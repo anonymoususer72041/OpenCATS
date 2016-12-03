@@ -124,7 +124,7 @@
                 <a href="http://forums.opencats.org ">opencats support forum</a>
             </div>
             <div class="col-md-8 text-right">
-                <span class="footerCopyright"><?php echo(COPYRIGHT_HTML); ?></span> Based upon original work and Powered by <a href="http://www.opencats.org" target="_blank">OpenCATS</a>.
+                <span class="footerCopyright"><?php echo(COPYRIGHT_HTML); ?></span> Based upon original work and Powered by <a href="http://www.catsone.com ">CATS</a>.
             </div>
         </div>
       </div>

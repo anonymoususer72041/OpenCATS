@@ -21,6 +21,10 @@
         "components/jquery": "^3.1",
         "twbs/bootstrap": "^3.3"
     },
+    "require": {
+        "components/jquery": "3.1.*",
+        "twbs/bootstrap": "3.3.*"
+    },
     "autoload": {
         "psr-4": {
             "OpenCATS\\": "src/OpenCATS/"
