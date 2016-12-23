@@ -221,19 +221,18 @@ function setProgressUpdating(progress, currentVersion, maxVersion, module)
 {
 	document.getElementById("upToDateSqlQuery").innerHTML = progress;
 	document.getElementById("upToDateModuleName").innerHTML = "Processing Module:  " + module + " (" + currentVersion + ")";
-	
-	if (totalProgressInstall != maxVersion)
+		
+	if (totalProgressInstall !== maxVersion)
 	{
 	    totalProgressInstall = maxVersion;
 	    firstProgressInstall = currentVersion;
 	}
 
-    theProgress = Math.round(((currentVersion - firstProgressInstall) * 100) / (totalProgressInstall - firstProgressInstall));
+    var theProgress = Math.round(((currentVersion - firstProgressInstall) * 100) / (totalProgressInstall - firstProgressInstall));
 
     if (theProgress > 100){
         return;
     }
-
     document.getElementById("d1").style.display = "";
     document.getElementById("d2").style.display = "";
     document.getElementById("d3").style.display = "";
