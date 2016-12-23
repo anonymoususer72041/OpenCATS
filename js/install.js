@@ -227,14 +227,13 @@ function setProgressUpdating(progress, currentVersion, maxVersion, module)
 	    totalProgressInstall = maxVersion;
 	    firstProgressInstall = currentVersion;
 	}
-	
+
     theProgress = Math.round(((currentVersion - firstProgressInstall) * 100) / (totalProgressInstall - firstProgressInstall));
 
-    if (theProgress > 100)
-    {
+    if (theProgress > 100){
         return;
     }
-    
+
     document.getElementById("d1").style.display = "";
     document.getElementById("d2").style.display = "";
     document.getElementById("d3").style.display = "";
@@ -255,4 +254,3 @@ function setProgressUpdating(progress, currentVersion, maxVersion, module)
         document.getElementById("d2").style.width = (theProgress * 3) + "px";
     }
 }
-
