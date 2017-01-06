@@ -1406,6 +1406,11 @@ class TemplateUtility
         echo '<![if !IE]><link rel="stylesheet" type="text/css" href="',
              self::getVersionedAssetURL('not-ie.css'),
              '" /><![endif]>', "\n";
+
+        /* Bootstrap require files */
+        echo '<link href="vendor/twbs/bootstrap/dist/css/bootstrap.min.css" media="screen" rel="stylesheet" type="text/css" />', "\n";
+        echo '<script type="text/javascript" src="', self::getVersionedAssetURL('vendor/components/jquery/jquery.min.js'), '"></script>', "\n";
+        echo '<script type="text/javascript" src="', self::getVersionedAssetURL('vendor/twbs/bootstrap/dist/js/bootstrap.min.js'), '"></script>', "\n";
         echo '</head>', "\n\n";
     }
 
