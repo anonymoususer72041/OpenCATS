@@ -1016,27 +1016,30 @@ class SettingsUI extends UserInterface
             switch($_GET['s'])
             {
                 case 'changePassword':
-                    $templateFile = './modules/settings/ChangePassword.tpl';
+                    $templateFile = 'settings/changepassword';
                     break;
 
                 default:
-                    $templateFile = './modules/settings/MyProfile.tpl';
+                    $templateFile = 'settings/home';
                     break;
             }
         }
         else
         {
-            $templateFile = './modules/settings/MyProfile.tpl';
+            $templateFile = 'settings/home';
         }
 
         if (!eval(Hooks::get('SETTINGS_DISPLAY_PROFILE_SETTINGS'))) return;
 
-        $this->_template->assign('isDemoUser', $isDemoUser);
-        $this->_template->assign('userID', $this->_userID);
-        $this->_template->assign('active', $this);
-        $this->_template->assign('subActive', 'My Profile');
-        $this->_template->assign('auth_mode', AUTH_MODE);
-        $this->_template->display($templateFile);
+        $themeVariables['isDemoUser']   =$isDemoUser;
+        $themeVariables['userID']       =$this->_userID;
+        $themeVariables['active']       =$this;
+        $themeVariables['subActive']    ='My Profile';
+        $themeVariables['auth_mode']    =AUTH_MODE;
+
+        oc_set_title("Settings");
+
+        theme(array($templateFile), $themeVariables);
     }
 
     /*
@@ -2102,8 +2105,9 @@ class SettingsUI extends UserInterface
      */
     private function themeSettings()
     {
-        $themeVariables["content"] = "Coming soon";
-        oc_set_title("Activities");
+        $themeVariables['active']   = $this;
+        $themeVariables["content"]  = "Coming soon";
+        oc_set_title("Theme Settings");
         theme(array("settings/theme"), $themeVariables);
     }
 
@@ -2553,13 +2557,14 @@ class SettingsUI extends UserInterface
                     break;
 
                 default:
-                    $templateFile = './modules/settings/Administration.tpl';
+                    $templateFile = 'settings/administration';
                     break;
             }
         }
         else
         {
-            $templateFile = './modules/settings/Administration.tpl';
+
+            $templateFile = 'settings/administration';
 
             /* Load extra settings. */
             $extraSettings = array();
@@ -2583,11 +2588,11 @@ class SettingsUI extends UserInterface
             $this->_template->assign('extraSettings', $extraSettings);
         }
 
-        if (!strcmp($templateFile, './modules/settings/Administration.tpl'))
+        if (!strcmp($templateFile, 'settings/administration'))
         {
             // Highlight certain rows of importance based on criteria
             $candidates = new Candidates($this->_siteID);
-            $this->_template->assign('totalCandidates', $candidates->getCount());
+            $themeVariables['totalCandidates'] = $candidates->getCount();
         }
 
         if (!eval(Hooks::get('SETTINGS_DISPLAY_ADMINISTRATION'))) return;
@@ -2602,11 +2607,16 @@ class SettingsUI extends UserInterface
             $careerPortalUnlock = true;
         }
 
-        $this->_template->assign('careerPortalUnlock', $careerPortalUnlock);
-        $this->_template->assign('subActive', 'Administration');
-        $this->_template->assign('systemAdministration', $systemAdministration);
-        $this->_template->assign('active', $this);
-        $this->_template->display($templateFile);
+        $themeVariables['careerPortalUnlock']   = $careerPortalUnlock;
+        $themeVariables['subActive']            = 'Administration';
+        $themeVariables['systemAdministration'] = $systemAdministration;
+        $themeVariables['active']               = $this;
+
+        oc_set_title("Settings");
+
+        theme(array($templateFile), $themeVariables);
+
+
     }
 
     /*
@@ -2996,7 +3006,7 @@ class SettingsUI extends UserInterface
             $this->_template->assign('active', $this);
             $this->_template->assign('subActive', 'My Profile');
             $this->_template->assign('errorMessage', join('<br />', $error));
-            $this->_template->display('./modules/settings/MyProfile.tpl');
+            $this->_template->display('settings/home');
         }
     }
 
