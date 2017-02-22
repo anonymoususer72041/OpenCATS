@@ -80,7 +80,7 @@ class SettingsUI extends UserInterface
         );
 
         $this->_subTabs = $mp;
-        
+
         $this->_hooks = $this->defineHooks();
     }
 
@@ -97,7 +97,7 @@ class SettingsUI extends UserInterface
                     }
                 }
             ',
-            
+
             /* Home goes to settings in career portal mode. */
             'HOME' => '
                 if ($_SESSION[\'CATS\']->hasUserCategory(\'careerportal\'))
@@ -106,7 +106,7 @@ class SettingsUI extends UserInterface
                     return false;
                 }
             ',
-            
+
             /* My Profile goes to administration in career portal mode. */
             'SETTINGS_DISPLAY_PROFILE_SETTINGS' => '
                 if ($_SESSION[\'CATS\']->hasUserCategory(\'careerportal\'))
@@ -126,7 +126,7 @@ class SettingsUI extends UserInterface
             'REPORTS_HANDLE_REQUEST' =>    'if ($_SESSION[\'CATS\']->hasUserCategory(\'careerportal\')) $this->fatal("' . ERROR_NO_PERMISSION . '");'
         );
     }
-    
+
     private function onAddNewTag()
     {
         if (!isset($_SESSION['CATS']) || empty($_SESSION['CATS']))
@@ -160,13 +160,13 @@ class SettingsUI extends UserInterface
 						</li>
 					</ul>
 				</li>',
-	        $arr['id'],$arr['id'],$arr['tag_title'], CATSUtility::getIndexName(), $arr['id']);        	
+	        $arr['id'],$arr['id'],$arr['tag_title'], CATSUtility::getIndexName(), $arr['id']);
         }
-        
-        
-        return; 
+
+
+        return;
     }
-    
+
     private function onRemoveTag()
     {
         if (!isset($_SESSION['CATS']) || empty($_SESSION['CATS']))
@@ -176,9 +176,9 @@ class SettingsUI extends UserInterface
         }
         $tags = new Tags($this->_siteID);
         $tags->delete($_POST['tag_id']);
-        return; 
+        return;
     }
-    
+
     private function onChangeTag()
     {
         if (!isset($_SESSION['CATS']) || empty($_SESSION['CATS']))
@@ -192,8 +192,8 @@ class SettingsUI extends UserInterface
         echo htmlspecialchars($_POST['tag_title'], ENT_QUOTES | ENT_SUBSTITUTE, HTML_ENCODING);
         return;
     }
-    
-    
+
+
     /**
      * This function make changes to tags
      * @return unknown_type
@@ -201,7 +201,7 @@ class SettingsUI extends UserInterface
     private function onChangeTags()
     {
         // TODO: Add tags changing code
- 
+
     }
 
     /**
@@ -244,7 +244,7 @@ class SettingsUI extends UserInterface
                     $this->changeTags();
                 }
                 break;
-            
+
             case 'changePassword':
                 /* Bail out if the user is demo. */
                 if ($this->getUserAccessLevel('settings.changePassword') == ACCESS_LEVEL_DEMO)
@@ -438,7 +438,7 @@ class SettingsUI extends UserInterface
                 break;
 
             case 'customizeExtraFields':
-                
+
                 if ($this->isPostBack())
                 {
                     if ($this->getUserAccessLevel('settings.customizeExtraFields.POST') < ACCESS_LEVEL_SA)
@@ -458,7 +458,7 @@ class SettingsUI extends UserInterface
                 break;
 
             case 'customizeCalendar':
-                
+
                 if ($this->isPostBack())
                 {
                     if ($this->getUserAccessLevel('settings.customizeCalendar.POST') < ACCESS_LEVEL_SA)
@@ -493,7 +493,7 @@ class SettingsUI extends UserInterface
                 break;
 
             case 'emailSettings':
-                
+
                 if ($this->isPostBack())
                 {
                     if ($this->getUserAccessLevel('settings.emailSettings.POST') < ACCESS_LEVEL_SA)
@@ -509,6 +509,26 @@ class SettingsUI extends UserInterface
                         CommonErrors::fatal(COMMONERROR_PERMISSION, $this, 'Invalid user level for action.');
                     }
                     $this->emailSettings();
+                }
+                break;
+
+            case 'themeSettings':
+
+                if ($this->isPostBack())
+                {
+                    if ($this->getUserAccessLevel('settings.themeSettings.POST') < ACCESS_LEVEL_SA)
+                    {
+                        CommonErrors::fatal(COMMONERROR_PERMISSION, $this, 'Invalid user level for action.');
+                    }
+                    $this->onEmailSettings();
+                }
+                else
+                {
+                    if ($this->getUserAccessLevel('settings.themeSettings.GET') < ACCESS_LEVEL_DEMO)
+                    {
+                        CommonErrors::fatal(COMMONERROR_PERMISSION, $this, 'Invalid user level for action.');
+                    }
+                    $this->themeSettings();
                 }
                 break;
 
@@ -545,7 +565,7 @@ class SettingsUI extends UserInterface
                 break;
 
             case 'careerPortalTemplateEdit':
-                
+
                 if ($this->isPostBack())
                 {
                     if ($this->getUserAccessLevel('settings.careerPortalTemplateEdit.POST') < ACCESS_LEVEL_SA && !$_SESSION['CATS']->hasUserCategory('careerportal'))
@@ -588,7 +608,7 @@ class SettingsUI extends UserInterface
                 break;
 
             case 'eeo':
-                
+
                 if ($this->isPostBack())
                 {
                     if ($this->getUserAccessLevel('settings.eeo.POST') < ACCESS_LEVEL_SA)
@@ -640,7 +660,7 @@ class SettingsUI extends UserInterface
                 break;
 
             case 'emailTemplates':
-                
+
                 if ($this->isPostBack())
                 {
                     if ($this->getUserAccessLevel('settings.emailTemplates.POST') < ACCESS_LEVEL_SA && !$_SESSION['CATS']->hasUserCategory('careerportal'))
@@ -702,7 +722,7 @@ class SettingsUI extends UserInterface
                 }
                 $this->onAddNewTag();
                 break;
-            
+
             case 'ajax_tags_del':
                 if (!isset($_SESSION['CATS']) || empty($_SESSION['CATS']))
                 {
@@ -730,7 +750,7 @@ class SettingsUI extends UserInterface
                 }
                 $this->onChangeTag();
                 break;
-               
+
             case 'ajax_wizardAddUser':
                 if (!isset($_SESSION['CATS']) || empty($_SESSION['CATS']))
                 {
@@ -2075,6 +2095,16 @@ class SettingsUI extends UserInterface
         $this->_template->assign('mailerSettingsRS', $mailerSettingsRS);
         $this->_template->assign('sessionCookie', $_SESSION['CATS']->getCookie());
         $this->_template->display('./modules/settings/EmailSettings.tpl');
+    }
+
+    /*
+     * Called by handleRequest() to show the theme settings template.
+     */
+    private function themeSettings()
+    {
+        $themeVariables["content"] = "Coming soon";
+        oc_set_title("Activities");
+        theme(array("settings/theme"), $themeVariables);
     }
 
     /*
