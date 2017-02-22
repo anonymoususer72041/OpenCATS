@@ -56,11 +56,24 @@ if (function_exists('date_default_timezone_set'))
     @date_default_timezone_set(date_default_timezone_get());
 }
 
+/* Start error handler if ASP error handler exists and this isn't a localhost
+ * connection.
+ */
+if (file_exists(LEGACY_ROOT . '/modules/asp/lib/ErrorHandler.php') &&
+    @$_SERVER['REMOTE_ADDR'] !== '127.0.0.1' &&
+    @$_SERVER['REMOTE_ADDR'] !== '::1' &&
+    substr(@$_SERVER['REMOTE_ADDR'], 0, 3) !== '10.')
+{
+    include_once(LEGACY_ROOT . '/modules/asp/lib/ErrorHandler.php');
+    $errorHandler = new ErrorHandler();
+}
+
 include_once(LEGACY_ROOT . '/constants.php');
 include_once(LEGACY_ROOT . '/lib/CommonErrors.php');
 include_once(LEGACY_ROOT . '/lib/CATSUtility.php');
 include_once(LEGACY_ROOT . '/lib/DatabaseConnection.php');
 include_once(LEGACY_ROOT . '/lib/Template.php');
+include_once(LEGACY_ROOT . '/lib/Theme.php');
 include_once(LEGACY_ROOT . '/lib/Users.php');
 include_once(LEGACY_ROOT . '/lib/MRU.php');
 include_once(LEGACY_ROOT . '/lib/Hooks.php');
