@@ -42,9 +42,9 @@ class awDrawer
      */
     public $y;
 
-    private $w;
+    protected $w;
 
-    private $h;
+    protected $h;
 
     /**
      * Build your drawer
@@ -447,9 +447,20 @@ class awDrawer
                 $thickness = $line->getThickness();
                 $this->startThickness($thickness);
                 $rgb = $color->getColor($this->resource);
-                imagerectangle($this->resource, $this->x + $p1->x, $this->y + $p1->y, $this->x + $p2->x, $this->y + $p2->y, $rgb);
+
+                // Explicitly cast coordinates to integers to avoid warnings
+                imagerectangle(
+                    $this->resource,
+                    (int)($this->x + $p1->x), // Cast to int
+                               (int)($this->y + $p1->y), // Cast to int
+                               (int)($this->x + $p2->x), // Cast to int
+                               (int)($this->y + $p2->y), // Cast to int
+                               $rgb
+                );
+
                 $this->stopThickness($thickness);
                 break;
+
 
             default:
 
@@ -497,11 +508,21 @@ class awDrawer
 
         if ($background instanceof awColor) {
             $rgb = $background->getColor($this->resource);
-            imagefilledrectangle($this->resource, $this->x + $p1->x, $this->y + $p1->y, $this->x + $p2->x, $this->y + $p2->y, $rgb);
+
+            // Explicitly cast coordinates to integers to avoid warnings
+            imagefilledrectangle(
+                $this->resource,
+                (int)($this->x + $p1->x), // Cast to int
+                                 (int)($this->y + $p1->y), // Cast to int
+                                 (int)($this->x + $p2->x), // Cast to int
+                                 (int)($this->y + $p2->y), // Cast to int
+                                 $rgb
+            );
         } elseif ($background instanceof awGradient) {
             $gradientDrawer = new awGradientDrawer($this);
             $gradientDrawer->filledRectangle($background, $p1, $p2);
         }
+
     }
 
     /**
@@ -656,20 +677,31 @@ class awGradientDrawer
         [$x1, $y1] = $p1->getLocation();
         [$x2, $y2] = $p2->getLocation();
 
+        // Swap values using temporary variables (traditional method)
         if ($y1 < $y2) {
-            $y1 ^= $y2 ^= $y1 ^= $y2;
+            $temp = $y1;
+            $y1 = $y2;
+            $y2 = $temp;
         }
 
         if ($x2 < $x1) {
-            $x1 ^= $x2 ^= $x1 ^= $x2;
+            $temp = $x1;
+            $x1 = $x2;
+            $x2 = $temp;
         }
 
         if ($gradient instanceof awLinearGradient) {
-            $this->rectangleLinearGradient($gradient, new awPoint($x1, $y1), new awPoint($x2, $y2));
+            // Use explicit casting if necessary for drawing functions
+            $this->rectangleLinearGradient(
+                $gradient,
+                new awPoint((int)$x1, (int)$y1), // Cast to int if necessary
+                                           new awPoint((int)$x2, (int)$y2)  // Cast to int if necessary
+            );
         } else {
             trigger_error("This gradient is not supported by rectangles", E_USER_ERROR);
         }
     }
+
 
     public function filledPolygon(awGradient $gradient, awPolygon $polygon)
     {
@@ -964,33 +996,33 @@ class awGradientDrawer
      *
      * @var int
      */
-    private $r1;
+    protected $r1;
 
-    private $g1;
+    protected $g1;
 
-    private $b1;
+    protected $b1;
 
-    private $a1;
+    protected $a1;
 
     /**
      * Stop colors
      *
      * @var int
      */
-    private $r2;
+    protected $r2;
 
-    private $g2;
+    protected $g2;
 
-    private $b2;
+    protected $b2;
 
-    private $a2;
+    protected $a2;
 
     /**
      * Gradient size in pixels
      *
      * @var int
      */
-    private $size;
+    protected $size;
 
     private function init(awGradient $gradient, $size)
     {

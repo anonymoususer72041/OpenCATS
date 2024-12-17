@@ -58,13 +58,13 @@
             <br /><br />
             <table cellpadding="0" cellspacing="0" border="0" width="956">
                 <tr>
-                <td style="padding-left: 62px;" align="center" valign="center">
+                <td style="padding-left: 62px;" style="text-align:center;" vstyle="text-align:center;">
 
                     <div style="text-align: center; width: 600px; line-height: 22px; font-size: 18px; font-weight: bold; color: #666666; padding-bottom: 20px;">
                     Create lists to group candidates, job orders, companies and contacts and perform actions on them quickly.
                     <br /><br />
                     <span style="font-size: 14px; font-weight: normal;">
-                    Create lists from the <b>job orders, candidates, companies </b>or<b> contacts</b> tab.
+                    Create lists from the <strong>job orders, candidates, companies </strong>or<strong> contacts</strong> tab.
                     </span>
                     </div>
                 </td>

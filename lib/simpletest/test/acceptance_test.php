@@ -146,7 +146,7 @@ class TestOfRequestMethods extends UnitTestCase {
 
 	function testPostWithXmlEncoding() {
 		$browser = new SimpleBrowser();
-		$this->assertTrue($browser->post($this->samples() . 'request_methods.php', '<a><b>c</b></a>', 'text/xml'));
+		$this->assertTrue($browser->post($this->samples() . 'request_methods.php', '<a><strong>c</strong></a>', 'text/xml'));
 		$this->assertEqual($browser->getResponseCode(), 201);
 		$this->assertPattern('/c/', $browser->getContent());
 	}
@@ -160,7 +160,7 @@ class TestOfRequestMethods extends UnitTestCase {
 
 	function testPutWithXmlEncoding() {
 		$browser = new SimpleBrowser();
-		$this->assertTrue($browser->put($this->samples() . 'request_methods.php', '<a><b>c</b></a>', 'application/xml'));
+		$this->assertTrue($browser->put($this->samples() . 'request_methods.php', '<a><strong>c</strong></a>', 'application/xml'));
 		$this->assertEqual($browser->getResponseCode(), 201);
 		$this->assertPattern('/c/', $browser->getContent());
 	}

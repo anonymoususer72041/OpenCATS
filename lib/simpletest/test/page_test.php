@@ -135,13 +135,13 @@ class TestOfHtmlStrippingAndNormalisation extends UnitTestCase {
 
     function testTagSuppression() {
         $this->assertEqual(
-                SimplePage::normalise('<b>Hello</b>'),
+                SimplePage::normalise('<strong>Hello</strong>'),
                 'Hello');
     }
 
     function testAdjoiningTagSuppression() {
         $this->assertEqual(
-                SimplePage::normalise('<b>Hello</b><em>Goodbye</em>'),
+                SimplePage::normalise('<strong>Hello</strong><em>Goodbye</em>'),
                 'HelloGoodbye');
     }
 

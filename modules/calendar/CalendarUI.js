@@ -277,7 +277,7 @@ function calendarViewEvent(entry)
     else
     {
         document.getElementById('viewEventTime').innerHTML = 'All Day / No Specific Time';
-        document.getElementById('viewEventDuration').innerHTML = '<i>(All day event - None Set)</i>';
+        document.getElementById('viewEventDuration').innerHTML = '<em>(All day event - None Set)</em>';
     }
     if (entry.getData('reminderEnabled') == 1)
     {
@@ -286,7 +286,7 @@ function calendarViewEvent(entry)
     }
     else
     {
-        document.getElementById('viewEventReminder').innerHTML = '<i>(None Set)</i>';
+        document.getElementById('viewEventReminder').innerHTML = '<em>(None Set)</em>';
     }
 
     if (entry.getData('description') != '')
@@ -295,7 +295,7 @@ function calendarViewEvent(entry)
     }
     else
     {
-        document.getElementById('viewEventDescription').innerHTML = '<i>(None Set)</i>';
+        document.getElementById('viewEventDescription').innerHTML = '<em>(None Set)</em>';
     }
 
     currentViewedEntry = entry;

@@ -57,17 +57,17 @@ error_reporting($errorReporting & ~E_STRICT);
  */
 class Mailer
 {
-    private $_mailer;
+    private \PHPMailer\PHPMailer\PHPMailer $_mailer;
 
-    private $_errorMessage = '';
+    private string $_errorMessage = '';
 
-    private $_settings;
+    private array $_settings;
 
     private $_siteID;
 
     private $_userID;
 
-    private $_db;
+    private \DatabaseConnection $_db;
 
     public function __construct($siteID, $userID = -1)
     {
@@ -393,7 +393,7 @@ class Mailer
  */
 class MailerSettings
 {
-    private $_db;
+    private \DatabaseConnection $_db;
 
     private $_siteID;
 

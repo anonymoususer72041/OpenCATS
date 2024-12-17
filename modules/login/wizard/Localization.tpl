@@ -1,4 +1,4 @@
-<b>Please select your time zone and date format.</b>
+<strong>Please select your time zone and date format.</strong>
 <p />
 <div id="localizationBeacon" style="display: none;">&nbsp;</div>
 <table class="editTable">

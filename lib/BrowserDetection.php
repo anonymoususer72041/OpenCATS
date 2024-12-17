@@ -284,7 +284,7 @@ class BrowserDetection
         /* Yahoo Crawles - Test this before Mozilla. */
         if (stripos($userAgent, 'yahoo') !== false) {
             return [
-               'name' => 'Yahoo Crawler',
+                'name' => 'Yahoo Crawler',
                 'version' => '',
             ];
         }
@@ -326,7 +326,7 @@ class BrowserDetection
 
             return [
                 'name' => 'OmniWeb',
-                'version' => (isset($b[1]) ? $b[1] : 'Unknown'),
+                'version' => ($b[1] ?? 'Unknown'),
             ];
         }
 

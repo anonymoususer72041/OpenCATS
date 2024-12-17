@@ -257,7 +257,7 @@ if (! eval(Hooks::get('JO_AJAX_GET_PIPELINE'))) {
             </a>
         </th>
 <?php if (! $isPopup): ?>
-        <th align="center">Action</th>
+        <th style="text-align:center;">Action</th>
 <?php endif; ?>
     </tr>
 
@@ -302,7 +302,7 @@ if (! eval(Hooks::get('JO_AJAX_GET_PIPELINE'))) {
             <td valign="top" nowrap="nowrap"><?php echo(htmlspecialchars($pipelinesData['status'])); ?></td>
             <td valign="top"><?php echo($pipelinesData['lastActivity']); ?></td>
 <?php if (! $isPopup): ?>
-            <td align="center" nowrap="nowrap">
+            <td style="text-align:center;" nowrap="nowrap">
                 <?php if ($_SESSION['CATS']->getAccessLevel('pipelines.screening') >= ACCESS_LEVEL_EDIT && ! $_SESSION['CATS']->hasUserCategory('sourcer')): ?>
                     <?php if ($pipelinesData['ratingValue'] < 0): ?>
                         <a href="#" id="screenLink<?php echo($pipelinesData['candidateJobOrderID']); ?>" onclick="moImageValue<?php echo($pipelinesData['candidateJobOrderID']); ?> = 0; setRating(<?php echo($pipelinesData['candidateJobOrderID']); ?>, 0, 'moImage<?php echo($pipelinesData['candidateJobOrderID']); ?>', '<?php echo($_SESSION['CATS']->getCookie()); ?> '); return false;" >
@@ -329,7 +329,7 @@ if (! eval(Hooks::get('JO_AJAX_GET_PIPELINE'))) {
         </tr>
         <tr class="<?php TemplateUtility::printAlternatingRowClass($rowNumber); ?>" id="pipelineDetails<?php echo($rowNumber); ?>" style="display:none;">
             <td colspan="11">
-                <center>
+                <div style="text-align:center;">
                     <table width="98%" border=1 class="detailsOutside" style="margin:5px;">
                         <tr>
                             <td align="left" style="padding: 6px 6px 6px 6px; background-color: white; clear: both;">
@@ -339,7 +339,7 @@ if (! eval(Hooks::get('JO_AJAX_GET_PIPELINE'))) {
                             </td>
                         </tr>
                     </table>
-                </center>
+                </div>
             </td>
         </tr>
     <?php endfor; ?>

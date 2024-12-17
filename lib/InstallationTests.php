@@ -49,7 +49,6 @@ class InstallationTests
 
         $proceed = $proceed && self::printCATSVersion();
         $proceed = $proceed && self::checkPHPVersion();
-        $proceed = $proceed && self::checkMagicQuotes();
         $proceed = $proceed && self::checkRegisterGlobals();
         $proceed = $proceed && self::checkSessionAutoStart();
         $proceed = $proceed && self::checkMySQLExtension();
@@ -73,10 +72,6 @@ class InstallationTests
         }
 
         if (! InstallationTests::checkPHPVersion()) {
-            $result = false;
-        }
-
-        if (! InstallationTests::checkMagicQuotes()) {
             $result = false;
         }
 
@@ -159,19 +154,6 @@ class InstallationTests
             . 'Found version: %s.</td></tr>',
             PHP_VERSION
         );
-        return false;
-    }
-
-    /* magic_quotes_runtime cannot be enabled. */
-    public static function checkMagicQuotes()
-    {
-        if (! self::DEBUG_FAIL && ! ini_get('magic_quotes_runtime')) {
-            echo '<tr class="pass"><td>PHP.ini: magic_quotes_runtime is disabled.</td></tr>';
-            return true;
-        }
-
-        echo '<tr class="fail"><td><strong>PHP.ini: magic_quotes_runtime must be set to Off in php.ini.</strong><br />'
-            . 'Check your settings in php.ini.</td></tr>';
         return false;
     }
 

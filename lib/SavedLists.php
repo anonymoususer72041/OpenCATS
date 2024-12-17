@@ -36,7 +36,7 @@
  */
 class SavedLists
 {
-    private $_db;
+    private \DatabaseConnection $_db;
 
     private $_siteID;
 

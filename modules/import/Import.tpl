@@ -227,7 +227,7 @@
                                                 <?php endif; ?>
                                             <?php endfor; ?>
                                             <?php if ($fieldsDisplayed == 0): ?>
-                                                <br /><i>(none)</i>
+                                                <br /><em>(none)</em>
                                             <?php endif; ?>
                                         </td>
                                     </tr>

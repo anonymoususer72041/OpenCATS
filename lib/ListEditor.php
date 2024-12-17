@@ -123,7 +123,7 @@ class ListEditor
         $output = '';
         foreach ($rs as $rsIndex => $rsEntry) {
             $string = '"' . str_replace('"', '""', $rsEntry[$index]) . '"';
-            if ($rsIndex != count($rs) - 1) {
+            if ($rsIndex != (is_countable($rs) ? count($rs) : 0) - 1) {
                 $output .= $string . ',';
             } else {
                 $output .= $string;
@@ -143,7 +143,7 @@ class ListEditor
     {
         $theArrayValues = [];
 
-        for ($i = 0; $i < count($theArray); $i++) {
+        for ($i = 0; $i < (is_countable($theArray) ? count($theArray) : 0); $i++) {
             if (strpos($theArray[$i], '!!EDIT!!') === false) {
                 $theArrayValues[] = $theArray[$i];
             }
@@ -162,7 +162,7 @@ class ListEditor
     {
         $theArrayValues = [];
 
-        for ($i = 0; $i < count($theArray); $i++) {
+        for ($i = 0; $i < (is_countable($theArray) ? count($theArray) : 0); $i++) {
             if (strpos($theArray[$i], '!!EDIT!!') === 0) {
                 $from = StringUtility::JSSubString(
                     $theArray[$i],

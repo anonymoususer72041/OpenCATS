@@ -146,9 +146,9 @@
                                                     </td>
                                                     <td style="text-align: center;">
                                                     <div style="font-weight:bold;">Insert Formatting:</div>
-                                                        <?php generateInsertAtCursorLink($data, 'Bold', '<B></B>'); ?>
-                                                        <?php generateInsertAtCursorLink($data, 'Italics', '<I></I>'); ?>
-                                                        <?php generateInsertAtCursorLink($data, 'Underline', '<U></U>'); ?>
+                                                        <?php generateInsertAtCursorLink($data, 'Bold', '<strong></strong>'); ?>
+                                                        <?php generateInsertAtCursorLink($data, 'Italics', '<em></em>'); ?>
+                                                        <?php generateInsertAtCursorLink($data, 'Underline', '<span style="text-decoration:underline;"></span>'); ?>
                                                         <br />
                                                         <div style="font-weight:bold;">Insert Mail Merge Fields:</div>
                                                         <?php /* Global vars */ ?>

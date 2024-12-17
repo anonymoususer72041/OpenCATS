@@ -14,7 +14,7 @@ abstract class TestOfParsing extends UnitTestCase {
     }
 
     function testTextAccessor() {
-        $page = $this->whenVisiting('http://host/', '<b>Some</b> &quot;messy&quot; HTML');
+        $page = $this->whenVisiting('http://host/', '<strong>Some</strong> &quot;messy&quot; HTML');
         $this->assertEqual($page->getText(), 'Some "messy" HTML');
     }
 
@@ -39,7 +39,7 @@ abstract class TestOfParsing extends UnitTestCase {
 
     function testUrlLabelsHaveHtmlTagsStripped() {
         $page = $this->whenVisiting('http://host',
-                                    '<html><a href="http://somewhere.com"><b>Label</b></a></html>');
+                                    '<html><a href="http://somewhere.com"><strong>Label</strong></a></html>');
         $this->assertEqual(
                 $page->getUrlsByLabel('Label'),
                 array(new SimpleUrl('http://somewhere.com')));
@@ -479,7 +479,7 @@ abstract class TestOfParsing extends UnitTestCase {
     function testSelectionOptionsAreNormalised() {
         $raw = '<form>' .
                 '<select name="a">' .
-                '<option selected><b>Big</b> bold</option>' .
+                '<option selected><strong>Big</strong> bold</option>' .
                 '<option>small <em>italic</em></option>' .
                 '</select>' .
                 '</form>';
@@ -614,7 +614,7 @@ class TestOfParsingUsingPhpParser extends TestOfParsing {
 
     function testNastyTitle() {
         $page = $this->whenVisiting('http://host',
-                                    '<html><head><Title> <b>Me&amp;Me </TITLE></b></head></html>');
+                                    '<html><head><Title> <strong>Me&amp;Me </TITLE></strong></head></html>');
         $this->assertEqual($page->getTitle(), "Me&Me");
     }
 

@@ -27,7 +27,7 @@ class TestOfTag extends UnitTestCase {
     function testMessyTitleContent() {
         $tag = new SimpleTitleTag(array());
         $this->assertTrue($tag->expectEndTag());
-        $tag->addContent('<b>Hello</b>');
+        $tag->addContent('<strong>Hello</strong>');
         $tag->addContent('<em>World</em>');
         $this->assertEqual($tag->getText(), 'HelloWorld');
     }

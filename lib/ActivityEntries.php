@@ -60,7 +60,7 @@ include_once(LEGACY_ROOT . '/lib/JobOrders.php');
  */
 class ActivityEntries
 {
-    private $_db;
+    private \DatabaseConnection $_db;
 
     private $_siteID;
 
@@ -164,10 +164,9 @@ class ActivityEntries
         $activityID,
         $activityType,
         $activityNotes,
-        $timezoneOffset,
         $jobOrderID = false,
-        $date = false
-
+        $date = false,
+        $timezoneOffset
     ) {
         /* Get some extra information about the activity entry that we'll
          * need later on.

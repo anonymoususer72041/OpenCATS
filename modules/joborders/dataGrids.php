@@ -38,8 +38,27 @@ include_once(LEGACY_ROOT . '/lib/Width.php');
 
 class JobOrdersListByViewDataGrid extends JobOrdersDataGrid
 {
+    protected $_tableWidth = null;
+    protected $_defaultAlphabeticalSortBy = null;
+    public $ajaxMode = null;
+    public $showExportCheckboxes = null;
+    public $showActionArea = null;
+    public $showChooseColumnsBox = null;
+    public $allowResizing = null;
+    public $defaultSortBy = null;
+    public $defaultSortDirection = null;
+    public $_db;
+    public $_assignedCriterion = null;
+    protected $_dataItemIDColumn = null;
+    protected $_classColumns = null;
+    protected $_totalEntries;
+    protected $_currentPage;
+    protected $_totalPages;
+    public $globalStyle;
+
     public function __construct($siteID, $parameters, $misc)
     {
+
         /* Pager configuration. */
         $this->_tableWidth = new Width(100, '%');
         $this->_defaultAlphabeticalSortBy = 'title';

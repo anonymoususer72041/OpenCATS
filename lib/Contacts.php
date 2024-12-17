@@ -40,7 +40,7 @@ include_once(LEGACY_ROOT . '/lib/Calendar.php');
  */
 class Contacts
 {
-    private $_db;
+    private \DatabaseConnection $_db;
 
     private $_siteID;
 
@@ -951,7 +951,6 @@ class ContactsDataGrid extends DataGrid
                 'alphaNavigation' => true,
                 'filter' => 'contact.city',
             ],
-
 
             'State' => [
                 'select' => 'contact.state AS state',

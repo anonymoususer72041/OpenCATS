@@ -26,7 +26,7 @@ define('CBF_GUID_SWAP_ENABLED', false);
 
 class CBFUtility
 {
-    private $_db;
+    private \DatabaseConnection $_db;
 
     private $_siteID;
 
@@ -34,7 +34,7 @@ class CBFUtility
 
     private $_keys;
 
-    private $_GUID;
+    private int $_GUID;
 
     private $_GUIDs;
 
@@ -42,7 +42,7 @@ class CBFUtility
 
     private $_GUIDSwap;
 
-    private $_GUIDSwapEnabled;
+    private ?bool $_GUIDSwapEnabled = null;
 
     private $_dataOverwrite;
 
@@ -95,6 +95,7 @@ class CBFUtility
 
     public function doScanTable($tableName)
     {
+        $primaryKey = null;
         $hasSiteID = false;
         $tableStructure = [];
 
@@ -153,7 +154,7 @@ class CBFUtility
         $result = [];
         foreach ($this->_structure as $tableName => $tableData) {
             $foreignKeys = $this->getForeignKeys($tableData);
-            if (count($foreignKeys) == $allowedKeys) {
+            if ((is_countable($foreignKeys) ? count($foreignKeys) : 0) == $allowedKeys) {
                 $result[$tableName] = $tableData;
             }
         }
@@ -385,7 +386,9 @@ class CBFUtility
 
     private function restoreTableDataBackup($tableName, $tableStructure, $tableData)
     {
-        $numFields = count($tableStructure);
+        $dataType = null;
+        $data = null;
+        $numFields = is_countable($tableStructure) ? count($tableStructure) : 0;
         $numRows = array_pop(unpack('N1', substr($tableData, 0, $size = 4)));
         $tableData = substr($tableData, $size);
 
@@ -585,7 +588,7 @@ class CBFUtility
             // Get info for the first table
             $tableInfoSize = array_pop(unpack('N1', fread($fp, 4)));
             $data = fread($fp, $tableInfoSize);
-            list($tableName, $tableStructure) = $this->restoreTableInfoBackup($data);
+            [$tableName, $tableStructure] = $this->restoreTableInfoBackup($data);
 
             $tableDataSize = array_pop(unpack('N1', fread($fp, 4)));
             $data = fread($fp, $tableDataSize);
@@ -642,7 +645,6 @@ class CBFUtility
             echo "<BR><BR><BR><BR><BR><BR><BR><BR><BR><BR>";
             htmlentities(print_r($sqlInserts));
             echo count($sqlInserts) . ' rows were unable to be inserted.';
-
 
             foreach ($sqlInserts as $mp) {
                 echo "Unable to translate " . substr($mp['SQL'], strpos($mp['SQL'], 'GUID{'), 10) . "... <BR>\n";

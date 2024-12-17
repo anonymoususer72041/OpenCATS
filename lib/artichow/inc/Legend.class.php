@@ -22,6 +22,7 @@ class awLegend implements awPositionable
      * @var array
      */
     protected $legends = [];
+    public $padding = null;
 
     /**
      * The current component
@@ -112,7 +113,7 @@ class awLegend implements awPositionable
      *
      * @var array Array for left, right, top and bottom margins
      */
-    private $margin;
+    protected $margin;
 
     /**
      * Legend shadow

@@ -7,6 +7,23 @@ include_once(LEGACY_ROOT . '/lib/Width.php');
 
 class candidatesListByViewDataGrid extends CandidatesDataGrid
 {
+    protected $_tableWidth = null;
+    protected $_defaultAlphabeticalSortBy = null;
+    public $ajaxMode = null;
+    public $showExportCheckboxes = null;
+    public $showActionArea = null;
+    public $showChooseColumnsBox = null;
+    public $allowResizing = null;
+    public $defaultSortBy = null;
+    public $defaultSortDirection = null;
+    protected $_db = null;
+    protected $_assignedCriterion = null;
+    protected $_dataItemIDColumn = null;
+    protected $_classColumns = null;
+    protected $_totalEntries = null;
+    protected $_currentPage = null;
+    protected $_totalPages = null;
+    public $globalStyle = null;
     public function __construct($siteID, $parameters, $misc)
     {
         /* Pager configuration. */
@@ -101,6 +118,25 @@ class candidatesListByViewDataGrid extends CandidatesDataGrid
 
 class candidatesSavedListByViewDataGrid extends CandidatesDataGrid
 {
+    public $showActionArea = null;
+    public $showChooseColumnsBox = null;
+    public $allowResizing = null;
+    public $defaultSortBy = null;
+    public $defaultSortDirection = null;
+    protected $_db = null;
+    protected $_assignedCriterion = null;
+    protected $_dataItemIDColumn = null;
+    protected $_classColumns = null;
+    protected $_totalEntries = null;
+    protected $_currentPage = null;
+    protected $_totalColumnWidths;
+    protected $_totalPages = null;
+    public $globalStyle = null;
+    protected $_tableWidth;
+    protected $_defaultAlphabeticalSortBy;
+    public $ajaxMode;
+    public $showExportCheckboxes;
+
     public function __construct($siteID, $parameters, $misc)
     {
         $this->_tableWidth = new Width(100, '%');

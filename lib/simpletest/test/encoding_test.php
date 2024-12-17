@@ -204,9 +204,9 @@ class TestOfEncoding extends UnitTestCase {
     }
     
     function testEntityEncodingXmlBody() {
-        $encoding = new SimpleEntityEncoding('<p><a>xml</b><b>text</b></p>', 'text/xml');
+        $encoding = new SimpleEntityEncoding('<p><a>xml</strong><strong>text</strong></p>', 'text/xml');
         $this->assertIdentical($encoding->getContentType(), 'text/xml');
-        $this->assertWritten($encoding, '<p><a>xml</b><b>text</b></p>');
+        $this->assertWritten($encoding, '<p><a>xml</strong><strong>text</strong></p>');
     }
 }
 

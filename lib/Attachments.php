@@ -42,7 +42,7 @@ include_once(LEGACY_ROOT . '/lib/Hooks.php');
  */
 class Attachments
 {
-    private $_db;
+    private \DatabaseConnection $_db;
 
     private $_siteID;
 
@@ -780,21 +780,21 @@ class Attachments
  */
 class AttachmentCreator
 {
-    private $_isError = false;
+    private bool $_isError = false;
 
-    private $_error = '';
+    private string $_error = '';
 
-    private $_isTextExtractionError = false;
+    private bool $_isTextExtractionError = false;
 
-    private $_textExtractionError = '';
+    private string $_textExtractionError = '';
 
     private $_extractedText = '';
 
     private $_siteID = -1;
 
-    private $_duplicatesOccurred = false;
+    private bool $_duplicatesOccurred = false;
 
-    private $_newFilePath = '';
+    private string $_newFilePath = '';
 
     private $_containingDirectory = '';
 
@@ -936,10 +936,6 @@ class AttachmentCreator
         $contentType = $_FILES[$fileField]['type'];
         $fileSize = $_FILES[$fileField]['size'];
         $uploadError = $_FILES[$fileField]['error'];
-
-        /* Recover from magic quotes. Note that tmp_name doesn't appear to
-         * get escaped, and stripslashes() on it breaks on Windows. - Will
-         */
 
         /* Did a file upload error occur? */
         if ($uploadError != UPLOAD_ERR_OK) {

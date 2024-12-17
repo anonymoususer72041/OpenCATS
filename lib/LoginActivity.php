@@ -41,7 +41,7 @@ class LoginActivityPager extends Pager
 {
     private $_siteID;
 
-    private $_db;
+    private \DatabaseConnection $_db;
 
     private $_successful;
 
@@ -79,21 +79,22 @@ class LoginActivityPager extends Pager
         $rs = $this->_db->getAssoc($sql);
 
         /* Pass "Login Activity By Most Recent"-specific parameters to Pager
+         * constructor.
          */
         parent::__construct($rs['count'], $rowsPerPage, $currentPage);
     }
 
-    /**
-     * Updates hostname for a user.
-     *
-     * @param userLoginID
-     * @param hostName
-     * @return array contacts data
-     */
-    public function updateHostName($userLoginID, $hostName)
-    {
-        $sql = sprintf(
-            "UPDATE
+     /**
+      * Updates hostname for a user.
+      *
+      * @param userLoginID
+      * @param hostName
+      * @return array contacts data
+      */
+     public function updateHostName($userLoginID, $hostName)
+     {
+         $sql = sprintf(
+             "UPDATE
                 user_login
              SET
                 user_login.host = %s
@@ -102,13 +103,13 @@ class LoginActivityPager extends Pager
              AND
                 user_login.site_id = %s
              ",
-            $this->_db->makeQueryString($hostName),
-            $userLoginID,
-            $this->_siteID
-        );
+             $this->_db->makeQueryString($hostName),
+             $userLoginID,
+             $this->_siteID
+         );
 
-        $this->_db->query($sql);
-    }
+         $this->_db->query($sql);
+     }
 
     /**
      * Returns the current page of login activity.

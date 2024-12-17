@@ -22,7 +22,7 @@
 </div>
 
 <div id="pageContainer">
-<center>
+<div style="text-align:center;">
     <div id="wizardContainer">
         <table cellpadding="0" cellspacing="0" border="0" width="770">
             <tr>
@@ -86,7 +86,7 @@
             <input type="button" class="button" id="next" value="Next" onclick="next();" />
         <?php endif; ?>
     </div>
-    </center>
+    </div>
 </div>
 
 </body>

@@ -39,7 +39,7 @@ include_once(LEGACY_ROOT . '/lib/Site.php');
  */
 class EmailTemplates
 {
-    private $_db;
+    private \DatabaseConnection $_db;
 
     private $_siteID;
 
@@ -150,7 +150,6 @@ class EmailTemplates
             );
         }
 
-
         $queryResult = $this->_db->query($sql);
         if (! $queryResult) {
             return false;
@@ -221,9 +220,7 @@ class EmailTemplates
             $mailerSettings = new MailerSettings($this->_siteID);
             $mailerSettingsRS = $mailerSettings->getAll();
 
-            if (isset($mailerSettingsRS['configured']) && $mailerSettingsRS['configured'] == '0' ||
-        MAIL_MAILER == 0 ||
-        (isset($mailerSettingsRS['mode']) && $mailerSettingsRS['mode'] == 0)) { // Add this check
+            if ($mailerSettingsRS['configured'] == '0' || $mailerSettingsRS['mode'] == 0) {
                 $rs['disabled'] = '1';
             }
 

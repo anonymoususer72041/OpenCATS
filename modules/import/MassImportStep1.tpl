@@ -16,7 +16,7 @@ You have <?php echo number_format(count($this->documents), 0); ?> document<?php 
         that hosts CATS:
         <br /><br />
 
-        <b><?php echo $this->uploadPath; ?></b>
+        <strong><?php echo $this->uploadPath; ?></strong>
 
         <br /><br />
         Once you have resumes in this folder, <a href="<?php echo CATSUtility::getIndexName(); ?>?m=import&a=importSelectType&typeOfImport=resume">
@@ -30,21 +30,21 @@ You have <?php echo number_format(count($this->documents), 0); ?> document<?php 
         If you need assistance in uploading files to your web server, contact your system administrator.<br />
         <?php endif; ?>
     <?php else: ?>
-        In order to import resume documents into CATS, you need to create a directory named "<b>upload</b>" on the computer
+        In order to import resume documents into CATS, you need to create a directory named "<strong>upload</strong>" on the computer
         that hosts cats. This directory needs to have its permissions set to allow files to be created by your
         web server.
         <br /><br />
-        <b>Linux Instructions:</b>
+        <strong>Linux Instructions:</strong>
         <br />
         <blockquote>
         <span style="color: #c0c0c0;">&gt;</span> mkdir /PATH/TO/CATS/upload<br />
         <span style="color: #c0c0c0;">&gt;</span> chmod -R 777 /PATH/TO/CATS/upload
         </blockquote>
         <br />
-        <b>Windows Instructions:</b>
+        <strong>Windows Instructions:</strong>
         <blockquote>
-        <span style="color: #c0c0c0;">&gt;</span> Create a folder named <b>upload</b> in the directory you installed CATS.<br />
-        <span style="color: #c0c0c0;">&gt;</span> Set the appropriate permissions by right clicking the file and selecting <b>Properties</b>, then <b>Security</b>.<br />
+        <span style="color: #c0c0c0;">&gt;</span> Create a folder named <strong>upload</strong> in the directory you installed CATS.<br />
+        <span style="color: #c0c0c0;">&gt;</span> Set the appropriate permissions by right clicking the file and selecting <strong>Properties</strong>, then <strong>Security</strong>.<br />
         <span style="color: #c0c0c0;">&gt;</span> Make sure all users have access to read, write and delete files and directories.
         </blockquote>
     <?php endif; ?>
@@ -72,9 +72,9 @@ You have <?php echo number_format(count($this->documents), 0); ?> document<?php 
             <td align="left" valign="top">
                 <span style="font-size: 16px;">
                 <?php if (LicenseUtility::isProfessional()): ?>
-                You are a registered CATS Professional user <b><?php echo LicenseUtility::getName(); ?></b>.
+                You are a registered CATS Professional user <strong><?php echo LicenseUtility::getName(); ?></strong>.
                 <?php elseif (LicenseUtility::isOpenSource()): ?>
-                <b>You are a registered open source user of CATS.</b>
+                <strong>You are a registered open source user of CATS.</strong>
                 <?php endif; ?>
                 </span>
 
@@ -86,7 +86,7 @@ You have <?php echo number_format(count($this->documents), 0); ?> document<?php 
                     </span>
                 <?php else: ?>
                     <span style="font-size: 14px; color: #333333;">
-                    Your resume documents will be imported as searchable documents but <b>not</b> as candidates unless
+                    Your resume documents will be imported as searchable documents but <strong>not</strong> as candidates unless
                     you manually complete the required fields for each document (first and last names).
                     <br /><br />
                     With the

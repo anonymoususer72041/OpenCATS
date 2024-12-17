@@ -22,6 +22,8 @@ class awBarPlotDashboard extends awPlot implements awLegendable
      * @var Label
      */
     public $label;
+    public $view = null;
+
 
     /**
      * Bar plot identifier

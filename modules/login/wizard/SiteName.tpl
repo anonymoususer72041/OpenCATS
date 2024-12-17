@@ -1,4 +1,4 @@
-<b>Please name your OpenCATS site.</b>
+<strong>Please name your OpenCATS site.</strong>
 <br />
 The name you choose will be used to describe your OpenCATS site. By default, it will be seen in
 e-mail notifications.

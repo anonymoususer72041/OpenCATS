@@ -2451,7 +2451,7 @@ class SettingsUI extends UserInterface
                     $message = 'That is not a valid Professional membership key<br /><span style="font-size: 16px; color: #000000;">Please verify that you have the correct key and try again.</span>';
                 } elseif (! CATSUtility::changeConfigSetting('LICENSE_KEY', "'" . $key . "'")) {
                     $message = 'Internal Permissions Error<br /><span style="font-size: 12px; color: #000000;">CATS is unable '
-                        . 'to write changes to your <b>config.php</b> file. Please change the file permissions or contact us '
+                        . 'to write changes to your <strong>config.php</strong> file. Please change the file permissions or contact us '
                         . 'for support. Our support e-mail is <a href="mailto:support@catsone.com">support@catsone.com</a> '
                         . 'and our office number if (952) 417-0067.</span>';
                 } else {

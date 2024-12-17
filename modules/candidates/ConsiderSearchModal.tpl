@@ -64,7 +64,7 @@
                         <th align="left">Start</th>
                         <th align="left">Recruiter</th>
                         <th align="left">Owner</th>
-                        <th align="center">Action</th>
+                        <th style="text-align:center;">Action</th>
                     </tr>
 
                     <?php foreach ($this->rs as $rowNumber => $data): ?>
@@ -86,7 +86,7 @@
                             <td align="left" valign="top" nowrap="nowrap"><?php $this->_($data['startDate']); ?></td>
                             <td align="left" valign="top" nowrap="nowrap"><?php $this->_($data['recruiterAbbrName']); ?></td>
                             <td align="left" valign="top" nowrap="nowrap"><?php $this->_($data['ownerAbbrName']); ?></td>
-                            <td align="center" nowrap="nowrap">
+                            <td style="text-align:center;" nowrap="nowrap">
                                 <a href="#" title="Show Job Order" onclick="javascript:openCenteredPopup('<?php echo(CATSUtility::getIndexName()); ?>?m=joborders&amp;a=show&amp;display=popup&amp;jobOrderID=<?php $this->_($data['jobOrderID']); ?>', 'viewJobOrderDetails', 1000, 675, true); return false;">
                                     <img src="images/new_browser_inline.gif" alt="consider" width="16" height="16" border="0" class="absmiddle" />
                                 </a>
@@ -114,7 +114,7 @@
                         <th align="left">Start</th>
                         <th align="left">Recruiter</th>
                         <th align="left">Owner</th>
-                        <th align="center">Action</th>
+                        <th style="text-align:center;">Action</th>
                     </tr>
 
                     <?php foreach ($this->rs as $rowNumber => $data): ?>
@@ -136,7 +136,7 @@
                             <td align="left" valign="top" nowrap="nowrap"><?php $this->_($data['startDate']); ?></td>
                             <td align="left" valign="top" nowrap="nowrap"><?php $this->_($data['recruiterAbbrName']); ?></td>
                             <td align="left" valign="top" nowrap="nowrap"><?php $this->_($data['ownerAbbrName']); ?></td>
-                            <td align="center" nowrap="nowrap">
+                            <td style="text-align:center;" nowrap="nowrap">
                                 <a href="#" title="Show Job Order" onclick="javascript:openCenteredPopup('<?php echo(CATSUtility::getIndexName()); ?>?m=joborders&amp;a=show&amp;display=popup&amp;jobOrderID=<?php $this->_($data['jobOrderID']); ?>', 'viewJobOrderDetails', 1000, 675, true); return false;">
                                     <img src="images/new_browser_inline.gif" alt="consider" width="16" height="16" border="0" class="absmiddle" />
                                 </a>

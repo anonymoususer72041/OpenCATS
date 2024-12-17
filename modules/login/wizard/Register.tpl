@@ -8,7 +8,7 @@ input.licenseKey { border: 1px solid #0C519D; padding: 5px; width: 500px; }
         </td>
 
         <td align="left" valign="top">
-            <b>OpenCATS</b> users get everything.</b>
+            <strong>OpenCATS</strong> users get everything.</strong>
             <ul>
                 <li>Freeform text-search across resume's.</li>
                 <li>A careers website where applicants can view public jobs and apply.</li>
@@ -19,7 +19,7 @@ input.licenseKey { border: 1px solid #0C519D; padding: 5px; width: 500px; }
 
             <p />
 
-            <b>Enter your open source or professional license key:</b>
+            <strong>Enter your open source or professional license key:</strong>
             <p />
             <input type="text" name="key" id="key" value="<?php if (defined('LICENSE_KEY') && LICENSE_KEY != '') echo LICENSE_KEY; ?>" class="licenseKey" />
             <p />

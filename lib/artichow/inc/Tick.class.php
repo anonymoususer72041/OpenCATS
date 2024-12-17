@@ -275,11 +275,11 @@ class awTick
     {
         // Draw last tick
         if ($this->hideLast === false) {
-            //echo '<b>';
+            //echo '<strong>';
             if (($this->number - 1) % $this->interval === 0) {
                 $this->drawTick($drawer, $vector->p2, $from, $to);
             }
-            //echo '</b>';
+            //echo '</strong>';
         }
 
         $number = $this->number - 1;
@@ -310,7 +310,7 @@ class awTick
 
     protected function drawTick(awDrawer $drawer, awPoint $p, $from, $to)
     {
-        //	echo $this->size.':'.$angle.'|<b>'.cos($angle).'</b>/';
+        //	echo $this->size.':'.$angle.'|<strong>'.cos($angle).'</strong>/';
         // The round avoid some errors in the calcul
         // For example, 12.00000008575245 becomes 12
         $p1 = $p;

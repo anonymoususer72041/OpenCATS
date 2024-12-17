@@ -5,6 +5,7 @@ namespace OpenCATS\UI;
 class QuickActionMenu
 {
     private $dataItemType;
+    private $accessLevel;
 
     private $dataItemId;
 

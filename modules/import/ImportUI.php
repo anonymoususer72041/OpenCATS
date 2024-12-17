@@ -1524,7 +1524,7 @@ class ImportUI extends UserInterface
                     'errorMessage',
                     'You didn\'t upload any files or there was a '
                     . 'problem working with any files you uploaded. Please use the '
-                    . '<a href="javascript:back()"><b>Back</b></a> button on your web browser '
+                    . '<a href="javascript:back()"><strong>Back</strong></a> button on your web browser '
                     . 'and select one or more files to import.'
                 );
 
@@ -1574,8 +1574,8 @@ class ImportUI extends UserInterface
                 $this->_template->assign(
                     'errorMessage',
                     '<b style="font-size: 20px;">Information no Longer '
-                    . 'Available</b><br /><br />'
-                    . 'Ooops! You probably used the <b>back</b> or <b>refresh</b> '
+                    . 'Available</strong><br /><br />'
+                    . 'Ooops! You probably used the <strong>back</strong> or <strong>refresh</strong> '
                     . 'buttons on your browser. The information you previously had here is no longer '
                     . 'available. To start a new '
                     . 'mass resume import, <a style="font-size: 16px;" href="' . CATSUtility::getIndexName() . '?m=import&a=massImport&'

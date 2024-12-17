@@ -148,12 +148,12 @@
                                 </td>
                                 <td style="background-color: #<?php echo $col; ?>;"><?php echo $questionnaire['description']; ?></td>
                                 <td style="background-color: #<?php echo $col; ?>;"><?php echo $questionnaire['isActive'] ? 'Active' : 'Inactive'; ?></td>
-                                <td style="background-color: #<?php echo $col; ?>;" align="center"><input type="checkbox" name="removeQuestionnaire<?php echo $i; ?>" value="yes" /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                                <td style="background-color: #<?php echo $col; ?>;" style="text-align:center;"><input type="checkbox" name="removeQuestionnaire<?php echo $i; ?>" value="yes" /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
                             </tr>
                         <?php endfor; ?>
                         </table>
                     <?php else: ?>
-                        <span style="color: ##00008b;">You have no questionnaires. Click <b>Add Questionnaire</b> to create one.</span><br />
+                        <span style="color: ##00008b;">You have no questionnaires. Click <strong>Add Questionnaire</strong> to create one.</span><br />
                     <?php endif; ?>
 
                     <br />
@@ -240,7 +240,7 @@
                     <td class="tdVertical" valign="top" width="100%" height="330" nowrap="nowrap">
                         <table class="editTable" width="100%">
                             <tr>
-                                <td valign="top" align="center" nowrap="nowrap">
+                                <td valign="top" style="text-align:center;" nowrap="nowrap">
                                     <span id="textTemplateName" style="font-weight: bold; font-size: 18px;"></span>
                                     <br />
                                     <input type="button" class="button" value="Full Screen Preview" onclick="fullScreenPreview();" />

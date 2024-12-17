@@ -821,14 +821,14 @@ class JobOrders
      * @param string typecode
      * @return string human readable typecode
      */
-    public static function typeCodeToString($typeCode)
-    {
-        $jobTypes = (new JobOrderTypes())->getAll();
-        if (array_key_exists($typeCode, $jobTypes) && isset($jobTypes[$typeCode])) {
-            return $jobTypes[$typeCode];
-        }
-        return '(Unknown)';
+public static function typeCodeToString($typeCode)
+{
+    $jobTypes = (new JobOrderTypes())->getAll();
+    if (array_key_exists($typeCode, $jobTypes)) {
+        return $jobTypes[$typeCode];
     }
+    return '(Unknown)';
+}
 
     /**
      * Sets the administrative hide feature.  ASP site administrators

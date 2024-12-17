@@ -54,7 +54,7 @@
                         <th align="left" nowrap="nowrap">Key Skills</th>
                         <th align="left">Created</th>
                         <th align="left">Owner</th>
-                        <th align="center">Action</th>
+                        <th style="text-align:center;">Action</th>
                     </tr>
 
                     <?php foreach ($this->rs as $rowNumber => $data): ?>
@@ -88,7 +88,7 @@
                             <td valign="top" align="left"><?php $this->_($data['keySkills']); ?>&nbsp;</td>
                             <td valign="top" align="left" nowrap="nowrap"><?php $this->_($data['dateCreated']); ?>&nbsp;</td>
                             <td valign="top" align="left" nowrap="nowrap"><?php $this->_($data['ownerAbbrName']); ?>&nbsp;</td>
-                            <td align="center" nowrap="nowrap">
+                            <td style="text-align:center;" nowrap="nowrap">
                                 <a href="#" title="Show Candidate" onclick="javascript:openCenteredPopup('<?php echo(CATSUtility::getIndexName()); ?>?m=candidates&amp;a=show&amp;display=popup&amp;candidateID=<?php $this->_($data['candidateID']); ?>', 'viewCandidateDetails', 1000, 675, true); return false;">
                                     <img src="images/new_browser_inline.gif" alt="consider" width="16" height="16" border="0" class="absmiddle" />
                                 </a>

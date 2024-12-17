@@ -439,7 +439,7 @@ class CandidatesUI extends UserInterface
             return;
         }
 
-        if ($data['isAdminHidden'] == 1 && $this->getUserAccessLevel('candidates.hidden') < ACCESS_LEVEL_MULTI_SA) {
+        if (isset($data['isAdminHidden']) == 1 && $this->getUserAccessLevel('candidates.hidden') < ACCESS_LEVEL_MULTI_SA) {
             $this->listByView('This candidate is hidden - only a CATS Administrator can unlock the candidate.');
             return;
         }
@@ -448,17 +448,20 @@ class CandidatesUI extends UserInterface
          * of in the template.
          */
         $data['cityAndState'] = StringUtility::makeCityStateString(
-            $data['city'],
-            $data['state']
+            isset($data['city']) ? $data['city'] : '',
+            isset($data['state']) ? $data['state'] : ''
         );
+
 
         /*
          * Replace newlines with <br />, fix HTML "special" characters, and
          * strip leading empty lines and spaces.
          */
         $data['notes'] = trim(
-            nl2br(htmlspecialchars($data['notes'], ENT_QUOTES))
+            nl2br(htmlspecialchars($data['notes'] ?? '', ENT_QUOTES))
         );
+
+
 
         /* Chop $data['notes'] to make $data['shortNotes']. */
         if (strlen($data['notes']) > self::NOTES_MAXLEN) {
@@ -474,13 +477,13 @@ class CandidatesUI extends UserInterface
         }
 
         /* Format "can relocate" status. */
-        if ($data['canRelocate'] == 1) {
+        if (isset($data['canRelocate']) == 1) {
             $data['canRelocate'] = 'Yes';
         } else {
             $data['canRelocate'] = 'No';
         }
 
-        if ($data['isHot'] == 1) {
+        if (isset($data['isHot']) == 1) {
             $data['titleClass'] = 'jobTitleHot';
         } else {
             $data['titleClass'] = 'jobTitleCold';
@@ -597,7 +600,7 @@ class CandidatesUI extends UserInterface
         $_SESSION['CATS']->getMRU()->addEntry(
             DATA_ITEM_CANDIDATE,
             $candidateID,
-            $data['firstName'] . ' ' . $data['lastName']
+            isset($data['firstName']) . ' ' . isset($data['lastName'])
         );
 
         /* Is the user an admin - can user see history? */
@@ -617,25 +620,25 @@ class CandidatesUI extends UserInterface
             if ($EEOSettingsRS['genderTracking'] == 1) {
                 $EEOValues[] = [
                     'fieldName' => 'Gender',
-                    'fieldValue' => $data['eeoGenderText'],
+                    'fieldValue' => isset($data['eeoGenderText']),
                 ];
             }
             if ($EEOSettingsRS['ethnicTracking'] == 1) {
                 $EEOValues[] = [
                     'fieldName' => 'Ethnicity',
-                    'fieldValue' => $data['eeoEthnicType'],
+                    'fieldValue' => isset($data['eeoEthnicType']),
                 ];
             }
             if ($EEOSettingsRS['veteranTracking'] == 1) {
                 $EEOValues[] = [
                     'fieldName' => 'Veteran Status',
-                    'fieldValue' => $data['eeoVeteranType'],
+                    'fieldValue' => isset($data['eeoVeteranType']),
                 ];
             }
             if ($EEOSettingsRS['disabilityTracking'] == 1) {
                 $EEOValues[] = [
                     'fieldName' => 'Disability Status',
-                    'fieldValue' => $data['eeoDisabilityStatus'],
+                    'fieldValue' => isset($data['eeoDisabilityStatus']),
                 ];
             }
         }

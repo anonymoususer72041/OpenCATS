@@ -19,363 +19,372 @@
  */
 class Template
 {
-    private $_templateFile;
+    public $activityType;
+    public $departmentString;
+    public $placementsJobOrdersRS;
+    protected $_templateFile;
+    public $oldCandidateID;
+    public $newCandidateID;
+    public $rsOld = [];
+    public $rsNew = [];
 
-    private $_filters = [];
 
-    // Define properties that were previously dynamic
-    private $messageSuccess;
+    public $theImage;
 
-    private $message;
+    protected $_filters = [];
 
-    private $username;
+    protected $messageSuccess;
 
-    private $reloginVars;
+    protected $message;
 
-    private $siteName;
+    protected $username;
 
-    private $siteNameFull;
+    protected $reloginVars;
 
-    private $dateString;
+    protected $siteName;
 
-    private $dataGrid;
+    protected $siteNameFull;
 
-    private $dataGrid2;
+    protected $dateString;
 
-    private $placedRS;
+    protected $dataGrid;
 
-    private $upcomingEventsFupHTML;
+    protected $dataGrid2;
 
-    private $upcomingEventsHTML;
+    protected $placedRS;
 
-    private $active;
+    protected $upcomingEventsFupHTML;
 
-    private $numActivities;
+    protected $upcomingEventsHTML;
 
-    private $quickLinks;
+    protected $active;
 
-    private $totalJobOrders;
+    protected $numActivities;
 
-    private $errMessage;
+    protected $quickLinks;
 
-    private $totalCandidates;
+    protected $totalJobOrders;
 
-    private $userID;
+    protected $errMessage;
 
-    private $totalContacts;
+    protected $totalCandidates;
 
-    private $summaryHTML;
+    protected $userID;
 
-    private $statisticsData;
+    protected $totalContacts;
 
-    private $isDemoUser;
+    protected $summaryHTML;
 
-    private $subActive;
+    protected $statisticsData;
 
-    private $userIsSuperUser;
+    protected $isDemoUser;
 
-    private $superUserActive;
+    protected $subActive;
 
-    private $allowAjax;
+    protected $userIsSuperUser;
 
-    private $defaultPublic;
+    protected $superUserActive;
 
-    private $firstDayMonday;
+    protected $allowAjax;
 
-    private $userEmail;
+    protected $defaultPublic;
 
-    private $calendarEventTypes;
+    protected $firstDayMonday;
 
-    private $eventsString;
+    protected $userEmail;
 
-    private $view;
+    protected $calendarEventTypes;
 
-    private $year;
+    protected $eventsString;
 
-    private $month;
+    protected $view;
 
-    private $showEvent;
+    protected $year;
 
-    private $currentDateMDY;
+    protected $month;
 
-    private $allowEventReminders;
+    protected $showEvent;
 
-    private $dayHourStart;
+    protected $currentDateMDY;
 
-    private $dayHourEnd;
+    protected $allowEventReminders;
 
-    private $militaryTime;
+    protected $dayHourStart;
 
-    private $currentMonth;
+    protected $dayHourEnd;
 
-    private $currentYear;
+    protected $militaryTime;
 
-    private $currentDay;
+    protected $currentMonth;
 
-    private $currentHour;
+    protected $currentYear;
 
-    private $md5InstanceName;
+    protected $currentDay;
 
-    private $arrayKeysString;
+    protected $currentHour;
 
-    private $counterFilters;
+    protected $md5InstanceName;
 
-    private $data;
+    protected $arrayKeysString;
 
-    private $isPopup;
+    protected $counterFilters;
 
-    private $attachmentsRS;
+    protected $data;
 
-    private $extraFieldRS;
+    protected $isPopup;
 
-    private $EEOSettingsRS;
+    protected $attachmentsRS;
 
-    private $EEOValues;
+    protected $extraFieldRS;
 
-    private $isShortNotes;
+    protected $EEOSettingsRS;
 
-    private $calendarRS;
+    protected $EEOValues;
 
-    private $assignedTags;
+    protected $isShortNotes;
 
-    private $privledgedUser;
+    protected $calendarRS;
 
-    private $pipelinesRS;
+    protected $assignedTags;
 
-    private $lists;
+    protected $privledgedUser;
 
-    private $activityRS;
+    protected $pipelinesRS;
 
-    private $listRS;
+    protected $lists;
 
-    private $savedSearchRS;
+    protected $activityRS;
 
-    private $isResumeMode;
+    protected $listRS;
 
-    private $isResultsMode;
+    protected $savedSearchRS;
 
-    private $mode;
+    protected $isResumeMode;
 
-    private $pager;
+    protected $isResultsMode;
 
-    private $exportForm;
+    protected $mode;
 
-    private $departmentsRS;
+    protected $pager;
 
-    private $jobOrdersRS;
+    protected $exportForm;
 
-    private $contactsRSWC;
+    protected $departmentsRS;
 
-    private $contactsRS;
+    protected $jobOrdersRS;
 
-    private $companyID;
+    protected $contactsRSWC;
 
-    private $contactID;
+    protected $contactsRS;
 
-    private $isFinishedMode;
+    protected $companyID;
 
-    private $onlyScheduleEvent;
+    protected $contactID;
 
-    private $changesMade;
+    protected $isFinishedMode;
 
-    private $eventHTML;
+    protected $onlyScheduleEvent;
 
-    private $modal;
+    protected $changesMade;
 
-    private $errorTitle;
+    protected $eventHTML;
 
-    private $errorMessage;
+    protected $modal;
 
-    private $isDemo;
+    protected $errorTitle;
 
-    private $careerPortalUnlock;
+    protected $errorMessage;
 
-    private $careerPortalSettings;
+    protected $isDemo;
 
-    private $careerPortalSettingsRS;
+    protected $careerPortalUnlock;
 
-    private $careerPortalURL;
+    protected $careerPortalSettings;
 
-    private $careerPortalTemplateNames;
+    protected $careerPortalSettingsRS;
 
-    private $careerPortalTemplateCustomNames;
+    protected $careerPortalURL;
 
-    private $template;
+    protected $careerPortalTemplateNames;
 
-    private $submissionJobOrdersRS;
+    protected $careerPortalTemplateCustomNames;
 
-    private $reportTitle;
+    protected $template;
+
+    protected $submissionJobOrdersRS;
+
+    protected $reportTitle;
 
     public $sessionCookie;
 
-    private $candidateID;
+    protected $candidateID;
 
-    private $defaultCompanyID;
+    protected $defaultCompanyID;
 
-    private $RS;
+    protected $RS;
 
-    private $selectedCompanyID;
+    protected $selectedCompanyID;
 
-    private $noCompanies;
+    protected $noCompanies;
 
-    private $jobTypes;
+    protected $jobTypes;
 
-    private $careerPortalEnabled;
+    protected $careerPortalEnabled;
 
-    private $questionnaires;
+    protected $questionnaires;
 
-    private $systemAdministration;
+    protected $systemAdministration;
 
-    private $calendarSettingsRS;
+    protected $calendarSettingsRS;
 
-    private $timeZone;
+    protected $timeZone;
 
-    private $isDateDMY;
+    protected $isDateDMY;
 
-    private $rs;
+    protected $rs;
 
-    private $regardingRS;
+    protected $regardingRS;
 
-    private $activityAdded;
+    protected $activityAdded;
 
-    private $reportsToRS;
+    protected $reportsToRS;
 
-    private $tagsRS;
+    protected $tagsRS;
 
-    private $topLog;
+    protected $topLog;
 
-    private $sourceInRS;
+    protected $sourceInRS;
 
-    private $sourcesRS;
+    protected $sourcesRS;
 
-    private $sourcesString;
+    protected $sourcesString;
 
-    private $emailTemplateDisabled;
+    protected $emailTemplateDisabled;
 
-    private $canEmail;
+    protected $canEmail;
 
-    private $usersRS;
+    protected $usersRS;
 
-    private $isModal;
+    protected $isModal;
 
-    private $isParsingEnabled;
+    protected $isParsingEnabled;
 
-    private $associatedAttachment;
+    protected $associatedAttachment;
 
-    private $associatedTextResume;
+    protected $associatedTextResume;
 
-    private $parsingStatus;
+    protected $parsingStatus;
 
-    private $contents;
+    protected $contents;
 
-    private $associatedAttachmentRS;
+    protected $associatedAttachmentRS;
 
-    private $subTemplateContents;
+    protected $subTemplateContents;
 
-    private $multipleFilesEnabled;
+    protected $multipleFilesEnabled;
 
-    private $uploadPath;
+    protected $uploadPath;
 
-    private $isPublic;
+    protected $isPublic;
 
-    private $questionnaireData;
+    protected $questionnaireData;
 
-    private $questionnaireID;
+    protected $questionnaireID;
 
-    private $pipelineEntriesPerPage;
+    protected $pipelineEntriesPerPage;
 
-    private $jobOrderID;
+    protected $jobOrderID;
 
-    private $pipelineGraph;
+    protected $pipelineGraph;
 
-    private $license;
+    protected $license;
 
-    private $auth_mode;
+    protected $auth_mode;
 
-    private $accessLevels;
+    protected $accessLevels;
 
-    private $defaultAccessLevel;
+    protected $defaultAccessLevel;
 
-    private $categories;
+    protected $categories;
 
-    private $privledged;
+    protected $privledged;
 
-    private $loginAttempts;
+    protected $loginAttempts;
 
-    private $jobOrderFilters;
+    protected $jobOrderFilters;
 
-    private $pageStart;
+    protected $pageStart;
 
-    private $pageEnd;
+    protected $pageEnd;
 
-    private $totalResults;
+    protected $totalResults;
 
-    private $templateName;
+    protected $templateName;
 
-    private $wildCardString;
+    protected $wildCardString;
 
-    private $defaultCompanyRS;
+    protected $defaultCompanyRS;
 
-    private $extraFieldsForJobOrders;
+    protected $extraFieldsForJobOrders;
 
-    private $eeoEnabled;
+    protected $eeoEnabled;
 
-    private $extraFieldsForCandidates;
+    protected $extraFieldsForCandidates;
 
-    private $isJobOrdersMode;
+    protected $isJobOrdersMode;
 
-    private $pipelineRS;
+    protected $pipelineRS;
 
-    private $statusRS;
+    protected $statusRS;
 
-    private $selectedJobOrderID;
+    protected $selectedJobOrderID;
 
-    private $selectedStatusID;
+    protected $selectedStatusID;
 
-    private $statusChangeTemplate;
+    protected $statusChangeTemplate;
 
-    private $emailDisabled;
+    protected $emailDisabled;
 
-    private $notificationHTML;
+    protected $notificationHTML;
 
-    private $success;
+    protected $success;
 
-    private $recipients;
+    protected $recipients;
 
-    private $emailTemplatesRS;
+    protected $emailTemplatesRS;
 
-    private $dataItemDesc;
+    protected $dataItemDesc;
 
-    private $dataItemIDArray;
+    protected $dataItemIDArray;
 
-    private $savedListsRS;
+    protected $savedListsRS;
 
-    private $dataItemType;
+    protected $dataItemType;
 
-    private $success_to;
+    protected $success_to;
 
-    private $candidateIDArrayStored;
+    protected $candidateIDArrayStored;
 
-    private $candidateIDArray;
+    protected $candidateIDArray;
 
-    private $candidateJoborderStatusSendsMessage;
+    protected $candidateJoborderStatusSendsMessage;
 
-    private $mailerSettingsRS;
+    protected $mailerSettingsRS;
 
-    private $bulk;
+    protected $bulk;
 
-    private $typeOfImport;
+    protected $typeOfImport;
 
     /**
      * Prints $string with all HTML special characters converted to &codes;.
      *$isModa
-     * Ex: 'If x < 2 & x > 0, x = 1.' -> 'If x &lt; 2 &amp; x &gt; 0, x = 1.'.private $
+     * Ex: 'If x < 2 & x > 0, x = 1.' -> 'If x &lt; 2 &amp; x &gt; 0, x = 1.'.protected $
      *
      * @param string $string
      */
     public function _($string)
     {
-        echo(htmlspecialchars($string));
+        echo(htmlspecialchars($string ?? ''));
     }
 
     /**

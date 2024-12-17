@@ -164,7 +164,7 @@
                                     <tr>
                                         <td class="tdVertical">Notice:</td>
                                         <td class="tdData" style="color: #800000;">
-                                            <b>You are currently using your full allotment of active user accounts. Disable an existing account or upgrade your license to add another active user.</b>
+                                            <strong>You are currently using your full allotment of active user accounts. Disable an existing account or upgrade your license to add another active user.</strong>
                                         </td>
                                     </tr>
                                 <?php endif; ?>

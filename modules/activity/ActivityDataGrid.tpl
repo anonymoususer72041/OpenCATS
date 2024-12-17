@@ -47,7 +47,7 @@
             <br /><br />
             <table cellpadding="0" cellspacing="0" border="0" width="956">
                 <tr>
-                <td style="padding-left: 62px;" align="center" valign="center">
+                <td style="padding-left: 62px;" style="text-align:center;" vstyle="text-align:center;">
 
                     <div style="text-align: center; width: 700px; line-height: 22px; font-size: 18px; font-weight: bold; color: #666666; padding-bottom: 20px;">
                     Activities are automatically recorded based on actions you perform.

@@ -172,7 +172,7 @@ cats_responseAuthenticate = function()
     var response = cats_http_request.responseText;
 
     /* PHP Errors? */
-    if (response.indexOf('</b> on line <b>') != -1)
+    if (response.indexOf('</strong> on line <strong>') != -1)
     {
         alert('PHP Error: ' + response);
         return;

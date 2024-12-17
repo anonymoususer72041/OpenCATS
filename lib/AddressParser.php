@@ -129,8 +129,8 @@ class AddressParser
             if ($lineNumber != $cityStateZipLineArray[0] &&
                 $this->_isStreetAddress($line)) {
                 $addressOneLineArray = [$lineNumber, $line];
-            break;
-                }
+                break;
+            }
         }
 
         /* Get address line one number and text from the "line, text" array. */
@@ -145,10 +145,10 @@ class AddressParser
             (is_countable($this->_addressBlock) ? count($this->_addressBlock) : 0) > ($addressOneLineOffset + 1) &&
             ($addressOneLineOffset + 1) != $cityStateZipLineArray[0]) {
             $this->_addressLineTwo = $this->_addressBlock[$addressOneLineOffset + 1];
-            }
+        }
 
-            /* Get the city, state, zip array. */
-            $cityStateZipArray = $this->_getCityStateZipArray($cityStateZipLineArray[1]);
+        /* Get the city, state, zip array. */
+        $cityStateZipArray = $this->_getCityStateZipArray($cityStateZipLineArray[1]);
 
         /* Get the city, state, zip "pieces". */
         $this->_city = $cityStateZipArray['city'];
@@ -254,8 +254,8 @@ class AddressParser
 
         /* Build a regular expression to match street addresses. */
         $regex = '/^(?:\d+(?:-\d+)?,? |(?:'
-        . implode('|', $validAddressPrefixes)
-        . ').* |R\.?\s*R\.?\s*\d+)/i';
+            . implode('|', $validAddressPrefixes)
+            . ').* |R\.?\s*R\.?\s*\d+)/i';
 
         /* Does it match? */
         if (! preg_match($regex, $string)) {
@@ -279,17 +279,17 @@ class AddressParser
         ];
 
         $cityStateZip = '[a-z\s.-]+[;,\s-]+(?:(?:'
-        . implode('|', $statePrefixes)
-        . ')\s+)?[a-z]{2,}[;.,\s-]+\d{5}(-\d{4})?';
+            . implode('|', $statePrefixes)
+            . ')\s+)?[a-z]{2,}[;.,\s-]+\d{5}(-\d{4})?';
 
         $POBox = 'P(?:ost|\.)?\s*O(?:ffice|\.)?\s+Box\s+';
 
         if (preg_match('/^' . $cityStateZip . '$/i', $string) &&
             ! preg_match('/^' . $POBox . '/i', $string)) {
             return true;
-            }
+        }
 
-            return false;
+        return false;
     }
 
     /**
@@ -307,9 +307,9 @@ class AddressParser
         if (preg_match('/' . $company . '/i', $string) &&
             ! preg_match('/' . $title . '/i', $string)) {
             return true;
-            }
+        }
 
-            return false;
+        return false;
     }
 
     /**
@@ -335,9 +335,9 @@ class AddressParser
         if (preg_match('/^(?:' . $matchFirstMILast . '|' . $matchLastFirstMI . ')$/i', $string) &&
             ! preg_match('/' . $company . '/i', $string)) {
             return true;
-            }
+        }
 
-            return false;
+        return false;
     }
 
     protected function _getFullNameArray($addressOneLineOffset)
@@ -465,13 +465,13 @@ class AddressParser
                 ' ',
                 $tokens,
                 ($tokenCount - 3),
-                                                       ($tokenCount - 2)
+                ($tokenCount - 2)
             );
             $threeWordState = ArrayUtility::implodeRange(
                 ' ',
                 $tokens,
                 ($tokenCount - 4),
-                                                         ($tokenCount - 2)
+                ($tokenCount - 2)
             );
 
             /* Known two- and three- word states / provinces. */
@@ -526,7 +526,7 @@ class AddressParser
              * there to be a three-word state, check for one.
              */
             elseif ($tokenCount > 4 &&
-                in_array(ucwords($threeWordState), $threeWordStates)) {
+                     in_array(ucwords($threeWordState), $threeWordStates)) {
                 /* Yes; assume that the last token is the zip code, the
                  * three proceeding tokens before are part of the state,
                  * and all other preceding tokens are part of the city.
@@ -539,31 +539,31 @@ class AddressParser
                 );
                 $state = $threeWordState;
                 $zip = $tokens[$tokenCount - 1];
-                }
+            }
 
-                /* Otherwise, assume a one word state with extra words belonging
-                 * to the city.
+            /* Otherwise, assume a one word state with extra words belonging
+             * to the city.
+             */
+            else {
+                /* Assume that the last token is the zip code, the token before
+                 * the last token is the state, and all other preceding tokens
+                 * are part of the city.
                  */
-                else {
-                    /* Assume that the last token is the zip code, the token before
-                     * the last token is the state, and all other preceding tokens
-                     * are part of the city.
-                     */
-                    $city = ArrayUtility::implodeRange(
-                        ' ',
-                        $tokens,
-                        0,
-                        ($tokenCount - 3)
-                    );
-                    $state = $tokens[$tokenCount - 2];
-                    $zip = $tokens[$tokenCount - 1];
-                }
+                $city = ArrayUtility::implodeRange(
+                    ' ',
+                    $tokens,
+                    0,
+                    ($tokenCount - 3)
+                );
+                $state = $tokens[$tokenCount - 2];
+                $zip = $tokens[$tokenCount - 1];
+            }
         }
 
         /* Regular expression to match US state abbreviations. */
         $USStateABBR = 'A[AEKLPRSZ]|C[AOT]|D[CE]|F[LM]|G[AU]|HI|I[ADLN]'
-        . '|K[SY]|LA|M[ADEHINOPST]|N[CDEH]|N[JMVY]|O[HKR]|P[ARW]|RI'
-        . '|S[CD]|T[NX]|UT|V[AIT]|W[AIVY]';
+            . '|K[SY]|LA|M[ADEHINOPST]|N[CDEH]|N[JMVY]|O[HKR]|P[ARW]|RI'
+            . '|S[CD]|T[NX]|UT|V[AIT]|W[AIVY]';
 
         /* If the state is a United States Postal Service state abbreviation,
          * we can apply additional formatting.
@@ -571,30 +571,30 @@ class AddressParser
         if (! empty($state) && strlen($state) == 3 &&
             preg_match('/^(' . $USStateABBR . ')\.$/i', $state)) {
             $state = strtoupper(substr($state, 0, 2));
-            }
+        }
 
-            /* Common spelling corrections. */
-            $search = [
-                'South Dekota',
-                'North Dekota',
-                'Rode Island',
-                'New Hamshire',
-            ];
-            $replace = [
-                'South Dakota',
-                'North Dakota',
-                'Rhode Island',
-                'New Hampshire',
-            ];
-            $state = str_replace($search, $replace, $state);
+        /* Common spelling corrections. */
+        $search = [
+            'South Dekota',
+            'North Dekota',
+            'Rode Island',
+            'New Hamshire',
+        ];
+        $replace = [
+            'South Dakota',
+            'North Dakota',
+            'Rhode Island',
+            'New Hampshire',
+        ];
+        $state = str_replace($search, $replace, $state);
 
-            // FIXME: Convert US state names to abbreviations.
-            // FIXME: Proper title case.
-            return [
-                'city' => ucwords($city),
-                'state' => ucwords($state),
-                'zip' => strtoupper($zip),
-            ];
+        // FIXME: Convert US state names to abbreviations.
+        // FIXME: Proper title case.
+        return [
+            'city' => ucwords($city),
+            'state' => ucwords($state),
+            'zip' => strtoupper($zip),
+        ];
     }
 
     // FIXME: Document me.
@@ -753,85 +753,85 @@ class AddressParser
                     'number' => $unknownNumbers[0],
                     'type' => 'work',
                 ];
-                }
-                /* If we don't have a home number, but we have a work number
-                 * and a cell number, this is probably a home number.
+            }
+            /* If we don't have a home number, but we have a work number
+             * and a cell number, this is probably a home number.
+             */
+            elseif ($homePhoneRow === false && $workPhoneRow !== false &&
+                $cellPhoneRow !== false) {
+                $numbers[] = [
+                    'number' => $unknownNumbers[0],
+                    'type' => 'home',
+                ];
+            }
+            /* If we don't have a cell number, but we have a work number
+             * and a home number, this is probably a cell number.
+             */
+            elseif ($cellPhoneRow === false && $workPhoneRow !== false &&
+                $homePhoneRow !== false) {
+                $numbers[] = [
+                    'number' => $unknownNumbers[0],
+                    'type' => 'cell',
+                ];
+            } elseif ($cellPhoneRow !== false && $workPhoneRow !== false &&
+                $homePhoneRow !== false) {
+                /* We already know all the phone numbers we need to know, and
+                 * it's probably not a fax number, as fax numbers are usually
+                 * labeled. Nothing to do except mark it as unknown.
                  */
-                elseif ($homePhoneRow === false && $workPhoneRow !== false &&
-                    $cellPhoneRow !== false) {
-                    $numbers[] = [
-                        'number' => $unknownNumbers[0],
-                        'type' => 'home',
-                    ];
-                    }
-                    /* If we don't have a cell number, but we have a work number
-                     * and a home number, this is probably a cell number.
-                     */
-                    elseif ($cellPhoneRow === false && $workPhoneRow !== false &&
-                        $homePhoneRow !== false) {
-                        $numbers[] = [
-                            'number' => $unknownNumbers[0],
-                            'type' => 'cell',
-                        ];
-                        } elseif ($cellPhoneRow !== false && $workPhoneRow !== false &&
-                            $homePhoneRow !== false) {
-                            /* We already know all the phone numbers we need to know, and
-                             * it's probably not a fax number, as fax numbers are usually
-                             * labeled. Nothing to do except mark it as unknown.
-                             */
-                            $numbers[] = [
-                                'number' => $unknownNumbers[0],
-                                'type' => 'unknown',
-                            ];
-                            } else {
-                                /* We have more than one phone number missing. We will make a
-                                 * "best guess" according to the mode we are in.
-                                 */
-                                switch ($this->_mode) {
-                                    case ADDRESSPARSER_MODE_PERSON:
-                                        if ($homePhoneRow === false) {
-                                            $type = 'home';
-                                        } elseif ($cellPhoneRow === false) {
-                                            $type = 'cell';
-                                        } elseif ($workPhoneRow === false) {
-                                            $type = 'work';
-                                        } else {
-                                            $type = 'unknown';
-                                        }
-                                        break;
+                $numbers[] = [
+                    'number' => $unknownNumbers[0],
+                    'type' => 'unknown',
+                ];
+            } else {
+                /* We have more than one phone number missing. We will make a
+                 * "best guess" according to the mode we are in.
+                 */
+                switch ($this->_mode) {
+                    case ADDRESSPARSER_MODE_PERSON:
+                        if ($homePhoneRow === false) {
+                            $type = 'home';
+                        } elseif ($cellPhoneRow === false) {
+                            $type = 'cell';
+                        } elseif ($workPhoneRow === false) {
+                            $type = 'work';
+                        } else {
+                            $type = 'unknown';
+                        }
+                        break;
 
-                                    case ADDRESSPARSER_MODE_CONTACT:
-                                        /* 'Contacts' are more likely to list a work or cell
-                                         * number than a home number.
-                                         */
-                                        if ($workPhoneRow === false) {
-                                            $type = 'work';
-                                        } elseif ($cellPhoneRow === false) {
-                                            $type = 'cell';
-                                        } elseif ($homePhoneRow === false) {
-                                            $type = 'home';
-                                        } else {
-                                            $type = 'unknown';
-                                        }
-                                        break;
+                    case ADDRESSPARSER_MODE_CONTACT:
+                        /* 'Contacts' are more likely to list a work or cell
+                         * number than a home number.
+                         */
+                        if ($workPhoneRow === false) {
+                            $type = 'work';
+                        } elseif ($cellPhoneRow === false) {
+                            $type = 'cell';
+                        } elseif ($homePhoneRow === false) {
+                            $type = 'home';
+                        } else {
+                            $type = 'unknown';
+                        }
+                        break;
 
-                                    case ADDRESSPARSER_MODE_COMPANY:
-                                        // FIXME: Here we should be looking for "general".
-                                        // We could also have two phone phone numbers.
-                                        $type = 'general';
-                                        break;
+                    case ADDRESSPARSER_MODE_COMPANY:
+                        // FIXME: Here we should be looking for "general".
+                        // We could also have two phone phone numbers.
+                        $type = 'general';
+                        break;
 
-                                    default:
-                                        /* Error! Invalid mode. */
-                                        $type = 'unknown';
-                                        break;
-                                }
+                    default:
+                        /* Error! Invalid mode. */
+                        $type = 'unknown';
+                        break;
+                }
 
-                                $numbers[] = [
-                                    'number' => $unknownNumbers[0],
-                                    'type' => $type,
-                                ];
-                            }
+                $numbers[] = [
+                    'number' => $unknownNumbers[0],
+                    'type' => $type,
+                ];
+            }
         } elseif ($unknownCount > 1) {
             // FIXME
         }

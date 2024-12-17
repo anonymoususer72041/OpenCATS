@@ -61,11 +61,11 @@ class NewVersionCheck
         /* Set a UID number if it does not exist. */
         if ($systemInfo['uid'] == 0) {
             $randMax = mt_getrandmax();
-            if ($randMax >= 100000000) {
-                $randMax = 100000000;
+            if ($randMax >= 100_000_000) {
+                $randMax = 100_000_000;
             }
 
-            $systemInfo['uid'] = mt_rand(1, $randMax);
+            $systemInfo['uid'] = random_int(1, $randMax);
             $systemInfoDb->updateUID($systemInfo['uid']);
         }
 

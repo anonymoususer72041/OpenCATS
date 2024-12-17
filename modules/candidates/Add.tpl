@@ -75,7 +75,7 @@
                             <input type="text" tabindex="1" name="firstName" id="firstName" class="inputbox" style="width: 150px" value="<?php if(isset($this->preassignedFields['firstName'])) $this->_($this->preassignedFields['firstName']); ?>" />&nbsp;*
                         </td>
 
-                        <td rowspan="12" align="center" valign="top">
+                        <td rowspan="12" style="text-align:center;" valign="top">
                             <?php if ($this->isParsingEnabled): ?>
                                 <input type="hidden" name="loadDocument" id="loadDocument" value="" />
                                 <input type="hidden" name="parseDocument" id="parseDocument" value="" />
@@ -110,7 +110,7 @@
                                             <textarea class="inputbox" tabindex="90" name="documentText" id="documentText" rows="5" cols="40" onmousemove="documentCheck();" onchange="documentCheck();" onmousedown="documentCheck();" onkeypress="documentCheck();" style="width: <?php if ($this->isModal): ?>320<?php else: ?>500<?php endif; ?>px; height: 210px; padding: 3px;"><?php echo $this->contents; ?></textarea>
                                             <br/>
                                             <div style="color: #666666; text-align: center;">
-                                            (<b>hint:</b> you may also paste the resume contents)
+                                            (<strong>hint:</strong> you may also paste the resume contents)
                                             <br /><br />
                                             Need to upload multiple resumes? <a href="<?php echo CATSUtility::getIndexName(); ?>?m=import&a=massImport">Click here!</a>
                                             </div>
@@ -284,7 +284,7 @@
                             <?php if ($this->associatedAttachment == 0): ?>
                                 <nobr> <?php /* FIXME:  remove nobr stuff */ ?>
                                     <?php if (isset($this->overAttachmentQuota)): ?>
-                                        <span style="font-size:10px;">(You have already reached your limit of <?php echo(FREE_ACCOUNT_SIZE/1024); ?> MB of attachments, and cannot add additional file attachments without upgrading to CATS Professional Hosted.)<br /></font>Copy and Paste Resume:&nbsp;
+                                        <span style="font-size:10px;">(You have already reached your limit of <?php echo(FREE_ACCOUNT_SIZE/1024); ?> MB of attachments, and cannot add additional file attachments without upgrading to CATS Professional Hosted.)<br /></span>Copy and Paste Resume:&nbsp;
                                     <?php else: ?>
                                         <input type="file" id="file" name="file" size="21" tabindex="<?php echo($tabIndex++); ?>" <?php if($this->associatedTextResume !== false): ?>disabled<?php endif; ?> /> &nbsp;
                                     <?php endif; ?>

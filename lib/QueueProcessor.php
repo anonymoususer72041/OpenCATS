@@ -105,7 +105,7 @@ class QueueProcessor
     {
         $db = DatabaseConnection::getInstance();
 
-        $completedTxt = date('c', ($completedTime ? $completedTime : time()));
+        $completedTxt = date('c', ($completedTime ?: time()));
 
         $sql = sprintf(
             "UPDATE
@@ -187,7 +187,7 @@ class QueueProcessor
 
         $rs = $db->getAssoc($sql);
 
-        if (! count($rs)) {
+        if (! (is_countable($rs) ? count($rs) : 0)) {
             // There are no current appropriate queues to process, quit
             return TASKRET_NO_TASKS;
         } else {
@@ -205,6 +205,7 @@ class QueueProcessor
     // FIXME: Document me.
     public static function getInstantiatedTask($taskPath)
     {
+        $curTask = null;
         // Figure out the name from the path
         $taskName = self::getTaskNameFromPath($taskPath);
 
@@ -512,7 +513,7 @@ class QueueProcessor
     public static function isTaskReady($schedule)
     {
         $valid = true;
-        list($minute, $hour, $dayofmonth, $month, $dayofweek) = explode(' ', $schedule);
+        [$minute, $hour, $dayofmonth, $month, $dayofweek] = explode(' ', $schedule);
         if ($minute != '*') {
             $match = false;
             foreach (explode(',', $minute) as $_minute) {

@@ -254,7 +254,6 @@ class Pager
             'name', 'city', 'state', 'clientName', 'title', 'firstName', 'lastName',
         ];
 
-
         /* Try to get default column data if not on an alpha column. */
         if ($defaultSortBy != '' && (method_exists($this, 'getNavigation') || method_exists($this, '_getNavigation'))) {
             $sortBy = $defaultSortBy;
@@ -342,7 +341,7 @@ class Pager
             /* This is the actual content. */
             if ($i == $this->_currentPage) {
                 echo sprintf(
-                    '<option selected value="">Page %s%s</option>',
+                    '<option selected="selected" value="">Page %s%s</option>',
                     $i,
                     $navText
                 );
@@ -357,7 +356,6 @@ class Pager
         }
 
         echo "\n", '</select>&nbsp;', "\n";
-
 
         /* If there is a next page, show "Next >>" as a link; otherwise just
          * as text.
@@ -394,13 +392,13 @@ class Pager
             /* $i+2, because every pair of records indicates the first and
              * last entry on a page.
              */
-            for ($i = 0; $i < count($rsNav); $i += 2) {
+            for ($i = 0; $i < (is_countable($rsNav) ? count($rsNav) : 0); $i += 2) {
                 $output = '';
 
                 /* If no corresponding 2nd entry, make one (1 entry on last
                  * page for example).
                  */
-                if (count($rsNav) == $i + 1) {
+                if ((is_countable($rsNav) ? count($rsNav) : 0) == $i + 1) {
                     $rsNav[$i + 1] = $rsNav[$i];
                 }
 
@@ -412,7 +410,7 @@ class Pager
                 /* If it is the last entry, go to the first or last letter
                  * in the alphabet.
                  */
-                if (count($rsNav) == $i + 2) {
+                if ((is_countable($rsNav) ? count($rsNav) : 0) == $i + 2) {
                     if ($sortDirection == 'ASC') {
                         $lastChar = ord('Z');
                     } else {

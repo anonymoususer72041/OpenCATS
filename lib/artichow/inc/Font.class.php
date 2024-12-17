@@ -58,8 +58,8 @@ class awFont
         $function(
             $drawer->resource,
             $this->font,
-            $drawer->x + $p->x,
-            $drawer->y + $p->y + $add,
+            (int)($drawer->x + $p->x),            // Cast to int
+            (int)($drawer->y + $p->y + $add),     // Cast to int
             $text->getText(),
             $rgb
         );
@@ -205,11 +205,11 @@ class awTTFFont extends awFont
                     $drawer->resource,
                     $this->size,
                     $text->getAngle(),
-                    $drawer->x + $p->x + $width * sin($text->getAngle() / 180 * M_PI) + $offsetRight,
-                    $drawer->y + $p->y + $height + $offsetTop,
-                    $rgb,
-                    $this->font,
-                    $theText
+                             (int)($drawer->x + $p->x + $width * sin($text->getAngle() / 180 * M_PI) + $offsetRight),  // Cast to int
+                             (int)($drawer->y + $p->y + $height + $offsetTop),  // Cast to int
+                             $rgb,
+                             $this->font,
+                             $theText
                 );
             }
             $offsetTop += 15;

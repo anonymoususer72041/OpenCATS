@@ -46,7 +46,7 @@ class Questionnaire
 {
     private $_siteID;
 
-    private $_db;
+    private \DatabaseConnection $_db;
 
     public function __construct($siteID)
     {
@@ -191,7 +191,7 @@ class Questionnaire
         // Put the data into a well-formatted php array
         for (
             $rowIndex = 0, $questions = [], $questionIndex = $questionID = -1;
-            $rowIndex < count($rs);
+            $rowIndex < (is_countable($rs) ? count($rs) : 0);
             $rowIndex++
         ) {
             if ($questionID != ($newID = $rs[$rowIndex]['questionID'])) {
@@ -575,7 +575,7 @@ class Questionnaire
 
         $qData = $this->get($questionnaireID);
         if (is_array($qData) && ! empty($qData)) {
-            if (! count($questions = $this->getQuestions($qData['questionnaireID']))) {
+            if (! (is_countable($questions = $this->getQuestions($qData['questionnaireID'])) ? count($questions = $this->getQuestions($qData['questionnaireID'])) : 0)) {
                 return false;
             }
 
@@ -616,7 +616,7 @@ class Questionnaire
                             $qData['questionnaireID'],
                             $question['questionID']
                         );
-                        $answerText = substr(trim(isset($postData[$index]) ? $postData[$index] : ''), 0, 255);
+                        $answerText = substr(trim($postData[$index] ?? ''), 0, 255);
                         $answerIDs = [];
                         break;
                 }

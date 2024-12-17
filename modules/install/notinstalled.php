@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-"http://www.w3.org/TR/html4/transitional.dtd">
 <?php include_once('config.php'); ?>
 <html>
     <head>

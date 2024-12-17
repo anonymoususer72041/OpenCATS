@@ -5,7 +5,7 @@
         <td>
         <td align="left" valign="top">
             <span style="color: #B67E00;">
-            <b>To help you get started as quickly as possible, we’ve prepared a few easy tasks.</b>
+            <strong>To help you get started as quickly as possible, we’ve prepared a few easy tasks.</strong>
             </span>
             <p />
             If you have any questions, comments or suggestions about OpenCATS, we’d love to hear your

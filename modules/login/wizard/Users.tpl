@@ -15,7 +15,7 @@ input.userAddField:focus { background-color: #D7E0F5; border: 1px solid #666666;
 
 #contentAddUser { position: absolute; left: 150px; top: 75px; margin: 5px 0 5px 0; padding: 20px; visibility: hidden; }
 </style>
-<b>Setup users who can access your OpenCATS site.</b>
+<strong>Setup users who can access your OpenCATS site.</strong>
 <br />
 <br />
 <table cellpadding="0" cellspacing="0" border="0" width="100%" class="userTable">
@@ -52,15 +52,15 @@ input.userAddField:focus { background-color: #D7E0F5; border: 1px solid #666666;
 
 <?php if ($this->userLicenses != 0 && $this->totalUsers >= $this->userLicenses): ?>
 <div style="font-size: 14px; margin-top: 10px;">
-You have <b><?php echo StringUtility::cardinal($this->userLicenses); ?></b> user licenses and they have all been used.
-You can get more by clicking <b>Settings</b>-><b>Administration</b>-><b>User Management</b> once you finish this wizard.
+You have <strong><?php echo StringUtility::cardinal($this->userLicenses); ?></strong> user licenses and they have all been used.
+You can get more by clicking <strong>Settings</strong>-><strong>Administration</strong>-><strong>User Management</strong> once you finish this wizard.
 </div>
 <?php else: ?>
 <table cellpadding="0" cellspacing="0" border="0" width="100%" class="informativeTable">
     <tr>
         <td align="left" valign="top" class="informativeColumn">
             <?php if ($this->userLicenses != 0): ?>
-            You are using <b><?php echo StringUtility::cardinal($this->totalUsers); ?></b> of your <b><?php echo StringUtility::cardinal($this->userLicenses); ?></b> user licenses.
+            You are using <strong><?php echo StringUtility::cardinal($this->totalUsers); ?></strong> of your <strong><?php echo StringUtility::cardinal($this->userLicenses); ?></strong> user licenses.
             <?php endif; ?>
         </td>
         <td align="right" valign="top">

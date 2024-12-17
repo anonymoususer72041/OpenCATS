@@ -57,13 +57,11 @@ class DatabaseConnection
     {
         if (self::$_instance == null) {
             self::$_instance = new DatabaseConnection();
-            if (!self::$_instance->connect()) {
-                throw new \RuntimeException('Unable to connect to database');
-            }
+            self::$_instance->connect();
             self::$_instance->setInTransaction(false);
         }
 
-        // Handle session-related settings safely.
+        // FIXME: Remove Session tight-coupling here.
         if (isset($_SESSION['CATS']) && $_SESSION['CATS']->isLoggedIn()) {
             self::$_instance->_timeZone = $_SESSION['CATS']->getTimeZoneOffset();
             self::$_instance->_dateDMY = $_SESSION['CATS']->isDateDMY();
@@ -104,6 +102,7 @@ class DatabaseConnection
 
     /**
      * Initiate a connection with the MySQL database. This is called by the
+     * constructor.
      *
      * @param string MySQL query or null to operate on the last executed query
      *               for this instance.
@@ -111,27 +110,41 @@ class DatabaseConnection
      */
     public function connect()
     {
-        mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+        $this->_connection = @mysqli_connect(
+            DATABASE_HOST,
+            DATABASE_USER,
+            DATABASE_PASS
+        );
+        // handle connection failures
+        if (! $this->_connection) {
+            $error = "errno: " . mysqli_connect_errno() . ", ";
+            $error .= "error: " . mysqli_connect_error();
 
-        try {
-            $this->_connection = mysqli_connect(DATABASE_HOST, DATABASE_USER, DATABASE_PASS);
+            die(
+                '<!-- NOSPACEFILTER --><p style="background: #ec3737; padding:'
+                . ' 4px; margin-top: 0; font: normal normal bold 12px/130% '
+                . 'Arial, Tahoma, sans-serif;">Error Connecting '
+                . "to Database</p><pre>\n\n" . $error . "</pre>\n\n"
+            );
+            return false;
+        }
+        mysqli_set_charset($this->_connection, SQL_CHARACTER_SET);
+        $isDBSelected = @mysqli_select_db($this->_connection, DATABASE_NAME);
+        if (! $isDBSelected) {
+            $error = "errno: " . mysqli_connect_errno() . ", ";
+            $error .= "error: " . mysqli_connect_error();
 
-            mysqli_set_charset($this->_connection, SQL_CHARACTER_SET);
-            $isDBSelected = mysqli_select_db($this->_connection, DATABASE_NAME);
-
-            if (!$isDBSelected) {
-                throw new \mysqli_sql_exception('Error selecting database: ' . DATABASE_NAME);
-            }
-        } catch (\mysqli_sql_exception $e) {
-            die('<p style="background: #ec3737; padding: 4px; margin-top: 0; font: normal normal bold 12px/130% Arial, Tahoma, sans-serif;">'
-            . 'Error Connecting to Database</p><pre>' . $e->getMessage() . '</pre>'
+            die(
+                '<!-- NOSPACEFILTER --><p style="background: #ec3737; '
+                . 'padding: 4px; margin-top: 0; font: normal normal bold '
+                . '12px/130% Arial, Tahoma, sans-serif;">Error Selecting '
+                . "Database</p><pre>\n\n" . $error . "</pre>\n\n"
             );
             return false;
         }
 
         return true;
     }
-
 
     /**
      * Executes a MySQL query against the current connection. Unless
@@ -240,7 +253,7 @@ class DatabaseConnection
      * @param integer Column number.
      * @return array Multi-dimensional associative result set array, or array()
      */
-    public function getColumn($row, $column, $query = null)
+    public function getColumn($query = null, $row, $column)
     {
         if ($query != null) {
             $this->query($query);
@@ -258,7 +271,6 @@ class DatabaseConnection
         mysqli_data_seek($this->_queryResult, $row);
         return mysqli_fetch_row($this->_queryResult);
     }
-
 
     /**
      * Returns one row from a query's result set in an associative array,

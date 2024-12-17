@@ -1,10 +1,10 @@
 <?php
 
 /*
- * CATS
+ * OPENCATS
  * Companies Datagrid
  *
- * CATS Version: 0.9.8.2
+ * OPENCATS Version: 0.9.8.2
  *
  * Copyright (C) 2005 - 2007 Cognizo Technologies, Inc.
  *
@@ -38,13 +38,34 @@ include_once(LEGACY_ROOT . '/lib/Width.php');
 
 class CompaniesListByViewDataGrid extends CompaniesDataGrid
 {
+    // Declare properties to avoid deprecated dynamic property creation
+    protected $_tableWidth;
+    protected $_defaultAlphabeticalSortBy;
+    public $ajaxMode;
+    public $showExportCheckboxes;
+    public $showActionArea;
+    public $showChooseColumnsBox;
+    public $allowResizing;
+    public $defaultSortBy;
+    public $defaultSortDirection;
+    protected $_defaultColumns;
+    protected $_db;
+    protected $_assignedCriterion;
+    protected $_dataItemIDColumn;
+    protected $_classColumns;
+    protected $_totalEntries;
+    protected $_currentPage;
+    protected $_totalPages;
+    public $globalStyle;
+    protected $_totalColumnWidths;
+
     public function __construct($siteID, $parameters, $misc)
     {
         /* Pager configuration. */
         $this->_tableWidth = new Width(100, '%');
         $this->_defaultAlphabeticalSortBy = 'name';
         $this->ajaxMode = false;
-        $this->showExportCheckboxes = true; //BOXES WILL NOT APPEAR UNLESS SQL ROW exportID IS RETURNED!
+        $this->showExportCheckboxes = true; // BOXES WILL NOT APPEAR UNLESS SQL ROW exportID IS RETURNED!
         $this->showActionArea = true;
         $this->showChooseColumnsBox = true;
         $this->allowResizing = true;
@@ -107,7 +128,7 @@ class CompaniesListByViewDataGrid extends CompaniesDataGrid
      */
     public function getInnerActionArea()
     {
-        //TODO: Add items:
+        // TODO: Add items:
         //  - Add to List
         //  - Add to Pipeline
         //  - Mass set rank (depends on each candidate having their own personal rank - are we going to do this?)
@@ -121,9 +142,14 @@ class CompaniesListByViewDataGrid extends CompaniesDataGrid
         return $html;
     }
 }
-
 class companiesSavedListByViewDataGrid extends CompaniesDataGrid
 {
+    protected $_tableWidth;
+    protected $_defaultAlphabeticalSortBy;
+    protected $_db;protected $_assignedCriterion;
+    protected $_classColumns;
+
+
     public function __construct($siteID, $parameters, $misc)
     {
         /* Pager configuration. */

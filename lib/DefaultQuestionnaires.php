@@ -31,7 +31,7 @@ include_once(LEGACY_ROOT . '/lib/Questionnaire.php');
 
 class DefaultQuestionnaireUtility
 {
-    private $_defaultQuestionnaires;
+    private array $_defaultQuestionnaires;
 
     public function __construct()
     {

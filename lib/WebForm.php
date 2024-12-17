@@ -1638,7 +1638,7 @@ class WebForm
 
             if (error)
             {
-                errorMessage = '<table><tr><td align="left" valign="center"><img src="<?php echo $this->_relPath; ?>images/wf_error.gif" border="0" align="left" style="padding-right: 5px;"/></td><td align="left" valign="center" class="wfErrorText">' + document.getElementById(obj.name + 'Caption').innerHTML + "</td></tr></table>";
+                errorMessage = '<table><tr><td align="left" vstyle="text-align:center;"><img src="<?php echo $this->_relPath; ?>images/wf_error.gif" border="0" align="left" style="padding-right: 5px;"/></td><td align="left" vstyle="text-align:center;" class="wfErrorText">' + document.getElementById(obj.name + 'Caption').innerHTML + "</td></tr></table>";
                 errorBox.style.left = '' + (xy[0] + 140) + 'px';
                 errorBox.style.top = '' + (xy[1] - 10) + 'px';
                 errorBox.style.visibility = 'visible';
@@ -1669,7 +1669,7 @@ class WebForm
                 helpBox.style.left = '' + (xy[0] + 140) + 'px';
                 helpBox.style.top = '' + (xy[1] - 30) + 'px';
                 helpBox.style.visibility = 'visible';
-                helpBox.innerHTML = '<b>' + title + '</b><br />' + desc + '<p><b>Rules:</b><br />' + rules;
+                helpBox.innerHTML = '<strong>' + title + '</strong><br />' + desc + '<p><strong>Rules:</strong><br />' + rules;
             }
         }
 

@@ -38,7 +38,7 @@ include_once(LEGACY_ROOT . '/lib/History.php');
  */
 class Pipelines
 {
-    private $_db;
+    private \DatabaseConnection $_db;
 
     private $_siteID;
 

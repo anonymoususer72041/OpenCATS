@@ -124,7 +124,7 @@ if ($phpVersionParts[0] >= 5) {
                                                 </tr>
                                                 <tr>
                                                     <td>Database Host: <span style="color: #ff0000">*</span></td>
-                                                    <td><input type="text" size="20" id="dbhost" value="localhost" /> (usually <i>localhost</i>)</td>
+                                                    <td><input type="text" size="20" id="dbhost" value="localhost" /> (usually <em>localhost</em>)</td>
                                                 </tr>
                                             </table>
                                             <br />
@@ -385,7 +385,7 @@ if ($phpVersionParts[0] >= 5) {
                                             <br />
                                             The installer is ready to restore your backup.<br />
                                             <br />
-                                            Please upload the file catsbackup.bak into the <b>restore</b> directory. The installer will load the data
+                                            Please upload the file catsbackup.bak into the <strong>restore</strong> directory. The installer will load the data
                                             out of the catsbackup.bak and set up your site accordingly, and then it will delete the file (preventing
                                             unauthorized access to the backup file).<br />
                                             <br />

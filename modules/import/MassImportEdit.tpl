@@ -26,7 +26,7 @@
                     <table cellpadding="0" cellspacing="0" border="0" width="100%" style="padding-top: 10px;">
                         <tr>
                             <td style="font-size: 14px; padding-top: 10px;">
-                                <b>* - Fields that are required for this document to be converted into a candidate.</b>
+                                <strong>* - Fields that are required for this document to be converted into a candidate.</strong>
                             </td>
                             <td align="right" valign="bottom">
                                 <input type="submit" value="Save ->" style="cursor: pointer;" />
@@ -233,7 +233,7 @@
                                 </div>
                             </td>
                             <td align="left" valign="top" width="600">
-                                File: <b><?php echo $this->document['realName']; ?></b> (<?php echo number_format(filesize($this->document['name'])/1024,0); ?>k)
+                                File: <strong><?php echo $this->document['realName']; ?></strong> (<?php echo number_format(filesize($this->document['name'])/1024,0); ?>k)
                                 <textarea name="document" id="document" class="documentViewer" rows="25" cols="40" onmouseup="documentMouseUp(this);" readonly><?php echo $this->document['contents']; ?></textarea>
                             </td>
                         </tr>

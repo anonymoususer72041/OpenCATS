@@ -40,7 +40,7 @@
                 <tr>
                     <td width="40%" align="left" valign="top">
                         <span style="font-size: 16px;">
-                        <b>Candidate Information:</b><br />
+                        <strong>Candidate Information:</strong><br />
                         <?php echo $this->cData['lastName'] . ', ' . $this->cData['firstName']; ?><br />
                         <?php echo $this->cData['address']; ?><br />
                         <?php echo ($str = $this->cData['city'] . ' ' . $this->cData['state'] . ' ' . $this->cData['zip']) . strlen($str) > 2 ? '<br />' : ''; ?>
@@ -51,11 +51,11 @@
                     </td>
                     <td align="left" valign="top" width="60%" style="padding-left: 10px;">
                         <span style="font-size: 14px;">
-                        <b>Notes:</b>
+                        <strong>Notes:</strong>
                         <br />
                         <?php echo $this->cData['notes']; ?>
                         <br /><br />
-                        <b>Will Relocate:</b><br />
+                        <strong>Will Relocate:</strong><br />
                         <?php echo $this->cData['canRelocate'] ? 'Yes' : 'No'; ?>
                         </span>
                     </td>
@@ -84,7 +84,7 @@
             <?php if (isset($this->resumeText) && !empty($this->resumeText)): ?>
             <br /><br />
             <span style="font-size: 14px;">
-            <b><?php echo $this->cData['firstName'] . ' ' . $this->cData['lastName']; ?>'s Resume:</b>
+            <strong><?php echo $this->cData['firstName'] . ' ' . $this->cData['lastName']; ?>'s Resume:</strong>
             <br />
             <div>
             <?php echo $this->resumeText; ?>

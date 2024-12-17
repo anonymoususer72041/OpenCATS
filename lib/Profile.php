@@ -36,7 +36,7 @@ class Profile
 {
     private $_siteID;
 
-    private $_db;
+    private \DatabaseConnection $_db;
 
     private $_savedProfileID;
 
@@ -818,6 +818,7 @@ class Profile
      */
     public function deleteField($profileID = false, $page = false, $columnName = false)
     {
+        $criterion = null;
         if (! ($profileID = ($profileID !== false ? $profileID : $this->_savedProfileID))) {
             return false;
         }

@@ -6,7 +6,7 @@
                     Review
                 </td>
                 <td align="right" valign="middle" class="infoFileText">
-                    <b><?php echo LicenseUtility::isParsingEnabled() ? 'Parsed and ' : ''; ?>Ready to Import</b> <?php echo number_format($cnt = count($this->documents), 0); ?>
+                    <strong><?php echo LicenseUtility::isParsingEnabled() ? 'Parsed and ' : ''; ?>Ready to Import</strong> <?php echo number_format($cnt = count($this->documents), 0); ?>
                     resume document<?php echo $cnt != 1 ? 's' : ''; ?>
                 </td>
             </tr>
@@ -40,14 +40,14 @@
     <div style="font-size: 14px;">
         <?php if (LicenseUtility::isParsingEnabled()): ?>
             CATS has attempted to extract relevant information like contact data, education and skill sets automatically.
-            This process is <b>not</b> an exact science and can sometimes guess incorrectly (or not at all). Click on a
+            This process is <strong>not</strong> an exact science and can sometimes guess incorrectly (or not at all). Click on a
             row above to find out more information.
             <br />
-            <b>Please review these results carefully and make any necessary changes before importing them!</b>
+            <strong>Please review these results carefully and make any necessary changes before importing them!</strong>
         <?php else: ?>
-            By default, these documents will be imported as <u>searchable</u> resume files and <b>not</b> as candidates.
+            By default, these documents will be imported as <span style="text-decoration:underline;">searchable</span> resume files and <strong>not</strong> as candidates.
             <br /><br />
-            <b>To import candidates: </b>Click on a document and manually enter information like name and
+            <strong>To import candidates: </strong>Click on a document and manually enter information like name and
             e-mail address. The document will then be imported as a candidate.
         <?php endif; ?>
     </div>
@@ -63,7 +63,7 @@
         ?>
         <span id="data_<?php echo $i; ?>_column_0" class="hiddenDataColumn">
             <a href="?m=import&a=massImportEdit&documentID=<?php echo $doc['id']; ?>">
-            <i><?php echo strlimit($doc['realName'], 25); ?></i> <font style="font-size: 11px;">(<?php echo number_format(@filesize($doc['name'])/1024); ?> KB)</font>
+            <em><?php echo strlimit($doc['realName'], 25); ?></em> <span style="font-size: 11px;">(<?php echo number_format(@filesize($doc['name'])/1024); ?> KB)</span>
             </a>
         </span>
         <span id="data_<?php echo $i; ?>_column_1" class="hiddenDataColumn"><?php echo isset($doc['firstName']) ? strlimit($doc['firstName'], 10) : ''; ?> <?php echo isset($doc['lastName']) ? strlimit($doc['lastName'], 10) : '&nbsp;'; ?>&nbsp;</span>

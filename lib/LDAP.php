@@ -7,13 +7,13 @@
 
 class LDAP
 {
-    private static $_instance;
+    private static ?\LDAP $_instance = null;
 
     public $failureUrl = '';
 
     private $_connection;
 
-    private $_bind;
+    private ?bool $_bind = null;
 
     public static function getInstance()
     {

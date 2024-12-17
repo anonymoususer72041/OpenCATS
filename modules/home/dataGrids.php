@@ -40,6 +40,27 @@ include_once(LEGACY_ROOT . '/lib/Width.php');
 class ImportantPipelineDashboard extends DataGrid
 {
     protected $_siteID;
+    protected $_tableWidth;
+    protected $_defaultAlphabeticalSortBy;
+    public $ajaxMode;
+    public $showExportColumn;
+    public $showExportCheckboxes;
+    public $showActionArea;
+    public $showChooseColumnsBox;
+    public $allowResizing;
+    public $dateCriterion;
+    public $globalStyle;
+    public $ignoreSavedColumnLayouts;
+    protected $_db;
+    protected $_assignedCriterion;
+    protected $_candidateIDColumn;
+    protected $_classColumns;
+    public $defaultSortBy;
+    public $defaultSortDirection;
+    protected $_totalEntries;
+    protected $_currentPage;
+    protected $_totalPages;
+    public $_totalColumnWidths;
 
     // FIXME: Fix ugly indenting - ~400 character lines = bad.
     public function __construct($siteID, $parameters)
@@ -230,6 +251,30 @@ include_once(LEGACY_ROOT . '/lib/InfoString.php');
 class CallsDataGrid extends DataGrid
 {
     protected $_siteID;
+    protected $_tableWidth;
+    protected $_defaultAlphabeticalSortBy;
+    public $ajaxMode;
+    public $showExportColumn;
+    public $showExportCheckboxes;
+    public $showActionArea;
+    public $allowSorting;
+    public $showChooseColumnsBox;
+    public $allowResizing;
+    public $dateCriterion;
+    public $globalStyle;
+    public $listStyle;
+    public $ignoreSavedColumnLayouts;
+    public $defaultSortBy;
+    public $defaultSortDirection;
+    protected $_db;
+    protected $_userID;
+    protected $_assignedCriterion;
+    protected $_dataItemIDColumn;
+    protected $_classColumns;
+    protected $_totalEntries;
+    protected $_currentPage;
+    protected $_totalPages;
+    protected $_totalColumnWidths;
 
     // FIXME: Fix ugly indenting - ~400 character lines = bad.
     public function __construct($siteID, $parameters)

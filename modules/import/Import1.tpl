@@ -95,7 +95,7 @@
             <?php if ($this->bulk['numBulkAttachments'] > 0 && $this->getUserAccessLevel('import.import') >= ACCESS_LEVEL_SA): ?>
             <br />
             <div style="background-color: #f0f0f0; color: #000000; border: 1px solid #000000; text-align: left; font-size: 14px; padding: 10px; margin: 0 0 15px 0; font-weight: normal;">
-                You have uploaded <b><?php echo number_format($this->bulk['numBulkAttachments'], 0); ?></b>
+                You have uploaded <strong><?php echo number_format($this->bulk['numBulkAttachments'], 0); ?></strong>
                 unclassified resume documents. You can search these documents; but, they are not attached to
                 candidates because candidate information (like their name, address, etc.) was not available when they were uploaded.
                 <br /><br />

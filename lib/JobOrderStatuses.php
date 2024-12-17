@@ -9,19 +9,43 @@
 
 /* Configuration in config.php. Ad if missing or rewrite these constants there. */
 /* Job Order statuses (not pipeline statuses)
+const JOB_ORDER_STATUS_GROUP = array(
+    'Open' => array ('Active', 'On Hold', 'Full'),
+    'Closed' => array('Closed', 'Canceled'),
+    'Pre-Open' => array('Upcoming', 'Lead')
+);
+Job order status(es) used for XML, RSS and Careers portal
+const JOB_ORDER_STATUS_SHARING = array(
+    'Active'
+);
+
+Filters that can be used on main job order grid, the first one will be default selected
+const JOB_ORDER_STATUS_FILTERING = array(
+    'Active / On Hold / Full',
+    'Active',
+    'On Hold / Full',
+    'Closed / Canceled',
+    'Upcoming / Lead'
+);
+
+Job order status(es) used for submission/placement statistics
+const JOB_ORDER_STATUS_STATISTICS = array(
+    'Active', 'On Hold', 'Full', 'Closed'
+);
+
 const JOB_ORDER_STATUS_DEFAULT = 'Active';
- */
+*/
 
 
 class JobOrderStatuses
 {
-    private static $_defaultStatusGroups = [
+    private static array $_defaultStatusGroups = [
         'Open' => ['Active', 'On Hold', 'Full'],
         'Closed' => ['Closed', 'Canceled'],
         'Pre-Open' => ['Upcoming', 'Lead'],
     ];
 
-    private static $_defaultFilters = [
+    private static array $_defaultFilters = [
         'Active / On Hold / Full',
         'Active',
         'On Hold / Full',
@@ -29,11 +53,11 @@ class JobOrderStatuses
         'Upcoming / Lead',
     ];
 
-    private static $_defaultSharingStatuses = ['Active'];
+    private static array $_defaultSharingStatuses = ['Active'];
 
-    private static $_defaultStatisticsStatuses = ['Active', 'OnHold', 'Full', 'Closed'];
+    private static array $_defaultStatisticsStatuses = ['Active', 'OnHold', 'Full', 'Closed'];
 
-    private static $_defaultStatus = 'Active';
+    private static string $_defaultStatus = 'Active';
 
     /**
      * Returns job order statuses from config or default

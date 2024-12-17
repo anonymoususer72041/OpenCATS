@@ -442,7 +442,7 @@ function AJAX_isCallInProgress(http)
  */
 function AJAX_isPHPError(responseText)
 {
-    return (responseText.indexOf('</b> on line <b>') != -1);
+    return (responseText.indexOf('</strong> on line <strong>') != -1);
 }
 
 

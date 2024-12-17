@@ -54,6 +54,7 @@ define('END_CENTRAL_DIRECTORY', 0x06054b50);
 class ZipFileCreator
 {
     /* Full path (absolute or relative) to the zip file we're writing. Set by
+     * the constructor.
      */
     private $_filename = '';
 
@@ -66,29 +67,29 @@ class ZipFileCreator
      * end of the zip file, so it must be stored in memory until we're done
      * writing all the files we need to write.
      */
-    private $_centralDirectory = '';
+    private string $_centralDirectory = '';
 
     /* Total number of file records added to the zip file. */
-    private $_fileRecordCount = 0;
+    private int $_fileRecordCount = 0;
 
     /* Last file offset position. This starts at 0 and is increased each time a
      * file is added.
      */
-    private $_lastOffset = 0;
+    private int $_lastOffset = 0;
 
     /* Total length of file records. This will eventually point to the starting
      * offset of the Central Directory.
      */
-    private $_fileRecordsLength = 0;
+    private int $_fileRecordsLength = 0;
 
     /* Total length of Central Directory. */
-    private $_centralDirectoryLength = 0;
+    private int $_centralDirectoryLength = 0;
 
     /* File handle for the open zip file we're writing as we're writing it. */
     private $_fileHandle = null;
 
     /* Current error message. */
-    private $_errorMessage = '';
+    private string $_errorMessage = '';
 
     public function __construct($filename, $allowOverwrite = false)
     {
@@ -287,7 +288,6 @@ class ZipFileCreator
         /* Extra field length. */
         $extraFieldLength = 0;
 
-
         /* Format:
          *
          * [4B] [Start of File Record Marker]
@@ -391,7 +391,6 @@ class ZipFileCreator
         $this->_fileRecordsLength += $fileRecordLength;
         ++$this->_fileRecordCount;
 
-
         /* Create the Central Directory entry for this file and append it
          * to the Central Directory (stored in memory for now until all file
          * records have been written).
@@ -445,7 +444,7 @@ class ZipFileCreator
         $uncompressedLength = filesize($filename);
 
         /* Calculate the CRC32 checksum of the file data to be compressed. */
-        $CRC32 = HashUtility::crc32File($filename);
+        $CRC32 = (new HashUtility())->crc32File($filename);
 
         /* Version needed to extract.
          *
@@ -549,7 +548,6 @@ class ZipFileCreator
 
         /* Extra field length. */
         $extraFieldLength = 0;
-
 
         /* Format:
          *
@@ -808,7 +806,6 @@ class ZipFileCreator
         /* Length of file comment. */
         $fileCommentLength = 0;
 
-
         /* Format:
          *
          * [4B] [Start of Central Directory Entry Marker]
@@ -934,6 +931,7 @@ class ZipFileCreator
 class ZipFileExtractor
 {
     /* Full path (absolute or relative) to the zip file we're reading. Set by
+     * the constructor.
      */
     private $_filename = '';
 
@@ -941,10 +939,10 @@ class ZipFileExtractor
     private $_fileHandle = null;
 
     /* Meta data and Central Directory. */
-    private $_metaData = [];
+    private array $_metaData = [];
 
     /* Current error message. */
-    private $_errorMessage = '';
+    private string $_errorMessage = '';
 
     public function __construct($filename)
     {
@@ -1053,7 +1051,7 @@ class ZipFileExtractor
         if (! $commentData) {
             $commentData = [''];
         }
-        list($metaData['comment']) = $commentData;
+        [$metaData['comment']] = $commentData;
 
         /* Is our central directory start offset valid? */
         $centralDirectoryOffset = $metaData['centralDirectoryStart'];
@@ -1212,7 +1210,7 @@ class ZipFileExtractor
             /* Read the filename into a string. */
             if ($metaData[$index]['filenameLength'] > 0) {
                 /* Attempt to extract the filename. */
-                list($metaData[$index]['filename']) = @unpack(
+                [$metaData[$index]['filename']] = @unpack(
                     'a*0',
                     substr($entry, 42, $metaData[$index]['filenameLength'])
                 );
@@ -1235,6 +1233,11 @@ class ZipFileExtractor
      */
     public function getFileByOffset($startOffset)
     {
+        $filenameLength = null;
+        $extraFieldLength = null;
+        $compressedSize = null;
+        $compressionMethod = null;
+        $CRC32 = null;
         /* Seek to the start of the central directory. */
         if (fseek($this->_fileHandle, $startOffset, SEEK_SET) === -1) {
             $this->_errorMessage = 'Unexpected end of file.';
@@ -1500,5 +1503,3 @@ class FileCompressorUtility
         return mktime($hour, $minute, $second, $month, $day, $year);
     }
 }
-?>
-

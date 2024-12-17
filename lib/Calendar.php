@@ -54,7 +54,7 @@ include_once(LEGACY_ROOT . '/lib/Mailer.php');
  */
 class Calendar
 {
-    private $_db;
+    private \DatabaseConnection $_db;
 
     private $_siteID;
 
@@ -81,6 +81,7 @@ class Calendar
      */
     public function getEventArray($month, $year)
     {
+        $array = [];
         // FIXME: Rewrite this query to use date ranges in WHERE, so that
         //        indexes can be used.
         $sql = sprintf(
@@ -665,6 +666,8 @@ class Calendar
      */
     public function getUpcomingEventsHTML($limit, $flag = UPCOMING_FOR_CALENDAR)
     {
+        $criteria = null;
+        $HTML = null;
         switch ($flag) {
             case UPCOMING_FOR_CALENDAR:
                 $HTML = '<div class="noteUnsizedSpan">My Upcoming Events / Calls</div>';
@@ -969,7 +972,7 @@ class Calendar
  */
 class CalendarSettings
 {
-    private $_db;
+    private \DatabaseConnection $_db;
 
     private $_siteID;
 

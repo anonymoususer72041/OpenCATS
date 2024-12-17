@@ -36,7 +36,7 @@
  */
 class History
 {
-    private $_db;
+    private \DatabaseConnection $_db;
 
     private $_siteID;
 
@@ -142,6 +142,7 @@ class History
      */
     public function storeHistoryDeleted($dataItemType, $dataItemID)
     {
+        $changedHistoryValues = [];
         $description = '(USER) deleted entry.';
 
         $changedHistoryValues[] = sprintf(
@@ -174,6 +175,7 @@ class History
         $category,
         $description
     ) {
+        $changedHistoryValues = [];
         $changedHistoryValues[] = sprintf(
             "(%s, %s, %s, NULL, NULL, %s, NOW(), %s, %s)",
             $dataItemType,
@@ -211,6 +213,7 @@ class History
         $after,
         $description
     ) {
+        $changedHistoryValues = [];
         $changedHistoryValues[] = sprintf(
             "(%s, %s, %s, %s, %s, %s, NOW(), %s, %s)",
             $dataItemType,
@@ -244,6 +247,7 @@ class History
         $dataItemID,
         $description
     ) {
+        $changedHistoryValues = [];
         $changedHistoryValues[] = sprintf(
             "(%s, %s, NULL, NULL, NULL, %s, NOW(), %s, %s)",
             $dataItemType,

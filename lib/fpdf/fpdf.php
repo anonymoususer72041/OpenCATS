@@ -355,7 +355,7 @@ if (! class_exists('FPDF')) {
         public function Error($msg)
         {
             //Fatal error
-            die('<B>FPDF error: </B>' . $msg);
+            die('<strong>FPDF error: </strong>' . $msg);
         }
 
         public function Open()

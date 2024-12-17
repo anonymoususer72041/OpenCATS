@@ -26,13 +26,13 @@
 
     <body style="background: #fff;">
         <div class="outer">
-            <p align="center" style="font-size:36px;"><?php echo($_SESSION['CATS']->getSiteName()); ?></p>
+            <p style="text-align:center;" style="font-size:36px;"><?php echo($_SESSION['CATS']->getSiteName()); ?></p>
 
-            <p align="center">Graph refreshes every 5 minutes. Press F11 to toggle fullscreen mode in most browsers.</p>
+            <p style="text-align:center;">Graph refreshes every 5 minutes. Press F11 to toggle fullscreen mode in most browsers.</p>
 
-            <p align="center"><img src="<?php $this->_($this->theImage); ?>" alt="Graph" /></p>
+            <p style="text-align:center;"><img src="<?php $this->_($this->theImage); ?>" alt="Graph" /></p>
 
-            <p align="center"><a href="#" onclick="window.close('fs'); return false;">Close Window</a></p>
+            <p style="text-align:center;"><a href="#" onclick="window.close('fs'); return false;">Close Window</a></p>
 
             <script type="text/javascript">
             if (document.images)
@@ -45,7 +45,7 @@
             }
             </script>
 
-            <p id="footerText" align="center">CATS Version <?php echo(CATSUtility::getVersion()); ?> build <?php echo(CATSUtility::getBuild()); ?>. Powered by <a href="http://www.opencats.org" target="_blank"><strong>OpenCATS</strong></a>.<br />
+            <p id="footerText" style="text-align:center;">CATS Version <?php echo(CATSUtility::getVersion()); ?> build <?php echo(CATSUtility::getBuild()); ?>. Powered by <a href="http://www.opencats.org" target="_blank"><strong>OpenCATS</strong></a>.<br />
             <span id="footerCopyright">&copy;2007-2023 OpenCATS All rights reserved.</span></p>
         </div>
     </body>

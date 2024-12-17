@@ -43,7 +43,7 @@ div.friendlyErrorMessage {
                             <?php echo $this->errorMessage; ?>
                             <?php if ($this->isDemo): ?>
                             <br /><br />
-                            You are logged in as a <b>demo account.</b> Demo accounts
+                            You are logged in as a <strong>demo account.</strong> Demo accounts
                             have several restrictions in place because of their inherent anonymity.
                             You may wish to sign up for a CATS Hosted account -- it's free,
                             and none of the demo restrictions are in place. To sign up, <a href="?a=getcats">click here</a>!

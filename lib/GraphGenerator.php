@@ -269,6 +269,9 @@ class GraphComparisonChart
 class pipelineStatisticsGraph
 {
     private $xLabels;
+    private $colorArray;
+    private $width;
+    private $height;
 
     private $xValues;
 

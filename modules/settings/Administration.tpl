@@ -36,7 +36,7 @@
                                     <?php if ($this->careerPortalUnlock): ?>
                                     <a href="<?php echo(CATSUtility::getIndexName()); ?>?m=settings&amp;a=careerPortalSettings">Careers Website</a>
                                     <?php else: ?>
-                                    <a href="http://www.catsone.com/?a=careerswebsite"><b>Careers Website</b></a>
+                                    <a href="http://www.catsone.com/?a=careerswebsite"><strong>Careers Website</strong></a>
                                     <?php endif; ?>
                                 </td>
                                 <td>
@@ -113,11 +113,11 @@
                                 <td>
                                     <img src="images/bullet_black.gif" alt="" />
                                     <a href="<?php echo(CATSUtility::getIndexName()); ?>?m=import">
-                                        <?php if (!$this->totalCandidates): ?><b><?php endif; ?>Data Import<?php if (!$this->totalCandidates): ?></b><?php endif; ?>
+                                        <?php if (!$this->totalCandidates): ?><strong><?php endif; ?>Data Import<?php if (!$this->totalCandidates): ?></strong><?php endif; ?>
                                     </a>
                                 </td>
                                 <td>
-                                    <?php if (!$this->totalCandidates): ?><b><?php endif; ?>Import resumes, candidates, companies or contacts from files on your computer.<?php if (!$this->totalCandidates): ?></b><?php endif; ?>
+                                    <?php if (!$this->totalCandidates): ?><strong><?php endif; ?>Import resumes, candidates, companies or contacts from files on your computer.<?php if (!$this->totalCandidates): ?></strong><?php endif; ?>
                                 </td>
                             </tr>
                             <tr>
@@ -211,7 +211,7 @@
                                         Scheduler
                                     </td>
                                     <td>
-                                        <i>Change how CATS interacts with the server to schedule tasks.</i>
+                                        <em>Change how CATS interacts with the server to schedule tasks.</em>
                                     </td>
                                 </tr>-->
                                 <tr>

@@ -49,7 +49,7 @@ include_once(LEGACY_ROOT . '/lib/Contacts.php');
  */
 class Companies
 {
-    private $_db;
+    private \DatabaseConnection $_db;
 
     private $_siteID;
 
@@ -835,7 +835,6 @@ class CompaniesDataGrid extends DataGrid
                 'filter' => 'company.phone2',
             ],
 
-
             'City' => [
                 'select' => 'company.city AS city',
                 'sortableColumn' => 'city',
@@ -843,7 +842,6 @@ class CompaniesDataGrid extends DataGrid
                 'alphaNavigation' => true,
                 'filter' => 'company.city',
             ],
-
 
             'State' => [
                 'select' => 'company.state AS state',
@@ -860,7 +858,6 @@ class CompaniesDataGrid extends DataGrid
                 'pagerWidth' => 50,
                 'filter' => 'company.zip',
             ],
-
 
             'Web Site' => [
                 'select' => 'company.url AS webSite',
@@ -894,7 +891,6 @@ class CompaniesDataGrid extends DataGrid
                 'alphaNavigation' => true,
                 'filter' => 'CONCAT(contact.first_name, contact.last_name)',
             ],
-
 
             'Created' => [
                 'select' => 'DATE_FORMAT(company.date_created, \'%m-%d-%y\') AS dateCreated',

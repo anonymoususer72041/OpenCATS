@@ -948,7 +948,7 @@ class TemplateUtility
      *
      * For example, lets say you had the following text:
      *
-     *   <a href="blah/blah.html?id=55"><b>My Link</b></a>
+     *   <a href="blah/blah.html?id=55"><strong>My Link</strong></a>
      *
      * If you wanted to remove the hyperlink from the text for every occurrence
      * of this format of link, you could use:
@@ -957,7 +957,7 @@ class TemplateUtility
      *       $HTML, '<a href="blah/blah.html?id=', '>', '</a>'
      *   );
      *
-     * and the link would be replaced with '<b>My Link</b>' in the returned
+     * and the link would be replaced with '<strong>My Link</strong>' in the returned
      * text / HTML.
      *
      * @param string output HTML to filter

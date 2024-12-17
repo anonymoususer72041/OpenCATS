@@ -14,11 +14,11 @@
                         <?php $this->dataGrid2->drawHTML();  ?>
                     </td>
 
-                    <td align="center" valign="top" style="text-align: left; font-size:11px; height:50px;">
+                    <td style="text-align:center;" valign="top" style="text-align: left; font-size:11px; height:50px;">
                         <?php echo($this->upcomingEventsFupHTML); ?>
                     </td>
 
-                    <td align="center" valign="top" style="text-align: left;font-size:11px; height:50px;">
+                    <td style="text-align:center;" valign="top" style="text-align: left;font-size:11px; height:50px;">
                         <?php echo($this->upcomingEventsHTML); ?>
                     </td>
                 </tr>
@@ -53,7 +53,7 @@
                         <?php endif; ?>
                     </td>
 
-                    <td align="center" valign="top" style="text-align: left; width: 50%; height: 240px;">
+                    <td style="text-align:center;" valign="top" style="text-align: left; width: 50%; height: 240px;">
                         <div class="noteUnsizedSpan">Hiring Overview</div>
                         <map name="dashboardmap" id="dashboardmap">
                            <area href="#" alt="Weekly" title="Weekly"

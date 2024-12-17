@@ -327,7 +327,7 @@ class TestOfHttpPostRequest extends UnitTestCase {
 		$socket->expectAt(0, 'write', array("Content-Length: 27\r\n"));
 		$socket->expectAt(1, 'write', array("Content-Type: text/xml\r\n"));
 		$socket->expectAt(2, 'write', array("\r\n"));
-		$socket->expectAt(3, 'write', array("<a><b>one</b><c>two</c></a>"));
+		$socket->expectAt(3, 'write', array("<a><strong>one</strong><c>two</c></a>"));
 
 		$route = new MockSimpleRoute();
 		$route->setReturnReference('createConnection', $socket);
@@ -335,7 +335,7 @@ class TestOfHttpPostRequest extends UnitTestCase {
 
 		$request = new SimpleHttpRequest(
 		$route,
-		new SimplePostEncoding('<a><b>one</b><c>two</c></a>', 'text/xml'));
+		new SimplePostEncoding('<a><strong>one</strong><c>two</c></a>', 'text/xml'));
 		$this->assertIsA($request->fetch(15), 'SimpleHttpResponse');
 	}
 }

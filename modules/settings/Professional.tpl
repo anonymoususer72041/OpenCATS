@@ -55,15 +55,15 @@ span.titleText {
                         helpful support services, and plug-ins to make finding and managing talent easier than ever.
                         <br /><br />
                         For more information on getting started and your Professional membership, please visit the CATS official
-                        Professional membership website at <a href="http://www.catsone.com/professional" target="_blank">www.catsone.com/<b>professional</b></a>.
+                        Professional membership website at <a href="http://www.catsone.com/professional" target="_blank">www.catsone.com/<strong>professional</strong></a>.
                         From there, you'll find information about the latest new releases and all the tools and resources
                         available to you.
                         <br /><br />
-                        <b>All the professional features in CATS have been unlocked and are ready-to-use.</b>
+                        <strong>All the professional features in CATS have been unlocked and are ready-to-use.</strong>
                         <br /><br />
-                        <b>Number of seats/user licenses: </b><?php echo ucfirst(StringUtility::cardinal($this->license->getNumberOfSeats())); ?>
+                        <strong>Number of seats/user licenses: </strong><?php echo ucfirst(StringUtility::cardinal($this->license->getNumberOfSeats())); ?>
                         <br />
-                        <b>Service valid until:</b> <?php echo date('F dS, Y', $this->license->getExpirationDate()); ?>
+                        <strong>Service valid until:</strong> <?php echo date('F dS, Y', $this->license->getExpirationDate()); ?>
 
                         </span>
                     </td>
@@ -87,18 +87,18 @@ span.titleText {
                         All the features available to you have been unlocked are are ready-to-use. To download
                         plug-ins, get the latest information about Professional or to upgrade or renew your
                         Professional account, visit our CATS Professional website at
-                        <a href="http://www.catsone.com/professional">http://www.catsone.com/<b>professional</b></a>.
+                        <a href="http://www.catsone.com/professional">http://www.catsone.com/<strong>professional</strong></a>.
                         </span>
                         <p />
-                        <b>Registered to:</b>
+                        <strong>Registered to:</strong>
                         <br />
                         <?php echo LicenseUtility::getName(); ?>
                         <p />
-                        <b>Valid until:</b>
+                        <strong>Valid until:</strong>
                         <br />
                         <?php echo date('F j, Y', LicenseUtility::getExpirationDate()); ?>
                         <p />
-                        <b>User licenses/seats:</b>
+                        <strong>User licenses/seats:</strong>
                         <br />
                         <?php echo ucfirst(StringUtility::cardinal(LicenseUtility::getNumberOfSeats())); ?> (<?php echo LicenseUtility::getNumberOfSeats(); ?>)
                         </span>
@@ -139,7 +139,7 @@ span.titleText {
                         </div>
                         <div style="font-size: 12px; color: #000000; text-align: justify;">
                         For more information on getting started and your Professional membership, please visit the CATS official
-                        Professional membership website at <a href="http://www.catsone.com/professional" target="_blank">www.catsone.com/<b>Professional</b></a>.
+                        Professional membership website at <a href="http://www.catsone.com/professional" target="_blank">www.catsone.com/<strong>Professional</strong></a>.
                         From there, you'll find information about the latest new releases and all the tools and resources
                         available to you.
                         </div>
@@ -151,7 +151,7 @@ span.titleText {
 
 
     <?php else: ?>
-        <center>
+        <div style="text-align:center;">
         <table>
             <tr>
                 <td valign="top" align="left" style="padding-right: 10px;">
@@ -162,7 +162,7 @@ span.titleText {
                         <tr>
                             <td width="50%" valign="top" align="left" style="padding-right: 20px; padding-bottom: 10px;">
                                 <div style="width: 100%; padding: 5px; background-color: #D5E4F6; font-size: 14px;">
-                                    <b>Plug-ins and Add-ons</b>
+                                    <strong>Plug-ins and Add-ons</strong>
                                     <br />
                                     <span style="font-size: 12px; line-height: 14px; color: #666666;">
                                     Import candidates from Monster, HotJobs and others. Convert your resume documents
@@ -172,7 +172,7 @@ span.titleText {
                             </td>
                             <td width="50%" align="left" valign="top">
                                 <div style="width: 100%; padding: 5px; background-color: #E7F1FC; font-size: 14px;">
-                                    <b>No Hassles</b>
+                                    <strong>No Hassles</strong>
                                     <br />
                                     <span style="font-size: 12px; line-height: 14px; color: #666666;">
                                     Run CATS on your server. We'll support and manage it, keeping it up to date
@@ -184,7 +184,7 @@ span.titleText {
                         <tr>
                             <td width="50%" valign="top" align="left" style="padding-right: 20px; padding-bottom: 10px;">
                                 <div style="width: 100%; padding: 5px; background-color: #D5E4F6; font-size: 14px;">
-                                    <b>CD-ROM</b>
+                                    <strong>CD-ROM</strong>
                                     <br />
                                     <span style="font-size: 12px; line-height: 14px; color: #666666;">
                                     Turn any ordinary computer into a CATS server with our optional CD-ROM installer.
@@ -194,7 +194,7 @@ span.titleText {
                             </td>
                             <td width="50%" align="left" valign="top">
                                 <div style="width: 100%; padding: 5px; background-color: #E7F1FC; font-size: 14px;">
-                                    <b>Custom Servers</b>
+                                    <strong>Custom Servers</strong>
                                     <br />
                                     <span style="font-size: 12px; line-height: 14px; color: #666666;">
                                     Purchase an optional custom server pre-loaded with CATS Professinal. Just plug it
@@ -206,7 +206,7 @@ span.titleText {
                         <tr>
                             <td width="50%" valign="top" align="left" style="padding-right: 20px; padding-bottom: 10px;">
                                 <div style="width: 100%; padding: 5px; background-color: #D5E4F6; font-size: 14px;">
-                                    <b>Growing?</b>
+                                    <strong>Growing?</strong>
                                     <br />
                                     <span style="font-size: 12px; line-height: 14px; color: #666666;">
                                     Is your business expanding? Add users or extend your support contract at any
@@ -216,7 +216,7 @@ span.titleText {
                             </td>
                             <td width="50%" align="left" valign="top">
                                 <div style="width: 100%; padding: 5px; background-color: #E7F1FC; font-size: 14px;">
-                                    <b>Regular Updates</b>
+                                    <strong>Regular Updates</strong>
                                     <br />
                                     <span style="font-size: 12px; line-height: 14px; color: #666666;">
                                     We'll keep your server up to date with the latest plug-ins and patches. You'll
@@ -254,7 +254,7 @@ span.titleText {
 
         <table cellpadding="0" cellspacing="0" border="0" width="100%" style="padding-top: 20px; padding-left: 25px;">
             <tr>
-                <td width="33%" align="center" valign="bottom">
+                <td width="33%" style="text-align:center;" valign="bottom">
                     <div style="width: 240px; text-align: left; font-size: 13px; font-weight: bold;">
                         <img src="images/massResumeImport.jpg" border="0" />
                         <br />
@@ -262,9 +262,9 @@ span.titleText {
                     </div>
                 </td>
 
-                <td width="33%" align="center" valign="bottom">
+                <td width="33%" style="text-align:center;" valign="bottom">
                     <div style="width: 280px;">
-                        <center>
+                        <div style="text-align:center;">
                         <a href="http://www.catsone.com/?a=addons">
                         <img src="images/toolbarImport.jpg" border="0" />
                         </a>
@@ -272,11 +272,11 @@ span.titleText {
                         <div style="width: 250px; text-align: left; font-size: 13px; font-weight: bold;">
                         Import candidates from websites using your web browser.
                         </div>
-                        </center>
+                        </div>
                     </div>
                 </td>
 
-                <td width="33%" align="center" valign="bottom">
+                <td width="33%" style="text-align:center;" valign="bottom">
                     <img src="images/serverSystem.jpg" border="0" />
                     <br />
                     <div style="width: 240px; text-align: left; font-size: 13px; font-weight: bold;">
@@ -317,7 +317,7 @@ span.titleText {
             </form>
         </div>
 
-        </center>
+        </div>
 
     <?php endif; ?>
 

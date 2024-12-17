@@ -103,11 +103,11 @@ class CATSUtility
             return 0;
         }
 
-        $data = file_get_contents('.svn/entries');
+        $data = @file_get_contents('.svn/entries');
 
         /* XML Data? */
         if ($data[0] === '<') {
-            $xml = simplexml_load_string($data);
+            $xml = @simplexml_load_string($data);
             if (! $xml || ! isset($xml->entry[0]['committed-rev'])) {
                 return 0;
             }
@@ -145,7 +145,7 @@ class CATSUtility
         }
 
         /* Try to read the existing config file. */
-        $config = file('config.php');
+        $config = @file('config.php');
         if ($config === false) {
             return false;
         }
@@ -159,7 +159,7 @@ class CATSUtility
             }
         }
 
-        $result = file_put_contents(
+        $result = @file_put_contents(
             'config.php',
             implode("\n", $newconfig) . "\n"
         );

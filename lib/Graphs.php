@@ -41,7 +41,7 @@ include_once(LEGACY_ROOT . '/lib/Statistics.php');
  */
 class Graphs
 {
-    private $_graphsEnabled;
+    private ?bool $_graphsEnabled = null;
 
     public function __construct()
     {
@@ -213,8 +213,8 @@ class Graphs
     public function verificationImage()
     {
         // FIXME: mt_rand()?!
-        srand((float) microtime() * 10000);
-        $string = strtoupper(md5(rand(0, 10000)));
+        mt_srand((float) microtime() * 10000);
+        $string = strtoupper(md5(random_int(0, 10000)));
         $verifyString = substr($string, 0, 6);
 
         /* Replace some numbers so all of the characters are quite obviousally

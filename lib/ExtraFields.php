@@ -37,7 +37,7 @@ include_once(LEGACY_ROOT . '/lib/Site.php');
 
 class ExtraFields
 {
-    private $_db;
+    private \DatabaseConnection $_db;
 
     private $_siteID;
 
@@ -705,7 +705,7 @@ class ExtraFields
         switch ($data['extraFieldType']) {
             case EXTRA_FIELD_CHECKBOX:
                 return [
-                 'select' => 'extra_field' . $uniqueIndex . '.value AS extra_field_value' . $uniqueIndex,
+                    'select' => 'extra_field' . $uniqueIndex . '.value AS extra_field_value' . $uniqueIndex,
                     'join' => 'LEFT JOIN extra_field AS extra_field' . $uniqueIndex . ' ' .
                                       'ON ' . $column . ' = extra_field' . $uniqueIndex . '.data_item_id ' .
                                       'AND extra_field' . $uniqueIndex . '.field_name = ' . $db->makeQueryString($data['fieldName']) . ' ' .
@@ -715,7 +715,7 @@ class ExtraFields
                     'sortableColumn' => 'extra_field_value' . $uniqueIndex,
                     'pagerWidth' => 45,
                     'filter' => 'IF (extra_field' . $uniqueIndex . '.value = "Yes", "Yes", "No")',
-            ];
+                ];
                 break;
 
             case EXTRA_FIELD_DATE:
@@ -865,7 +865,7 @@ class ExtraFields
     {
         $extraFields = $this->_getValuesWithSettings($dataItemID);
 
-        for ($i = 0; $i < count($extraFields); $i++) {
+        for ($i = 0; $i < (is_countable($extraFields) ? count($extraFields) : 0); $i++) {
             if (isset($_POST['extraField' . $i]) && $extraFields[$i]['value'] != $_POST['extraField' . $i]) {
                 $this->setValue($extraFields[$i]['fieldName'], $_POST['extraField' . $i], $dataItemID);
             }

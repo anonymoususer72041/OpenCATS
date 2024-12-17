@@ -548,9 +548,9 @@ class SphinxClient
     /// $words is a string which contains the words to highlight
     /// $opts is a hash which contains additional optional highlighting parameters:
     ///		"before_match"
-    ///			a string to insert before a set of matching words, default is "<b>"
+    ///			a string to insert before a set of matching words, default is "<strong>"
     ///		"after_match"
-    ///			a string to insert after a set of matching words, default is "<b>"
+    ///			a string to insert after a set of matching words, default is "<strong>"
     ///		"chunk_separator"
     ///			a string to insert between excerpts chunks, default is " ... "
     ///		"limit"
@@ -576,10 +576,10 @@ class SphinxClient
         /////////////////
 
         if (! isset($opts["before_match"])) {
-            $opts["before_match"] = "<b>";
+            $opts["before_match"] = "<strong>";
         }
         if (! isset($opts["after_match"])) {
-            $opts["after_match"] = "</b>";
+            $opts["after_match"] = "</strong>";
         }
         if (! isset($opts["chunk_separator"])) {
             $opts["chunk_separator"] = " ... ";

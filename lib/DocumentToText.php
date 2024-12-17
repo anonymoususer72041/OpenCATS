@@ -49,7 +49,7 @@ class DocumentToText
 
     private $_returnCode = -1;
 
-    private $_isError = false;
+    private bool $_isError = false;
 
     private $_error = '';
 
@@ -75,6 +75,7 @@ class DocumentToText
      */
     public function convert($fileName, $documentType)
     {
+        $filename = null;
         /* (Re?)initialize variables. */
         $this->_linesArray = [];
         $this->_linesString = '';

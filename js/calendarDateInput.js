@@ -172,7 +172,7 @@ function BuildCalendarDays() {
                BackColor = CalBGColor;
             }
             if ((this.displayed.yearValue == Today.getFullYear()) && (this.displayed.monthIndex == Today.getMonth()) && (Day == Today.getDate())) TextStyle += 'border:1px solid darkred;padding:0px;';
-            HTML += '<td align="center" class="calendarDateInput" style="cursor:default;height:' + CellHeight + ';width:' + CellWidth + ';' + TextStyle + ';background-color:' + BackColor + '" onclick="' + this.objName + '.pickDay(' + Day + ')" onmouseover="return ' + this.objName + '.displayed.dayHover(this,true,\'' + BackColor + '\',' + Day + ')" onmouseout="return ' + this.objName + '.displayed.dayHover(this,false,\'' + BackColor + '\')">' + Day + '</td>';
+            HTML += '<td style="text-align:center;" class="calendarDateInput" style="cursor:default;height:' + CellHeight + ';width:' + CellWidth + ';' + TextStyle + ';background-color:' + BackColor + '" onclick="' + this.objName + '.pickDay(' + Day + ')" onmouseover="return ' + this.objName + '.displayed.dayHover(this,true,\'' + BackColor + '\',' + Day + ')" onmouseout="return ' + this.objName + '.displayed.dayHover(this,false,\'' + BackColor + '\')">' + Day + '</td>';
          }
          else HTML += '<td class="calendarDateInput" style="height:' + CellHeight + '">&nbsp;</td>';
       }
@@ -683,15 +683,15 @@ function DateInput(DateName, Required, DateFormat, DefaultDate, TabIndex)
         writeln('<table width="' + (CellWidth * 7) + '" cellspacing="0" cellpadding="1">');
 
         writeln('<tr style="background-color:' + TopRowBGColor + ';">');
-        writeln('<td id="' + DateName + '_Previous_ID" style="cursor: default;" align="center" class="calendarDateInput" style="height: ' + CellHeight + '" onclick="' + objectName + '.previous.go();" onMouseDown="VirtualButton(this, true);" onMouseUp="VirtualButton(this, false);" onmouseover="return ' + objectName + '.previous.hover(this, true)" onmouseout="return ' + objectName + '.previous.hover(this, false);" title="' + object.previous.monthName + '"><img src="' + PrevURL + '"></td>');
-        writeln('<td id="' + DateName + '_Current_ID" style="cursor: pointer;" align="center" class="calendarDateInput" style="height: ' + CellHeight + '" colspan="5" onclick="' + objectName + '.displayed.goCurrent();" onmouseover="self.status=\'Click to view ' + CurrentDate.fullName + '\'; return true;" onmouseout="self.status = \'\'; return true;" title="Show Current Month">' + object.displayed.fullName + '</td>');
-        writeln('<td id="' + DateName + '_Next_ID" style="cursor: default;" align="center" class="calendarDateInput" style="height: ' + CellHeight + '" onclick="' + objectName + '.next.go();" onMouseDown="VirtualButton(this, true);" onMouseUp="VirtualButton(this, false);" onmouseover="return ' + objectName + '.next.hover(this, true);" onmouseout="return ' + objectName + '.next.hover(this, false);" title="' + object.next.monthName + '"><img src="' + NextURL + '" /></td>');
+        writeln('<td id="' + DateName + '_Previous_ID" style="cursor: default;" style="text-align:center;" class="calendarDateInput" style="height: ' + CellHeight + '" onclick="' + objectName + '.previous.go();" onMouseDown="VirtualButton(this, true);" onMouseUp="VirtualButton(this, false);" onmouseover="return ' + objectName + '.previous.hover(this, true)" onmouseout="return ' + objectName + '.previous.hover(this, false);" title="' + object.previous.monthName + '"><img src="' + PrevURL + '"></td>');
+        writeln('<td id="' + DateName + '_Current_ID" style="cursor: pointer;" style="text-align:center;" class="calendarDateInput" style="height: ' + CellHeight + '" colspan="5" onclick="' + objectName + '.displayed.goCurrent();" onmouseover="self.status=\'Click to view ' + CurrentDate.fullName + '\'; return true;" onmouseout="self.status = \'\'; return true;" title="Show Current Month">' + object.displayed.fullName + '</td>');
+        writeln('<td id="' + DateName + '_Next_ID" style="cursor: default;" style="text-align:center;" class="calendarDateInput" style="height: ' + CellHeight + '" onclick="' + objectName + '.next.go();" onMouseDown="VirtualButton(this, true);" onMouseUp="VirtualButton(this, false);" onmouseover="return ' + objectName + '.next.hover(this, true);" onmouseout="return ' + objectName + '.next.hover(this, false);" title="' + object.next.monthName + '"><img src="' + NextURL + '" /></td>');
         writeln('</tr>');
 
         writeln('<tr>');
         for (var w = 0; w < 7; w++)
         {
-            writeln('<td width="' + CellWidth + '" align="center" class="calendarDateInput" style="height:' + CellHeight + '; width:' + CellWidth + '; font-weight: bold; border-top: 1px solid dimgray; border-bottom: 1px solid dimgray;">' + WeekDays[w] + '</td>');
+            writeln('<td width="' + CellWidth + '" style="text-align:center;" class="calendarDateInput" style="height:' + CellHeight + '; width:' + CellWidth + '; font-weight: bold; border-top: 1px solid dimgray; border-bottom: 1px solid dimgray;">' + WeekDays[w] + '</td>');
         }
         writeln('</tr>');
 
@@ -839,15 +839,15 @@ function DateInputForDOM(DateName, Required, DateFormat, DefaultDate, TabIndex)
     outCode += ('<table width="' + (CellWidth * 7) + '" cellspacing="0" cellpadding="1">');
 
     outCode += ('<tr style="background-color:' + TopRowBGColor + ';">');
-    outCode += ('<td id="' + DateName + '_Previous_ID" style="cursor: default;" align="center" class="calendarDateInput" style="height: ' + CellHeight + '" onclick="' + objectName + '.previous.go();" onMouseDown="VirtualButton(this, true);" onMouseUp="VirtualButton(this, false);" onmouseover="return ' + objectName + '.previous.hover(this, true)" onmouseout="return ' + objectName + '.previous.hover(this, false);" title="' + object.previous.monthName + '"><img src="' + PrevURL + '"></td>');
-    outCode += ('<td id="' + DateName + '_Current_ID" style="cursor: pointer;" align="center" class="calendarDateInput" style="height: ' + CellHeight + '" colspan="5" onclick="' + objectName + '.displayed.goCurrent();" onmouseover="self.status=\'Click to view ' + CurrentDate.fullName + '\'; return true;" onmouseout="self.status = \'\'; return true;" title="Show Current Month">' + object.displayed.fullName + '</td>');
-    outCode += ('<td id="' + DateName + '_Next_ID" style="cursor: default;" align="center" class="calendarDateInput" style="height: ' + CellHeight + '" onclick="' + objectName + '.next.go();" onMouseDown="VirtualButton(this, true);" onMouseUp="VirtualButton(this, false);" onmouseover="return ' + objectName + '.next.hover(this, true);" onmouseout="return ' + objectName + '.next.hover(this, false);" title="' + object.next.monthName + '"><img src="' + NextURL + '" /></td>');
+    outCode += ('<td id="' + DateName + '_Previous_ID" style="cursor: default;" style="text-align:center;" class="calendarDateInput" style="height: ' + CellHeight + '" onclick="' + objectName + '.previous.go();" onMouseDown="VirtualButton(this, true);" onMouseUp="VirtualButton(this, false);" onmouseover="return ' + objectName + '.previous.hover(this, true)" onmouseout="return ' + objectName + '.previous.hover(this, false);" title="' + object.previous.monthName + '"><img src="' + PrevURL + '"></td>');
+    outCode += ('<td id="' + DateName + '_Current_ID" style="cursor: pointer;" style="text-align:center;" class="calendarDateInput" style="height: ' + CellHeight + '" colspan="5" onclick="' + objectName + '.displayed.goCurrent();" onmouseover="self.status=\'Click to view ' + CurrentDate.fullName + '\'; return true;" onmouseout="self.status = \'\'; return true;" title="Show Current Month">' + object.displayed.fullName + '</td>');
+    outCode += ('<td id="' + DateName + '_Next_ID" style="cursor: default;" style="text-align:center;" class="calendarDateInput" style="height: ' + CellHeight + '" onclick="' + objectName + '.next.go();" onMouseDown="VirtualButton(this, true);" onMouseUp="VirtualButton(this, false);" onmouseover="return ' + objectName + '.next.hover(this, true);" onmouseout="return ' + objectName + '.next.hover(this, false);" title="' + object.next.monthName + '"><img src="' + NextURL + '" /></td>');
     outCode += ('</tr>');
 
     outCode += ('<tr>');
     for (var w = 0; w < 7; w++)
     {
-        outCode += ('<td width="' + CellWidth + '" align="center" class="calendarDateInput" style="height:' + CellHeight + '; width:' + CellWidth + '; font-weight: bold; border-top: 1px solid dimgray; border-bottom: 1px solid dimgray;">' + WeekDays[w] + '</td>');
+        outCode += ('<td width="' + CellWidth + '" style="text-align:center;" class="calendarDateInput" style="height:' + CellHeight + '; width:' + CellWidth + '; font-weight: bold; border-top: 1px solid dimgray; border-bottom: 1px solid dimgray;">' + WeekDays[w] + '</td>');
     }
     outCode += ('</tr>');
 

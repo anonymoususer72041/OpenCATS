@@ -23,6 +23,7 @@
  * (or from the year in which this file was created to the year 2007) by
  * Cognizo Technologies, Inc. All Rights Reserved.
  *
+ *
  * @package    CATS
  * @subpackage Library
  * @copyright Copyright (C) 2005 - 2007 Cognizo Technologies, Inc.
@@ -41,6 +42,7 @@ class AJAXInterface
      * contain the <?xml tag.
      *
      * @param string Output XML.
+     * @return void
      */
     public function outputXMLPage($xmlString)
     {
@@ -54,12 +56,13 @@ class AJAXInterface
      * Echos an XML error document back to the company.
      *
      * @param string Error output XML.
+     * @return void
      */
     public function outputXMLErrorPage($errorCode, $errorMessage)
     {
         $this->outputXMLPage(
             "<data>\n" .
-            "    <errorcode>" . $errorCode . "</errorcode>\n" .
+            "    <errorcode>"    . $errorCode . "</errorcode>\n" .
             "    <errormessage>" . $errorMessage . "</errormessage>\n" .
             "</data>\n"
         );
@@ -69,6 +72,7 @@ class AJAXInterface
      * Echos an XML success document back to the company.
      *
      * @param string XML response message.
+     * @return void
      */
     public function outputXMLSuccessPage($response = 'Success!')
     {
@@ -90,13 +94,12 @@ class AJAXInterface
      * @param string Allow ID to be negative?
      * @return boolean Does the value pass all tests?
      */
-    public function isRequiredIDValid(
-        $key,
-        $allowZero = true,
-        $allowNegative = false
-    ) {
+    public function isRequiredIDValid($key, $allowZero = true,
+        $allowNegative = false)
+    {
         /* Return false if the key is not present. */
-        if (! isset($_REQUEST[$key])) {
+        if (!isset($_REQUEST[$key]))
+        {
             return false;
         }
 
@@ -105,22 +108,26 @@ class AJAXInterface
         /* Return false if the key is empty, or if the key is zero and
          * zero-values are not allowed.
          */
-        if (empty($value) && ($value !== '0' || ! $allowZero)) {
+        if (empty($value) && ($value !== '0' || !$allowZero))
+        {
             return false;
         }
 
         /* -0 should not be allowed. */
-        if ($value === '-0') {
+        if ($value === '-0')
+        {
             return false;
         }
 
         /* If allowing negatives, strip the first character if it's a '-'. */
-        if ($allowNegative && $value[0] === '-') {
+        if ($allowNegative && $value[0] === '-')
+        {
             $value = substr($value, 1);
         }
 
         /* Only allow digits. */
-        if (! ctype_digit($value)) {
+        if (!ctype_digit($value))
+        {
             return false;
         }
 
@@ -136,9 +143,10 @@ class AJAXInterface
      */
     public function isOptionalIDValid($key)
     {
-        if (isset($_REQUEST[$key]) && ! empty($_REQUEST[$key]) &&
+        if (isset($_REQUEST[$key]) && !empty($_REQUEST[$key]) &&
             ($_REQUEST[$key] == 'NULL' ||
-            ctype_digit((string) $_REQUEST[$key]))) {
+            ctype_digit((string) $_REQUEST[$key])))
+        {
             return true;
         }
 
@@ -149,12 +157,14 @@ class AJAXInterface
      * Returns true if a checkbox by the name of $key is checked in $request.
      *
      * @param string Request variable name / key.
+     * @param array $_GET, $_POST, or $_REQUEST
      * @return boolean Is checkbox checked?
      */
     public function isChecked($key)
     {
-        if (isset($_REQUEST[$key]) && ! empty($_REQUEST[$key]) &&
-            $_REQUEST[$key] != 'false' && $_REQUEST[$key] != 'off') {
+        if (isset($_REQUEST[$key]) && !empty($_REQUEST[$key]) &&
+            $_REQUEST[$key] != 'false' && $_REQUEST[$key] != 'off')
+        {
             return true;
         }
 
@@ -169,7 +179,8 @@ class AJAXInterface
      */
     public function getTrimmedInput($key)
     {
-        if (isset($_REQUEST[$key])) {
+        if (isset($_REQUEST[$key]))
+        {
             return trim($_REQUEST[$key]);
         }
 
@@ -185,8 +196,8 @@ class AJAXInterface
 class SecureAJAXInterface extends AJAXInterface
 {
     private $_siteID;
-
     private $_userID;
+
 
     public function __construct()
     {
@@ -196,10 +207,10 @@ class SecureAJAXInterface extends AJAXInterface
         session_start();
 
         /* Validate the session. */
-        if (! $this->isSessionLoggedIn()) {
+        if (!$this->isSessionLoggedIn())
+        {
             $this->outputXMLErrorPage(
-                -1,
-                'You are not logged in. Please log out and log back in.'
+                -1, 'You are not logged in. Please log out and log back in.'
             );
             die();
         }
@@ -210,6 +221,7 @@ class SecureAJAXInterface extends AJAXInterface
         /* Grab the current user's user ID. */
         $this->_userID = $_SESSION['CATS']->getUserID();
     }
+
 
     /**
      * Returns the current session's site ID.
@@ -238,11 +250,14 @@ class SecureAJAXInterface extends AJAXInterface
      */
     public function isSessionLoggedIn()
     {
-        if (! isset($_SESSION['CATS']) || empty($_SESSION['CATS']) ||
-            ! $_SESSION['CATS']->isLoggedIn()) {
+        if (!isset($_SESSION['CATS']) || empty($_SESSION['CATS']) ||
+            !$_SESSION['CATS']->isLoggedIn())
+        {
             return false;
         }
 
         return true;
     }
 }
+
+?>

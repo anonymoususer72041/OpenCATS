@@ -14,3 +14,4 @@ temp/*
 *.rej
 
 upload/addcandidate/jay cv_Copy2.docx
+*.swp

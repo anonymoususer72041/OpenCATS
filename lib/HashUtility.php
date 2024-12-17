@@ -44,7 +44,7 @@ class HashUtility
 
     public const CRC32_FINALXOR = 0xFFFFFFFF;
 
-    public const CRC32_READ_BLOCKSIZE = 1048576;
+    public const CRC32_READ_BLOCKSIZE = 1_048_576;
 
     public const INT_MAX = 0x7fffffff;
 
@@ -78,7 +78,7 @@ class HashUtility
             }
 
             // FIXME: Should this be in machine byte order, or always little endian?
-            list(, $hash) = unpack('V', $rawHash);
+            [, $hash] = unpack('V', $rawHash);
             return $hash;
         }
 

@@ -1678,7 +1678,7 @@ class CareersUI extends UserInterface
                 '<form style="padding:0;margin:0;border:0;" name="logout" id="logout" method="post" '
                 . 'action="%s%s"><input type="hidden" id="pa" name="pa" value="" />%s<div style="margin: 20px 0 20px 0; '
                 . 'line-height: 18px;"> '
-                . '<h3 style="font-weight: normal;"><b>Welcome back %s.</b>&nbsp;&nbsp;Not %s? '
+                . '<h3 style="font-weight: normal;"><strong>Welcome back %s.</strong>&nbsp;&nbsp;Not %s? '
                 . '<a href="javascript:void(0);" onclick="document.getElementById(\'pa\').value=\'logout\'; '
                 . 'document.logout.submit();">Log Out</a>.'
                 . '&nbsp;&nbsp;Need to update your information? <a href="javascript:void(0);" onclick="document.getElementById(\'pa\').value=\'updateProfile\'; '

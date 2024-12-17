@@ -274,7 +274,7 @@ use OpenCATS\UI\QuickActionMenu;
                         <td valign="top" align="left"><?php $this->_($jobOrdersData['pipeline']); ?></td>
                         <td valign="top" align="left"><?php $this->_($jobOrdersData['recruiterAbbrName']); ?></td>
                         <td valign="top" align="left"><?php $this->_($jobOrdersData['ownerAbbrName']); ?></td>
-                        <td valign="top" align="center">
+                        <td valign="top" style="text-align:center;">
                             <?php if ($this->getUserAccessLevel('joborders.edit') >= ACCESS_LEVEL_EDIT): ?>
                                 <a href="<?php echo(CATSUtility::getIndexName()); ?>?m=joborders&amp;a=edit&amp;jobOrderID=<?php $this->_($jobOrdersData['jobOrderID']) ?>">
                                     <img src="images/actions/edit.gif" width="16" height="16" class="absmiddle" alt="edit" border="0" />
@@ -305,7 +305,7 @@ use OpenCATS\UI\QuickActionMenu;
                     <th align="left" nowrap="nowrap">Cell Phone</th>
                     <th align="left">Created</th>
                     <th align="left">Owner</th>
-                    <th align="center">Action</th>
+                    <th style="text-align:center;">Action</th>
                 </tr>
 
                 <?php if (count($this->contactsRSWC) != 0): ?>
@@ -327,7 +327,7 @@ use OpenCATS\UI\QuickActionMenu;
                         <td valign="top" align="left"><?php $this->_($contactsData['phoneCell']) ?></td>
                         <td valign="top" align="left"><?php $this->_($contactsData['dateCreated']) ?></td>
                         <td valign="top" align="left"><?php $this->_($contactsData['ownerAbbrName']); ?></td>
-                        <td valign="top" align="center">
+                        <td valign="top" style="text-align:center;">
                             <?php if (!empty($contactsData['email1'])): ?>
                                 <a href="mailto:<?php $this->_($contactsData['email1']); ?>" title="Send E-Mail (<?php $this->_($contactsData['email1']); ?>)">
                                     <img src="images/actions/email.gif" width="16" height="16" alt="" class="absmiddle" border="0" />
@@ -365,7 +365,7 @@ use OpenCATS\UI\QuickActionMenu;
                         <td valign="top" align="left"><?php $this->_($contactsData['phoneCell']) ?></td>
                         <td valign="top" align="left"><?php $this->_($contactsData['dateCreated']) ?></td>
                         <td valign="top" align="left"><?php $this->_($contactsData['ownerAbbrName']); ?></td>
-                        <td valign="top" align="center">
+                        <td valign="top" style="text-align:center;">
                             <?php if (!empty($contactsData['email1'])): ?>
                                 <a href="mailto:<?php $this->_($contactsData['email1']); ?>">
                                     <img src="images/actions/email.gif" width="16" height="16" alt="" class="absmiddle" border="0" title="Send E-Mail (<?php $this->_($contactsData['email1']); ?>)"/>

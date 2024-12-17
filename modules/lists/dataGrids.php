@@ -38,6 +38,21 @@ include_once(LEGACY_ROOT . '/lib/Width.php');
 
 class ListsDataGrid extends DataGrid
 {
+    protected $_tableWidth = null;
+    protected $_defaultAlphabeticalSortBy = null;
+    public $ajaxMode = null;
+    public $showExportCheckboxes = null;
+    public $showActionArea = null;
+    public $showChooseColumnsBox = null;
+    public $allowResizing = null;
+    public $defaultSortBy = null;
+    public $defaultSortDirection = null;
+    protected $_classColumns = null;
+    protected $_totalEntries = null;
+    protected $_currentPage = null;
+    protected $_totalPages = null;
+    protected $_totalColumnWidths;
+    public $globalStyle = null;
     // FIXME: Fix ugly indenting - ~400 character lines = bad.
     public function __construct($siteID, $parameters, $misc)
     {

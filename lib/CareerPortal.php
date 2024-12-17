@@ -52,7 +52,7 @@ class CareerPortalSettings
         'CSS',
     ];
 
-    private $_db;
+    private \DatabaseConnection $_db;
 
     private $_siteID;
 

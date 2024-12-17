@@ -1,4 +1,4 @@
-<b>Please enter your e-mail address.</b>
+<strong>Please enter your e-mail address.</strong>
 <p />
 This will be set as your default OpenCATS e-mail address for notifications.
 <br />It will also be where

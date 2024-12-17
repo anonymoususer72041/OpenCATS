@@ -1262,25 +1262,25 @@ class Candidates
         return $this->_db->getColumn($sql, 0, 0);
     }
 
-    /**
-     * Removes a candidate's duplicate warning/link from the system.
-     * @param $oldCandidateID int the candidate that is going to stay
-     * @param $newCandidateID int the candidate that is going to be deleted after merge
-     */
-    public function removeDuplicity($oldCandidateID, $newCandidateID)
-    {
-        $sql = sprintf(
-            "DELETE FROM 
+     /**
+      * Removes a candidate's duplicate warning/link from the system.
+      * @param $oldCandidateID int the candidate that is going to stay
+      * @param $newCandidateID int the candidate that is going to be deleted after merge
+      */
+     public function removeDuplicity($oldCandidateID, $newCandidateID)
+     {
+         $sql = sprintf(
+             "DELETE FROM 
                     candidate_duplicates
                 WHERE
                     candidate_duplicates.old_candidate_id = %s
                 AND
                     candidate_duplicates.new_candidate_id = %s",
-            $this->_db->makeQueryStringOrNULL($oldCandidateID),
-            $this->_db->makeQueryStringOrNULL($newCandidateID)
-        );
-        $this->_db->query($sql);
-    }
+             $this->_db->makeQueryStringOrNULL($oldCandidateID),
+             $this->_db->makeQueryStringOrNULL($newCandidateID)
+         );
+         $this->_db->query($sql);
+     }
 
     /**
      * Adds a duplicate to the database.
