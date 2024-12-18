@@ -57,6 +57,8 @@ class GraphSimple
 
     private $title;
 
+    private $width;
+    private $height;
     public function __construct($xLabels, $xValues, $color, $title, $width, $height)
     {
         $this->xLabels = $xLabels;
@@ -129,6 +131,9 @@ class GraphPie
 
     private $title;
 
+    private $width;
+    private $height;
+
     public function __construct($xLabels, $xValues, $title, $width, $height)
     {
         $this->xLabels = $xLabels;
@@ -195,6 +200,9 @@ class GraphComparisonChart
     private $color;
 
     private $title;
+
+    private $width;
+    private $height;
 
     private $totalValue;
 
