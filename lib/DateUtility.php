@@ -135,23 +135,22 @@ class DateUtility
 
         switch ($toFormat) {
             case DATE_FORMAT_YYYYMMDD:
-                $dateFormat = '%Y' . $separator . '%m' . $separator . '%d';
+                $dateFormat = 'Y' . $separator . 'm' . $separator . 'd';
                 break;
 
             case DATE_FORMAT_DDMMYY:
-                $dateFormat = '%d' . $separator . '%m' . $separator . '%y';
+                $dateFormat = 'd' . $separator . 'm' . $separator . 'y';
                 break;
 
             case DATE_FORMAT_MMDDYY:
-                $dateFormat = '%m' . $separator . '%d' . $separator . '%y';
+                $dateFormat = 'm' . $separator . 'd' . $separator . 'y';
                 break;
         }
 
         /* Return the date in the correct format. */
-        return strftime($dateFormat, mktime(0, 0, 0, $month, $day, $year));
-    }
+        return date($dateFormat, mktime(0, 0, 0, $month, $day, $year));
 
-    /**
+}    /**
      * Returns true if the specified date string is a valid date in
      * MM-DD-YY format.
      *
@@ -453,15 +452,17 @@ class DateUtility
     {
         switch ($format) {
             case DATE_FORMAT_YYYYMMDD:
-                return strftime('%Y-%m-%d', $unixTime);
+                return date('Y-m-d', $unixTime);
                 break;
 
             case DATE_FORMAT_MMDDYY:
-                return strftime('%m-%d-%y', $unixTime);
+                // Replace strftime('%m-%d-%y', $unixTime) with date()
+                return date('m-d-y', $unixTime);
                 break;
 
             case DATE_FORMAT_DDMMYY:
-                return strftime('%d-%m-%y', $unixTime);
+                // Replace strftime('%d-%m-%y', $unixTime) with date()
+                return date('d-m-y', $unixTime);
                 break;
 
             case DATE_FORMAT_SECONDS:
