@@ -111,7 +111,7 @@ class CommonErrors
             case COMMONERROR_INVALIDMODULE:
                 $errorTitle = 'That Module is not Installed';
                 $internalErrorTitle = 'Bad Module';
-                $errorMessage = 'The module you requested, "<b>' . htmlentities($customMessage) . '</b>", doesn\'t exist or we haven\'t created it yet!<p>'
+                $errorMessage = 'The module you requested, "<b>' . htmlentities((string) $customMessage) . '</b>", doesn\'t exist or we haven\'t created it yet!<p>'
                     . 'One of the most amazing things about CATS is that through modules, you add new features '
                     . 'in the blink of an eye. Modules are like plug-ins, and perform specific tasks like integrating with '
                     . 'job boards or keeping your calendar up to date. You\'re getting this message because you followed '
@@ -308,13 +308,13 @@ class CommonErrors
             . 'domain, request, backtrace, date) VALUES (%d, %d, "%s", "%s", %d, "%s", "%s", "%s", "%s", NOW())',
             $siteID,
             $userID,
-            addslashes($internalErrorTitle),
-            addslashes($customMessage),
+            addslashes((string) $internalErrorTitle),
+            addslashes((string) $customMessage),
             $accessLevel,
-            addslashes($_SERVER['SCRIPT_NAME']),
-            addslashes($_SERVER['SERVER_NAME']),
-            addslashes($_SERVER['QUERY_STRING']),
-            addslashes(self::getBacktrace())
+            addslashes((string) $_SERVER['SCRIPT_NAME']),
+            addslashes((string) $_SERVER['SERVER_NAME']),
+            addslashes((string) $_SERVER['QUERY_STRING']),
+            addslashes((string) self::getBacktrace())
         );
 
         $rs = $db->query($sql);

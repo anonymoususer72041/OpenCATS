@@ -63,10 +63,10 @@ class FeatureContext extends MinkContext implements Context, SnippetAcceptingCon
     public function thereIsAPersonCalledWith($fullName, $property)
     {
         $this->visitPath('/index.php?m=candidates&a=add');
-        list($firstName, $lastName) = explode(" ", $fullName);
+        list($firstName, $lastName) = explode(" ", (string) $fullName);
         $this->fillField('firstName', $firstName);
         $this->fillField('lastName', $lastName);
-        list($key, $value) = explode("=", $property);
+        list($key, $value) = explode("=", (string) $property);
         $this->fillField($key, $value);
         $this->pressButton('Add Candidate');
     }
@@ -189,7 +189,7 @@ class FeatureContext extends MinkContext implements Context, SnippetAcceptingCon
     protected function getScreenshotFilename()
     {
         $filename = $this->scenarioTitle;
-        $filename = preg_replace("#[^a-zA-Z0-9\._-]#", '_', $filename);
+        $filename = preg_replace("#[^a-zA-Z0-9\._-]#", '_', (string) $filename);
 
         return sprintf('%s/%s.png', sys_get_temp_dir(), $filename);
     }
@@ -244,7 +244,7 @@ class FeatureContext extends MinkContext implements Context, SnippetAcceptingCon
      */
     public function thereIsAUserWithParams($userName, $fullName, $password)
     {
-        list($firstName, $lastName) = explode(" ", $fullName);
+        list($firstName, $lastName) = explode(" ", (string) $fullName);
         $siteId = $this->getSiteId();
         $users = new Users($siteId);
         $users->add(
@@ -267,7 +267,7 @@ class FeatureContext extends MinkContext implements Context, SnippetAcceptingCon
     public function assertPopupMessage($message)
     {
         return strpos(
-            $this->getSession()->getDriver()->getWebDriverSession()->getAlert_text(),
+            (string) $this->getSession()->getDriver()->getWebDriverSession()->getAlert_text(),
             $message
         ) != -1;
     }

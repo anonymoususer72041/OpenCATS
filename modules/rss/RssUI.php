@@ -132,7 +132,7 @@ class RssUI extends UserInterface
             );
 
             // Fix URL if viewing from /rss without using globals or dirup '../'
-            if (strpos($_SERVER['PHP_SELF'], '/rss/') !== false) {
+            if (strpos((string) $_SERVER['PHP_SELF'], '/rss/') !== false) {
                 $uri = str_replace('/rss/', '/', $uri);
             }
 

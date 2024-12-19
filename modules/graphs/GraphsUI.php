@@ -598,7 +598,7 @@ class GraphsUI extends UserInterface
      *
      * @param string error message
      */
-    protected function fatal($error, $directoryOverride = '')
+    protected function fatal($error, $directoryOverride = ''): never
     {
         // FIXME: Generate an image containing the error message?
         die($error);

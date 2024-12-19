@@ -100,7 +100,7 @@ class WizardUI extends UserInterface
         for ($i = 0; $i < count($_SESSION['CATS_WIZARD']['pages']); $i++) {
             $js .= sprintf(
                 'addWizardPage("%s", %s, %s);%s',
-                addslashes($_SESSION['CATS_WIZARD']['pages'][$i]['title']),
+                addslashes((string) $_SESSION['CATS_WIZARD']['pages'][$i]['title']),
                 $_SESSION['CATS_WIZARD']['pages'][$i]['disableNext'] ? 'true' : 'false',
                 $_SESSION['CATS_WIZARD']['pages'][$i]['disableSkip'] ? 'true' : 'false',
                 "\n"

@@ -48,7 +48,7 @@ $rs = $attachments->get($attachmentID, false);
 
 if (! isset($rs['directoryName']) ||
     ! isset($rs['storedFilename']) ||
-    md5($rs['directoryName']) != $_POST['directoryNameHash']) {
+    md5((string) $rs['directoryName']) != $_POST['directoryNameHash']) {
     $interface->outputXMLErrorPage(-2, 'Invalid directory name hash.');
     die();
 }

@@ -11,9 +11,10 @@
 
 class CATSWebTestCase extends WebTestCase
 {
-    private $_indexName;
+    protected $_indexName;
+    protected $_browser;
 
-    private $_indexURL;
+    protected $_indexURL;
 
     public function __construct()
     {
@@ -87,7 +88,7 @@ class CATSWebTestCase extends WebTestCase
         /* Are we on an Initial Configuration Wizard page? */
         $initialConfiguration = preg_match(
             '/<title>CATS - Initial Configuration Wizard<\/title>/',
-            $rawHTML
+            (string) $rawHTML
         );
         if ($initialConfiguration) {
             /* We are on the E-Mail Features Disabled page. */

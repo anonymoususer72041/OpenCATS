@@ -62,11 +62,11 @@ $type = $_REQUEST['type'];
 $jobOrderID = $_REQUEST['jobOrderID'];
 
 /* Decode and trim the activity notes from the company. */
-$activityNote = trim(urldecode($_REQUEST['notes']));
-$activityDate = trim(urldecode($_REQUEST['date']));
-$activityHour = trim(urldecode($_REQUEST['hour']));
-$activityMinute = trim(urldecode($_REQUEST['minute']));
-$activityAMPM = trim(urldecode($_REQUEST['ampm']));
+$activityNote = trim(urldecode((string) $_REQUEST['notes']));
+$activityDate = trim(urldecode((string) $_REQUEST['date']));
+$activityHour = trim(urldecode((string) $_REQUEST['hour']));
+$activityMinute = trim(urldecode((string) $_REQUEST['minute']));
+$activityAMPM = trim(urldecode((string) $_REQUEST['ampm']));
 
 if (! DateUtility::validate('-', $activityDate, DATE_FORMAT_MMDDYY)) {
     die('Invalid availability date.');
@@ -123,8 +123,8 @@ $interface->outputXMLPage(
     "    <errormessage></errormessage>\n" .
     "    <type>" . $activityEntry['type'] . "</type>\n" .
     "    <typedescription>" . $activityEntry['typeDescription'] . "</typedescription>\n" .
-    "    <notes>" . htmlspecialchars($activityEntry['notes']) . "</notes>\n" .
-    "    <regarding>" . htmlspecialchars($activityEntry['regarding']) . "</regarding>\n" .
-    "    <date>" . htmlspecialchars($activityEntry['dateCreated']) . "</date>\n" .
+    "    <notes>" . htmlspecialchars((string) $activityEntry['notes']) . "</notes>\n" .
+    "    <regarding>" . htmlspecialchars((string) $activityEntry['regarding']) . "</regarding>\n" .
+    "    <date>" . htmlspecialchars((string) $activityEntry['dateCreated']) . "</date>\n" .
     "</data>\n"
 );

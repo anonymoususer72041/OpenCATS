@@ -238,8 +238,8 @@ class ListsDataGrid extends DataGrid
             $selectSQL,
             $joinSQL,
             $_SESSION['CATS']->getSiteID(),
-            (strlen($whereSQL) > 0) ? ' AND ' . $whereSQL : '',
-            (strlen($havingSQL) > 0) ? ' HAVING ' . $havingSQL : '',
+            (strlen((string) $whereSQL) > 0) ? ' AND ' . $whereSQL : '',
+            (strlen((string) $havingSQL) > 0) ? ' HAVING ' . $havingSQL : '',
             $orderSQL,
             $limitSQL
         );
@@ -264,10 +264,10 @@ class ListsDataGrid extends DataGrid
         $html .= sprintf(
             '<a href="javascript:void(0);" onclick="window.location.href=\'%s?m=export&amp;a=exportByDataGrid&amp;i=%s&amp;p=%s&amp;&dynamicArgument%s=\' + urlEncode(serializeArray(exportArray%s));">Export Selected</a><br />',
             CATSUtility::getIndexName(),
-            urlencode($this->_instanceName),
+            urlencode((string) $this->_instanceName),
             urlencode(serialize($newParameterArray)),
-            urlencode($this->_instanceName),
-            md5($this->_instanceName)
+            urlencode((string) $this->_instanceName),
+            md5((string) $this->_instanceName)
         );
 
         //$html .= sprintf(

@@ -42,7 +42,7 @@ include_once(LEGACY_ROOT . '/lib/Hooks.php');
  */
 class Attachments
 {
-    private \DatabaseConnection $_db;
+    private readonly \DatabaseConnection $_db;
 
     private $_siteID;
 
@@ -353,7 +353,7 @@ class Attachments
         }
 
         /* Sanity check. Don't delete the whole attachments directory. */
-        $directoryName = trim($rs['directoryName']);
+        $directoryName = trim((string) $rs['directoryName']);
         if (empty($directoryName) || $directoryName == '.') {
             return true;
         }
@@ -405,7 +405,7 @@ class Attachments
 
         foreach ($rs as $rowNumber => $row) {
             /* Sanity check. Don't delete the whole attachments directory. */
-            $directoryName = trim($row['directoryName']);
+            $directoryName = trim((string) $row['directoryName']);
             if (empty($directoryName) || $directoryName = '.') {
                 continue;
             }
@@ -542,7 +542,7 @@ class Attachments
                 '%s?m=attachments&amp;a=getAttachment&amp;id=%s&amp;directoryNameHash=%s',
                 CATSUtility::getIndexName(),
                 $data['attachmentID'],
-                urlencode(md5($data['directoryName']))
+                urlencode(md5((string) $data['directoryName']))
             );
 
             $directoryName = $data['directoryName'];
@@ -555,7 +555,7 @@ class Attachments
                 sprintf(
                     'id=%s&amp;directoryNameHash=%s',
                     $data['attachmentID'],
-                    urlencode(md5($data['directoryName']))
+                    urlencode(md5((string) $data['directoryName']))
                 ),
                 $rs[$index]['retrievalURL']
             );
@@ -610,7 +610,7 @@ class Attachments
                 '%s?m=attachments&amp;a=getAttachment&amp;id=%s&amp;directoryNameHash=%s',
                 CATSUtility::getIndexName(),
                 $rs['attachmentID'],
-                urlencode(md5($rs['directoryName']))
+                urlencode(md5((string) $rs['directoryName']))
             );
         }
 
@@ -995,7 +995,7 @@ class AttachmentCreator
         $extractText,
         $fileExists
     ) {
-        $filePathParts = explode('/', $filePath);
+        $filePathParts = explode('/', (string) $filePath);
         $originalFilename = end($filePathParts);
 
         return $this->createGeneric(

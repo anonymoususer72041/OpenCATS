@@ -290,7 +290,7 @@ class VCard
     {
         $this->_properties[] = [
             'PHOTO;TYPE=' . $type . ';ENCODING=BASE64',
-            base64_encode($photo),
+            base64_encode((string) $photo),
         ];
     }
 

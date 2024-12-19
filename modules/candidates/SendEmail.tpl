@@ -121,10 +121,23 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td align="right" valign="top" colspan="2">
-                                    <input type="submit" tabindex="<?php echo($tabIndex++); ?>" class="button" value="Send E-Mail" />&nbsp;
-                                    <input type="reset"  tabindex="<?php echo($tabIndex++); ?>" class="button" value="Reset" />&nbsp;
-                                </td>
+                            <td align="right" valign="top" colspan="2">
+                            <!-- Submit button with .button class -->
+                            <input
+                            type="submit"
+                            tabindex="<?php echo($tabIndex++); ?>"
+                            class="button"
+                            value="Send E-Mail"
+                            />&nbsp;
+
+                            <!-- Reset button -->
+                            <input
+                            type="reset"
+                            tabindex="<?php echo($tabIndex++); ?>"
+                            class="button"
+                            value="Reset"
+                            />&nbsp;
+                            </td>
                             </tr>
                         </table>
 

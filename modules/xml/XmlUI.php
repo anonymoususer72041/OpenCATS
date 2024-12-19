@@ -130,7 +130,7 @@ class XmlUI extends UserInterface
             $templateName = $_GET['t'];
             // Check if the template exists
             foreach ($availTemplates as $template) {
-                if (! strcasecmp($template['xml_template_name'], $templateName)) {
+                if (! strcasecmp((string) $template['xml_template_name'], (string) $templateName)) {
                     $templateSections = XmlTemplate::loadTemplate($templateName);
                 }
             }

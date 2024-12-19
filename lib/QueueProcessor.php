@@ -223,7 +223,7 @@ class QueueProcessor
     // FIXME: Document me.
     public static function getTaskNameFromPath($taskPath)
     {
-        if (preg_match('/\/([^\/\.]+)\.php$/', $taskPath, $matches)) {
+        if (preg_match('/\/([^\/\.]+)\.php$/', (string) $taskPath, $matches)) {
             return $matches[1];
         }
         return '';
@@ -513,7 +513,7 @@ class QueueProcessor
     public static function isTaskReady($schedule)
     {
         $valid = true;
-        [$minute, $hour, $dayofmonth, $month, $dayofweek] = explode(' ', $schedule);
+        [$minute, $hour, $dayofmonth, $month, $dayofweek] = explode(' ', (string) $schedule);
         if ($minute != '*') {
             $match = false;
             foreach (explode(',', $minute) as $_minute) {

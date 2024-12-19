@@ -81,7 +81,7 @@ class JavaScriptCompressor
          * should theoretically not be needed, but without it, it seems to
          * eat newlines.
          */
-        $string = preg_replace('/^\s*(.*?)\s*?$/m', '\1', $string);
+        $string = preg_replace('/^\s*(.*?)\s*?$/m', '\1', (string) $string);
 
         /* Remove C / C++ comments.
          *
@@ -107,10 +107,10 @@ class JavaScriptCompressor
          * Significant newlines will never be removed.
          */
         $string = preg_replace('/;\n/', ';', $string);
-        $string = preg_replace('/\{\n/', '{', $string);
-        $string = preg_replace('/\)\n{/', ') {', $string);
-        $string = preg_replace('/\}\nelse/', '} else', $string);
-        $string = preg_replace('/else\n\{/', 'else {', $string);
+        $string = preg_replace('/\{\n/', '{', (string) $string);
+        $string = preg_replace('/\)\n{/', ') {', (string) $string);
+        $string = preg_replace('/\}\nelse/', '} else', (string) $string);
+        $string = preg_replace('/else\n\{/', 'else {', (string) $string);
 
         return $string;
     }

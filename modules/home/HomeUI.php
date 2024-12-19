@@ -198,7 +198,7 @@ class HomeUI extends UserInterface
             CommonErrors::fatal(COMMONERROR_BADFIELDS, $this, 'No query string specified.');
         }
 
-        $query = trim($_GET['quickSearchFor']);
+        $query = trim((string) $_GET['quickSearchFor']);
         $wildCardQuickSearch = $query;
 
         $search = new QuickSearch($this->_siteID);

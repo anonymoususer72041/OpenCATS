@@ -116,7 +116,7 @@ class StringUtility
             . self::matchPHCountryCode . self::matchPHSeparator . self::matchPHAreaCode
             . self::matchPHSeparator . self::matchPHExchange . self::matchPHSeparator
             . self::matchPHNumber . self::matchPHSeparator . self::matchPHExtension
-            . '$/i', $string)) {
+            . '$/i', (string) $string)) {
             return true;
         }
 
@@ -135,7 +135,7 @@ class StringUtility
             . self::matchPHCountryCode . self::matchPHSeparator . self::matchPHAreaCode
             . self::matchPHSeparator . self::matchPHExchange . self::matchPHSeparator
             . self::matchPHNumber . self::matchPHSeparator . self::matchPHExtension
-            . '/i', $string)) {
+            . '/i', (string) $string)) {
             return true;
         }
 
@@ -154,7 +154,7 @@ class StringUtility
             . self::matchPHECountryCode . self::matchPHSeparator . self::matchPHEAreaCode
             . self::matchPHSeparator . self::matchPHEExchange . self::matchPHSeparator
             . self::matchPHENumber . self::matchPHSeparator . self::matchPHEExtension
-            . '/i', $string, $matches)) {
+            . '/i', (string) $string, $matches)) {
             //print_r($matches);
 
             /* Don't format international phone numbers. */
@@ -205,7 +205,7 @@ class StringUtility
             . self::matchPHECountryCode . self::matchPHSeparator . self::matchPHEAreaCode
             . self::matchPHSeparator . self::matchPHEExchange . self::matchPHSeparator
             . self::matchPHENumber . self::matchPHSeparator . self::matchPHEExtension
-            . '/i', $string, $matches, PREG_SET_ORDER)) {
+            . '/i', (string) $string, $matches, PREG_SET_ORDER)) {
             //print_r($matches);
 
             foreach ($matches as $matchIndex => $match) {
@@ -238,7 +238,7 @@ class StringUtility
     {
         if (preg_match('/^' . self::matchEmailUser . self::matchEmailAt
             . self::matchEmailHost . self::matchEmailDot
-            . self::matchEmailTLD . '$/i', $string)) {
+            . self::matchEmailTLD . '$/i', (string) $string)) {
             return true;
         }
 
@@ -256,7 +256,7 @@ class StringUtility
     {
         if (preg_match('/' . self::matchEmailUser . self::matchEmailAt
             . self::matchEmailHost . self::matchEmailDot
-            . self::matchEmailTLD . '/i', $string)) {
+            . self::matchEmailTLD . '/i', (string) $string)) {
             return true;
         }
 
@@ -273,7 +273,7 @@ class StringUtility
     {
         if (preg_match('/' . self::matchEmailEUser . self::matchEmailAt
             . self::matchEmailEHost . self::matchEmailDot
-            . self::matchEmailETLD . '/i', $string, $matches)) {
+            . self::matchEmailETLD . '/i', (string) $string, $matches)) {
             $formattedEmailAddress = sprintf(
                 "%s@%s.%s",
                 $matches['user'],
@@ -305,7 +305,7 @@ class StringUtility
     {
         $string = preg_replace('/' . self::matchEmailUser . self::matchEmailAt
                 . self::matchEmailHost . self::matchEmailDot
-                . self::matchEmailTLD . '/i', '', $string);
+                . self::matchEmailTLD . '/i', '', (string) $string);
 
         if ($trim) {
             $string = trim($string);
@@ -326,7 +326,7 @@ class StringUtility
             '/^' . self::matchURLProtocol .
             self::matchURLUserPassword . self::matchURLDomain .
             self::matchURLPort . self::matchURLExtras . '$/i',
-            $string,
+            (string) $string,
             $matches
         )) {
             return true;
@@ -346,7 +346,7 @@ class StringUtility
         if (preg_match('/^(|.*\s+)' . self::matchEURLProtocol .
             self::matchEURLUserPassword . self::matchEURLDomain .
             self::matchEURLPort . self::matchEURLExtras .
-            '/i', $string, $matches)) {
+            '/i', (string) $string, $matches)) {
             if (! empty($matches['protocol'])) {
                 $protocol = $matches['protocol'];
             } else {
@@ -402,7 +402,7 @@ class StringUtility
     {
         $octet = '(?:\d{1,2}|1\d\d|2[0-4]\d|25[0-5])';
 
-        if (preg_match('/^' . $octet . '\.' . $octet . '\.' . $octet . '\.' . $octet . '$/', $string)) {
+        if (preg_match('/^' . $octet . '\.' . $octet . '\.' . $octet . '\.' . $octet . '$/', (string) $string)) {
             return true;
         }
 
@@ -416,7 +416,7 @@ class StringUtility
      */
     public static function removeEmptyLines($string)
     {
-        $string = preg_replace("/[\r\n]+[\s\t]*[\r\n]+/", "\n", $string);
+        $string = preg_replace("/[\r\n]+[\s\t]*[\r\n]+/", "\n", (string) $string);
         $string = preg_replace("/^[\s\t]*[\r\n]+/", "", $string);
         $string = trim($string);
 
@@ -495,9 +495,9 @@ class StringUtility
         if ($lastCommaFirst) {
             $firstInitial = $firstName[0] . '.';
 
-            if (strlen($lastName) > $maxLength) {
+            if (strlen((string) $lastName) > $maxLength) {
                 return ucwords(
-                    substr($lastName, 0, $maxLength) . ', ' . $firstInitial
+                    substr((string) $lastName, 0, $maxLength) . ', ' . $firstInitial
                 );
             }
 
@@ -506,9 +506,9 @@ class StringUtility
 
         $lastInitial = $lastName[0] . '.';
 
-        if (strlen($firstName) > $maxLength) {
+        if (strlen((string) $firstName) > $maxLength) {
             return ucwords(
-                substr($firstName, 0, $maxLength) . ' ' . $lastInitial
+                substr((string) $firstName, 0, $maxLength) . ' ' . $lastInitial
             );
         }
 
@@ -523,8 +523,8 @@ class StringUtility
      */
     public static function makeCityStateString($city, $state)
     {
-        $city = trim($city);
-        $state = trim($state);
+        $city = trim((string) $city);
+        $state = trim((string) $state);
 
         if (! empty($city)) {
             $string = $city;
@@ -555,7 +555,7 @@ class StringUtility
             function ($result) {
                 return sprintf("=%02X", ord($result[0]));
             },
-            $string
+            (string) $string
         );
         /* Prevent the splitting of lines from interfering with escaped
          * characters.
@@ -600,7 +600,7 @@ class StringUtility
     /* Implemented like JS substring function. */
     public static function JSSubString($string, $start, $end)
     {
-        return substr($string, $start, ($end - $start));
+        return substr((string) $string, $start, ($end - $start));
     }
 
     /**
@@ -614,13 +614,13 @@ class StringUtility
      */
     public static function replaceOnce($needle, $replace, $haystack)
     {
-        $potision = strpos($haystack, $needle);
+        $potision = strpos((string) $haystack, (string) $needle);
 
         if ($potision === false) {
             return $haystack;
         }
 
-        return substr_replace($haystack, $replace, $potision, strlen($needle));
+        return substr_replace($haystack, $replace, $potision, strlen((string) $needle));
     }
 
     public static function cardinal($x)

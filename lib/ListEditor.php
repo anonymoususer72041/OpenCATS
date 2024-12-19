@@ -144,7 +144,7 @@ class ListEditor
         $theArrayValues = [];
 
         for ($i = 0; $i < (is_countable($theArray) ? count($theArray) : 0); $i++) {
-            if (strpos($theArray[$i], '!!EDIT!!') === false) {
+            if (strpos((string) $theArray[$i], '!!EDIT!!') === false) {
                 $theArrayValues[] = $theArray[$i];
             }
         }
@@ -163,16 +163,16 @@ class ListEditor
         $theArrayValues = [];
 
         for ($i = 0; $i < (is_countable($theArray) ? count($theArray) : 0); $i++) {
-            if (strpos($theArray[$i], '!!EDIT!!') === 0) {
+            if (strpos((string) $theArray[$i], '!!EDIT!!') === 0) {
                 $from = StringUtility::JSSubString(
                     $theArray[$i],
                     8,
-                    strpos($theArray[$i], '!!INTO!!')
+                    strpos((string) $theArray[$i], '!!INTO!!')
                 );
                 $into = StringUtility::JSSubString(
                     $theArray[$i],
-                    strpos($theArray[$i], '!!INTO!!') + 8,
-                    strlen($theArray[$i])
+                    strpos((string) $theArray[$i], '!!INTO!!') + 8,
+                    strlen((string) $theArray[$i])
                 );
                 $theArrayValues[] = [$from, $into];
             }
@@ -206,9 +206,9 @@ class ListEditor
         /* Safeguard:  Do not delete anything unless we KNOW that the user did a delete. */
         $allowDelete = false;
 
-        if (strpos($stringListEditor, '&DELETEALLOWED&') !== false) {
+        if (strpos((string) $stringListEditor, '&DELETEALLOWED&') !== false) {
             $allowDelete = true;
-            $stringListEditor = substr($stringListEditor, 0, strpos($stringListEditor, '&DELETEALLOWED&'));
+            $stringListEditor = substr((string) $stringListEditor, 0, strpos((string) $stringListEditor, '&DELETEALLOWED&'));
         }
 
         $arrayDiff = [];

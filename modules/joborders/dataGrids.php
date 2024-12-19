@@ -155,6 +155,8 @@ class JobOrdersListByViewDataGrid extends JobOrdersDataGrid
 
 class joborderSavedListByViewDataGrid extends JobOrdersDataGrid
 {
+    protected $_tableWidth;
+    protected $_defaultAlphabeticalSortBy;
     public function __construct($siteID, $parameters, $misc)
     {
         /* Pager configuration. */

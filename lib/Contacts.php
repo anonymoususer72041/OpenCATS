@@ -40,9 +40,9 @@ include_once(LEGACY_ROOT . '/lib/Calendar.php');
  */
 class Contacts
 {
-    private \DatabaseConnection $_db;
+    private readonly \DatabaseConnection $_db;
 
-    private $_siteID;
+    protected $_siteID;
 
     public $extraFields;
 
@@ -835,6 +835,9 @@ class Contacts
 class ContactsDataGrid extends DataGrid
 {
     protected $_siteID;
+    protected $_db;
+    protected $_assignedCriterion;
+    protected $_classColumns;
 
     // FIXME: Fix ugly indenting - ~400 character lines = bad.
     public function __construct($instanceName, $siteID, $parameters, $misc = 0)
@@ -1100,9 +1103,9 @@ class ContactsDataGrid extends DataGrid
             $selectSQL,
             $joinSQL,
             $this->_siteID,
-            (strlen($whereSQL) > 0) ? ' AND ' . $whereSQL : '',
+            (strlen((string) $whereSQL) > 0) ? ' AND ' . $whereSQL : '',
             $this->_assignedCriterion,
-            (strlen($havingSQL) > 0) ? ' HAVING ' . $havingSQL : '',
+            (strlen((string) $havingSQL) > 0) ? ' HAVING ' . $havingSQL : '',
             $orderSQL,
             $limitSQL
         );

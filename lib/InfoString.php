@@ -98,90 +98,90 @@ class InfoString
 
         $infoString = sprintf(
             '<span class="bold">Contact:</span>&nbsp;%s %s',
-            htmlspecialchars($infoRS['firstName']),
-            htmlspecialchars($infoRS['lastName'])
+            htmlspecialchars((string) $infoRS['firstName']),
+            htmlspecialchars((string) $infoRS['lastName'])
         );
 
         if (! empty($infoRS['title'])) {
             $infoString .= sprintf(
                 '<br /><span class="bold">Title:</span>&nbsp;%s',
-                htmlspecialchars($infoRS['title'])
+                htmlspecialchars((string) $infoRS['title'])
             );
         }
 
         if (! empty($infoRS['companyName'])) {
             $infoString .= sprintf(
                 '<br /><span class="bold">Company:</span>&nbsp;%s',
-                htmlspecialchars($infoRS['companyName'])
+                htmlspecialchars((string) $infoRS['companyName'])
             );
         }
 
         if (! empty($infoRS['department'])) {
             $infoString .= sprintf(
                 '<br /><span class="bold">Department:</span>&nbsp;%s',
-                htmlspecialchars($infoRS['department'])
+                htmlspecialchars((string) $infoRS['department'])
             );
         }
 
         if (! empty($infoRS['email1'])) {
             $infoString .= sprintf(
                 '<br /><span class="bold">Primary Email:</span>&nbsp;%s',
-                htmlspecialchars($infoRS['email1'])
+                htmlspecialchars((string) $infoRS['email1'])
             );
         }
 
         if (! empty($infoRS['email2'])) {
             $infoString .= sprintf(
                 '<br /><span class="bold">Secondary Email:</span>&nbsp;%s',
-                htmlspecialchars($infoRS['email2'])
+                htmlspecialchars((string) $infoRS['email2'])
             );
         }
 
         if (! empty($infoRS['phoneWork'])) {
             $infoString .= sprintf(
                 '<br /><span class="bold">Work Phone:</span>&nbsp;%s',
-                htmlspecialchars($infoRS['phoneWork'])
+                htmlspecialchars((string) $infoRS['phoneWork'])
             );
         }
 
         if (! empty($infoRS['phoneCell'])) {
             $infoString .= sprintf(
                 '<br /><span class="bold">Cell Phone:</span>&nbsp;%s',
-                htmlspecialchars($infoRS['phoneCell'])
+                htmlspecialchars((string) $infoRS['phoneCell'])
             );
         }
 
         if (! empty($infoRS['phoneOther'])) {
             $infoString .= sprintf(
                 '<br /><span class="bold">Other Phone:</span>&nbsp;%s',
-                htmlspecialchars($infoRS['phoneOther'])
+                htmlspecialchars((string) $infoRS['phoneOther'])
             );
         }
 
         if (! empty($infoRS['address'])) {
             $infoString .= sprintf(
                 '<br /><span class="bold">Address:</span><br />&nbsp;&nbsp;%s',
-                htmlspecialchars($infoRS['address'])
+                htmlspecialchars((string) $infoRS['address'])
             );
 
             if (! empty($infoRS['city'])) {
                 $infoString .= sprintf(
                     '&nbsp;%s',
-                    htmlspecialchars($infoRS['city'])
+                    htmlspecialchars((string) $infoRS['city'])
                 );
             }
 
             if (! empty($infoRS['state'])) {
                 $infoString .= sprintf(
                     '&nbsp;%s',
-                    htmlspecialchars($infoRS['state'])
+                    htmlspecialchars((string) $infoRS['state'])
                 );
             }
 
             if (! empty($infoRS['zip'])) {
                 $infoString .= sprintf(
                     '&nbsp;%s',
-                    htmlspecialchars($infoRS['zip'])
+                    htmlspecialchars((string) $infoRS['zip'])
                 );
             }
         }
@@ -206,76 +206,76 @@ class InfoString
 
         $infoString = sprintf(
             '<span class="bold">Candidate:</span>&nbsp;%s %s',
-            htmlspecialchars($infoRS['firstName']),
-            htmlspecialchars($infoRS['lastName'])
+            htmlspecialchars((string) $infoRS['firstName']),
+            htmlspecialchars((string) $infoRS['lastName'])
         );
 
         if (! empty($infoRS['currentEmployer'])) {
             $infoString .= sprintf(
                 '<br /><span class="bold">Current Employer:</span>&nbsp;%s',
-                htmlspecialchars($infoRS['currentEmployer'])
+                htmlspecialchars((string) $infoRS['currentEmployer'])
             );
         }
 
         if (! empty($infoRS['email1'])) {
             $infoString .= sprintf(
                 '<br /><span class="bold">Primary Email:</span>&nbsp;%s',
-                htmlspecialchars($infoRS['email1'])
+                htmlspecialchars((string) $infoRS['email1'])
             );
         }
 
         if (! empty($infoRS['email2'])) {
             $infoString .= sprintf(
                 '<br /><span class="bold">Secondary Email:</span>&nbsp;%s',
-                htmlspecialchars($infoRS['email2'])
+                htmlspecialchars((string) $infoRS['email2'])
             );
         }
 
         if (! empty($infoRS['phoneHome'])) {
             $infoString .= sprintf(
                 '<br /><span class="bold">Home Phone:</span>&nbsp;%s',
-                htmlspecialchars($infoRS['phoneHome'])
+                htmlspecialchars((string) $infoRS['phoneHome'])
             );
         }
 
         if (! empty($infoRS['phoneWork'])) {
             $infoString .= sprintf(
                 '<br /><span class="bold">Work Phone:</span>&nbsp;%s',
-                htmlspecialchars($infoRS['phoneWork'])
+                htmlspecialchars((string) $infoRS['phoneWork'])
             );
         }
 
         if (! empty($infoRS['phoneCell'])) {
             $infoString .= sprintf(
                 '<br /><span class="bold">Cell Phone:</span>&nbsp;%s',
-                htmlspecialchars($infoRS['phoneCell'])
+                htmlspecialchars((string) $infoRS['phoneCell'])
             );
         }
 
         if (! empty($infoRS['address'])) {
             $infoString .= sprintf(
                 '<br /><span class="bold">Address:</span><br />&nbsp;&nbsp;%s',
-                htmlspecialchars($infoRS['address'])
+                htmlspecialchars((string) $infoRS['address'])
             );
 
             if (! empty($infoRS['city'])) {
                 $infoString .= sprintf(
                     '&nbsp;%s',
-                    htmlspecialchars($infoRS['city'])
+                    htmlspecialchars((string) $infoRS['city'])
                 );
             }
 
             if (! empty($infoRS['state'])) {
                 $infoString .= sprintf(
                     '&nbsp;%s',
-                    htmlspecialchars($infoRS['state'])
+                    htmlspecialchars((string) $infoRS['state'])
                 );
             }
 
             if (! empty($infoRS['zip'])) {
                 $infoString .= sprintf(
                     '&nbsp;%s',
-                    htmlspecialchars($infoRS['zip'])
+                    htmlspecialchars((string) $infoRS['zip'])
                 );
             }
         }
@@ -301,7 +301,7 @@ class InfoString
 
         $infoString = sprintf(
             '<span class="bold">Job Order:</span>&nbsp;%s',
-            htmlspecialchars($infoRS['title'])
+            htmlspecialchars((string) $infoRS['title'])
         );
 
         if (! empty($infoRS['type'])) {
@@ -316,35 +316,35 @@ class InfoString
         if (! empty($infoRS['openings'])) {
             $infoString .= sprintf(
                 '<br /><span class="bold">Openings:</span>&nbsp;%s',
-                htmlspecialchars($infoRS['openings'])
+                htmlspecialchars((string) $infoRS['openings'])
             );
         }
 
         if (! empty($infoRS['salary'])) {
             $infoString .= sprintf(
                 '<br /><span class="bold">Salary:</span>&nbsp;%s',
-                htmlspecialchars($infoRS['salary'])
+                htmlspecialchars((string) $infoRS['salary'])
             );
         }
 
         if (! empty($infoRS['maxRate'])) {
             $infoString .= sprintf(
                 '<br /><span class="bold">Max Rate:</span>&nbsp;%s',
-                htmlspecialchars($infoRS['maxRate'])
+                htmlspecialchars((string) $infoRS['maxRate'])
             );
         }
 
         if (! empty($infoRS['recruiterFullName'])) {
             $infoString .= sprintf(
                 '<br /><span class="bold">Recruiter:</span>&nbsp;%s',
-                htmlspecialchars($infoRS['recruiterFullName'])
+                htmlspecialchars((string) $infoRS['recruiterFullName'])
             );
         }
 
         if (! empty($infoRS['startDate'])) {
             $infoString .= sprintf(
                 '<br /><span class="bold">Start Date:</span>&nbsp;%s',
-                htmlspecialchars($infoRS['startDate'])
+                htmlspecialchars((string) $infoRS['startDate'])
             );
         }
 
@@ -369,41 +369,41 @@ class InfoString
 
         $infoString = sprintf(
             '<span class="bold">Company:</span>&nbsp;%s',
-            htmlspecialchars($infoRS['name'])
+            htmlspecialchars((string) $infoRS['name'])
         );
 
         if (! empty($infoRS['billingContactFullName'])) {
             $infoString .= sprintf(
                 '<br /><span class="bold">Billing Contact:</span>&nbsp;%s',
-                htmlspecialchars($infoRS['billingContactFullName'])
+                htmlspecialchars((string) $infoRS['billingContactFullName'])
             );
         }
 
         if (! empty($infoRS['phone1'])) {
             $infoString .= sprintf(
                 '<br /><span class="bold">Primary Phone:</span>&nbsp;%s',
-                htmlspecialchars($infoRS['phone1'])
+                htmlspecialchars((string) $infoRS['phone1'])
             );
         }
 
         if (! empty($infoRS['phone2'])) {
             $infoString .= sprintf(
                 '<br /><span class="bold">Secondary Phone:</span>&nbsp;%s',
-                htmlspecialchars($infoRS['phone2'])
+                htmlspecialchars((string) $infoRS['phone2'])
             );
         }
 
         if (! empty($infoRS['faxNumber'])) {
             $infoString .= sprintf(
                 '<br /><span class="bold">Fax Number:</span>&nbsp;%s',
-                htmlspecialchars($infoRS['faxNumber'])
+                htmlspecialchars((string) $infoRS['faxNumber'])
             );
         }
 
         if (! empty($infoRS['keyTechnologies'])) {
             $infoString .= sprintf(
                 '<br /><span class="bold">Key Technologies:</span>&nbsp;%s',
-                htmlspecialchars($infoRS['keyTechnologies'])
+                htmlspecialchars((string) $infoRS['keyTechnologies'])
             );
         }
 

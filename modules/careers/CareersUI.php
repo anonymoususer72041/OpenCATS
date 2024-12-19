@@ -186,7 +186,7 @@ class CareersUI extends UserInterface
             foreach ($attachments as $attachment) {
                 if (preg_match(
                     '/^([0-9]{2})-([0-9]{2})-([0-9]{2}) \(([0-9]{2}):([0-9]{2}):([0-9]{2}) [A-Z]{2}\)$/',
-                    $attachment['dateCreated'],
+                    (string) $attachment['dateCreated'],
                     $matches
                 )) {
                     $epoch = strtotime(strval($matches[1]) . '/' . strval($matches[2]) . '/' . strval($matches[3]));
@@ -236,7 +236,7 @@ class CareersUI extends UserInterface
                 CATSUtility::getIndexName(),
                 $latestAttachment ? $latestAttachment : -1
             ) . $content . '</form>'
-            . (isset($_GET[$id = 'isPostBack']) && ! strcmp($_GET[$id], 'yes') ? '<script language="javascript" type="text/javascript">setTimeout(\'alert("Your changes have been saved!")\',25);</script>' : '');
+            . (isset($_GET[$id = 'isPostBack']) && ! strcmp((string) $_GET[$id], 'yes') ? '<script language="javascript" type="text/javascript">setTimeout(\'alert("Your changes have been saved!")\',25);</script>' : '');
 
             $template['Content'] = $content;
         } elseif ($p == 'onRegisteredCandidateProfile' && $isRegistrationEnabled) {
@@ -329,7 +329,7 @@ class CareersUI extends UserInterface
             // Set the cookie again, since some information used to verify may be changed
             $storedVal = '';
             foreach ($fieldValues as $tag => $tagData) {
-                $storedVal .= sprintf('"%s"="%s"', urlencode($tag), urlencode($tagData));
+                $storedVal .= sprintf('"%s"="%s"', urlencode($tag), urlencode((string) $tagData));
             }
             @setcookie($this->getCareerPortalCookieName($siteID), $storedVal, time() + 60 * 60 * 24 * 7 * 2);
 
@@ -364,8 +364,8 @@ class CareersUI extends UserInterface
                 foreach ($fields as $tagName => $tagValue) {
                     $js .= sprintf(
                         'if (obj = document.getElementById(\'%s\')) obj.value = \'%s\';%s',
-                        urldecode($tagName),
-                        str_replace("'", "\\'", urldecode($tagValue)),
+                        urldecode((string) $tagName),
+                        str_replace("'", "\\'", urldecode((string) $tagValue)),
                         "\n"
                     );
                 }
@@ -439,10 +439,10 @@ class CareersUI extends UserInterface
              * "contents" textarea on the application page. All post data remains intact and
              * re-populates the fields giving the illusion of AJAX.
              */
-            if (isset($_POST[$id = 'applyToJobSubAction']) && strlen($subAction = $_POST[$id])) {
+            if (isset($_POST[$id = 'applyToJobSubAction']) && strlen((string) ($subAction = $_POST[$id]))) {
                 // Check if a candidate has registered and has indicated it
-                if (! strcmp($subAction, 'processLogin') &&
-                    isset($_POST['isNew']) && ! strcmp($_POST['isNew'], 'no') && $isRegistrationEnabled) {
+                if (! strcmp((string) $subAction, 'processLogin') &&
+                    isset($_POST['isNew']) && ! strcmp((string) $_POST['isNew'], 'no') && $isRegistrationEnabled) {
                     $candidate = $this->ProcessCandidateRegistration($siteID, $template['Content - Candidate Registration']);
                     if ($candidate !== false) {
                         // Rewrite here, I'll fix it later
@@ -484,12 +484,12 @@ class CareersUI extends UserInterface
                     }
                 }
 
-                if (! strcmp($subAction, 'resumeParse')) {
+                if (! strcmp((string) $subAction, 'resumeParse')) {
                     // Check if the resume contents need to be parsed (user clicked parse contents button)
                     if (LicenseUtility::isParsingEnabled()) {
                         $pu = new ParseUtility();
                         $fileName = isset($uploadFile) ? $uploadFile : '';
-                        $res = $pu->documentParse($fileName, strlen($resumeContents), '', $resumeContents);
+                        $res = $pu->documentParse($fileName, strlen((string) $resumeContents), '', $resumeContents);
                         if (is_array($res) && ! empty($res)) {
                             if (isset($res[$id = 'first_name']) && $res[$id] != '' && $firstName == '') {
                                 $firstName = $res[$id];
@@ -589,7 +589,7 @@ class CareersUI extends UserInterface
                     // If parsing is enabled, add the image link for it
                     LicenseUtility::isParsingEnabled() ?
                         '<br /><div style="text-align: right;">'
-                        . '<input type="button" value="Populate Fields ->" id="resumePopulate" onclick="resumeParse();" ' . (strlen($resumeContents) ? '' : 'disabled') . ' />'
+                        . '<input type="button" value="Populate Fields ->" id="resumePopulate" onclick="resumeParse();" ' . (strlen((string) $resumeContents) ? '' : 'disabled') . ' />'
                     :
                         ''
                 ),
@@ -634,9 +634,9 @@ class CareersUI extends UserInterface
 
             foreach ($extraFieldsForCandidates as $ef) {
                 if (isset($ef['careersAddHTML'])) {
-                    $template['Content'] = str_replace('<input-extraField-' . urlencode($ef['fieldName']) . '>', $ef['careersAddHTML'], $template['Content']);
+                    $template['Content'] = str_replace('<input-extraField-' . urlencode((string) $ef['fieldName']) . '>', $ef['careersAddHTML'], $template['Content']);
                 } else {
-                    $template['Content'] = str_replace('<input-extraField-' . urlencode($ef['fieldName']) . '>', $ef['addHTML'], $template['Content']);
+                    $template['Content'] = str_replace('<input-extraField-' . urlencode((string) $ef['fieldName']) . '>', $ef['addHTML'], $template['Content']);
                 }
             }
 
@@ -725,7 +725,7 @@ class CareersUI extends UserInterface
 
                 $template['Content'] = $template['Content - Thanks for your Submission'];
                 $template['Content'] = str_replace('<title>', $jobOrderData['title'], $template['Content']);
-                $template['Content'] = str_replace('<a-jobDetails>', '<a href="' . CATSUtility::getIndexName() . '?m=careers' . (isset($_GET['templateName']) ? '&templateName=' . urlencode($_GET['templateName']) : '') . '&p=showJob&ID=' . $_POST['ID'] . '">', $template['Content']);
+                $template['Content'] = str_replace('<a-jobDetails>', '<a href="' . CATSUtility::getIndexName() . '?m=careers' . (isset($_GET['templateName']) ? '&templateName=' . urlencode((string) $_GET['templateName']) : '') . '&p=showJob&ID=' . $_POST['ID'] . '">', $template['Content']);
             } else {
                 ob_start();
 
@@ -759,9 +759,9 @@ class CareersUI extends UserInterface
             $jobID = $_GET['ID'];
 
             /* Filter out non numeric characters */
-            for ($i = 0; $i < strlen($jobID); $i++) {
-                if (ord(substr($jobID, $i, 1)) < ord('0') || ord(substr($jobID, $i, 1)) > ord('9')) {
-                    $jobID = str_replace(substr($jobID, $i, 1), '*', $jobID);
+            for ($i = 0; $i < strlen((string) $jobID); $i++) {
+                if (ord(substr((string) $jobID, $i, 1)) < ord('0') || ord(substr((string) $jobID, $i, 1)) > ord('9')) {
+                    $jobID = str_replace(substr((string) $jobID, $i, 1), '*', $jobID);
                 }
             }
             $jobID = str_replace('*', '', $jobID);
@@ -788,24 +788,24 @@ class CareersUI extends UserInterface
             $template['Content'] = str_replace('<contactPhone>', $jobOrderData['contactWorkPhone'] ?? '', $template['Content']);
             $template['Content'] = str_replace('<contactEmail>', $jobOrderData['contactEmail'] ?? '', $template['Content']);
             $template['Content'] = str_replace('<description>', $jobOrderData['description'] ?? '', $template['Content']);
-            $template['Content'] = str_replace('<rate>', nl2br($jobOrderData['maxRate']), $template['Content']);
-            $template['Content'] = str_replace('<salary>', nl2br($jobOrderData['salary']), $template['Content']);
-            $template['Content'] = str_replace('<daysOld>', nl2br($jobOrderData['daysOld']), $template['Content']);
+            $template['Content'] = str_replace('<rate>', nl2br((string) $jobOrderData['maxRate']), $template['Content']);
+            $template['Content'] = str_replace('<salary>', nl2br((string) $jobOrderData['salary']), $template['Content']);
+            $template['Content'] = str_replace('<daysOld>', nl2br((string) $jobOrderData['daysOld']), $template['Content']);
 
             $isRegistered = $this->isCandidateRegistered($siteID, $template['Content - Candidate Registration']);
 
             // If candidate registration is enabled, ask them if they would like to log in first
             if ($isRegistrationEnabled && ! $isRegistered) {
-                $template['Content'] = str_replace('<a-applyToJob', '<a href="' . CATSUtility::getIndexName() . '?m=careers' . (isset($_GET['templateName']) ? '&templateName=' . urlencode($_GET['templateName']) : '') . '&p=candidateRegistration&ID=' . $jobID . '"', $template['Content']);
+                $template['Content'] = str_replace('<a-applyToJob', '<a href="' . CATSUtility::getIndexName() . '?m=careers' . (isset($_GET['templateName']) ? '&templateName=' . urlencode((string) $_GET['templateName']) : '') . '&p=candidateRegistration&ID=' . $jobID . '"', $template['Content']);
             } else {
-                $template['Content'] = str_replace('<a-applyToJob', '<a href="' . CATSUtility::getIndexName() . '?m=careers' . (isset($_GET['templateName']) ? '&templateName=' . urlencode($_GET['templateName']) : '') . '&p=applyToJob&ID=' . $jobID . '"', $template['Content']);
+                $template['Content'] = str_replace('<a-applyToJob', '<a href="' . CATSUtility::getIndexName() . '?m=careers' . (isset($_GET['templateName']) ? '&templateName=' . urlencode((string) $_GET['templateName']) : '') . '&p=applyToJob&ID=' . $jobID . '"', $template['Content']);
             }
 
             $jobOrders = new JobOrders($siteID);
             $extraFieldsForJobOrders = $jobOrders->extraFields->getValuesForShow($jobID);
 
             foreach ($extraFieldsForJobOrders as $ef) {
-                $template['Content'] = str_replace('<extraField-' . urlencode($ef['fieldName']) . '>', $ef['display'], $template['Content']);
+                $template['Content'] = str_replace('<extraField-' . urlencode((string) $ef['fieldName']) . '>', $ef['display'], $template['Content']);
             }
         } elseif ($p == 'searchResults') {
         } else {
@@ -816,7 +816,7 @@ class CareersUI extends UserInterface
 
             if ($isRegistrationEnabled) {
                 // postback
-                if (isset($_GET[$id = 'postback']) && ! strcmp($_GET[$id], 'yes')) {
+                if (isset($_GET[$id = 'postback']) && ! strcmp((string) $_GET[$id], 'yes')) {
                     $candidate = $this->ProcessCandidateRegistration($siteID, $template['Content - Candidate Registration']);
 
                     if ($candidate === false) {
@@ -877,9 +877,9 @@ class CareersUI extends UserInterface
 
         $indexName = CATSUtility::getIndexName();
         foreach ($template as $index => $data) {
-            $template[$index] = str_replace('<a-LinkMain>', '<a href="' . $indexName . '?m=careers' . (isset($_GET['templateName']) ? '&templateName=' . urlencode($_GET['templateName']) : '') . '">', $template[$index]);
-            $template[$index] = str_replace('<a-LinkSearch>', '<a href="' . $indexName . '?m=careers' . (isset($_GET['templateName']) ? '&templateName=' . urlencode($_GET['templateName']) : '') . '&amp;p=search">', $template[$index]);
-            $template[$index] = str_replace('<a-ListAll>', '<a href="' . $indexName . '?m=careers' . (isset($_GET['templateName']) ? '&templateName=' . urlencode($_GET['templateName']) : '') . '&amp;p=showAll">', $template[$index]);
+            $template[$index] = str_replace('<a-LinkMain>', '<a href="' . $indexName . '?m=careers' . (isset($_GET['templateName']) ? '&templateName=' . urlencode((string) $_GET['templateName']) : '') . '">', $template[$index]);
+            $template[$index] = str_replace('<a-LinkSearch>', '<a href="' . $indexName . '?m=careers' . (isset($_GET['templateName']) ? '&templateName=' . urlencode((string) $_GET['templateName']) : '') . '&amp;p=search">', $template[$index]);
+            $template[$index] = str_replace('<a-ListAll>', '<a href="' . $indexName . '?m=careers' . (isset($_GET['templateName']) ? '&templateName=' . urlencode((string) $_GET['templateName']) : '') . '&amp;p=showAll">', $template[$index]);
             $template[$index] = str_replace('<siteName>', $siteName, $template[$index]);
             $template[$index] = str_replace('<numberOfOpenPositions>', count($rs), $template[$index]);
 
@@ -911,7 +911,7 @@ class CareersUI extends UserInterface
     {
         $validator = '';
 
-        if (strpos($template['Content'], '<input-firstName>') !== false || strpos($template['Content'], '<input-firstName req>') !== false) {
+        if (strpos((string) $template['Content'], '<input-firstName>') !== false || strpos((string) $template['Content'], '<input-firstName req>') !== false) {
             $validator .= '
                 if (document.getElementById(\'firstName\').value == \'\')
                 {
@@ -921,7 +921,7 @@ class CareersUI extends UserInterface
                 }';
         }
 
-        if (strpos($template['Content'], '<input-lastName>') !== false || strpos($template['Content'], '<input-lastName req>') !== false) {
+        if (strpos((string) $template['Content'], '<input-lastName>') !== false || strpos((string) $template['Content'], '<input-lastName req>') !== false) {
             $validator .= '
                 if (document.getElementById(\'lastName\').value == \'\')
                 {
@@ -931,7 +931,7 @@ class CareersUI extends UserInterface
                 }';
         }
 
-        if (strpos($template['Content'], '<input-emailconfirm>') !== false || strpos($template['Content'], '<input-emailconfirm req>') !== false) {
+        if (strpos((string) $template['Content'], '<input-emailconfirm>') !== false || strpos((string) $template['Content'], '<input-emailconfirm req>') !== false) {
             $validator .= '
                 if (document.getElementById(\'emailconfirm\').value != document.getElementById(\'email\').value)
                 {
@@ -941,7 +941,7 @@ class CareersUI extends UserInterface
                 }';
         }
 
-        if (strpos($template['Content'], '<input-email>') !== false || strpos($template['Content'], '<input-email req>') !== false) {
+        if (strpos((string) $template['Content'], '<input-email>') !== false || strpos((string) $template['Content'], '<input-email req>') !== false) {
             $validator .= '
                 if (document.getElementById(\'email\').value == \'\')
                 {
@@ -958,7 +958,7 @@ class CareersUI extends UserInterface
                 }';
         }
 
-        if (strpos($template['Content'], '<input-address req>') !== false) {
+        if (strpos((string) $template['Content'], '<input-address req>') !== false) {
             $validator .= '
                 if (document.getElementById(\'address\').value == \'\')
                 {
@@ -968,7 +968,7 @@ class CareersUI extends UserInterface
                 }';
         }
 
-        if (strpos($template['Content'], '<input-city req>') !== false) {
+        if (strpos((string) $template['Content'], '<input-city req>') !== false) {
             $validator .= '
                 if (document.getElementById(\'city\').value == \'\')
                 {
@@ -978,7 +978,7 @@ class CareersUI extends UserInterface
                 }';
         }
 
-        if (strpos($template['Content'], '<input-state req>') !== false) {
+        if (strpos((string) $template['Content'], '<input-state req>') !== false) {
             $validator .= '
                 if (document.getElementById(\'state\').value == \'\')
                 {
@@ -988,7 +988,7 @@ class CareersUI extends UserInterface
                 }';
         }
 
-        if (strpos($template['Content'], '<input-zip req>') !== false) {
+        if (strpos((string) $template['Content'], '<input-zip req>') !== false) {
             $validator .= '
                 if (document.getElementById(\'zip\').value == \'\')
                 {
@@ -998,7 +998,7 @@ class CareersUI extends UserInterface
                 }';
         }
 
-        if (strpos($template['Content'], '<input-phone req>') !== false) {
+        if (strpos((string) $template['Content'], '<input-phone req>') !== false) {
             $validator .= '
                 if (document.getElementById(\'phone\').value == \'\')
                 {
@@ -1008,7 +1008,7 @@ class CareersUI extends UserInterface
                 }';
         }
 
-        if (strpos($template['Content'], '<input-keySkills req>') !== false) {
+        if (strpos((string) $template['Content'], '<input-keySkills req>') !== false) {
             $validator .= '
                 if (document.getElementById(\'keySkills\').value == \'\')
                 {
@@ -1018,7 +1018,7 @@ class CareersUI extends UserInterface
                 }';
         }
 
-        if (strpos($template['Content'], '<input-extraNotes req>') !== false) {
+        if (strpos((string) $template['Content'], '<input-extraNotes req>') !== false) {
             $validator .= '
                 if (document.getElementById(\'extraNotes\').value == \'\')
                 {
@@ -1067,7 +1067,7 @@ class CareersUI extends UserInterface
 
             if ($settings['showCompany'] == 1) {
                 $html .= '<td>';
-                $html .= htmlspecialchars($line['companyName']);
+                $html .= htmlspecialchars((string) $line['companyName']);
                 $html .= '</td>';
             }
 
@@ -1076,19 +1076,19 @@ class CareersUI extends UserInterface
                 if ($line['departmentID'] == 0) {
                     $html .= 'General';
                 } else {
-                    $html .= htmlspecialchars($line['departmentName']);
+                    $html .= htmlspecialchars((string) $line['departmentName']);
                 }
                 $html .= '</td>';
             }
 
             $html .= '<td>';
-            $html .= '<a href="' . CATSUtility::getIndexName() . '?m=careers' . (isset($_GET['templateName']) ? '&amp;templateName=' . urlencode($_GET['templateName']) : '') . '&amp;p=showJob&amp;ID=' . $line['jobOrderID'] . '">';
-            $html .= htmlspecialchars($line['title']);
+            $html .= '<a href="' . CATSUtility::getIndexName() . '?m=careers' . (isset($_GET['templateName']) ? '&amp;templateName=' . urlencode((string) $_GET['templateName']) : '') . '&amp;p=showJob&amp;ID=' . $line['jobOrderID'] . '">';
+            $html .= htmlspecialchars((string) $line['title']);
             $html .= '</a>';
             $html .= '</td>';
 
             $html .= '<td>';
-            $html .= htmlspecialchars($line['city']) . ', ' . htmlspecialchars($line['state']);
+            $html .= htmlspecialchars((string) $line['city']) . ', ' . htmlspecialchars((string) $line['state']);
             $html .= '</td>';
 
             $html .= '</tr>' . "\n";
@@ -1523,7 +1523,7 @@ class CareersUI extends UserInterface
             $hiddenTags .= sprintf(
                 '<input type="hidden" name="%s" value="%s" />%s',
                 $name,
-                htmlspecialchars($value),
+                htmlspecialchars((string) $value),
                 "\n"
             );
         }
@@ -1549,7 +1549,7 @@ class CareersUI extends UserInterface
     {
         $db = DatabaseConnection::getInstance();
 
-        $numMatches = preg_match_all('/\<input\-([A-Za-z0-9]+)\>/', $template, $matches);
+        $numMatches = preg_match_all('/\<input\-([A-Za-z0-9]+)\>/', (string) $template, $matches);
         if (! $numMatches) {
             return false;
         }
@@ -1580,7 +1580,7 @@ class CareersUI extends UserInterface
                     $fields[$tag] = $cookieFields[$tag];
                 }
             } else {
-                $fields[$tag] = trim($_POST[$tag]);
+                $fields[$tag] = trim((string) $_POST[$tag]);
             }
         }
 
@@ -1597,9 +1597,9 @@ class CareersUI extends UserInterface
 
         foreach ($fields as $tag => $tagData) {
             foreach ($columns as $column => $columnData) {
-                if (! strcasecmp($columnData['CamelField'], $tag)) {
+                if (! strcasecmp((string) $columnData['CamelField'], $tag)) {
                     $sql .= 'LCASE(' . $columnData['Field'] . ') = '
-                        . $db->makeQueryString(strtolower($tagData)) . ' AND ';
+                        . $db->makeQueryString(strtolower((string) $tagData)) . ' AND ';
                     $verificationFields++;
                 }
             }
@@ -1614,8 +1614,8 @@ class CareersUI extends UserInterface
         $sql .= sprintf(
             'site_id = %d AND (LCASE(email1) = %s OR LCASE(email2) = %s) LIMIT 1',
             $siteID,
-            $db->makeQueryString(strtolower($fields['email'])),
-            $db->makeQueryString(strtolower($fields['email']))
+            $db->makeQueryString(strtolower((string) $fields['email'])),
+            $db->makeQueryString(strtolower((string) $fields['email']))
         );
 
         $rs = $db->getAssoc($sql);
@@ -1625,10 +1625,10 @@ class CareersUI extends UserInterface
             $candidate = $candidates->get($rs['candidate_id']);
 
             // Setup a cookie to remember the user by for the next 2 weeks
-            if (isset($_POST['rememberMe']) && ! strcasecmp($_POST['rememberMe'], 'yes')) {
+            if (isset($_POST['rememberMe']) && ! strcasecmp((string) $_POST['rememberMe'], 'yes')) {
                 $storedVal = '';
                 foreach ($fields as $tag => $tagData) {
-                    $storedVal .= sprintf('"%s"="%s"', urlencode($tag), urlencode($tagData));
+                    $storedVal .= sprintf('"%s"="%s"', urlencode($tag), urlencode((string) $tagData));
                 }
                 @setcookie($this->getCareerPortalCookieName($siteID), $storedVal, time() + 60 * 60 * 24 * 7 * 2);
             }
@@ -1650,7 +1650,7 @@ class CareersUI extends UserInterface
 
         // Check if there's a cookie to prefill the fields with
         if (isset($_COOKIE[$id = $this->getCareerPortalCookieName($siteID)])) {
-            if (preg_match_all('/"([^"]+)"="([^"]*)"/', $_COOKIE[$id], $matches) > 0) {
+            if (preg_match_all('/"([^"]+)"="([^"]*)"/', (string) $_COOKIE[$id], $matches) > 0) {
                 for ($i = 0; $i < count($matches[1]); $i++) {
                     $fields[urldecode($matches[1][$i])] = urldecode($matches[2][$i]);
                     // Some fields have multiple meanings:

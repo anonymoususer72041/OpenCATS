@@ -426,7 +426,7 @@ class ReportsUI extends UserInterface
 
         if (isset($_GET['dataSet'])) {
             $dataSet = $_GET['dataSet'];
-            $dataSet = explode(',', $dataSet);
+            $dataSet = explode(',', (string) $dataSet);
         } else {
             $dataSet = [4, 3, 2, 1];
         }

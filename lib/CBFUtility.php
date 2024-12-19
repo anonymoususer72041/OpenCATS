@@ -26,7 +26,7 @@ define('CBF_GUID_SWAP_ENABLED', false);
 
 class CBFUtility
 {
-    private \DatabaseConnection $_db;
+    private readonly \DatabaseConnection $_db;
 
     private $_siteID;
 
@@ -85,7 +85,7 @@ class CBFUtility
                 }
 
                 foreach ($this->_keys as $keyFieldName => $keyTableName) {
-                    if (! strcmp($keyFieldName, $fieldName)) {
+                    if (! strcmp($keyFieldName, (string) $fieldName)) {
                         $this->_structure[$tableName][$fieldName]['foreign'] = $keyTableName;
                     }
                 }
@@ -123,7 +123,7 @@ class CBFUtility
             }
 
             // Prevent tables with no site_id from being backed up
-            if (! strcmp($row['Field'], 'site_id')) {
+            if (! strcmp((string) $row['Field'], 'site_id')) {
                 $hasSiteID = true;
             }
         }
@@ -166,7 +166,7 @@ class CBFUtility
     private function isTableSiteRestricted($tableData)
     {
         foreach ($tableData as $fieldName => $fieldData) {
-            if (! strcmp($fieldName, 'site_id')) {
+            if (! strcmp((string) $fieldName, 'site_id')) {
                 return true;
             }
         }
@@ -227,7 +227,7 @@ class CBFUtility
             $rId = array_pop(unpack('N1', $rIdBin));
             $rGUID = array_pop(unpack('N1', $rGUIDBin));
 
-            if (! strcasecmp($rName, $fieldName) && $id == $rId) {
+            if (! strcasecmp($rName, (string) $fieldName) && $id == $rId) {
                 return $rGUID;
             }
         }
@@ -277,9 +277,9 @@ class CBFUtility
 
     private function getFieldType($type)
     {
-        if (strpos(strtolower($type), 'int') !== false) {
+        if (strpos(strtolower((string) $type), 'int') !== false) {
             return 'N';
-        } elseif (strpos(strtolower($type), 'float') !== false) {
+        } elseif (strpos(strtolower((string) $type), 'float') !== false) {
             return 'N';
         } else {
             return 'S';
@@ -301,7 +301,7 @@ class CBFUtility
 
     private function restoreTableInfoBackup($tableData)
     {
-        $mp = explode(',', $tableData);
+        $mp = explode(',', (string) $tableData);
         $tableName = $mp[0];
         $tableFields = array_slice($mp, 1);
 
@@ -314,7 +314,7 @@ class CBFUtility
         foreach ($tableFields as $newFieldName) {
             $exists = false;
             foreach ($this->_structure[$tableName] as $fieldName => $fieldData) {
-                if (! strcasecmp($newFieldName, $fieldName)) {
+                if (! strcasecmp($newFieldName, (string) $fieldName)) {
                     $exists = true;
                 }
             }
@@ -365,7 +365,7 @@ class CBFUtility
                             // id points to a row that doesn't exist, maintain invalidity
                             $data .= pack('C1', ord('D'));
                             $data .= pack('C1', ord($this->getFieldType($tableData[$columnField]['Type'])));
-                            $data .= pack('N1', strlen($columnData));
+                            $data .= pack('N1', strlen((string) $columnData));
                             $data .= $columnData;
                         } else {
                             $data .= pack('C1', ord('G'));
@@ -374,7 +374,7 @@ class CBFUtility
                     } else {
                         $data .= pack('C1', ord('D'));
                         $data .= pack('C1', ord($this->getFieldType($tableData[$columnField]['Type'])));
-                        $data .= pack('N1', strlen($columnData));
+                        $data .= pack('N1', strlen((string) $columnData));
                         $data .= $columnData;
                     }
                 }
@@ -389,8 +389,8 @@ class CBFUtility
         $dataType = null;
         $data = null;
         $numFields = is_countable($tableStructure) ? count($tableStructure) : 0;
-        $numRows = array_pop(unpack('N1', substr($tableData, 0, $size = 4)));
-        $tableData = substr($tableData, $size);
+        $numRows = array_pop(unpack('N1', substr((string) $tableData, 0, $size = 4)));
+        $tableData = substr((string) $tableData, $size);
 
         $sqlInserts = [];
 
@@ -412,7 +412,7 @@ class CBFUtility
                     $tableData = substr($tableData, $size);
                     $dataType = 'N';
 
-                    if (! strcmp($fieldName, 'site_id')) {
+                    if (! strcmp((string) $fieldName, 'site_id')) {
                         // replace occurances of site_id with the current site_id
                         $dataType = 'N';
                         $data = $this->_siteID;
@@ -432,11 +432,11 @@ class CBFUtility
                 if ($dataType == 'S') {
                     $data = $this->_db->makeQueryString($data);
                 } else {
-                    if (! strlen($data)) {
+                    if (! strlen((string) $data)) {
                         $data = 'NULL';
                     }
                     // Prevent sql injection
-                    $data = addslashes($data);
+                    $data = addslashes((string) $data);
                 }
 
                 if ($tableStructure[$fieldIndex]['exists']) {
@@ -449,7 +449,7 @@ class CBFUtility
             }
 
             // Do not insert site records
-            if (strcasecmp($tableName, 'site')) {
+            if (strcasecmp((string) $tableName, 'site')) {
                 // build the insertion query
                 $sql = sprintf(
                     'INSERT INTO %s (%s) VALUES (%s)',
@@ -516,12 +516,12 @@ class CBFUtility
 
             foreach ($tables as $tableName => $tableData) {
                 $info = $this->getTableInfoBackup($tableName, $tableData);
-                fwrite($fp, pack('N1', strlen($info)), 4);
-                fwrite($fp, $info);
+                fwrite($fp, pack('N1', strlen((string) $info)), 4);
+                fwrite($fp, (string) $info);
 
                 $data = $this->getTableDataBackup($tableName, $tableData);
-                fwrite($fp, pack('N1', strlen($data)), 4);
-                fwrite($fp, $data);
+                fwrite($fp, pack('N1', strlen((string) $data)), 4);
+                fwrite($fp, (string) $data);
             }
         }
 
@@ -602,7 +602,7 @@ class CBFUtility
             $tmp = [];
             for ($sqlIndex = 0; $sqlIndex < count($sqlInserts); $sqlIndex++) {
                 $sqlInsert = $sqlInserts[$sqlIndex];
-                if (strpos($sqlInsert['SQL'], 'GUID{') === false) {
+                if (strpos((string) $sqlInsert['SQL'], 'GUID{') === false) {
                     $this->_db->query($sqlInsert['SQL']);
                     {
                         $this->setRestoreGUID($sqlInsert['GUID'], $id = $this->_db->getLastInsertID());
@@ -647,7 +647,7 @@ class CBFUtility
             echo count($sqlInserts) . ' rows were unable to be inserted.';
 
             foreach ($sqlInserts as $mp) {
-                echo "Unable to translate " . substr($mp['SQL'], strpos($mp['SQL'], 'GUID{'), 10) . "... <BR>\n";
+                echo "Unable to translate " . substr((string) $mp['SQL'], strpos((string) $mp['SQL'], 'GUID{'), 10) . "... <BR>\n";
             }
         }
 

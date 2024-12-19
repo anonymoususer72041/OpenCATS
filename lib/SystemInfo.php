@@ -118,7 +118,7 @@ class SystemInfo
             WHERE
                 system_id = 0",
             $version,
-            urlencode($newsRelease),
+            urlencode((string) $newsRelease),
             $date
         );
         $this->_db->query($sql);

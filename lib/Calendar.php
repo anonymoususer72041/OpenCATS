@@ -54,7 +54,7 @@ include_once(LEGACY_ROOT . '/lib/Mailer.php');
  */
 class Calendar
 {
-    private \DatabaseConnection $_db;
+    private readonly \DatabaseConnection $_db;
 
     private $_siteID;
 
@@ -569,7 +569,7 @@ class Calendar
                     $eventParameters[] = $field . '|' . str_replace(
                         '+',
                         ' ',
-                        urlencode($value)
+                        urlencode((string) $value)
                     );
                 }
 
@@ -598,7 +598,7 @@ class Calendar
      */
     public function getUpcomingEventsByDataItem($dataItemType, $dataItemID)
     {
-        $currentDateForMySQL = strftime('%Y-%m-%d 00:00:00', time());
+        $currentDateForMySQL = date('Y-m-d 00:00:00', time());
 
         $sql = sprintf(
             "SELECT
@@ -807,7 +807,7 @@ class Calendar
 
             $HTML .= sprintf(
                 $formatString,
-                htmlspecialchars($row['description']),
+                htmlspecialchars((string) $row['description']),
                 $style,
                 $row['date'],
                 $time,
@@ -817,7 +817,7 @@ class Calendar
                 $row['day'],
                 $row['eventID'],
                 $style,
-                htmlspecialchars($row['title'])
+                htmlspecialchars((string) $row['title'])
             );
         }
 
@@ -835,7 +835,7 @@ class Calendar
 
             $HTML .= sprintf(
                 $formatString,
-                htmlspecialchars($row['description']),
+                htmlspecialchars((string) $row['description']),
                 $style,
                 $row['date'],
                 $time,
@@ -845,7 +845,7 @@ class Calendar
                 $row['day'],
                 $row['eventID'],
                 $style,
-                htmlspecialchars($row['title'])
+                htmlspecialchars((string) $row['title'])
             );
         }
 
@@ -972,7 +972,7 @@ class Calendar
  */
 class CalendarSettings
 {
-    private \DatabaseConnection $_db;
+    private readonly \DatabaseConnection $_db;
 
     private $_siteID;
 

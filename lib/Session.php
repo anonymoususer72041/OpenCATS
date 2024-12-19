@@ -799,7 +799,7 @@ class CATSSession
                 $this->_userLicenses = $rs['userLicenses'];
                 $this->_accessLevel = $rs['accessLevel'];
                 $this->_realAccessLevel = $rs['accessLevel'];
-                $this->_categories = explode(',', $rs['categories']);
+                $this->_categories = explode(',', (string) $rs['categories']);
                 $this->_isASP = ($rs['companyID'] != 0 ? true : false);
                 $this->_isHrMode = ($rs['isHrMode'] != 0 ? true : false);
                 $this->_siteCompanyID = ($rs['companyID'] != 0 ? $rs['companyID'] : -1);
@@ -843,7 +843,7 @@ class CATSSession
                     $this->_accessLevel = ACCESS_LEVEL_DISABLED;
                 }
 
-                if (strlen($rs['columnPreferences']) > 0 && $this->_isDemo == false) {
+                if (strlen((string) $rs['columnPreferences']) > 0 && $this->_isDemo == false) {
                     $this->__dataGridColumnPreferences = unserialize($rs['columnPreferences']);
                 } else {
                     $this->__dataGridColumnPreferences = [];
@@ -888,7 +888,7 @@ class CATSSession
                     'samesite' => 'Strict',
                 ];
 
-                setcookie('session_cookie', $cookieValue, $cookieOptions);
+                setcookie('session_cookie', (string) $cookieValue, $cookieOptions);
 
                 // Update the user session in the database
                 $sql = sprintf(
@@ -1040,7 +1040,7 @@ class CATSSession
             $this->_startTime = $this->_endTime;
         }
 
-        list($a_dec, $a_sec) = explode(' ', $this->_startTime);
+        list($a_dec, $a_sec) = explode(' ', (string) $this->_startTime);
         list($b_dec, $b_sec) = explode(' ', $this->_endTime);
 
         $duration = $b_sec - $a_sec + $b_dec - $a_dec;
@@ -1201,8 +1201,8 @@ class CATSSession
      */
     public function getDataGridParameters($instance)
     {
-        if (isset($this->_dataGridColumnPreferences[md5($instance)])) {
-            return $this->_dataGridColumnPreferences[md5($instance)];
+        if (isset($this->_dataGridColumnPreferences[md5((string) $instance)])) {
+            return $this->_dataGridColumnPreferences[md5((string) $instance)];
         } else {
             return [];
         }
@@ -1215,6 +1215,6 @@ class CATSSession
      */
     public function setDataGridParameters($instance, $parameters)
     {
-        $this->_dataGridColumnPreferences[md5($instance)] = $parameters;
+        $this->_dataGridColumnPreferences[md5((string) $instance)] = $parameters;
     }
 }

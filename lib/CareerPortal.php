@@ -52,7 +52,7 @@ class CareerPortalSettings
         'CSS',
     ];
 
-    private \DatabaseConnection $_db;
+    private readonly \DatabaseConnection $_db;
 
     private $_siteID;
 
@@ -112,7 +112,7 @@ class CareerPortalSettings
          * for the activeBoard (if any).
          */
         foreach ($rs as $rowIndex => $row) {
-            if (! strcmp($row['setting'], 'activeBoard')) {
+            if (! strcmp((string) $row['setting'], 'activeBoard')) {
                 $activeBoard = $row['value'];
 
                 $templateSource1 = $this->getAllFromDefaultTemplate($activeBoard);

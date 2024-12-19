@@ -118,8 +118,8 @@ class TemplateUtility
         if ($showTopRight) {
             // FIXME: Use common functions.
             // FIXME: Isn't the UNIX-name stuff ASP specific? Hook?
-            if (strpos($username, '@' . $_SESSION['CATS']->getSiteID()) !== false &&
-                substr($username, strpos($username, '@' . $_SESSION['CATS']->getSiteID())) ==
+            if (strpos((string) $username, '@' . $_SESSION['CATS']->getSiteID()) !== false &&
+                substr((string) $username, strpos((string) $username, '@' . $_SESSION['CATS']->getSiteID())) ==
                 '@' . $_SESSION['CATS']->getSiteID()) {
                 $username = str_replace('@' . $_SESSION['CATS']->getSiteID(), '', $username);
             }
@@ -235,7 +235,7 @@ class TemplateUtility
                 }
             }
 
-            echo '>', htmlspecialchars($timeZone[1]), '</option>';
+            echo '>', htmlspecialchars((string) $timeZone[1]), '</option>';
         }
 
         echo '</select>';
@@ -308,7 +308,7 @@ class TemplateUtility
             echo '    data = [];', "\n";
             echo '    nodes = [];', "\n";
 
-            $stuff = explode('{[+', $_GET['advancedSearchParser']);
+            $stuff = explode('{[+', (string) $_GET['advancedSearchParser']);
             for ($i = 0; $i < sizeof($stuff); $i++) {
                 $innerStuff = explode('[|]', $stuff[$i]);
 
@@ -327,7 +327,7 @@ class TemplateUtility
 
         /* Tell the script what fields have access to advanced search. */
         if (! empty($considerFields)) {
-            $considerFieldsArray = explode(',', $considerFields);
+            $considerFieldsArray = explode(',', (string) $considerFields);
 
             echo '<script type="text/javascript">';
             echo '    advancedValidFields = ["', implode('","', $considerFieldsArray), '"];';
@@ -357,7 +357,7 @@ class TemplateUtility
         $currentUrlGET = [];
         foreach ($_GET as $key => $value) {
             if ($key != 'savedSearchID') {
-                $currentUrlGET[] = $key . '=' . urlencode($value);
+                $currentUrlGET[] = $key . '=' . urlencode((string) $value);
             }
         }
 
@@ -378,8 +378,8 @@ class TemplateUtility
             echo '(None)';
         } else {
             foreach ($savedSearchRecent as $savedSearchRow) {
-                if (strlen($savedSearchRow['dataItemText']) > 35) {
-                    $savedSearchRow['dataItemText'] = substr($savedSearchRow['dataItemText'], 0, 35) . '...';
+                if (strlen((string) $savedSearchRow['dataItemText']) > 35) {
+                    $savedSearchRow['dataItemText'] = substr((string) $savedSearchRow['dataItemText'], 0, 35) . '...';
                 }
 
                 if (count($savedSearchSaved) >= RECENT_SEARCH_MAX_ITEMS) {
@@ -392,7 +392,7 @@ class TemplateUtility
 
                 echo '<img src="images/actions/add_small.gif" alt="" style="border: none;" title="Save This Search" /></a>&nbsp;', "\n";
 
-                $escapedURL = htmlspecialchars($savedSearchRow['URL']);
+                $escapedURL = htmlspecialchars((string) $savedSearchRow['URL']);
 
                 /* Remove leading slashes. */
                 while (substr($escapedURL, 0, 1) == '/') {
@@ -401,7 +401,7 @@ class TemplateUtility
                 $escapedURL = '/' . $escapedURL;
 
 
-                $escapedText = htmlspecialchars($savedSearchRow['dataItemText']);
+                $escapedText = htmlspecialchars((string) $savedSearchRow['dataItemText']);
 
                 echo '<a href="', $escapedURL,
                 '" onclick="gotoSearch(\'', $escapedText, "', '", $escapedURL, '\');"',
@@ -425,12 +425,12 @@ class TemplateUtility
             echo '(None)';
         } else {
             foreach ($savedSearchSaved as $savedSearchRow) {
-                if (strlen($savedSearchRow['dataItemText']) > 35) {
-                    $savedSearchRow['dataItemText'] = substr($savedSearchRow['dataItemText'], 0, 35) . '...';
+                if (strlen((string) $savedSearchRow['dataItemText']) > 35) {
+                    $savedSearchRow['dataItemText'] = substr((string) $savedSearchRow['dataItemText'], 0, 35) . '...';
                 }
 
-                $escapedURL = htmlspecialchars($savedSearchRow['URL']);
-                $escapedText = htmlspecialchars($savedSearchRow['dataItemText']);
+                $escapedURL = htmlspecialchars((string) $savedSearchRow['URL']);
+                $escapedText = htmlspecialchars((string) $savedSearchRow['dataItemText']);
 
                 /* Remove leading slashes. */
                 while (substr($escapedURL, 0, 1) == '/') {
@@ -578,12 +578,12 @@ class TemplateUtility
                     $className = 'inactive';
                 }
 
-                $alPosition = strpos($tabText, "*al=");
+                $alPosition = strpos((string) $tabText, "*al=");
                 if ($alPosition === false) {
                     echo '<li><a class="', $className, '" href="', $indexName,
                     '?m=', $moduleName, '">', $tabText, '</a></li>', "\n";
                 } else {
-                    $al = substr($tabText, $alPosition + 4);
+                    $al = substr((string) $tabText, $alPosition + 4);
                     $soPosition = strpos($al, "@");
                     $soName = '';
                     if ($soPosition !== false) {
@@ -593,16 +593,16 @@ class TemplateUtility
                     if ($_SESSION['CATS']->getAccessLevel($soName) >= $al ||
                         $_SESSION['CATS']->isDemo()) {
                         echo '<li><a class="', $className, '" href="', $indexName, '?m=', $moduleName, '">',
-                        substr($tabText, 0, $alPosition), '</a></li>', "\n";
+                        substr((string) $tabText, 0, $alPosition), '</a></li>', "\n";
                     }
                 }
 
                 continue;
             }
 
-            $alPosition = strpos($tabText, "*al=");
+            $alPosition = strpos((string) $tabText, "*al=");
             if ($alPosition !== false) {
-                $tabText = substr($tabText, 0, $alPosition);
+                $tabText = substr((string) $tabText, 0, $alPosition);
             }
 
             /* Start the <li> block for the active tab. The secondary <ul>
@@ -625,23 +625,23 @@ class TemplateUtility
                     }
 
                     /* Check HR mode for displaying tab. */
-                    $hrmodePosition = strpos($link, "*hrmode=");
+                    $hrmodePosition = strpos((string) $link, "*hrmode=");
                     if ($hrmodePosition !== false) {
                         /* Access level restricted subtab. */
-                        $hrmode = substr($link, $hrmodePosition + 8);
+                        $hrmode = substr((string) $link, $hrmodePosition + 8);
                         if ((! $_SESSION['CATS']->isHrMode() && $hrmode == 0) ||
                             ($_SESSION['CATS']->isHrMode() && $hrmode == 1)) {
-                            $link = substr($link, 0, $hrmodePosition);
+                            $link = substr((string) $link, 0, $hrmodePosition);
                         } else {
                             $link = '';
                         }
                     }
 
                     /* Check access level for displaying tab. */
-                    $alPosition = strpos($link, "*al=");
+                    $alPosition = strpos((string) $link, "*al=");
                     if ($alPosition !== false) {
                         /* Access level restricted subtab. */
-                        $al = substr($link, $alPosition + 4);
+                        $al = substr((string) $link, $alPosition + 4);
                         $soPosition = strpos($al, "@");
                         $soName = '';
                         if ($soPosition !== false) {
@@ -650,24 +650,24 @@ class TemplateUtility
                         }
                         if ($_SESSION['CATS']->getAccessLevel($soName) >= $al ||
                             $_SESSION['CATS']->isDemo()) {
-                            $link = substr($link, 0, $alPosition);
+                            $link = substr((string) $link, 0, $alPosition);
                         } else {
                             $link = '';
                         }
                     }
 
-                    $jsPosition = strpos($link, "*js=");
+                    $jsPosition = strpos((string) $link, "*js=");
                     if ($jsPosition !== false) {
                         /* Javascript subtab. */
-                        echo '<li><a href="', substr($link, 0, $jsPosition), '" onclick="',
-                        substr($link, $jsPosition + 4), '" style="' . $style . '">', $subTabText, '</a></li>', "\n";
+                        echo '<li><a href="', substr((string) $link, 0, $jsPosition), '" onclick="',
+                        substr((string) $link, $jsPosition + 4), '" style="' . $style . '">', $subTabText, '</a></li>', "\n";
                     }
 
                     /* A few subtabs have special logic to decide if they display or not. */
                     /* FIXME:  Put the logic for these somewhere else.  Perhaps the definitions of the subtabs
                                themselves should have an eval()uatable rule?
                                Brian 6-14-07:  Second.  */
-                    elseif (strpos($link, 'a=internalPostings') !== false) {
+                    elseif (strpos((string) $link, 'a=internalPostings') !== false) {
                         /* Default company subtab. */
                         include_once(LEGACY_ROOT . '/lib/Companies.php');
 
@@ -676,12 +676,12 @@ class TemplateUtility
                         if ($defaultCompanyID !== false) {
                             echo '<li><a href="', $link, '" style="' . $style . '">', $subTabText, '</a></li>', "\n";
                         }
-                    } elseif (strpos($link, 'a=administration') !== false) {
+                    } elseif (strpos((string) $link, 'a=administration') !== false) {
                         /* Administration subtab. */
                         if ($_SESSION['CATS']->getAccessLevel('settings.administration') >= ACCESS_LEVEL_DEMO) {
                             echo '<li><a href="', $link, '" style="' . $style . '">', $subTabText, '</a></li>', "\n";
                         }
-                    } elseif (strpos($link, 'a=customizeEEOReport') !== false) {
+                    } elseif (strpos((string) $link, 'a=customizeEEOReport') !== false) {
                         /* EEO Report subtab.  Shouldn't be visible if EEO tracking is disabled. */
                         $EEOSettings = new EEOSettings($_SESSION['CATS']->getSiteID());
                         $EEOSettingsRS = $EEOSettings->getAll();
@@ -968,9 +968,9 @@ class TemplateUtility
      */
     public static function filterRemoveTextBlock($text, $startBlock, $endBlock, $closingTag = '')
     {
-        $startPos = strpos($text, $startBlock);
+        $startPos = strpos((string) $text, (string) $startBlock);
         if ($startPos !== false) {
-            $endPos = strpos(substr($text, $startPos + strlen($startBlock)), $endBlock);
+            $endPos = strpos(substr((string) $text, $startPos + strlen((string) $startBlock)), (string) $endBlock);
         } else {
             $endPos = false;
         }
@@ -983,22 +983,22 @@ class TemplateUtility
             if ($endPos === false) {
                 $endPos = 0;
             } else {
-                $endPos += strlen($endBlock);
+                $endPos += strlen((string) $endBlock);
             }
 
-            $text = substr_replace($text, '', $startPos, $endPos + strlen($startBlock));
+            $text = substr_replace($text, '', $startPos, $endPos + strlen((string) $startBlock));
 
             if ($closingTag != '') {
-                $closingPos = strpos(substr($text, $startPos), $closingTag);
+                $closingPos = strpos(substr($text, $startPos), (string) $closingTag);
 
                 if ($closingPos !== false) {
-                    $text = substr_replace($text, '', $closingPos + $startPos, strlen($closingTag));
+                    $text = substr_replace($text, '', $closingPos + $startPos, strlen((string) $closingTag));
                 }
             }
 
-            $startPos = strpos($text, $startBlock);
+            $startPos = strpos($text, (string) $startBlock);
             if ($startPos !== false) {
-                $endPos = strpos(substr($text, $startPos + strlen($startBlock)), $endBlock);
+                $endPos = strpos(substr($text, $startPos + strlen((string) $startBlock)), (string) $endBlock);
             } else {
                 $endPos = false;
             }
@@ -1062,7 +1062,7 @@ class TemplateUtility
         $headIncludes[] = 'main.css';
 
         foreach ($headIncludes as $key => $filename) {
-            $extension = substr($filename, strrpos($filename, '.') + 1);
+            $extension = substr((string) $filename, strrpos((string) $filename, '.') + 1);
 
             $filename .= $javascriptAntiCache;
 

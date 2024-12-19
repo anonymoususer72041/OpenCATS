@@ -46,7 +46,7 @@ class Questionnaire
 {
     private $_siteID;
 
-    private \DatabaseConnection $_db;
+    private readonly \DatabaseConnection $_db;
 
     public function __construct($siteID)
     {
@@ -484,7 +484,7 @@ class Questionnaire
         $lastTitle = '';
         $results = [];
         foreach ($rs as $row) {
-            if (strcmp($lastTitle, $row[$id = 'questionnaireTitle'])) {
+            if (strcmp((string) $lastTitle, (string) $row[$id = 'questionnaireTitle'])) {
                 $results[] = $row;
                 $lastTitle = $row[$id];
             }
@@ -630,19 +630,19 @@ class Questionnaire
                             $answerText .= $answer['answerText'];
 
                             // Perform any actions (if there are any)
-                            if (strlen($answer['actionSource'])) {
+                            if (strlen((string) $answer['actionSource'])) {
                                 if (strlen($source)) {
                                     $source .= ', ';
                                 }
                                 $source .= $answer['actionSource'];
                             }
-                            if (strlen($answer['actionNotes'])) {
+                            if (strlen((string) $answer['actionNotes'])) {
                                 if (strlen($notes)) {
                                     $notes .= ', ';
                                 }
                                 $notes .= $answer['actionNotes'];
                             }
-                            if (strlen($answer['actionKeySkills'])) {
+                            if (strlen((string) $answer['actionKeySkills'])) {
                                 if (strlen($keySkills)) {
                                     $keySkills .= ', ';
                                 }

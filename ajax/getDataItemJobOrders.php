@@ -86,9 +86,9 @@ foreach ($jobOrdersArray as $rowIndex => $row) {
     $output .=
         "    <joborder>\n" .
         "        <id>" . $jobOrdersArray[$rowIndex]['jobOrderID'] . "</id>\n" .
-        "        <title>" . htmlspecialchars($jobOrdersArray[$rowIndex]['title']) . "</title>\n" .
-        "        <companyname>" . htmlspecialchars($jobOrdersArray[$rowIndex]['companyName']) . "</companyname>\n" .
-        "        <assigned>" . htmlspecialchars($jobOrdersArray[$rowIndex]['isAssigned']) . "</assigned>\n" .
+        "        <title>" . htmlspecialchars((string) $jobOrdersArray[$rowIndex]['title']) . "</title>\n" .
+        "        <companyname>" . htmlspecialchars((string) $jobOrdersArray[$rowIndex]['companyName']) . "</companyname>\n" .
+        "        <assigned>" . htmlspecialchars((string) $jobOrdersArray[$rowIndex]['isAssigned']) . "</assigned>\n" .
         "    </joborder>\n";
 }
 

@@ -255,7 +255,7 @@ class UserInterface
 
         $getArray = [];
         foreach ($_REQUEST as $index => $data) {
-            $getArray[] = urlencode($index) . '=' . urlencode($data);
+            $getArray[] = urlencode($index) . '=' . urlencode((string) $data);
         }
 
         echo '<!--';
@@ -309,7 +309,7 @@ class UserInterface
     {
         if (isset($request[$key]) && (! empty($request[$key]) ||
             ($allowZero && $request[$key] == '0')) &&
-            ctype_digit((string) trim($request[$key]))) {
+            ctype_digit((string) trim((string) $request[$key]))) {
             return true;
         }
 
@@ -357,7 +357,7 @@ class UserInterface
     protected function getTrimmedInput($key, $request)
     {
         if (isset($request[$key])) {
-            return trim($request[$key]);
+            return trim((string) $request[$key]);
         }
 
         return '';
@@ -369,7 +369,7 @@ class UserInterface
     protected function getSanitisedInput($key, $request)
     {
         if (isset($request[$key])) {
-            return trim(htmlspecialchars($request[$key], ENT_QUOTES, false));
+            return trim(htmlspecialchars((string) $request[$key], ENT_QUOTES, false));
         }
         return '';
     }

@@ -139,7 +139,7 @@ if ($phpVersionParts[0] >= 5) {
                                             document processing software. You need to configure the software below
                                             to enable resume indexing.<br />
                                             <br />
-                                            <a href="http://www.catsone.com/resumeIndexingSoftware.php?os=<?php echo(urlencode(PHP_OS)); ?>&amp;server_software=<?php echo(urlencode($_SERVER['SERVER_SOFTWARE'])); ?>" target="resumeParsingSoftwareDownload">
+                                            <a href="http://www.catsone.com/resumeIndexingSoftware.php?os=<?php echo(urlencode(PHP_OS)); ?>&amp;server_software=<?php echo(urlencode((string) $_SERVER['SERVER_SOFTWARE'])); ?>" target="resumeParsingSoftwareDownload">
                                                 Where can I get this software?
                                             </a><br />
                                             <br />

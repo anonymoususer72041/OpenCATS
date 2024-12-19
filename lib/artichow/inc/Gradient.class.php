@@ -22,6 +22,7 @@ abstract class awGradient
      * @var Color
      */
     public $from;
+    public $angle;
 
     /**
      * To color

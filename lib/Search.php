@@ -77,7 +77,7 @@ class SearchUtility
                 }
 
                 /* Escape the key for use with preg_*(). */
-                $key = preg_quote($key, '/');
+                $key = preg_quote((string) $key, '/');
 
                 /* Remember occurrence of key so we can skip over it if more occurrnces
                  * are desired.
@@ -93,7 +93,7 @@ class SearchUtility
                     $newKey = str_replace('\*', '', $key);
                     $regExPass = preg_match(
                         '/' . $newKey . '/i',
-                        $text,
+                        (string) $text,
                         $matches,
                         PREG_OFFSET_CAPTURE,
                         $included[$key]
@@ -101,7 +101,7 @@ class SearchUtility
                 } else {
                     $regExPass = preg_match(
                         '/\b' . $key . '\b/i',
-                        $text,
+                        (string) $text,
                         $matches,
                         PREG_OFFSET_CAPTURE,
                         $included[$key]
@@ -111,9 +111,9 @@ class SearchUtility
                 if ($regExPass) {
                     $firstMatchOffset = $matches[0][1];
 
-                    $firstSpaceInRange = strpos($text, ' ', max(0, $firstMatchOffset - 60));
+                    $firstSpaceInRange = strpos((string) $text, ' ', max(0, $firstMatchOffset - 60));
                     if ($firstSpaceInRange !== false) {
-                        $end = substr($text, $firstMatchOffset, 80);
+                        $end = substr((string) $text, $firstMatchOffset, 80);
                         $lastSpaceInRange = strrpos($end, ' ');
 
                         if ($lastSpaceInRange !== false) {
@@ -186,7 +186,7 @@ class SearchUtility
         /* Fetch text. */
         $out = [];
         foreach ($newRanges as $from => $to) {
-            $out[] = substr($text, $from, $to - $from);
+            $out[] = substr((string) $text, $from, $to - $from);
         }
 
         $text = implode(' ... ', $out);
@@ -194,7 +194,7 @@ class SearchUtility
         /* Highlight wildcards differently. */
         $keywordsWild = [];
         foreach ($keywords as $keyOffset => $key) {
-            if (strpos($key, '*') !== false) {
+            if (strpos((string) $key, '*') !== false) {
                 $keywordsWild[] = str_replace('*', '', $key);
                 unset($keywords[$keyOffset]);
             }
@@ -221,7 +221,7 @@ class SearchUtility
             $text = preg_replace(
                 '/\b(' . $regex . ')\b/i',
                 '<span style="background-color: #ffff99">\1</span>',
-                $text
+                (string) $text
             );
         }
 
@@ -261,7 +261,7 @@ class SearchUtility
         /* Highlight wildcards differently. */
         $keywordsWild = [];
         foreach ($keywords as $keyOffset => $key) {
-            if (strpos($key, '*') !== false) {
+            if (strpos((string) $key, '*') !== false) {
                 $keywordsWild[] = str_replace('*', '', $key);
                 unset($keywords[$keyOffset]);
             }
@@ -276,7 +276,7 @@ class SearchUtility
             $text = preg_replace(
                 '/(' . $regex . ')/i',
                 '<span style="background-color: #ffff99">\1</span>',
-                $text
+                (string) $text
             );
         }
 
@@ -288,7 +288,7 @@ class SearchUtility
             $text = preg_replace(
                 '/\b(' . $regex . ')\b/i',
                 '<span style="background-color: #ffff99">\1</span>',
-                $text
+                (string) $text
             );
         }
 
@@ -2019,7 +2019,7 @@ class SearchByResumePager extends Pager
      *
      * @param string error message
      */
-    protected function fatal($error)
+    protected function fatal($error): never
     {
         $template = new Template();
         $template->assign('errorMessage', $error);

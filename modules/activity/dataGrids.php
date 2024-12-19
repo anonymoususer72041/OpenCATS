@@ -284,13 +284,13 @@ class ActivityDataGrid extends DataGrid
             DATA_ITEM_CANDIDATE,
             $this->_siteID,
             $this->dateCriterion,
-            (strlen($whereSQL) > 0) ? ' AND ' . $whereSQL : '',
+            (strlen((string) $whereSQL) > 0) ? ' AND ' . $whereSQL : '',
             $distinct,
             DATA_ITEM_CONTACT,
             $this->_siteID,
             $this->dateCriterion,
-            (strlen($whereSQL) > 0) ? ' AND ' . $whereSQL : '',
-            (strlen($havingSQL) > 0) ? ' HAVING ' . $havingSQL : '',
+            (strlen((string) $whereSQL) > 0) ? ' AND ' . $whereSQL : '',
+            (strlen((string) $havingSQL) > 0) ? ' HAVING ' . $havingSQL : '',
             $orderSQL,
             $limitSQL
         );

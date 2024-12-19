@@ -67,7 +67,7 @@ class DatabaseSearch
             'NOT',
             'NOT',
         ];
-        $string = preg_replace($regexSearch, $regexReplace, $string);
+        $string = preg_replace($regexSearch, $regexReplace, (string) $string);
 
         /* Translate AND/OR/NOT to +/-/!. */
         $stringSearch = [' AND ', ' NOT ', ' OR ', ','];
@@ -108,9 +108,9 @@ class DatabaseSearch
      */
     public static function markUpQuotes($string)
     {
-        while (strpos($string, '"') !== false) {
+        while (strpos((string) $string, '"') !== false) {
             /* Find the first quote. */
-            $quoteStart = strpos($string, '"');
+            $quoteStart = strpos((string) $string, '"');
             $string = substr_replace($string, '', $quoteStart, 1);
 
             /* Find the second quote; if there isn't one, break out. */
@@ -172,7 +172,7 @@ class DatabaseSearch
         /* Loop through each character of the string and ensure all paranthesis
          * are matched.
          */
-        $length = strlen($string);
+        $length = strlen((string) $string);
         for ($i = 0; $i < $length; ++$i) {
             /* Open paranthesis. */
             if ($string[$i] == '(') {
@@ -214,7 +214,7 @@ class DatabaseSearch
         /* Empty string handling. This makes the query "WHERE 0", thus no
          * results are returned.
          */
-        $string = trim($string);
+        $string = trim((string) $string);
         if (empty($string)) {
             return '0';
         }
@@ -276,7 +276,7 @@ class DatabaseSearch
         $string = preg_replace($regexSearch, $regexReplace, $string);
 
         /* Clean up extra spaces. */
-        while (strpos($string, '  ') !== false) {
+        while (strpos((string) $string, '  ') !== false) {
             $string = str_replace('  ', ' ', $string);
         }
 
@@ -287,7 +287,7 @@ class DatabaseSearch
         $string = $databaseConnection->escapeString($string);
 
         /* Everything that is a symbol gets translated into something else. */
-        $string = urlencode($string);
+        $string = urlencode((string) $string);
         $string = str_replace('%5C%5C%2A', '*', $string);
         $string = str_replace('%', 'PPPERCENTTT', $string);
         $string = urldecode($string);
@@ -315,7 +315,7 @@ class DatabaseSearch
         );
 
         /* Remove leading and trailing whitespace from $string. */
-        $string = trim($string);
+        $string = trim((string) $string);
 
         /* Strip empty or erroneous atoms. */
         $string = str_replace('word[(\'\')]full', '', $string);
@@ -364,22 +364,22 @@ class DatabaseSearch
         $string = preg_replace(
             $search,
             '(' . $tableField . ' LIKE \'%\\1%\')',
-            $string
+            (string) $string
         );
 
         /* WHERE clauses cannot start with NOT. */
-        if (preg_match('/^\s*NOT/i', $string)) {
+        if (preg_match('/^\s*NOT/i', (string) $string)) {
             return '0';
         }
 
         /* WHERE clauses cannot start with AND or OR. */
-        $string = preg_replace('/^\s*(?:(?:AND|OR)\s+)+/', ' ', $string);
+        $string = preg_replace('/^\s*(?:(?:AND|OR)\s+)+/', ' ', (string) $string);
 
         /* WHERE clauses cannot end with AND or OR. */
-        $string = preg_replace('/\s*(?:(?:AND|OR|NOT|AND\s+NOT)\s*)+$/', ' ', $string);
+        $string = preg_replace('/\s*(?:(?:AND|OR|NOT|AND\s+NOT)\s*)+$/', ' ', (string) $string);
 
         /* Move around NOT. */
-        $array = explode(' ', $string);
+        $array = explode(' ', (string) $string);
         $count = count($array);
         for ($i = 0; $i < ($count - 1); $i++) {
             if ($array[$i] == 'NOT' && isset($array[$i + 2]) &&

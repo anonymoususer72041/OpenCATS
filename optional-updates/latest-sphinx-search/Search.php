@@ -76,7 +76,7 @@ class SearchUtility
                 }
 
                 /* Escape the key for use with preg_*(). */
-                $key = preg_quote($key, '/');
+                $key = preg_quote((string) $key, '/');
 
                 /* Remember occurrence of key so we can skip over it if more occurrnces
                  * are desired.
@@ -92,7 +92,7 @@ class SearchUtility
                     $newKey = str_replace('\*', '', $key);
                     $regExPass = preg_match(
                         '/' . $newKey . '/i',
-                        $text,
+                        (string) $text,
                         $matches,
                         PREG_OFFSET_CAPTURE,
                         $included[$key]
@@ -100,7 +100,7 @@ class SearchUtility
                 } else {
                     $regExPass = preg_match(
                         '/\b' . $key . '\b/i',
-                        $text,
+                        (string) $text,
                         $matches,
                         PREG_OFFSET_CAPTURE,
                         $included[$key]
@@ -110,9 +110,9 @@ class SearchUtility
                 if ($regExPass) {
                     $firstMatchOffset = $matches[0][1];
 
-                    $firstSpaceInRange = strpos($text, ' ', max(0, $firstMatchOffset - 60));
+                    $firstSpaceInRange = strpos((string) $text, ' ', max(0, $firstMatchOffset - 60));
                     if ($firstSpaceInRange !== false) {
-                        $end = substr($text, $firstMatchOffset, 80);
+                        $end = substr((string) $text, $firstMatchOffset, 80);
                         $lastSpaceInRange = strrpos($end, ' ');
 
                         if ($lastSpaceInRange !== false) {
@@ -185,7 +185,7 @@ class SearchUtility
         /* Fetch text. */
         $out = [];
         foreach ($newRanges as $from => $to) {
-            $out[] = substr($text, $from, $to - $from);
+            $out[] = substr((string) $text, $from, $to - $from);
         }
 
         $text = implode(' ... ', $out);
@@ -193,7 +193,7 @@ class SearchUtility
         /* Highlight wildcards differently. */
         $keywordsWild = [];
         foreach ($keywords as $keyOffset => $key) {
-            if (strpos($key, '*') !== false) {
+            if (strpos((string) $key, '*') !== false) {
                 $keywordsWild[] = str_replace('*', '', $key);
                 unset($keywords[$keyOffset]);
             }
@@ -220,7 +220,7 @@ class SearchUtility
             $text = preg_replace(
                 '/\b(' . $regex . ')\b/i',
                 '<span style="background-color: #ffff99">\1</span>',
-                $text
+                (string) $text
             );
         }
 
@@ -260,7 +260,7 @@ class SearchUtility
         /* Highlight wildcards differently. */
         $keywordsWild = [];
         foreach ($keywords as $keyOffset => $key) {
-            if (strpos($key, '*') !== false) {
+            if (strpos((string) $key, '*') !== false) {
                 $keywordsWild[] = str_replace('*', '', $key);
                 unset($keywords[$keyOffset]);
             }
@@ -275,7 +275,7 @@ class SearchUtility
             $text = preg_replace(
                 '/(' . $regex . ')/i',
                 '<span style="background-color: #ffff99">\1</span>',
-                $text
+                (string) $text
             );
         }
 
@@ -287,7 +287,7 @@ class SearchUtility
             $text = preg_replace(
                 '/\b(' . $regex . ')\b/i',
                 '<span style="background-color: #ffff99">\1</span>',
-                $text
+                (string) $text
             );
         }
 
@@ -357,7 +357,7 @@ class SearchCandidates
         $result = "0";
         $bypass = false;
 
-        if (ENABLE_SPHINX && strlen($keywordstr) > 0) {
+        if (ENABLE_SPHINX && strlen((string) $keywordstr) > 0) {
             /* Sphinx API likes to throw PHP errors *AND* use it's own error
              * handling.
              */
@@ -482,7 +482,7 @@ class SearchCandidates
                 geoip_details            
             WHERE
                 LOWER(geoip_details.postalcode) = '%s'",
-            strtolower($zip_code)
+            strtolower((string) $zip_code)
         );
 
 
@@ -492,7 +492,7 @@ class SearchCandidates
             foreach ($rs as $rowIndex => $row) {
                 $latitude = $row["latitude"];
                 $longitude = $row["longitude"];
-                switch (strtolower($distance_unit)) {
+                switch (strtolower((string) $distance_unit)) {
                     case 'miles': /*** miles ***/
                         $unit = 3963;
                         break;
@@ -962,7 +962,7 @@ class SearchCompanies
                 geoip_details            
             WHERE
                 LOWER(geoip_details.postalcode) = '%s'",
-            strtolower($zip_code)
+            strtolower((string) $zip_code)
         );
 
 
@@ -972,7 +972,7 @@ class SearchCompanies
             foreach ($rs as $rowIndex => $row) {
                 $latitude = $row["latitude"];
                 $longitude = $row["longitude"];
-                switch (strtolower($distance_unit)) {
+                switch (strtolower((string) $distance_unit)) {
                     case 'miles': /*** miles ***/
                         $unit = 3963;
                         break;
@@ -2203,7 +2203,7 @@ class SearchByResumePager extends Pager
             'ownerSort',
         ];
 
-        if (ENABLE_SPHINX && strlen($single_resume_text) > 0) {
+        if (ENABLE_SPHINX && strlen((string) $single_resume_text) > 0) {
             /* Sphinx API likes to throw PHP errors *AND* use it's own error
              * handling.
              */
@@ -2273,7 +2273,7 @@ class SearchByResumePager extends Pager
 
             $wildCardString = $wildCardString_orig;
             if (empty($results['matches'])) {
-                if (strlen($wildCardString) > 0) {
+                if (strlen((string) $wildCardString) > 0) {
                     $this->_WHERE = "(" . $wildCardString . ")";
                 } else {
                     $this->_WHERE = '0';
@@ -2284,7 +2284,7 @@ class SearchByResumePager extends Pager
             } else {
                 $attachmentIDs = implode(',', array_keys($results['matches']));
                 $this->_WHERE = 'attachment.attachment_id IN(' . $attachmentIDs . ')';
-                if (strlen($wildCardString) > 0) {
+                if (strlen((string) $wildCardString) > 0) {
                     $this->_WHERE .= " AND (" . $wildCardString . ")";
                 } else {
                     $wildCardString = "0";
@@ -2406,7 +2406,7 @@ class SearchByResumePager extends Pager
      *
      * @param string error message
      */
-    protected function fatal($error)
+    protected function fatal($error): never
     {
         $template = new Template();
         $template->assign('errorMessage', $error);

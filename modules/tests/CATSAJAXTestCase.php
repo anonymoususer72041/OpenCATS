@@ -33,7 +33,7 @@ class CATSAJAXTestCase extends CATSWebTestCase
 
     public function getSimpleXML()
     {
-        return simplexml_load_string($this->getRawSource());
+        return simplexml_load_string((string) $this->getRawSource());
     }
 
     public function assertNoAJAXErrors($xml, $message = '%s')

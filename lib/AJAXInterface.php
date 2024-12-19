@@ -181,7 +181,7 @@ class AJAXInterface
     {
         if (isset($_REQUEST[$key]))
         {
-            return trim($_REQUEST[$key]);
+            return trim((string) $_REQUEST[$key]);
         }
 
         return '';

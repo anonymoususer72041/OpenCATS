@@ -45,7 +45,7 @@ if (! $interface->isRequiredIDValid('maxResults')) {
 
 $siteID = $interface->getSiteID();
 
-$dataName = trim($_REQUEST['dataName']);
+$dataName = trim((string) $_REQUEST['dataName']);
 $maxResults = $_REQUEST['maxResults'];
 
 $search = new SearchCompanies($siteID);
@@ -73,7 +73,7 @@ foreach ($companiesArray as $rowIndex => $row) {
     $output .=
         "    <result>\n" .
         "        <id>" . $companiesArray[$rowIndex]['companyID'] . "</id>\n" .
-        "        <name>" . rawurlencode($companiesArray[$rowIndex]['name']) . "</name>\n" .
+        "        <name>" . rawurlencode((string) $companiesArray[$rowIndex]['name']) . "</name>\n" .
         "    </result>\n";
 }
 

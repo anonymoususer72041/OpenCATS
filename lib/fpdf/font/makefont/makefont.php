@@ -8,7 +8,7 @@
 function ReadMap($enc)
 {
     //Read a map file
-    $file = dirname(__FILE__) . '/' . strtolower($enc) . '.map';
+    $file = dirname(__FILE__) . '/' . strtolower((string) $enc) . '.map';
     $a = file($file);
     if (empty($a)) {
         die('<strong>Error:</strong> encoding not found: ' . $enc);
@@ -202,7 +202,7 @@ function MakeFontDescriptor($fm, $symbolic)
     //StemV
     if (isset($fm['StdVW'])) {
         $stemv = $fm['StdVW'];
-    } elseif (isset($fm['Weight']) and preg_match('/(bold|black)/i', $fm['Weight'])) {
+    } elseif (isset($fm['Weight']) and preg_match('/(bold|black)/i', (string) $fm['Weight'])) {
         $stemv = 120;
     } else {
         $stemv = 70;
@@ -267,7 +267,7 @@ function SaveToFile($file, $s, $mode = 't')
     if (! $f) {
         die('Can\'t write to file ' . $file);
     }
-    fwrite($f, $s, strlen($s));
+    fwrite($f, (string) $s, strlen((string) $s));
     fclose($f);
 }
 
@@ -356,7 +356,7 @@ function MakeFont($fontfile, $afmfile, $enc = 'cp1252', $patch = [], $type = 'Tr
     $fd = MakeFontDescriptor($fm, empty($map));
     //Find font type
     if ($fontfile) {
-        $ext = strtolower(substr($fontfile, -3));
+        $ext = strtolower(substr((string) $fontfile, -3));
         if ($ext == 'ttf') {
             $type = 'TrueType';
         } elseif ($ext == 'pfb') {
@@ -386,7 +386,7 @@ function MakeFont($fontfile, $afmfile, $enc = 'cp1252', $patch = [], $type = 'Tr
     $s .= '$cw=' . $w . ";\n";
     $s .= '$enc=\'' . $enc . "';\n";
     $s .= '$diff=\'' . $diff . "';\n";
-    $basename = substr(basename($afmfile), 0, -4);
+    $basename = substr(basename((string) $afmfile), 0, -4);
     if ($fontfile) {
         //Embedded font
         if (! file_exists($fontfile)) {
@@ -430,7 +430,7 @@ function MakeFont($fontfile, $afmfile, $enc = 'cp1252', $patch = [], $type = 'Tr
             $s .= '$file=\'' . $cmp . "';\n";
             echo 'Font file compressed (' . $cmp . ')<BR>';
         } else {
-            $s .= '$file=\'' . basename($fontfile) . "';\n";
+            $s .= '$file=\'' . basename((string) $fontfile) . "';\n";
             echo '<strong>Notice:</strong> font file could not be compressed (zlib extension not available)<BR>';
         }
         if ($type == 'Type1') {

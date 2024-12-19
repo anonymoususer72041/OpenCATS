@@ -183,11 +183,11 @@ class XmlTemplate
     public static function loadTemplateTags($template)
     {
         $tags = [];
-        for ($i = 0; $i < strlen($template) - 4; $i++) {
-            if (! strcmp(substr($template, $i, 2), '$[')) {
-                $x = strpos($template, ']', $i + 2);
+        for ($i = 0; $i < strlen((string) $template) - 4; $i++) {
+            if (! strcmp(substr((string) $template, $i, 2), '$[')) {
+                $x = strpos((string) $template, ']', $i + 2);
                 if ($x !== false) {
-                    $tag = substr($template, $i + 2, $x - $i - 2);
+                    $tag = substr((string) $template, $i + 2, $x - $i - 2);
                     if (! in_array($tag, $tags)) {
                         $tags[] = $tag;
                     }
@@ -210,7 +210,7 @@ class XmlTemplate
     {
         return str_replace(
             sprintf('$[%s]', $tag),
-            htmlspecialchars($replace),
+            htmlspecialchars((string) $replace),
             $template
         );
     }

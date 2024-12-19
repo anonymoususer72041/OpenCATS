@@ -243,7 +243,7 @@ class ContactsUI extends UserInterface
          * strip leading empty lines and spaces.
          */
         $data['notes'] = trim(
-            nl2br(htmlspecialchars($data['notes'], ENT_QUOTES))
+            nl2br(htmlspecialchars((string) $data['notes'], ENT_QUOTES))
         );
 
         /* Chop $data['notes'] to make $data['shortNotes']. */
@@ -725,8 +725,8 @@ class ContactsUI extends UserInterface
                     $contactDetails['firstName'],
                     $contactDetails['firstName'] . ' ' . $contactDetails['lastName'],
                     $contactDetails['companyName'],
-                    '<a href="http://' . $_SERVER['HTTP_HOST'] . substr($_SERVER['REQUEST_URI'], 0, strpos($_SERVER['REQUEST_URI'], '?')) . '?m=contacts&amp;a=show&amp;contactID=' . $contactID . '">' .
-                        'http://' . $_SERVER['HTTP_HOST'] . substr($_SERVER['REQUEST_URI'], 0, strpos($_SERVER['REQUEST_URI'], '?')) . '?m=contacts&amp;a=show&amp;contactID=' . $contactID . '</a>',
+                    '<a href="http://' . $_SERVER['HTTP_HOST'] . substr((string) $_SERVER['REQUEST_URI'], 0, strpos((string) $_SERVER['REQUEST_URI'], '?')) . '?m=contacts&amp;a=show&amp;contactID=' . $contactID . '">' .
+                        'http://' . $_SERVER['HTTP_HOST'] . substr((string) $_SERVER['REQUEST_URI'], 0, strpos((string) $_SERVER['REQUEST_URI'], '?')) . '?m=contacts&amp;a=show&amp;contactID=' . $contactID . '</a>',
                 ];
                 $statusChangeTemplate = str_replace(
                     $stringsToFind,
@@ -894,7 +894,7 @@ class ContactsUI extends UserInterface
             CommonErrors::fatal(COMMONERROR_WILDCARDSTRING, $this, 'No wild card string specified.');
         }
 
-        $query = trim($_GET['wildCardString']);
+        $query = trim((string) $_GET['wildCardString']);
 
         /* Set up sorting. */
         if ($this->isRequiredIDValid('page', $_GET)) {
@@ -1135,7 +1135,7 @@ class ContactsUI extends UserInterface
 
         /* FIXME: Add fax to contacts and use setPhoneNumber('WORK;FAX') here */
 
-        $addressLines = explode("\n", $contact['address']);
+        $addressLines = explode("\n", (string) $contact['address']);
 
         $address1 = trim($addressLines[0]);
         if (isset($addressLines[1])) {
@@ -1216,18 +1216,18 @@ class ContactsUI extends UserInterface
             }
 
             /* Truncate Company Name column */
-            if (strlen($resultSet[$rowIndex]['companyName']) > self::TRUNCATE_CLIENT_NAME) {
+            if (strlen((string) $resultSet[$rowIndex]['companyName']) > self::TRUNCATE_CLIENT_NAME) {
                 $resultSet[$rowIndex]['companyName'] = substr(
-                    $resultSet[$rowIndex]['companyName'],
+                    (string) $resultSet[$rowIndex]['companyName'],
                     0,
                     self::TRUNCATE_CLIENT_NAME
                 ) . "...";
             }
 
             /* Truncate Title column */
-            if (strlen($resultSet[$rowIndex]['title']) > self::TRUNCATE_TITLE) {
+            if (strlen((string) $resultSet[$rowIndex]['title']) > self::TRUNCATE_TITLE) {
                 $resultSet[$rowIndex]['title'] = substr(
-                    $resultSet[$rowIndex]['title'],
+                    (string) $resultSet[$rowIndex]['title'],
                     0,
                     self::TRUNCATE_TITLE
                 ) . "...";
@@ -1278,7 +1278,7 @@ class ContactsUI extends UserInterface
 
             $activityNote = $this->getSanitisedInput('activityNote', $_POST);
 
-            $activityNote = htmlspecialchars($activityNote);
+            $activityNote = htmlspecialchars((string) $activityNote);
 
             /* Add the activity entry. */
             $activityEntries = new ActivityEntries($this->_siteID);
@@ -1444,7 +1444,7 @@ class ContactsUI extends UserInterface
 
             $eventHTML = sprintf(
                 '<p>An event of type <span class="bold">%s</span> has been scheduled on <span class="bold">%s</span>.</p>',
-                htmlspecialchars($eventTypeDescription),
+                htmlspecialchars((string) $eventTypeDescription),
                 htmlspecialchars($formattedDate)
             );
             $eventScheduled = true;

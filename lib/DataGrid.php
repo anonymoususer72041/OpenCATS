@@ -227,9 +227,12 @@ class DataGrid
     protected $_parameters;
     protected $_instanceName;
     protected $_currentColumns;
+    protected $_classColumns;
     protected $_defaultColumns;
     public $tableWidth;
+    protected $_tableWidth;
     public $defaultAlphabeticalSortBy;
+    protected $_defaultAlphabeticalSortBy;
     public $ajaxMode = false;
     public $showExportCheckboxes = true;
     public $showActionArea = true;
@@ -248,7 +251,6 @@ class DataGrid
     protected $_totalColumnWidths;
     protected $_dataItemIDColumn;
 
-
     /**
      * Static function returns an object to the DataGrid that is indicated by $indentifier
      * and has the specified parameters.
@@ -261,16 +263,16 @@ class DataGrid
     public static function get($indentifier, $parameters, $misc = 0)
     {
         /* This deals with loading a datagrid that was selected by use of the action / export box. */
-        if (isset($_REQUEST['dynamicArgument' . md5($indentifier)])) {
+        if (isset($_REQUEST['dynamicArgument' . md5((string) $indentifier)])) {
             foreach ($parameters as $index => $data) {
                 if ($data !== '<dynamic>') {
                     continue;
                 }
 
-                $parameters[$index] = $_REQUEST['dynamicArgument' . md5($indentifier)];
+                $parameters[$index] = $_REQUEST['dynamicArgument' . md5((string) $indentifier)];
 
                 if ($index === 'exportIDs') {
-                    $exportIDsDecoded = urldecode($parameters['exportIDs']);
+                    $exportIDsDecoded = urldecode((string) $parameters['exportIDs']);
                     if (is_string($exportIDsDecoded)) {
                         if (self::isSerialized($exportIDsDecoded)) {
                             $parameters['exportIDs'] = unserialize($exportIDsDecoded);
@@ -290,7 +292,7 @@ class DataGrid
         /* *** */
 
         /* Split function parameter into module name and function name. */
-        $indentifierParts = explode(':', $indentifier, 3);
+        $indentifierParts = explode(':', (string) $indentifier, 3);
 
         $module = preg_replace("/[^A-Za-z0-9]/", "", $indentifierParts[0]);
         $class = preg_replace("/[^A-Za-z0-9]/", "", $indentifierParts[1]);
@@ -355,7 +357,7 @@ class DataGrid
                 if (self::isSerialized($input)) {
                     $parameters = unserialize($input);
                 } else {
-                    $parameters = json_decode($input, true, 512, JSON_THROW_ON_ERROR);
+                    $parameters = json_decode((string) $input, true, 512, JSON_THROW_ON_ERROR);
                 }
             } catch (JsonException $e) {
                 error_log("JSON decode error in getFromRequest: " . $e->getMessage());
@@ -413,7 +415,7 @@ class DataGrid
         public function getMiscArgument()
         {
             /* Split function parameter into module name and function name. */
-            $instanceParts = explode(':', $this->_instanceName, 3);
+            $instanceParts = explode(':', (string) $this->_instanceName, 3);
 
             if (isset($instanceParts[2])) {
                 return json_decode($instanceParts[2], true, 512, JSON_THROW_ON_ERROR);
@@ -439,7 +441,7 @@ class DataGrid
 
              /* Allow _GET to override the supplied parameters array */
              if (isset($_GET['parameters' . $this->_instanceName])) {
-                 $this->_parameters = json_decode($_GET['parameters' . $this->_instanceName], true, 512, JSON_THROW_ON_ERROR);
+                 $this->_parameters = json_decode((string) $_GET['parameters' . $this->_instanceName], true, 512, JSON_THROW_ON_ERROR);
              } else {
                  $this->_parameters = $parameters;
              }
@@ -506,7 +508,7 @@ class DataGrid
              if (isset($this->_parameters['filterAlpha'])) {
                  if (ord($this->_parameters['filterAlpha']) < ord('A') ||
                      ord($this->_parameters['filterAlpha']) > ord('Z') ||
-                  strlen($this->_parameters['filterAlpha']) != 1) {
+                  strlen((string) $this->_parameters['filterAlpha']) != 1) {
                      unset($this->_parameters['filterAlpha']);
                  }
              }
@@ -607,7 +609,7 @@ class DataGrid
          */
         public function getJSRemoveFilter($columnName)
         {
-            return 'removeColumnFromFilter(\'filterArea' . md5($this->_instanceName) . '\', urlDecode(\'' . urlencode($columnName) . '\')); submitFilter' . md5($this->_instanceName) . '();';
+            return 'removeColumnFromFilter(\'filterArea' . md5((string) $this->_instanceName) . '\', urlDecode(\'' . urlencode((string) $columnName) . '\')); submitFilter' . md5((string) $this->_instanceName) . '();';
         }
 
         /**
@@ -621,7 +623,7 @@ class DataGrid
          */
         public function getJSAddFilter($columnName, $operator, $value, $submitFilterArgument = '')
         {
-            return 'addColumnToFilter(\'filterArea' . md5($this->_instanceName) . '\', urlDecode(\'' . urlencode($columnName) . '\'), \'' . $operator . '\', ' . $value . '); submitFilter' . md5($this->_instanceName) . '(' . $submitFilterArgument . ');';
+            return 'addColumnToFilter(\'filterArea' . md5((string) $this->_instanceName) . '\', urlDecode(\'' . urlencode((string) $columnName) . '\'), \'' . $operator . '\', ' . $value . '); submitFilter' . md5((string) $this->_instanceName) . '(' . $submitFilterArgument . ');';
         }
 
         /**
@@ -635,13 +637,13 @@ class DataGrid
         public function getJSAddRemoveFilterFromCheckbox($columnName, $operator, $value)
         {
             return 'if (this.checked) { ' .
-                       'addColumnToFilter(\'filterArea' . md5($this->_instanceName) . '\', urlDecode(\'' . urlencode($columnName) . '\'), \'' . $operator . '\', ' . $value . '); ' .
-                       'submitFilter' . md5($this->_instanceName) . '(true); ' .
+                       'addColumnToFilter(\'filterArea' . md5((string) $this->_instanceName) . '\', urlDecode(\'' . urlencode((string) $columnName) . '\'), \'' . $operator . '\', ' . $value . '); ' .
+                       'submitFilter' . md5((string) $this->_instanceName) . '(true); ' .
                     '} ' .
                     'else ' .
                     '{ ' .
-                        'removeColumnFromFilter(\'filterArea' . md5($this->_instanceName) . '\', urlDecode(\'' . urlencode($columnName) . '\')); ' .
-                        'submitFilter' . md5($this->_instanceName) . '(true);' .
+                        'removeColumnFromFilter(\'filterArea' . md5((string) $this->_instanceName) . '\', urlDecode(\'' . urlencode((string) $columnName) . '\')); ' .
+                        'submitFilter' . md5((string) $this->_instanceName) . '(true);' .
                     '}';
         }
 
@@ -655,7 +657,7 @@ class DataGrid
          */
         public function getJSApplyFilter()
         {
-            return 'submitFilter' . md5($this->_instanceName) . '();';
+            return 'submitFilter' . md5((string) $this->_instanceName) . '();';
         }
 
         /**
@@ -667,7 +669,7 @@ class DataGrid
         public function getFilterValue($columnName)
         {
             if (isset($this->_parameters['filter'])) {
-                $filterStrings = explode(',', $this->_parameters['filter']);
+                $filterStrings = explode(',', (string) $this->_parameters['filter']);
 
                 foreach ($filterStrings as $index => $data) {
                     if (strpos($data, '=') === false) {
@@ -693,7 +695,7 @@ class DataGrid
         public function getFilterOperator($columnName)
         {
             if (isset($this->_parameters['filter'])) {
-                $filterStrings = explode(',', $this->_parameters['filter']);
+                $filterStrings = explode(',', (string) $this->_parameters['filter']);
 
                 foreach ($filterStrings as $index => $data) {
                     if (strpos($data, '=') === false) {
@@ -719,7 +721,7 @@ class DataGrid
         public function drawRowsPerPageSelector()
         {
             echo '<a href="javascript:void(0);" class="button" style="text-decoration: none;" onclick="' .
-                      'var rowsPerPageSelector = document.getElementById(\'rowsPerPageSelectorFrame', md5($this->_instanceName), '\'); ' .
+                      'var rowsPerPageSelector = document.getElementById(\'rowsPerPageSelectorFrame', md5((string) $this->_instanceName), '\'); ' .
                       'if(rowsPerPageSelector.style.display==\'none\') { ' .
                         'rowsPerPageSelector.style.display=\'\'; ' .
                         'rowsPerPageSelector.style.left = (docjslib_getRealLeft(this) - 20) + \'px\'; ' .
@@ -728,10 +730,10 @@ class DataGrid
                         'rowsPerPageSelector.style.display=\'none\'; ' .
                  '">Rows Per Page</a>';
 
-            echo '<span style="position: absolute; text-align:left; display:none;" id="rowsPerPageSelectorFrame', md5($this->_instanceName), '">';
+            echo '<span style="position: absolute; text-align:left; display:none;" id="rowsPerPageSelectorFrame', md5((string) $this->_instanceName), '">';
             $this->_getData();
 
-            $md5InstanceName = md5($this->_instanceName);
+            $md5InstanceName = md5((string) $this->_instanceName);
 
             $newParameterArray = $this->_parameters;
             $newParameterArray['rangeStart'] = 0;
@@ -745,7 +747,7 @@ class DataGrid
                 $md5InstanceName,      //Select Box ID
                 CATSUtility::getIndexName(),
                 $requestString,
-                urlencode($this->_instanceName),
+                urlencode((string) $this->_instanceName),
                 "\n"
             );
 
@@ -777,7 +779,7 @@ class DataGrid
          */
         public function drawShowFilterControl()
         {
-            echo '<a href="javascript:void(0);" class="button" style="text-decoration: none;" onclick="var filterArea = document.getElementById(\'filterResultsArea', md5($this->_instanceName), '\'); if(filterArea.style.display==\'none\') {filterArea.style.display=\'\'; if (newFilterCounter', md5($this->_instanceName),' == 0){ showNewFilter', md5($this->_instanceName), '();}}else filterArea.style.display=\'none\';">Filter</a>';
+            echo '<a href="javascript:void(0);" class="button" style="text-decoration: none;" onclick="var filterArea = document.getElementById(\'filterResultsArea', md5((string) $this->_instanceName), '\'); if(filterArea.style.display==\'none\') {filterArea.style.display=\'\'; if (newFilterCounter', md5((string) $this->_instanceName),' == 0){ showNewFilter', md5((string) $this->_instanceName), '();}}else filterArea.style.display=\'none\';">Filter</a>';
         }
 
         /**
@@ -789,7 +791,7 @@ class DataGrid
          */
         public function drawFilterArea()
         {
-            $md5InstanceName = md5($this->_instanceName);
+            $md5InstanceName = md5((string) $this->_instanceName);
 
             $filterableColumns = array_keys($this->_classColumns);
 
@@ -949,13 +951,13 @@ class DataGrid
 
             /* Do we need to reorder the columns?. */
             if (isset($this->_parameters['reorderColumns'])) {
-                $reorderColumns = explode(',', $this->_parameters['reorderColumns']);
+                $reorderColumns = explode(',', (string) $this->_parameters['reorderColumns']);
 
                 /* Parse input */
-                $reorderColumns[0] = (int) substr(urldecode($reorderColumns[0]), 4 + strlen(md5($this->_instanceName)));
+                $reorderColumns[0] = (int) substr(urldecode($reorderColumns[0]), 4 + strlen(md5((string) $this->_instanceName)));
 
                 if (urldecode($reorderColumns[1]) !== 'moveToEnd') {
-                    $reorderColumns[1] = (int) substr(urldecode($reorderColumns[1]), 4 + strlen(md5($this->_instanceName)));
+                    $reorderColumns[1] = (int) substr(urldecode($reorderColumns[1]), 4 + strlen(md5((string) $this->_instanceName)));
                 }
 
                 /* Sort the array so indexes match. */
@@ -1021,17 +1023,17 @@ class DataGrid
             /* Get SELECT and JOIN paramaters for each column we want to collect data on. */
             foreach ($this->_currentColumns as $index => $data) {
                 if (isset($data['data']['select']) && ! empty($data['data']['select'])) {
-                    $selectSQL[md5($data['data']['select'])] = $data['data']['select'];
+                    $selectSQL[md5((string) $data['data']['select'])] = $data['data']['select'];
                 }
 
                 if (isset($data['data']['join']) && ! empty($data['data']['join'])) {
-                    $joinSQL[md5($data['data']['join'])] = $data['data']['join'];
+                    $joinSQL[md5((string) $data['data']['join'])] = $data['data']['join'];
                 }
             }
 
             /* Build filter logic. */
             if (isset($this->_parameters['filter'])) {
-                $filterStrings = explode(',', $this->_parameters['filter']);
+                $filterStrings = explode(',', (string) $this->_parameters['filter']);
                 $columnName = '';
 
                 foreach ($filterStrings as $index => $data) {
@@ -1054,16 +1056,16 @@ class DataGrid
                     /* Add select and join columns for this column. */
                     $this->_classColumns[$columnName];
                     if (isset($this->_classColumns[$columnName]['select']) && ! empty($this->_classColumns[$columnName]['select'])) {
-                        $selectSQL[md5($this->_classColumns[$columnName]['select'])] = $this->_classColumns[$columnName]['select'];
+                        $selectSQL[md5((string) $this->_classColumns[$columnName]['select'])] = $this->_classColumns[$columnName]['select'];
                     }
 
                     if (isset($this->_classColumns[$columnName]['join']) && ! empty($this->_classColumns[$columnName]['join'])) {
-                        $joinSQL[md5($this->_classColumns[$columnName]['join'])] = $this->_classColumns[$columnName]['join'];
+                        $joinSQL[md5((string) $this->_classColumns[$columnName]['join'])] = $this->_classColumns[$columnName]['join'];
                     }
 
                     /* The / character works as an OR clause for filters, exclude url and web_site */
-                    if ((strpos($this->_classColumns[$columnName]['filter'], 'web_site') !== false) ||
-                       (strpos($this->_classColumns[$columnName]['filter'], 'url') !== false)) {
+                    if ((strpos((string) $this->_classColumns[$columnName]['filter'], 'web_site') !== false) ||
+                       (strpos((string) $this->_classColumns[$columnName]['filter'], 'url') !== false)) {
                         $arguments = [$argument];
                     } else {
                         $argument = str_replace(' or ', '/', $argument);
@@ -1393,7 +1395,7 @@ class DataGrid
             /* Get data. */
             $this->_getData();
 
-            $md5InstanceName = md5($this->_instanceName);
+            $md5InstanceName = md5((string) $this->_instanceName);
 
             $this->_totalColumnWidths = 0;
 
@@ -1446,7 +1448,7 @@ class DataGrid
             /* Get data. */
             $this->_getData();
 
-            $md5InstanceName = md5($this->_instanceName);
+            $md5InstanceName = md5((string) $this->_instanceName);
 
             $this->_totalColumnWidths = 0;
 
@@ -1465,7 +1467,7 @@ class DataGrid
                     $currentFilterString = '';
                 }
 
-                echo '<input type="hidden" id="filterArea' . $md5InstanceName . '" value="', htmlspecialchars($currentFilterString), '" />';
+                echo '<input type="hidden" id="filterArea' . $md5InstanceName . '" value="', htmlspecialchars((string) $currentFilterString), '" />';
                 echo '<script type="text/javascript">', $this->_getApplyFilterFunctionDefinition(), '</script>';
 
                 /* This makes the table able to be wider then the displayable area. */
@@ -1588,7 +1590,7 @@ class DataGrid
                         $md5InstanceName,
                         $md5InstanceName,
                         end($currentColumnsKeys),
-                        urlencode($this->_instanceName),
+                        urlencode((string) $this->_instanceName),
                         $_SESSION['CATS']->getCookie(),
                         $data['name'],
                         $md5InstanceName,
@@ -1687,7 +1689,7 @@ class DataGrid
                         $md5InstanceName,
                         end($_keys_current_columns),
                         $this->getTableWidth(),
-                        urlencode($this->_instanceName),
+                        urlencode((string) $this->_instanceName),
                         $_SESSION['CATS']->getCookie(),
                         $data['name'],
                         implode(',', $cellIndexes)
@@ -1758,7 +1760,7 @@ class DataGrid
          */
         public function printActionArea()
         {
-            echo '&nbsp;<input type="checkbox" name="allBox" title="Select All" onclick="toggleChecksAllDataGrid' . md5($this->_instanceName) . '(this.checked);" />&nbsp;&nbsp;&nbsp;';
+            echo '&nbsp;<input type="checkbox" name="allBox" title="Select All" onclick="toggleChecksAllDataGrid' . md5((string) $this->_instanceName) . '(this.checked);" />&nbsp;&nbsp;&nbsp;';
 
             echo '<script type="text/javascript">', $this->_getCheckAllDefinition(), '</script>';
 
@@ -1766,9 +1768,9 @@ class DataGrid
                 return;
             }
 
-            echo '<a href="javascript:void(0);" onclick="toggleHideShowAction(\'' . md5($this->_instanceName) . '\');">Action</a>';
+            echo '<a href="javascript:void(0);" onclick="toggleHideShowAction(\'' . md5((string) $this->_instanceName) . '\');">Action</a>';
 
-            echo '<div class="ajaxSearchResults" id="ActionArea' . md5($this->_instanceName) . '" align="left" onclick="toggleHideShowAction(\'' . md5($this->_instanceName) . '\');" style="width:270px;">';
+            echo '<div class="ajaxSearchResults" id="ActionArea' . md5((string) $this->_instanceName) . '" align="left" onclick="toggleHideShowAction(\'' . md5((string) $this->_instanceName) . '\');" style="width:270px;">';
 
             echo $this->getInnerActionArea();
 
@@ -1801,27 +1803,27 @@ class DataGrid
             if ($allowAll) {
                 $html = sprintf(
                     '<div><div style="float:left; width:170px;">%s</div><div style="float:right; width:95px;"><a href="javascript:void(0);" onclick="if (exportArray%s.length>0) window.location.href=\'%s&i=%s&p=%s&dynamicArgument%s=\' + urlEncode(serializeArray(exportArray%s)); else dataGridNoSelected();">Selected</a>&nbsp;|&nbsp;<a href="%s&i=%s&p=%s">All</a></div></div>',
-                    htmlspecialchars($actionTitle),
-                    md5($this->_instanceName),
+                    htmlspecialchars((string) $actionTitle),
+                    md5((string) $this->_instanceName),
                     $actionURL,
-                    urlencode($this->_instanceName),
+                    urlencode((string) $this->_instanceName),
                     urlencode(serialize($newParameterArraySelected)),
-                    md5($this->_instanceName),
-                    md5($this->_instanceName),
+                    md5((string) $this->_instanceName),
+                    md5((string) $this->_instanceName),
                     $actionURL,
-                    urlencode($this->_instanceName),
+                    urlencode((string) $this->_instanceName),
                     urlencode(serialize($newParameterArrayAll))
                 );
             } else {
                 $html = sprintf(
                     '<div><div style="float:left; width:170px;">%s</div><div style="float:right; width:95px;"><a href="javascript:void(0);" onclick="if (exportArray%s.length>0) window.location.href=\'%s&i=%s&p=%s&dynamicArgument%s=\' + urlEncode(serializeArray(exportArray%s)); else dataGridNoSelected();">Selected</a></div></div>',
-                    htmlspecialchars($actionTitle),
-                    md5($this->_instanceName),
+                    htmlspecialchars((string) $actionTitle),
+                    md5((string) $this->_instanceName),
                     $actionURL,
-                    urlencode($this->_instanceName),
+                    urlencode((string) $this->_instanceName),
                     urlencode(json_encode($newParameterArraySelected, JSON_THROW_ON_ERROR)),
-                    md5($this->_instanceName),
-                    md5($this->_instanceName)
+                    md5((string) $this->_instanceName),
+                    md5((string) $this->_instanceName)
                 );
             }
 
@@ -1857,17 +1859,17 @@ class DataGrid
             if ($allowAll) {
                 $html = sprintf(
                     '<div><div style="float:left; width:170px;">%s</div><div style="float:right; width:95px;"><a href="javascript:void(0);" onclick="if (exportArray%s.length>0) showPopWin(\'%s&i=%s&p=%s&dynamicArgument%s=\' + urlEncode(serializeArray(exportArray%s)), %s, %s); else dataGridNoSelected();">Selected</a>&nbsp;|&nbsp;<a href="javascript:void(0);" onclick="showPopWin(\'%s&i=%s&p=%s\', %s, %s);">All</a></div></div>',
-                    htmlspecialchars($actionTitle),
-                    md5($this->_instanceName),
+                    htmlspecialchars((string) $actionTitle),
+                    md5((string) $this->_instanceName),
                     $actionURL,
-                    urlencode($this->_instanceName),
+                    urlencode((string) $this->_instanceName),
                     urlencode(json_encode($newParameterArraySelected, JSON_THROW_ON_ERROR)),
-                    md5($this->_instanceName),
-                    md5($this->_instanceName),
+                    md5((string) $this->_instanceName),
+                    md5((string) $this->_instanceName),
                     $width,
                     $height,
                     $actionURL,
-                    urlencode($this->_instanceName),
+                    urlencode((string) $this->_instanceName),
                     urlencode(json_encode($newParameterArrayAll, JSON_THROW_ON_ERROR)),
                     $width,
                     $height
@@ -1875,13 +1877,13 @@ class DataGrid
             } else {
                 $html = sprintf(
                     '<div><div style="float:left; width:170px;">%s</div><div style="float:right; width:95px;"><a href="javascript:void(0);" onclick="if (exportArray%s.length>0) showPopWin(\'%s&i=%s&p=%s&dynamicArgument%s=\' + urlEncode(serializeArray(exportArray%s)), %s, %s); else dataGridNoSelected();">Selected</a></div></div>',
-                    htmlspecialchars($actionTitle),
-                    md5($this->_instanceName),
+                    htmlspecialchars((string) $actionTitle),
+                    md5((string) $this->_instanceName),
                     $actionURL,
-                    urlencode($this->_instanceName),
+                    urlencode((string) $this->_instanceName),
                     urlencode(json_encode($newParameterArraySelected, JSON_THROW_ON_ERROR)),
-                    md5($this->_instanceName),
-                    md5($this->_instanceName),
+                    md5((string) $this->_instanceName),
+                    md5((string) $this->_instanceName),
                     $width,
                     $height
                 );
@@ -1919,8 +1921,8 @@ class DataGrid
 
             echo sprintf(
                 'if (document.getElementById(\'ActionArea%s\') != null) document.getElementById(\'ActionArea%s\').innerHTML = urlDecode(\'%s\');',
-                urlencode($this->_instanceName),
-                urlencode($this->_instanceName),
+                urlencode((string) $this->_instanceName),
+                urlencode((string) $this->_instanceName),
                 urlencode($this->getInnerActionArea())
             );
 
@@ -1942,7 +1944,7 @@ class DataGrid
          */
         public function getCurrentPageHTML()
         {
-            return '<span id="pageNumberHTML1' . md5($this->_instanceName)
+            return '<span id="pageNumberHTML1' . md5((string) $this->_instanceName)
                 . '">' . $this->getCurrentPage() . '</span>';
         }
 
@@ -1960,7 +1962,7 @@ class DataGrid
 
             $this->_getData();
 
-            $md5InstanceName = md5($this->_instanceName);
+            $md5InstanceName = md5((string) $this->_instanceName);
 
             /* << PREV */
             echo sprintf(
@@ -1988,7 +1990,7 @@ class DataGrid
                         $md5InstanceName,
                         $ID,
                         $md5InstanceName,      //Select Box ID
-                        urlencode($this->_instanceName),           //Instance name for ajax function itself
+                        urlencode((string) $this->_instanceName),           //Instance name for ajax function itself
                         urlencode(json_encode($newParameterArray, JSON_THROW_ON_ERROR)),  //New parameter array
                         $_SESSION['CATS']->getCookie(),            //Cookie
                         $newParameterArray['maxResults'],          //Used to help determine how many rows per page when changing pages
@@ -2013,7 +2015,7 @@ class DataGrid
                         $md5InstanceName,
                         CATSUtility::getIndexName(),
                         $requestString,
-                        urlencode($this->_instanceName),
+                        urlencode((string) $this->_instanceName),
                         $ID,
                         $md5InstanceName,
                         $newParameterArray['maxResults'],
@@ -2119,8 +2121,8 @@ class DataGrid
 
             echo sprintf(
                 '%sShow All</a>%sPagenate</a>%s',
-                $this->_makeControlLink($newParameterArray, '', 'showAll' . md5($this->_instanceName), 'this.style.display=\'none\'; document.getElementById(\'pagenate' . md5($this->_instanceName) . '\').style.display=\'\';'),
-                $this->_makeControlLink($newParameterArrayPagenate, '', 'pagenate' . md5($this->_instanceName), 'this.style.display=\'none\'; document.getElementById(\'showAll' . md5($this->_instanceName) . '\').style.display=\'\';', 'display:none;'),
+                $this->_makeControlLink($newParameterArray, '', 'showAll' . md5((string) $this->_instanceName), 'this.style.display=\'none\'; document.getElementById(\'pagenate' . md5((string) $this->_instanceName) . '\').style.display=\'\';'),
+                $this->_makeControlLink($newParameterArrayPagenate, '', 'pagenate' . md5((string) $this->_instanceName), 'this.style.display=\'none\'; document.getElementById(\'showAll' . md5((string) $this->_instanceName) . '\').style.display=\'\';', 'display:none;'),
                 "\n"
             );
         }
@@ -2155,7 +2157,7 @@ class DataGrid
                 $getStrings = [];
 
                 foreach ($getVars as $index => $data) {
-                    $getStrings[] = urlencode($index) . '=' . urlencode($data);
+                    $getStrings[] = urlencode($index) . '=' . urlencode((string) $data);
                 }
 
                 return implode('&', $getStrings);
@@ -2179,7 +2181,7 @@ class DataGrid
                     $this->globalStyle,
                     $style,
                     $javascript,
-                    urlencode($this->_instanceName),
+                    urlencode((string) $this->_instanceName),
                     urlencode(json_encode($newParameterArray, JSON_THROW_ON_ERROR)),
                     $_SESSION['CATS']->getCookie(),
                     ($className != '' ? 'class="' . $className . '"' : ''),
@@ -2213,7 +2215,7 @@ class DataGrid
          */
         private function _drawUpdatedNavigationSet($element, $value, $type = 'innerHTML')
         {
-            $md5InstanceName = md5($this->_instanceName);
+            $md5InstanceName = md5((string) $this->_instanceName);
 
             echo sprintf(
                 'if (document.getElementById(\'%s%s%s\') != null) { document.getElementById(\'%s%s%s\').%s = urlDecode(\'%s\'); }',
@@ -2224,7 +2226,7 @@ class DataGrid
                 1,
                 $md5InstanceName,
                 $type,
-                urlencode($value)
+                urlencode((string) $value)
             );
 
             echo sprintf(
@@ -2236,7 +2238,7 @@ class DataGrid
                 2,
                 $md5InstanceName,
                 $type,
-                urlencode($value)
+                urlencode((string) $value)
             );
         }
 
@@ -2314,7 +2316,7 @@ class DataGrid
           */
          public function _getApplyFilterFunctionDefinition()
          {
-             $md5InstanceName = md5($this->_instanceName);
+             $md5InstanceName = md5((string) $this->_instanceName);
 
              $newParameterArray = $this->_parameters;
              $newParameterArray['rangeStart'] = 0;
@@ -2326,7 +2328,7 @@ class DataGrid
              if (isset($this->ajaxMode) && ($this->ajaxMode)) {
                  echo sprintf(
                      'populateAjaxPager(\'%s\', \'%s\', \'%s\', document.getElementById(\'filterArea%s\').value);',
-                     urlencode($this->_instanceName),
+                     urlencode((string) $this->_instanceName),
                      urlencode(json_encode($newParameterArray, JSON_THROW_ON_ERROR)),  //New parameter array
                      $_SESSION['CATS']->getCookie(),            //Cookie
                      $md5InstanceName
@@ -2340,7 +2342,7 @@ class DataGrid
                      'document.location.href=\'%s?%s&dynamicArgument%s=\' + urlEncode(document.getElementById(\'filterArea%s\').value);',
                      CATSUtility::getIndexName(),
                      $requestString,
-                     urlencode($this->_instanceName),
+                     urlencode((string) $this->_instanceName),
                      $md5InstanceName
                  );
 
@@ -2358,7 +2360,7 @@ class DataGrid
                      'document.location.href=\'%s?%s&dynamicArgument%s=\' + urlEncode(document.getElementById(\'filterArea%s\').value);',
                      CATSUtility::getIndexName(),
                      $requestString,
-                     urlencode($this->_instanceName),
+                     urlencode((string) $this->_instanceName),
                      $md5InstanceName
                  );
 
@@ -2375,7 +2377,7 @@ class DataGrid
                      'document.location.href=\'%s?%s&dynamicArgument%s=\' + urlEncode(document.getElementById(\'filterArea%s\').value);',
                      CATSUtility::getIndexName(),
                      $requestString,
-                     urlencode($this->_instanceName),
+                     urlencode((string) $this->_instanceName),
                      $md5InstanceName
                  );
 
@@ -2392,7 +2394,7 @@ class DataGrid
           */
          public function _getCheckAllDefinition()
          {
-             $md5InstanceName = md5($this->_instanceName);
+             $md5InstanceName = md5((string) $this->_instanceName);
 
              $newParameterArray = $this->_parameters;
              $newParameterArray['rangeStart'] = 0;

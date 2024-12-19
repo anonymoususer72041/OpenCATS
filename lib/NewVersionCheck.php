@@ -101,11 +101,11 @@ class NewVersionCheck
 
         /* Build POST data. */
         $postData = 'CatsVersion=' . urlencode($catsVersion);
-        $postData .= '&CatsUID=' . urlencode($systemInfo['uid']);
+        $postData .= '&CatsUID=' . urlencode((string) $systemInfo['uid']);
         $postData .= '&PHPVersion=' . urlencode(phpversion());
-        $postData .= '&ServerSoftware=' . urlencode($serverSoftware);
-        $postData .= '&UserAgent=' . urlencode($userAgent);
-        $postData .= '&SiteName=' . urlencode($siteName);
+        $postData .= '&ServerSoftware=' . urlencode((string) $serverSoftware);
+        $postData .= '&UserAgent=' . urlencode((string) $userAgent);
+        $postData .= '&SiteName=' . urlencode((string) $siteName);
         $postData .= '&activeUsers=' . urlencode($numberOfActiveUsers);
         $postData .= '&licenseKey=' . urlencode($licenseKey);
 
@@ -120,7 +120,7 @@ class NewVersionCheck
         );
 
         /* Check to see if getting information failed, if it did reset the weekly counter */
-        if (strpos($theData, '(end of CATS version info)') == 0) {
+        if (strpos((string) $theData, '(end of CATS version info)') == 0) {
             if (! empty($systemInfo['available_version'])) {
                 $systemInfoDb->updateRemoteVersion(
                     $systemInfo['available_version'],
@@ -139,7 +139,7 @@ class NewVersionCheck
         }
 
         /* Strip down the data into $remoteVersion and $newVersionNotice. */
-        $temp = substr($theData, strpos($theData, '{<') + 2);
+        $temp = substr((string) $theData, strpos((string) $theData, '{<') + 2);
         $newVersionNotice = substr($temp, strpos($temp, '{<') + 2);
         $remoteVersion = substr($newVersionNotice, strpos($newVersionNotice, '{<') + 2);
         $newVersionNotice = substr($newVersionNotice, 0, strpos($newVersionNotice, '>}'));
@@ -164,7 +164,7 @@ class NewVersionCheck
 
         /* Update daily. */
         $lastWeeksDate = time() - (SECONDS_IN_A_DAY);
-        $lastCheck = strtotime($systemInfo['date_version_checked']);
+        $lastCheck = strtotime((string) $systemInfo['date_version_checked']);
         if ($lastWeeksDate > $lastCheck) {
             self::checkForUpdate();
             /* Refresh the new information. */
@@ -173,7 +173,7 @@ class NewVersionCheck
 
         /* Only display new version news if a new version is available. */
         if ($systemInfo['available_version'] > CATSUtility::getVersionAsInteger()) {
-            return urldecode($systemInfo['available_version_description']);
+            return urldecode((string) $systemInfo['available_version_description']);
         }
 
         return '';

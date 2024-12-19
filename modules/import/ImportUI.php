@@ -48,6 +48,10 @@ include_once(LEGACY_ROOT . '/lib/ContactsImport.php');
 class ImportUI extends UserInterface
 {
     public const MAX_ERRORS = 100;
+    public $candidatesTypes;
+    public $jobOrdersTypes;
+    public $contactsTypes;
+    public $companiesTypes;
 
     public function __construct()
     {
@@ -177,13 +181,13 @@ class ImportUI extends UserInterface
         }
 
         if (isset($importData['importErrors'])) {
-            $importErrors = htmlspecialchars($importData['importErrors'], ENT_QUOTES, 'UTF-8');
+            $importErrors = htmlspecialchars((string) $importData['importErrors'], ENT_QUOTES, 'UTF-8');
             $this->_template->assign('importErrors', $importErrors);
         } else {
             $this->_template->assign('importErrors', '');
         }
 
-        $importID = htmlspecialchars($importID, ENT_QUOTES, 'UTF-8');
+        $importID = htmlspecialchars((string) $importID, ENT_QUOTES, 'UTF-8');
         $this->_template->assign('importID', $importID);
         $this->viewPending();
         return;
@@ -473,8 +477,8 @@ class ImportUI extends UserInterface
          * get escaped, and stripslashes() on it breaks on Windows. - Will
          */
         if (get_magic_quotes_gpc()) {
-            $originalFilename = stripslashes($originalFilename);
-            $contentType = stripslashes($contentType);
+            $originalFilename = stripslashes((string) $originalFilename);
+            $contentType = stripslashes((string) $contentType);
         }
 
         if ($fileUploadError != UPLOAD_ERR_OK) {
@@ -643,8 +647,8 @@ class ImportUI extends UserInterface
 
         foreach ($theFields as $theField) {
             for ($i = 0; $i < count($types); $i += 2) {
-                $lField = trim(strtolower($theField));
-                $lType = strtolower($types[$i]);
+                $lField = trim(strtolower((string) $theField));
+                $lType = strtolower((string) $types[$i]);
 
                 if ($lField == $lType ||
                     ($lField == 'company' && $lType == 'company') ||
@@ -838,7 +842,7 @@ class ImportUI extends UserInterface
 
             if ($encoding) {
                 foreach ($theData as $index => $data) {
-                    $theData[$index] = iconv($encoding, 'UTF-8', $data);
+                    $theData[$index] = iconv($encoding, 'UTF-8', (string) $data);
                 }
             }
 
@@ -848,17 +852,17 @@ class ImportUI extends UserInterface
 
             /* Put the data where the user picked for it to go. */
             foreach ($theFieldPreference as $fieldID => $theFieldPreferenceValue) {
-                if (count($theData) <= $fieldID || trim($theData[$fieldID]) == '') {
+                if (count($theData) <= $fieldID || trim((string) $theData[$fieldID]) == '') {
                     continue;
                 }
 
                 if ($theFieldPreferenceValue == 'cats') {
-                    if (substr($_POST['importIntoField' . $fieldID], 0, 1) == '#') {
+                    if (substr((string) $_POST['importIntoField' . $fieldID], 0, 1) == '#') {
                         /* This is an extra field. */
-                        $foreignEntries[substr($_POST['importIntoField' . $fieldID], 1)] = $theData[$fieldID];
+                        $foreignEntries[substr((string) $_POST['importIntoField' . $fieldID], 1)] = $theData[$fieldID];
                     } else {
                         $catsEntriesRows[] = $_POST['importIntoField' . $fieldID];
-                        $catsEntriesValuesNamed[$_POST['importIntoField' . $fieldID]] = trim($theData[$fieldID]);
+                        $catsEntriesValuesNamed[$_POST['importIntoField' . $fieldID]] = trim((string) $theData[$fieldID]);
                     }
                 } elseif ($theFieldPreferenceValue == 'foreign' || $theFieldPreferenceValue == 'foreignAdded') {
                     /* Before we do this, ensure that we have permision and the field is in the database. */
@@ -945,7 +949,7 @@ class ImportUI extends UserInterface
                 $errorHtml .= '<span id="errorId' . $totalRows . '" style="display:none;">';
                 foreach ($theFields as $fieldID => $theField) {
                     if (count($theData) > $fieldID) {
-                        $errorHtml .= '<span class="bold">' . htmlspecialchars($theField) . ':</span> ' . htmlspecialchars($theData[$fieldID]) . '<br />';
+                        $errorHtml .= '<span class="bold">' . htmlspecialchars((string) $theField) . ':</span> ' . htmlspecialchars((string) $theData[$fieldID]) . '<br />';
                     }
                 }
                 $errorHtml .= '</span>';
@@ -1015,7 +1019,7 @@ class ImportUI extends UserInterface
         /* Bail out if any of the required fields are empty. */
 
         if (! empty($dataNamed['name'])) {
-            $nameArray = explode(' ', $dataNamed['name']);
+            $nameArray = explode(' ', (string) $dataNamed['name']);
             $dataNamed['first_name'] = $nameArray[0];
             $dataNamed['last_name'] = $nameArray[count($nameArray) - 1];
             unset($dataNamed['name']);
@@ -1180,7 +1184,7 @@ class ImportUI extends UserInterface
         /* Bail out if any of the required fields are empty. */
 
         if (! empty($dataNamed['name'])) {
-            $nameArray = explode(' ', $dataNamed['name']);
+            $nameArray = explode(' ', (string) $dataNamed['name']);
             $dataNamed['first_name'] = $nameArray[0];
             $dataNamed['last_name'] = $nameArray[count($nameArray) - 1];
             unset($dataNamed['name']);
@@ -1499,7 +1503,7 @@ class ImportUI extends UserInterface
 
             // Figure out the path to post resumes
             $script = $_SERVER['SCRIPT_FILENAME'];
-            $mp = explode('/', $script);
+            $mp = explode('/', (string) $script);
             $rootPath = implode('/', array_slice($mp, 0, count($mp) - 1));
             $subPath = FileUtility::getUploadPath($siteID, 'massimport');
             if ($subPath !== false) {
@@ -1540,9 +1544,9 @@ class ImportUI extends UserInterface
                 foreach ($files as $fileData) {
                     $js .= sprintf(
                         'addDocument(\'%s\', \'%s\', \'%s\', %d, %d);%s',
-                        addslashes($fileData['name']),
-                        addslashes($fileData['realName']),
-                        addslashes($fileData['ext']),
+                        addslashes((string) $fileData['name']),
+                        addslashes((string) $fileData['realName']),
+                        addslashes((string) $fileData['ext']),
                         $fileData['type'],
                         $fileData['cTime'],
                         "\n"
@@ -1663,7 +1667,7 @@ class ImportUI extends UserInterface
                      * - if email is present, does it match an existing e-mail
                      * - if last name and zip code or last name and phone numbers are present, do they match likewise
                      */
-                    if (strpos($doc['email'], '@') !== false) {
+                    if (strpos((string) $doc['email'], '@') !== false) {
                         $sql = sprintf(
                             'SELECT count(*) '
                             . 'FROM candidate '
@@ -1678,7 +1682,7 @@ class ImportUI extends UserInterface
                         }
                     }
 
-                    if (strlen($doc['lastName']) > 3 && isset($doc['phone']) && strlen($doc['phone']) >= 10) {
+                    if (strlen((string) $doc['lastName']) > 3 && isset($doc['phone']) && strlen((string) $doc['phone']) >= 10) {
                         $sql = sprintf(
                             'SELECT count(*) '
                             . 'FROM candidate '
@@ -1698,7 +1702,7 @@ class ImportUI extends UserInterface
                         }
                     }
 
-                    if (strlen($doc['lastName']) > 3 && isset($doc['zip']) && strlen($doc['zip']) >= 5) {
+                    if (strlen((string) $doc['lastName']) > 3 && isset($doc['zip']) && strlen((string) $doc['zip']) >= 5) {
                         $sql = sprintf(
                             'SELECT count(*) '
                             . 'FROM candidate '
@@ -1811,11 +1815,11 @@ class ImportUI extends UserInterface
                      * Bulk resumes can be "rescanned", make sure this particular file isn't a
                      * rescan before adding another copy.
                      */
-                    if (preg_match('/^_BulkResume_(.*)\.txt$/', $doc['realName'], $matches)) {
+                    if (preg_match('/^_BulkResume_(.*)\.txt$/', (string) $doc['realName'], $matches)) {
                         $attachments = new Attachments($this->_siteID);
                         $bulkResumes = $attachments->getBulkAttachments();
                         foreach ($bulkResumes as $bulkResume) {
-                            $mp = explode('.', $bulkResume['originalFileName']);
+                            $mp = explode('.', (string) $bulkResume['originalFileName']);
                             $fileName = implode('.', array_slice($mp, 0, -1));
 
                             if (! strcmp($fileName, $matches[1])) {
@@ -1868,11 +1872,11 @@ class ImportUI extends UserInterface
                  * existing bulk resume rescan, that document should be deleted.
                  */
                 else {
-                    if (preg_match('/^_BulkResume_(.*)\.txt$/', $doc['realName'], $matches)) {
+                    if (preg_match('/^_BulkResume_(.*)\.txt$/', (string) $doc['realName'], $matches)) {
                         $attachments = new Attachments($this->_siteID);
                         $bulkResumes = $attachments->getBulkAttachments();
                         foreach ($bulkResumes as $bulkResume) {
-                            $mp = explode('.', $bulkResume['originalFileName']);
+                            $mp = explode('.', (string) $bulkResume['originalFileName']);
                             $fileName = implode('.', array_slice($mp, 0, -1));
 
                             if (! strcmp($fileName, $matches[1])) {
@@ -2043,11 +2047,11 @@ class ImportUI extends UserInterface
          */
         foreach ($bulkResumes as $bulkResume) {
             $fullName = $bulkResume['originalFileName'];
-            if (! strlen(trim($fullName))) {
+            if (! strlen(trim((string) $fullName))) {
                 $fullName = 'Untitled';
             }
 
-            $mp = explode('.', $fullName);
+            $mp = explode('.', (string) $fullName);
             $fileName = implode('.', array_slice($mp, 0, -1));
 
             if (! @file_exists($newFileName = $uploadPath . '/_BulkResume_' . $fileName . '.txt')) {

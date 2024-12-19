@@ -138,8 +138,14 @@ class ContactsListByViewDataGrid extends ContactsDataGrid
 
 class contactSavedListByViewDataGrid extends ContactsDataGrid
 {
+    protected $_db;
+    protected $_assignedCriterion;
+    protected $_tableWidth;
+    protected $_defaultAlphabeticalSortBy;
+
     public function __construct($siteID, $parameters, $misc)
     {
+
         /* Pager configuration. */
         $this->_tableWidth = new Width(100, '%');
         $this->_defaultAlphabeticalSortBy = 'lastName';

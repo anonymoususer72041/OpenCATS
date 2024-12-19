@@ -163,7 +163,7 @@ class License
     // FIXME: Document me!
     public function importKey($key)
     {
-        $segments = explode('-', $key);
+        $segments = explode('-', (string) $key);
         $byteString = '';
 
         $seg = $segments[0];
@@ -206,7 +206,7 @@ class License
         }
 
         $byteString = $this->scrambleByteString($byteString, $e);
-        $this->setName(strtoupper($this->unpackString($byteString)));
+        $this->setName(strtoupper((string) $this->unpackString($byteString)));
         $this->setNumberOfSeats($this->unpackNumber($byteString, 0, 2));
         $this->setExpirationDate($this->unpackNumber($byteString, 3, 19));
 
@@ -312,7 +312,7 @@ class License
     // FIXME: Document me!
     protected function setHighBitByte($byte, $ch)
     {
-        $chOrd = ord(strtolower($ch));
+        $chOrd = ord(strtolower((string) $ch));
 
         /* A-Z (0-25 of the high 5-bits) */
         if ($chOrd >= 97 && $chOrd <= 122) {
@@ -421,8 +421,8 @@ class License
     protected function packString($byteString, $value)
     {
         // Character down-grade
-        $value = preg_replace('/[^a-z \-\.\,\/]/', '', strtolower($value));
-        $value = substr($value, 0, LICENSE_STRING_SIZE);
+        $value = preg_replace('/[^a-z \-\.\,\/]/', '', strtolower((string) $value));
+        $value = substr((string) $value, 0, LICENSE_STRING_SIZE);
 
         /* Pad to LICENSE_STRING_SIZE. */
         $value = str_pad($value, LICENSE_STRING_SIZE, ' ', STR_PAD_RIGHT);
@@ -467,12 +467,12 @@ class License
 
     protected function switchBytes($key, $schema)
     {
-        $key = strtoupper($key);
+        $key = strtoupper((string) $key);
         for ($i = 0; $i < strlen($key); $i++) {
             $char = ord(strtoupper($key[$i]));
             for ($i2 = 0; $i2 < (is_countable($schema) ? count($schema) : 0); $i2 += 2) {
-                $firstChar = ord(strtoupper($schema[$i2]));
-                $secondChar = ord(strtoupper($schema[$i2 + 1]));
+                $firstChar = ord(strtoupper((string) $schema[$i2]));
+                $secondChar = ord(strtoupper((string) $schema[$i2 + 1]));
                 if ($char == $firstChar) {
                     $key[$i] = chr($secondChar);
                 } elseif ($char == $secondChar) {
@@ -500,10 +500,10 @@ class License
         $length = ($end - $start + 1);
 
         /* Convert to base-4 so it can be stored in 2-bits. */
-        $number = base_convert($number, 10, 4);
+        $number = base_convert((string) $number, 10, 4);
 
         $value = preg_replace('/[^0-3]/', '', (string) $number);
-        $value = substr($value, 0, $length);
+        $value = substr((string) $value, 0, $length);
         $value = str_pad($value, $length, '0', STR_PAD_LEFT);
 
         for ($i = 0; $i < $length; $i++) {
@@ -596,7 +596,7 @@ class LicenseUtility
             return '';
         }
 
-        return trim($license->getName());
+        return trim((string) $license->getName());
     }
 
     // FIXME: Document me!

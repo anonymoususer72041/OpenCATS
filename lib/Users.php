@@ -94,7 +94,7 @@ class Users
         $eeoIsVisible = false,
         $userSiteID = -1
     ) {
-        $md5pwd = $password == LDAPUSER_PASSWORD ? $password : md5($password);
+        $md5pwd = $password == LDAPUSER_PASSWORD ? $password : md5((string) $password);
         $userSiteID = $userSiteID < 0 ? $this->_siteID : $userSiteID;
         $sql = sprintf(
             "INSERT INTO user (
@@ -690,7 +690,7 @@ class Users
         }
 
         /* Is the user's supplied password correct? */
-        if ($rs['password'] !== md5($currentPassword)) {
+        if ($rs['password'] !== md5((string) $currentPassword)) {
             return LOGIN_INVALID_PASSWORD;
         }
 
@@ -838,7 +838,7 @@ class Users
             return LOGIN_INVALID_USER;
         } else {
             /* Is the user's supplied password correct? */
-            if ($rs['password'] !== md5($password)) {
+            if ($rs['password'] !== md5((string) $password)) {
                 return LOGIN_INVALID_PASSWORD;
             }
         }

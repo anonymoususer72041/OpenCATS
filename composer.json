@@ -6,12 +6,13 @@
         "behat/mink": "^1.8",
         "behat/mink-selenium2-driver": "^1.4",
         "codacy/coverage": "^1.4.2",
-        "rector/rector": "^1.2",
         "symplify/easy-coding-standard": ">=11.3",
         "friends-of-behat/mink-extension": "^2.7",
         "amenadiel/jpgraph": "^4.1",
         "fabpot/goutte": "^4.0",
-        "behat/mink-goutte-driver": "^2.0"
+        "behat/mink-goutte-driver": "^2.0",
+        "rector/rector": "^2.0",
+        "phpstan/phpstan": "^2.0"
 
     },
     "autoload": {

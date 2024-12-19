@@ -47,12 +47,12 @@ if (! isset($_REQUEST['joborderID']) ||
 
 $siteID = $interface->getSiteID();
 
-$jobOrderID = trim(htmlspecialchars($_REQUEST['joborderID']));
-$page = trim(htmlspecialchars($_REQUEST['page']));
-$entriesPerPage = trim(htmlspecialchars($_REQUEST['entriesPerPage']));
-$sortBy = trim(htmlspecialchars($_REQUEST['sortBy']));
-$sortDirection = trim(htmlspecialchars($_REQUEST['sortDirection']));
-$indexFile = trim(htmlspecialchars($_REQUEST['indexFile']));
+$jobOrderID = trim(htmlspecialchars((string) $_REQUEST['joborderID']));
+$page = trim(htmlspecialchars((string) $_REQUEST['page']));
+$entriesPerPage = trim(htmlspecialchars((string) $_REQUEST['entriesPerPage']));
+$sortBy = trim(htmlspecialchars((string) $_REQUEST['sortBy']));
+$sortDirection = trim(htmlspecialchars((string) $_REQUEST['sortDirection']));
+$indexFile = trim(htmlspecialchars((string) $_REQUEST['indexFile']));
 $isPopup = $_REQUEST['isPopup'] == 1 ? true : false;
 
 $_SESSION['CATS']->setPipelineEntriesPerPage($entriesPerPage);
@@ -288,18 +288,18 @@ if (! eval(Hooks::get('JO_AJAX_GET_PIPELINE'))) {
             </td>
             <td valign="top">
                 <a href="<?php echo($indexFile); ?>?m=candidates&amp;a=show&amp;candidateID=<?php echo($pipelinesData['candidateID']); ?>" class="<?php echo($pipelinesData['highlightStyle']); ?>">
-                    <?php echo(htmlspecialchars($pipelinesData['firstName'])); ?>
+                    <?php echo(htmlspecialchars((string) $pipelinesData['firstName'])); ?>
                 </a>
             </td>
             <td valign="top">
                 <a href="<?php echo($indexFile); ?>?m=candidates&amp;a=show&amp;candidateID=<?php echo($pipelinesData['candidateID']); ?>" class="<?php echo($pipelinesData['highlightStyle']); ?>">
-                    <?php echo(htmlspecialchars($pipelinesData['lastName'])); ?>
+                    <?php echo(htmlspecialchars((string) $pipelinesData['lastName'])); ?>
                 </a>
             </td>
-            <td valign="top" nowrap="nowrap"><?php echo(htmlspecialchars($pipelinesData['state'])); ?></td>
-            <td valign="top" nowrap="nowrap"><?php echo(htmlspecialchars($pipelinesData['dateCreated'])); ?></td>
-            <td valign="top" nowrap="nowrap"><?php echo(htmlspecialchars($pipelinesData['addedByAbbrName'])); ?></td>
-            <td valign="top" nowrap="nowrap"><?php echo(htmlspecialchars($pipelinesData['status'])); ?></td>
+            <td valign="top" nowrap="nowrap"><?php echo(htmlspecialchars((string) $pipelinesData['state'])); ?></td>
+            <td valign="top" nowrap="nowrap"><?php echo(htmlspecialchars((string) $pipelinesData['dateCreated'])); ?></td>
+            <td valign="top" nowrap="nowrap"><?php echo(htmlspecialchars((string) $pipelinesData['addedByAbbrName'])); ?></td>
+            <td valign="top" nowrap="nowrap"><?php echo(htmlspecialchars((string) $pipelinesData['status'])); ?></td>
             <td valign="top"><?php echo($pipelinesData['lastActivity']); ?></td>
 <?php if (! $isPopup): ?>
             <td style="text-align:center;" nowrap="nowrap">
@@ -319,7 +319,7 @@ if (! eval(Hooks::get('JO_AJAX_GET_PIPELINE'))) {
                         </a>
                     <?php endif; ?>
                     <?php if ($_SESSION['CATS']->getAccessLevel('pipelines.removeFromPipeline') >= ACCESS_LEVEL_DELETE): ?>
-                        <a href="<?php echo($indexFile); ?>?m=joborders&amp;a=removeFromPipeline&amp;jobOrderID=<?php echo($jobOrderID); ?>&amp;candidateID=<?php echo($pipelinesData['candidateID']); ?>" onclick="javascript:return confirm('Remove <?php echo(str_replace('\'', '\\\'', htmlspecialchars($pipelinesData['firstName']))); ?> <?php echo(str_replace('\'', '\\\'', htmlspecialchars($pipelinesData['lastName']))); ?> from the pipeline?')">
+                        <a href="<?php echo($indexFile); ?>?m=joborders&amp;a=removeFromPipeline&amp;jobOrderID=<?php echo($jobOrderID); ?>&amp;candidateID=<?php echo($pipelinesData['candidateID']); ?>" onclick="javascript:return confirm('Remove <?php echo(str_replace('\'', '\\\'', htmlspecialchars((string) $pipelinesData['firstName']))); ?> <?php echo(str_replace('\'', '\\\'', htmlspecialchars((string) $pipelinesData['lastName']))); ?> from the pipeline?')">
                             <img src="images/actions/delete.gif" width="16" height="16" class="absmiddle" alt="remove" style="border: none;" title="Remove from Job Order"  />
                         </a>
                     <?php endif; ?>

@@ -196,7 +196,7 @@ class SettingsUI extends UserInterface
         $tags = new Tags($this->_siteID);
         //$tags->update($_POST['tag_id'], $_POST['title'], $_POST['description']);
         $tags->update($_POST['tag_id'], $_POST['tag_title'], "-");
-        echo htmlspecialchars($_POST['tag_title'], ENT_QUOTES, 'UTF-8');
+        echo htmlspecialchars((string) $_POST['tag_title'], ENT_QUOTES, 'UTF-8');
         return;
     }
 
@@ -899,11 +899,11 @@ class SettingsUI extends UserInterface
             }
         }
 
-        $siteIDPosition = strpos($data['username'], '@' . $_SESSION['CATS']->getSiteID());
+        $siteIDPosition = strpos((string) $data['username'], '@' . $_SESSION['CATS']->getSiteID());
 
         // FIXME: The last test here might be redundant.
         if ($siteIDPosition !== false &&
-            substr($data['username'], $siteIDPosition) == '@' . $_SESSION['CATS']->getSiteID()) {
+            substr((string) $data['username'], $siteIDPosition) == '@' . $_SESSION['CATS']->getSiteID()) {
             $data['username'] = str_replace(
                 '@' . $_SESSION['CATS']->getSiteID(),
                 '',
@@ -1029,13 +1029,13 @@ class SettingsUI extends UserInterface
         }
 
         /* If adding an e-mail username, verify it is a valid e-mail. */
-        if (strpos($username, '@') !== false && filter_var($username, FILTER_VALIDATE_EMAIL) === false) {
+        if (strpos((string) $username, '@') !== false && filter_var($username, FILTER_VALIDATE_EMAIL) === false) {
             CommonErrors::fatal(COMMONERROR_BADFIELDS, $this, 'Username is in improper format for an E-Mail address.');
         }
 
         /* Make it a multisite user name if the user is part of a hosted site. */
         $unixName = $_SESSION['CATS']->getUnixName();
-        if (strpos($username, '@') === false && ! empty($unixName)) {
+        if (strpos((string) $username, '@') === false && ! empty($unixName)) {
             $username .= '@' . $_SESSION['CATS']->getSiteID();
         }
 
@@ -1120,10 +1120,10 @@ class SettingsUI extends UserInterface
         /* Change multisite usernames into single site usernames. */
         // FIXME: The last test here might be redundant.
         // FIXME: Put this in a private method. It is duplicated twice so far.
-        $siteIDPosition = strpos($data['username'], '@' . $_SESSION['CATS']->getSiteID());
+        $siteIDPosition = strpos((string) $data['username'], '@' . $_SESSION['CATS']->getSiteID());
 
         if ($siteIDPosition !== false &&
-            substr($data['username'], $siteIDPosition) == '@' . $_SESSION['CATS']->getSiteID()) {
+            substr((string) $data['username'], $siteIDPosition) == '@' . $_SESSION['CATS']->getSiteID()) {
             $data['username'] = str_replace(
                 '@' . $_SESSION['CATS']->getSiteID(),
                 '',
@@ -1217,13 +1217,13 @@ class SettingsUI extends UserInterface
 
         /* If adding an e-mail username, verify it is a valid e-mail. */
         // FIXME: PREG!
-        if (strpos($username, '@') !== false && filter_var($username, FILTER_VALIDATE_EMAIL) === false) {
+        if (strpos((string) $username, '@') !== false && filter_var($username, FILTER_VALIDATE_EMAIL) === false) {
             CommonErrors::fatal(COMMONERROR_BADFIELDS, $this, 'Username is in improper format for an E-Mail address.');
         }
 
         /* Make it a multisite user name if the user is part of a hosted site. */
         $unixName = $_SESSION['CATS']->getUnixName();
-        if (strpos($username, '@') === false && ! empty($unixName)) {
+        if (strpos((string) $username, '@') === false && ! empty($unixName)) {
             $username .= '@' . $_SESSION['CATS']->getSiteID();
         }
 
@@ -1557,17 +1557,17 @@ class SettingsUI extends UserInterface
             if ($templateLine['setting'] != '') {
                 $careerPortalSettings->setForTemplate(
                     $templateLine['setting'],
-                    $_POST[md5($templateLine['setting'])],
+                    $_POST[md5((string) $templateLine['setting'])],
                     $templateName
                 );
             }
         }
 
         foreach ($careerPortalSettings->requiredTemplateFields as $field) {
-            if ($field != '' && isset($_POST[md5($field)])) {
+            if ($field != '' && isset($_POST[md5((string) $field)])) {
                 $careerPortalSettings->setForTemplate(
                     $field,
-                    $_POST[md5($field)],
+                    $_POST[md5((string) $field)],
                     $templateName
                 );
             }
@@ -2085,7 +2085,7 @@ class SettingsUI extends UserInterface
             $_SESSION['CATS']->setSiteName($newSiteName);
 
             /* If no E-Mail set for current user, make user set E-Mail address. */
-            if (trim($_SESSION['CATS']->getEmail()) == '') {
+            if (trim((string) $_SESSION['CATS']->getEmail()) == '') {
                 CATSUtility::transferRelativeURI('m=settings&a=forceEmail');
             } else {
                 CATSUtility::transferRelativeURI('m=settings&a=newInstallFinished');
@@ -2382,10 +2382,10 @@ class SettingsUI extends UserInterface
 
             // FIXME: The last test here might be redundant.
             // FIXME: Put this in a private method. It is duplicated twice so far.
-            $siteIDPosition = strpos($row['username'], '@' . $_SESSION['CATS']->getSiteID());
+            $siteIDPosition = strpos((string) $row['username'], '@' . $_SESSION['CATS']->getSiteID());
 
             if ($siteIDPosition !== false &&
-                substr($row['username'], $siteIDPosition) == '@' . $_SESSION['CATS']->getSiteID()) {
+                substr((string) $row['username'], $siteIDPosition) == '@' . $_SESSION['CATS']->getSiteID()) {
                 $rs[$rowIndex]['username'] = str_replace(
                     '@' . $_SESSION['CATS']->getSiteID(),
                     '',
@@ -2427,7 +2427,7 @@ class SettingsUI extends UserInterface
                 $message = 'Please enter a license key in order to continue.';
             }
 
-            $key = trim($fields['licenseKey']);
+            $key = trim((string) $fields['licenseKey']);
 
             $configWritten = false;
 
@@ -2736,7 +2736,7 @@ class SettingsUI extends UserInterface
             $accessLevel = ACCESS_LEVEL_READ;
         }
 
-        if (strlen($firstName) < 2 || strlen($lastName) < 2 || strlen($loginName) < 2 || strlen($password) < 2) {
+        if (strlen((string) $firstName) < 2 || strlen((string) $lastName) < 2 || strlen((string) $loginName) < 2 || strlen((string) $password) < 2) {
             echo 'First and last name are too short.';
             return;
         }
@@ -2744,14 +2744,14 @@ class SettingsUI extends UserInterface
         $users = new Users($this->_siteID);
 
         /* If adding an e-mail username, verify it is a valid e-mail. */
-        if (strpos($loginName, '@') !== false && filter_var($loginName, FILTER_VALIDATE_EMAIL) === false) {
+        if (strpos((string) $loginName, '@') !== false && filter_var($loginName, FILTER_VALIDATE_EMAIL) === false) {
             echo 'That is not a valid login name.';
             return;
         }
 
         /* Make it a multisite user name if the user is part of a hosted site. */
         $unixName = $_SESSION['CATS']->getUnixName();
-        if (strpos($loginName, '@') === false && ! empty($unixName)) {
+        if (strpos((string) $loginName, '@') === false && ! empty($unixName)) {
             $loginName .= '@' . $_SESSION['CATS']->getSiteID();
         }
 
@@ -2801,7 +2801,7 @@ class SettingsUI extends UserInterface
 
         if (isset($_GET[$id = 'key']) && $_GET[$id] != '') {
             $license = new License();
-            $key = strtoupper(trim($_GET[$id]));
+            $key = strtoupper(trim((string) $_GET[$id]));
 
             $configWritten = false;
 
@@ -2908,7 +2908,7 @@ class SettingsUI extends UserInterface
             $password = '';
         }
 
-        if (strlen($password) < 5) {
+        if (strlen((string) $password) < 5) {
             echo 'Your password length must be at least 5 characters long.';
             return;
         }
@@ -2930,7 +2930,7 @@ class SettingsUI extends UserInterface
             $email = '';
         }
 
-        if (strlen($email) < 5) {
+        if (strlen((string) $email) < 5) {
             echo 'Your e-mail address must be at least 5 characters long.';
             return;
         }
@@ -2949,7 +2949,7 @@ class SettingsUI extends UserInterface
             $siteName = '';
         }
 
-        if ($siteName == 'default_site' || strlen($siteName) <= 0) {
+        if ($siteName == 'default_site' || strlen((string) $siteName) <= 0) {
             echo 'That is not a valid site name. Please choose a different one.';
             return;
         }
@@ -3094,19 +3094,19 @@ class SettingsUI extends UserInterface
         }
 
         // Get the title
-        $title = isset($_POST[$id = 'title']) ? substr(trim($_POST[$id]), 0, 255) : '';
+        $title = isset($_POST[$id = 'title']) ? substr(trim((string) $_POST[$id]), 0, 255) : '';
         if (! strlen($title)) {
             $title = '';
         }
 
         // Get the description
-        $description = isset($_POST[$id = 'description']) ? substr(trim($_POST[$id]), 0, 255) : '';
+        $description = isset($_POST[$id = 'description']) ? substr(trim((string) $_POST[$id]), 0, 255) : '';
         if (! strlen($description)) {
             $description = '';
         }
 
         // Is this active?
-        $active = isset($_POST[$id = 'isActive']) ? ! strcasecmp($_POST[$id], 'yes') : 0;
+        $active = isset($_POST[$id = 'isActive']) ? ! strcasecmp((string) $_POST[$id], 'yes') : 0;
 
         $_SESSION['CATS_QUESTIONNAIRE']['title'] = $title;
         $_SESSION['CATS_QUESTIONNAIRE']['description'] = $description;
@@ -3125,14 +3125,14 @@ class SettingsUI extends UserInterface
             // Update the position of the question
             $field = sprintf('question%dPosition', $questionIndex);
             if (isset($_POST[$field])) {
-                $position = intval(trim($_POST[$field]));
+                $position = intval(trim((string) $_POST[$field]));
                 $questions[$questionIndex]['questionPosition'] = $position;
             }
 
             // Update the text of the question
             $field = sprintf('question%dTextValue', $questionIndex);
             if (isset($_POST[$field])) {
-                if (strlen($text = substr(trim($_POST[$field]), 0, 255))) {
+                if (strlen($text = substr(trim((string) $_POST[$field]), 0, 255))) {
                     $questions[$questionIndex]['questionText'] = $text;
                 }
             }
@@ -3149,7 +3149,7 @@ class SettingsUI extends UserInterface
 
             // Check if this question should be removed (user checked the box)
             $field = sprintf('question%dRemove', $questionIndex);
-            if (isset($_POST[$field]) && ! strcasecmp($_POST[$field], 'yes')) {
+            if (isset($_POST[$field]) && ! strcasecmp((string) $_POST[$field], 'yes')) {
                 $questions[$questionIndex]['remove'] = true;
             } else {
                 $questions[$questionIndex]['remove'] = false;
@@ -3159,21 +3159,21 @@ class SettingsUI extends UserInterface
                 // Update the position of the question
                 $field = sprintf('question%dAnswer%dPosition', $questionIndex, $answerIndex);
                 if (isset($_POST[$field])) {
-                    $position = intval(trim($_POST[$field]));
+                    $position = intval(trim((string) $_POST[$field]));
                     $questions[$questionIndex]['answers'][$answerIndex]['answerPosition'] = $position;
                 }
 
                 // Update the text of the answer
                 $field = sprintf('question%dAnswer%dTextValue', $questionIndex, $answerIndex);
                 if (isset($_POST[$field])) {
-                    if (strlen($text = substr(trim($_POST[$field]), 0, 255))) {
+                    if (strlen($text = substr(trim((string) $_POST[$field]), 0, 255))) {
                         $questions[$questionIndex]['answers'][$answerIndex]['answerText'] = $text;
                     }
                 }
 
                 // Check if this answer should be removed (user checked the box)
                 $field = sprintf('question%dAnswer%dRemove', $questionIndex, $answerIndex);
-                if (isset($_POST[$field]) && ! strcasecmp($_POST[$field], 'yes')) {
+                if (isset($_POST[$field]) && ! strcasecmp((string) $_POST[$field], 'yes')) {
                     $questions[$questionIndex]['answers'][$answerIndex]['remove'] = true;
                 } else {
                     $questions[$questionIndex]['answers'][$answerIndex]['remove'] = false;
@@ -3226,32 +3226,32 @@ class SettingsUI extends UserInterface
                 $actionKeySkillsValue = isset($_POST[$id = $actionKeySkillsField . 'Value']) ? $_POST[$id] : '';
 
                 $questions[$questionIndex]['answers'][$answerIndex]['actionSource'] = (
-                    strcasecmp($actionSourceActive, 'yes') ?
+                    strcasecmp((string) $actionSourceActive, 'yes') ?
                     '' :
                     $actionSourceValue
                 );
                 $questions[$questionIndex]['answers'][$answerIndex]['actionNotes'] = (
-                    strcasecmp($actionNotesActive, 'yes') ?
+                    strcasecmp((string) $actionNotesActive, 'yes') ?
                     '' :
                     $actionNotesValue
                 );
                 $questions[$questionIndex]['answers'][$answerIndex]['actionIsHot'] = (
-                    strcasecmp($actionIsHotActive, 'yes') ?
+                    strcasecmp((string) $actionIsHotActive, 'yes') ?
                     0 :
                     1
                 );
                 $questions[$questionIndex]['answers'][$answerIndex]['actionIsActive'] = (
-                    strcasecmp($actionIsActiveActive, 'yes') ?
+                    strcasecmp((string) $actionIsActiveActive, 'yes') ?
                     1 :
                     0
                 );
                 $questions[$questionIndex]['answers'][$answerIndex]['actionCanRelocate'] = (
-                    strcasecmp($actionCanRelocateActive, 'yes') ?
+                    strcasecmp((string) $actionCanRelocateActive, 'yes') ?
                     0 :
                     1
                 );
                 $questions[$questionIndex]['answers'][$answerIndex]['actionKeySkills'] = (
-                    strcasecmp($actionKeySkillsActive, 'yes') ?
+                    strcasecmp((string) $actionKeySkillsActive, 'yes') ?
                     '' :
                     $actionKeySkillsValue
                 );
@@ -3269,14 +3269,14 @@ class SettingsUI extends UserInterface
         $restrictQuestionID = isset($_POST[$id = 'restrictActionQuestionID']) ? intval($_POST[$id]) : '';
         $restrictAnswerID = isset($_POST[$id = 'restrictActionAnswerID']) ? intval($_POST[$id]) : '';
 
-        if (! strcasecmp($restrictAction, 'question')) {
+        if (! strcasecmp((string) $restrictAction, 'question')) {
             // Adding a new question to the questionnaire
-            $questionText = isset($_POST[$id = 'questionText']) ? trim($_POST[$id]) : '';
+            $questionText = isset($_POST[$id = 'questionText']) ? trim((string) $_POST[$id]) : '';
             $questionTypeText = isset($_POST[$id = 'questionType']) ? $_POST[$id] : '';
 
             // Make sure the question doesn't already exist (re-submit)
             for ($i = 0, $exists = false; $i < count($questions); $i++) {
-                if (! strcmp($questions[$i]['questionText'], $questionText)) {
+                if (! strcmp((string) $questions[$i]['questionText'], $questionText)) {
                     $exists = true;
                 }
             }
@@ -3294,7 +3294,7 @@ class SettingsUI extends UserInterface
                     'answers' => [],
                 ];
             }
-        } elseif (! strcasecmp($restrictAction, 'answer') &&
+        } elseif (! strcasecmp((string) $restrictAction, 'answer') &&
             isset($questions[$restrictQuestionID])) {
             // Adding a new answer to an existing question
             $field = sprintf('question%dAnswerText', $restrictQuestionID);
@@ -3313,7 +3313,7 @@ class SettingsUI extends UserInterface
                     'answerPosition' => 1000, // should be positioned last (see above)
                 ];
             }
-        } elseif (! strcasecmp($restrictAction, 'action') &&
+        } elseif (! strcasecmp((string) $restrictAction, 'action') &&
             isset($questions[$restrictQuestionID]) &&
             isset($questions[$restrictQuestionID]['answers'][$restrictAnswerID])) {
             // Adding a new action to an existing answer of an existing question
@@ -3439,10 +3439,10 @@ class SettingsUI extends UserInterface
             }
         }
 
-        if (isset($_POST[$id = 'startOver']) && ! strcasecmp($_POST[$id], 'yes')) {
+        if (isset($_POST[$id = 'startOver']) && ! strcasecmp((string) $_POST[$id], 'yes')) {
             // User wants to start over
             $_SESSION['CATS_QUESTIONNAIRE']['questions'] = [];
-        } elseif (isset($_POST[$id = 'saveChanges']) && ! strcasecmp($_POST[$id], 'yes')) {
+        } elseif (isset($_POST[$id = 'saveChanges']) && ! strcasecmp((string) $_POST[$id], 'yes')) {
             // User wants to add the new questionnaire
             if (($id = intval($_SESSION['CATS_QUESTIONNAIRE']['id'])) != 0) {
                 $questionnaire->update(
@@ -3490,7 +3490,7 @@ class SettingsUI extends UserInterface
 
         for ($i = 0; $i < count($data); $i++) {
             if (isset($_POST[$id = 'removeQuestionnaire' . $i]) &&
-                ! strcasecmp($_POST[$id], 'yes')) {
+                ! strcasecmp((string) $_POST[$id], 'yes')) {
                 $questionnaire->delete($data[$i]['questionnaireID']);
             }
         }

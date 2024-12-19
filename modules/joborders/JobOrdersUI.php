@@ -351,8 +351,8 @@ class JobOrdersUI extends UserInterface
             $data['state']
         );
 
-        $data['description'] = trim($data['description']);
-        $data['notes'] = trim($data['notes']);
+        $data['description'] = trim((string) $data['description']);
+        $data['notes'] = trim((string) $data['notes']);
 
         /* Determine the Job Type Description */
         $data['typeDescription'] = $jobOrders->typeCodeToString($data['type']);

@@ -174,13 +174,13 @@ class ZipFileCreator
         $DOSTime = FileCompressorUtility::UNIXToDOSTime($timestamp);
 
         /* Calculate the length of the file data before compression. */
-        $uncompressedLength = strlen($data);
+        $uncompressedLength = strlen((string) $data);
 
         /* Calculate the CRC32 checksum of the file data to be compressed. */
-        $CRC32 = crc32($data);
+        $CRC32 = crc32((string) $data);
 
         /* Compress the file data. */
-        $data = gzdeflate($data);
+        $data = gzdeflate((string) $data);
 
         /* Calculate the length of the file data after compression. */
         $compressedLength = strlen($data);
@@ -842,7 +842,7 @@ class ZipFileCreator
             $CRC32,
             $compressedLength,
             $uncompressedLength,
-            strlen($name),
+            strlen((string) $name),
             $extraFieldLength,
             $fileCommentLength,
             $diskNumber,
@@ -1105,8 +1105,8 @@ class ZipFileExtractor
         foreach ($this->_metaData['centralDirectory'] as $index => $data) {
             $fileName = $data['filename'];
 
-            if (strpos($fileName, '/') !== false) {
-                $directorySplit = explode('/', $fileName);
+            if (strpos((string) $fileName, '/') !== false) {
+                $directorySplit = explode('/', (string) $fileName);
                 unset($directorySplit[count($directorySplit) - 1]);
                 $directory = implode('/', $directorySplit);
                 @mkdir($directory, 0777, true);

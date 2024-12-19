@@ -44,9 +44,9 @@ include_once(LEGACY_ROOT . '/lib/DataGrid.php');
  */
 class Candidates
 {
-    private \DatabaseConnection $_db;
+    protected $_db;
 
-    private $_siteID;
+    protected $_siteID;
 
     public $extraFields;
 
@@ -1195,13 +1195,13 @@ class Candidates
             $phoneNumbers = [];
 
             if ($phoneHome != "") {
-                array_push($phoneNumbers, preg_replace('/\s+/', '', $phoneHome));
+                array_push($phoneNumbers, preg_replace('/\s+/', '', (string) $phoneHome));
             }
             if ($phoneCell != "") {
-                array_push($phoneNumbers, preg_replace('/\s+/', '', $phoneCell));
+                array_push($phoneNumbers, preg_replace('/\s+/', '', (string) $phoneCell));
             }
             if ($phoneWork != "") {
-                array_push($phoneNumbers, preg_replace('/\s+/', '', $phoneWork));
+                array_push($phoneNumbers, preg_replace('/\s+/', '', (string) $phoneWork));
             }
 
             $phoneNumbers = array_map('strtolower', $phoneNumbers);
@@ -1210,26 +1210,26 @@ class Candidates
             foreach ($rs as $row) {
                 $phoneNumbersDB = [];
                 if ($row['phoneHome'] != "") {
-                    array_push($phoneNumbersDB, preg_replace('/\s+/', '', $row['phoneHome']));
+                    array_push($phoneNumbersDB, preg_replace('/\s+/', '', (string) $row['phoneHome']));
                 }
                 if ($row['phoneCell'] != "") {
-                    array_push($phoneNumbersDB, preg_replace('/\s+/', '', $row['phoneCell']));
+                    array_push($phoneNumbersDB, preg_replace('/\s+/', '', (string) $row['phoneCell']));
                 }
                 if ($row['phoneWork'] != "") {
-                    array_push($phoneNumbersDB, preg_replace('/\s+/', '', $row['phoneWork']));
+                    array_push($phoneNumbersDB, preg_replace('/\s+/', '', (string) $row['phoneWork']));
                 }
                 $phoneNumbersDB = array_map('strtolower', $phoneNumbersDB);
                 $phoneNumbersDB = array_map('trim', $phoneNumbersDB);
 
-                if (strtolower($row['middleName']) == strtolower($middleName) && $middleName != "") {
+                if (strtolower((string) $row['middleName']) == strtolower((string) $middleName) && $middleName != "") {
                     array_push($duplicatesID, $row['candidateID']);
                 } elseif (sizeof(array_diff($phoneNumbers, $phoneNumbersDB)) != sizeof($phoneNumbers) || sizeof(array_diff($phoneNumbersDB, $phoneNumbers)) != sizeof($phoneNumbersDB)) {
                     array_push($duplicatesID, $row['candidateID']);
-                } elseif ((strtolower(trim($email1)) == strtolower(trim($row['email1'])) && trim($email1) != "") || (strtolower(trim($email1)) == strtolower(trim($row['email2'])) && trim($email1) != "") ||
-                        (strtolower(trim($email2)) == strtolower(trim($row['email1'])) && trim($email2) != "") || (strtolower(trim($email2)) == strtolower(trim($row['email2'])) && trim($email2) != "")) {
+                } elseif ((strtolower(trim((string) $email1)) == strtolower(trim((string) $row['email1'])) && trim((string) $email1) != "") || (strtolower(trim((string) $email1)) == strtolower(trim((string) $row['email2'])) && trim((string) $email1) != "") ||
+                        (strtolower(trim((string) $email2)) == strtolower(trim((string) $row['email1'])) && trim((string) $email2) != "") || (strtolower(trim((string) $email2)) == strtolower(trim((string) $row['email2'])) && trim((string) $email2) != "")) {
                     array_push($duplicatesID, $row['candidateID']);
-                } elseif (strtolower(trim($city)) == strtolower(trim($row['city'])) && trim($city) != "") {
-                    if (strtolower(trim($address)) == strtolower(trim($row['address'])) && trim($address) != "") {
+                } elseif (strtolower(trim((string) $city)) == strtolower(trim((string) $row['city'])) && trim((string) $city) != "") {
+                    if (strtolower(trim((string) $address)) == strtolower(trim((string) $row['address'])) && trim((string) $address) != "") {
                         array_push($duplicatesID, $row['candidateID']);
                     }
                 }
@@ -1528,7 +1528,7 @@ class Candidates
             $update .= ", ";
         }
         $dateAvailable = $rs['dateAvailable'];
-        $dateParts = explode("-", $dateAvailable);
+        $dateParts = explode("-", (string) $dateAvailable);
         $dateAvailable = "20" . $dateParts[2] . "-" . $dateParts[0] . "-" . $dateParts[1] . " 00:00:00";
         $update .= "is_active = " . $rs['isActive'] . ", " .
                     "current_employer = '" . $rs['currentEmployer'] . "', " .
@@ -1626,7 +1626,7 @@ class Candidates
                 $listIDs .= $row['listID'];
                 $listIDs .= ", ";
             }
-            $listIDs = substr($listIDs, 0, strlen($lists) - 2);
+            $listIDs = substr($listIDs, 0, strlen((string) $lists) - 2);
         } else {
             $listIDs = "0";
         }
@@ -1939,6 +1939,10 @@ class Candidates
 class CandidatesDataGrid extends DataGrid
 {
     protected $_siteID;
+    protected $_db;
+    protected $_assignedCriterion;
+    protected $_classColumns;
+
 
     // FIXME: Fix ugly indenting - ~400 character lines = bad.
     public function __construct($instanceName, $siteID, $parameters, $misc = 0)
@@ -2402,9 +2406,9 @@ class CandidatesDataGrid extends DataGrid
             $joinSQL,
             $this->_siteID,
             $adminHiddenCriterion,
-            (strlen($whereSQL) > 0) ? ' AND ' . $whereSQL : '',
+            (strlen((string) $whereSQL) > 0) ? ' AND ' . $whereSQL : '',
             $this->_assignedCriterion,
-            (strlen($havingSQL) > 0) ? ' HAVING ' . $havingSQL : '',
+            (strlen((string) $havingSQL) > 0) ? ' HAVING ' . $havingSQL : '',
             $orderSQL,
             $limitSQL
         );
@@ -2420,11 +2424,11 @@ class CandidatesDataGrid extends DataGrid
  */
 class EEOSettings
 {
-    private \DatabaseConnection $_db;
+    private readonly \DatabaseConnection $_db;
 
-    private $_siteID;
+    protected $_siteID;
 
-    private $_userID;
+    protected $_userID;
 
     public function __construct($siteID)
     {

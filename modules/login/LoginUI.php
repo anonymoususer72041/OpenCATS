@@ -179,7 +179,7 @@ class LoginUI extends UserInterface
             $message = 'Invalid username or password.';
 
             if (isset($_GET['reloginVars'])) {
-                $this->_template->assign('reloginVars', urlencode($_GET['reloginVars']));
+                $this->_template->assign('reloginVars', urlencode((string) $_GET['reloginVars']));
             } else {
                 $this->_template->assign('reloginVars', '');
             }
@@ -230,7 +230,7 @@ class LoginUI extends UserInterface
             $message = $_SESSION['CATS']->getLoginError();
 
             if (isset($_GET['reloginVars'])) {
-                $this->_template->assign('reloginVars', urlencode($_GET['reloginVars']));
+                $this->_template->assign('reloginVars', urlencode((string) $_GET['reloginVars']));
             } else {
                 $this->_template->assign('reloginVars', '');
             }
@@ -303,7 +303,7 @@ class LoginUI extends UserInterface
         }
 
         // make user set an e-mail address
-        if (trim($_SESSION['CATS']->getEmail()) == '') {
+        if (trim((string) $_SESSION['CATS']->getEmail()) == '') {
             $wizard->addPage('E-mail', './modules/login/wizard/Email.tpl', '', false, true);
         }
 
@@ -386,7 +386,7 @@ class LoginUI extends UserInterface
         }
 
         /* If no E-Mail set for current user, make user set E-Mail address. */
-        elseif (trim($_SESSION['CATS']->getEmail()) == '') {
+        elseif (trim((string) $_SESSION['CATS']->getEmail()) == '') {
             CATSUtility::transferRelativeURI('m=settings&a=forceEmail');
         }
 
@@ -464,7 +464,7 @@ class LoginUI extends UserInterface
                 continue;
             }
 
-            $getFormatted[] = urlencode($key) . '=' . urlencode($value);
+            $getFormatted[] = urlencode($key) . '=' . urlencode((string) $value);
         }
 
         return urlencode(implode('&', $getFormatted));

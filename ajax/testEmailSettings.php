@@ -59,7 +59,7 @@ $fromAddress = $_REQUEST['fromAddress'];
 
 /* Is the test e-mail address specified valid? */
 // FIXME: Validate properly.
-if (strpos($testEmailAddress, '@') === false) {
+if (strpos((string) $testEmailAddress, '@') === false) {
     $interface->outputXMLErrorPage(
         -2,
         'Invalid test e-mail address.'
@@ -70,7 +70,7 @@ if (strpos($testEmailAddress, '@') === false) {
 
 /* Is the from e-mail address specified valid? */
 // FIXME: Validate properly.
-if (strpos($fromAddress, '@') === false) {
+if (strpos((string) $fromAddress, '@') === false) {
     $interface->outputXMLErrorPage(
         -2,
         'Invalid from e-mail address.'

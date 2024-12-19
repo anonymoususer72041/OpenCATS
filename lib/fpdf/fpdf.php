@@ -219,7 +219,7 @@ if (! class_exists('FPDF')) {
             $this->fw = $this->fwPt / $this->k;
             $this->fh = $this->fhPt / $this->k;
             //Page orientation
-            $orientation = strtolower($orientation);
+            $orientation = strtolower((string) $orientation);
             if ($orientation == 'p' || $orientation == 'portrait') {
                 $this->DefOrientation = 'P';
                 $this->wPt = $this->fwPt;
@@ -352,7 +352,7 @@ if (! class_exists('FPDF')) {
             $this->AliasNbPages = $alias;
         }
 
-        public function Error($msg)
+        public function Error($msg): never
         {
             //Fatal error
             die('<strong>FPDF error: </strong>' . $msg);
@@ -549,14 +549,14 @@ if (! class_exists('FPDF')) {
         public function AddFont($family, $style = '', $file = '')
         {
             //Add a TrueType or Type1 font
-            $family = strtolower($family);
+            $family = strtolower((string) $family);
             if ($file == '') {
-                $file = str_replace(' ', '', $family) . strtolower($style) . '.php';
+                $file = str_replace(' ', '', $family) . strtolower((string) $style) . '.php';
             }
             if ($family == 'arial') {
                 $family = 'helvetica';
             }
-            $style = strtoupper($style);
+            $style = strtoupper((string) $style);
             if ($style == 'IB') {
                 $style = 'BI';
             }
@@ -615,7 +615,7 @@ if (! class_exists('FPDF')) {
             //Select a font; size given in points
             global $fpdf_charwidths;
 
-            $family = strtolower($family);
+            $family = strtolower((string) $family);
             if ($family == '') {
                 $family = $this->FontFamily;
             }
@@ -624,7 +624,7 @@ if (! class_exists('FPDF')) {
             } elseif ($family == 'symbol' || $family == 'zapfdingbats') {
                 $style = '';
             }
-            $style = strtoupper($style);
+            $style = strtoupper((string) $style);
             if (strpos($style, 'U') !== false) {
                 $this->underline = true;
                 $style = str_replace('U', '', $style);
@@ -845,13 +845,13 @@ if (! class_exists('FPDF')) {
                     $b2 = 'LR';
                 } else {
                     $b2 = '';
-                    if (strpos($border, 'L') !== false) {
+                    if (strpos((string) $border, 'L') !== false) {
                         $b2 .= 'L';
                     }
-                    if (strpos($border, 'R') !== false) {
+                    if (strpos((string) $border, 'R') !== false) {
                         $b2 .= 'R';
                     }
-                    $b = (strpos($border, 'T') !== false) ? $b2 . 'T' : $b2;
+                    $b = (strpos((string) $border, 'T') !== false) ? $b2 . 'T' : $b2;
                 }
             }
             $sep = -1;
@@ -923,7 +923,7 @@ if (! class_exists('FPDF')) {
                 $this->ws = 0;
                 $this->_out('0 Tw');
             }
-            if ($border && strpos($border, 'B') !== false) {
+            if ($border && strpos((string) $border, 'B') !== false) {
                 $b .= 'B';
             }
             $this->Cell($w, $h, substr($s, $j, $i - $j), $b, 2, $align, $fill);
@@ -1011,13 +1011,13 @@ if (! class_exists('FPDF')) {
             if (! isset($this->images[$file])) {
                 //First use of image, get info
                 if ($type == '') {
-                    $pos = strrpos($file, '.');
+                    $pos = strrpos((string) $file, '.');
                     if (! $pos) {
                         $this->Error('Image file has no extension and no type was specified: ' . $file);
                     }
-                    $type = substr($file, $pos + 1, 3);
+                    $type = substr((string) $file, $pos + 1, 3);
                 }
-                $type = strtolower($type);
+                $type = strtolower((string) $type);
                 $mqr = get_magic_quotes_runtime();
                 if (function_exists('set_magic_quotes_runtime')) {
                     set_magic_quotes_runtime(0);
@@ -1122,7 +1122,7 @@ if (! class_exists('FPDF')) {
             if (is_bool($dest)) {
                 $dest = $dest ? 'D' : 'F';
             }
-            $dest = strtoupper($dest);
+            $dest = strtoupper((string) $dest);
             if ($dest == '') {
                 if ($name == '') {
                     $name = 'doc.pdf';
@@ -1143,7 +1143,7 @@ if (! class_exists('FPDF')) {
                         if (headers_sent()) {
                             $this->Error('Some data has already been output to browser, can\'t send PDF file');
                         }
-                        header('Content-Length: ' . strlen($this->buffer));
+                        header('Content-Length: ' . strlen((string) $this->buffer));
                         header('Content-disposition: inline; filename="' . $name . '"');
                     }
                     echo $this->buffer;
@@ -1153,7 +1153,7 @@ if (! class_exists('FPDF')) {
                     if (ob_get_contents()) {
                         $this->Error('Some data has already been output, can\'t send PDF file');
                     }
-                    if (isset($_SERVER['HTTP_USER_AGENT']) && strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE')) {
+                    if (isset($_SERVER['HTTP_USER_AGENT']) && strpos((string) $_SERVER['HTTP_USER_AGENT'], 'MSIE')) {
                         header('Content-Type: application/force-download');
                     } else {
                         header('Content-Type: application/octet-stream');
@@ -1161,7 +1161,7 @@ if (! class_exists('FPDF')) {
                     if (headers_sent()) {
                         $this->Error('Some data has already been output to browser, can\'t send PDF file');
                     }
-                    header('Content-Length: ' . strlen($this->buffer));
+                    header('Content-Length: ' . strlen((string) $this->buffer));
                     header('Content-disposition: attachment; filename="' . $name . '"');
                     echo $this->buffer;
                     break;
@@ -1171,7 +1171,7 @@ if (! class_exists('FPDF')) {
                     if (! $f) {
                         $this->Error('Unable to create output file: ' . $name);
                     }
-                    fwrite($f, $this->buffer, strlen($this->buffer));
+                    fwrite($f, (string) $this->buffer, strlen((string) $this->buffer));
                     fclose($f);
                     break;
                 case 'S':
@@ -1253,14 +1253,14 @@ if (! class_exists('FPDF')) {
                 $this->_out('/Contents ' . ($this->n + 1) . ' 0 R>>');
                 $this->_out('endobj');
                 //Page content
-                $p = ($this->compress) ? gzcompress($this->pages[$n]) : $this->pages[$n];
+                $p = ($this->compress) ? gzcompress((string) $this->pages[$n]) : $this->pages[$n];
                 $this->_newobj();
-                $this->_out('<<' . $filter . '/Length ' . strlen($p) . '>>');
+                $this->_out('<<' . $filter . '/Length ' . strlen((string) $p) . '>>');
                 $this->_putstream($p);
                 $this->_out('endobj');
             }
             //Pages root
-            $this->offsets[1] = strlen($this->buffer);
+            $this->offsets[1] = strlen((string) $this->buffer);
             $this->_out('1 0 obj');
             $this->_out('<</Type /Pages');
             $kids = '/Kids [';
@@ -1300,7 +1300,7 @@ if (! class_exists('FPDF')) {
                     $font .= fread($f, 8192);
                 }
                 fclose($f);
-                $compressed = (substr($file, -2) == '.z');
+                $compressed = (substr((string) $file, -2) == '.z');
                 if (! $compressed && isset($info['length2'])) {
                     $header = (ord($font{0}) == 128);
                     if ($header) {
@@ -1384,7 +1384,7 @@ if (! class_exists('FPDF')) {
                     $this->_out('endobj');
                 } else {
                     //Allow for additional types
-                    $mtd = '_put' . strtolower($type);
+                    $mtd = '_put' . strtolower((string) $type);
                     if (! method_exists($this, $mtd)) {
                         $this->Error('Unsupported font type: ' . $type);
                     }
@@ -1405,7 +1405,7 @@ if (! class_exists('FPDF')) {
                 $this->_out('/Width ' . $info['w']);
                 $this->_out('/Height ' . $info['h']);
                 if ($info['cs'] == 'Indexed') {
-                    $this->_out('/ColorSpace [/Indexed /DeviceRGB ' . (strlen($info['pal']) / 3 - 1) . ' ' . ($this->n + 1) . ' 0 R]');
+                    $this->_out('/ColorSpace [/Indexed /DeviceRGB ' . (strlen((string) $info['pal']) / 3 - 1) . ' ' . ($this->n + 1) . ' 0 R]');
                 } else {
                     $this->_out('/ColorSpace /' . $info['cs']);
                     if ($info['cs'] == 'DeviceCMYK') {
@@ -1426,15 +1426,15 @@ if (! class_exists('FPDF')) {
                     }
                     $this->_out('/Mask [' . $trns . ']');
                 }
-                $this->_out('/Length ' . strlen($info['data']) . '>>');
+                $this->_out('/Length ' . strlen((string) $info['data']) . '>>');
                 $this->_putstream($info['data']);
                 unset($this->images[$file]['data']);
                 $this->_out('endobj');
                 //Palette
                 if ($info['cs'] == 'Indexed') {
                     $this->_newobj();
-                    $pal = ($this->compress) ? gzcompress($info['pal']) : $info['pal'];
-                    $this->_out('<<' . $filter . '/Length ' . strlen($pal) . '>>');
+                    $pal = ($this->compress) ? gzcompress((string) $info['pal']) : $info['pal'];
+                    $this->_out('<<' . $filter . '/Length ' . strlen((string) $pal) . '>>');
                     $this->_putstream($pal);
                     $this->_out('endobj');
                 }
@@ -1466,7 +1466,7 @@ if (! class_exists('FPDF')) {
             $this->_putfonts();
             $this->_putimages();
             //Resource dictionary
-            $this->offsets[2] = strlen($this->buffer);
+            $this->offsets[2] = strlen((string) $this->buffer);
             $this->_out('2 0 obj');
             $this->_out('<<');
             $this->_putresourcedict();
@@ -1547,7 +1547,7 @@ if (! class_exists('FPDF')) {
             $this->_out('>>');
             $this->_out('endobj');
             //Cross-ref
-            $o = strlen($this->buffer);
+            $o = strlen((string) $this->buffer);
             $this->_out('xref');
             $this->_out('0 ' . ($this->n + 1));
             $this->_out('0000000000 65535 f ');
@@ -1577,7 +1577,7 @@ if (! class_exists('FPDF')) {
             if (! $orientation) {
                 $orientation = $this->DefOrientation;
             } else {
-                $orientation = strtoupper($orientation{0});
+                $orientation = strtoupper((string) $orientation{0});
                 if ($orientation != $this->DefOrientation) {
                     $this->OrientationChanges[$this->page] = true;
                 }
@@ -1610,7 +1610,7 @@ if (! class_exists('FPDF')) {
         {
             //Begin a new object
             $this->n++;
-            $this->offsets[$this->n] = strlen($this->buffer);
+            $this->offsets[$this->n] = strlen((string) $this->buffer);
             $this->_out($this->n . ' 0 obj');
         }
 
@@ -1619,7 +1619,7 @@ if (! class_exists('FPDF')) {
             //Underline text
             $up = $this->CurrentFont['up'];
             $ut = $this->CurrentFont['ut'];
-            $w = $this->GetStringWidth($txt) + $this->ws * substr_count($txt, ' ');
+            $w = $this->GetStringWidth($txt) + $this->ws * substr_count((string) $txt, ' ');
             return sprintf('%.2f %.2f %.2f %.2f re f', $x * $this->k, ($this->h - ($y - $up / 1000 * $this->FontSize)) * $this->k, $w * $this->k, -$ut / 1000 * $this->FontSizePt);
         }
 

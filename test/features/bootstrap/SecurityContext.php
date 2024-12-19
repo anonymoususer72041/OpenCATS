@@ -103,7 +103,7 @@ class SecurityContext extends MinkContext implements Context, SnippetAcceptingCo
      */
     public function iDoPOSTRequest($url)
     {
-        $url = rtrim($this->getMinkParameter('base_url'), '/') . '/' . $url;
+        $url = rtrim((string) $this->getMinkParameter('base_url'), '/') . '/' . $url;
         $data = [
             'postback' => 'postback',
         ];
@@ -133,7 +133,7 @@ class SecurityContext extends MinkContext implements Context, SnippetAcceptingCo
         ];
 
         $context = stream_context_create($opts);
-        $url = rtrim($this->getMinkParameter('base_url'), '/') . '/' . $url . '&';
+        $url = rtrim((string) $this->getMinkParameter('base_url'), '/') . '/' . $url . '&';
         $this->result = file_get_contents($url, false, $context);
     }
 
@@ -143,7 +143,7 @@ class SecurityContext extends MinkContext implements Context, SnippetAcceptingCo
     public function theResponseShouldContain($text)
     {
         $response = $this->result;
-        $position = strpos($response, $text);
+        $position = strpos((string) $response, (string) $text);
         if ($position === false) {
             throw new ExpectationException("'" . $text . "' was not found in the response from this request and it should be", $this->getSession());
         }
@@ -155,7 +155,7 @@ class SecurityContext extends MinkContext implements Context, SnippetAcceptingCo
     public function theResponseShouldNotContain($text)
     {
         $response = $this->result;
-        $position = strpos($response, $text);
+        $position = strpos((string) $response, (string) $text);
         if ($position !== false) {
             throw new ExpectationException("'" . $text . "' was found in the response from this request and it should be not", $this->getSession());
         }
@@ -184,7 +184,7 @@ class SecurityContext extends MinkContext implements Context, SnippetAcceptingCo
         $response = $this->result;
 
         foreach ($expectedTexts as &$text) {
-            $position = strpos($response, $text);
+            $position = strpos((string) $response, $text);
             if ($position !== false) {
                 return;
             }

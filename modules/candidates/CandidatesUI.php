@@ -885,7 +885,7 @@ class CandidatesUI extends UserInterface
                     $fields['documentTempFile'] = $newFileName;
 
                     if (isset($_COOKIE['CATS_SP_TEMP_FILE']) && ($oldFile = $_COOKIE['CATS_SP_TEMP_FILE']) != '' &&
-                        strcasecmp($oldFile, $newFileName)) {
+                        strcasecmp((string) $oldFile, $newFileName)) {
                         // Get the safe, old file they uploaded and didn't use (if exists) and delete
                         $oldFilePath = FileUtility::getUploadFilePath($this->_siteID, 'addcandidate', $oldFile);
 
@@ -910,7 +910,7 @@ class CandidatesUI extends UserInterface
              */
             if (isset($_POST['parseDocument']) && $_POST['parseDocument'] == 'true' && $contents != '') {
                 $pu = new ParseUtility();
-                if ($res = $pu->documentParse('untitled', strlen($contents), '', $contents)) {
+                if ($res = $pu->documentParse('untitled', strlen((string) $contents), '', $contents)) {
                     if (isset($res['first_name'])) {
                         $fields['firstName'] = $res['first_name'];
                     } else {
@@ -1200,8 +1200,8 @@ class CandidatesUI extends UserInterface
                     $ownerDetails['fullName'],
                     $candidateDetails['firstName'],
                     $candidateDetails['firstName'] . ' ' . $candidateDetails['lastName'],
-                    '<a href="http://' . $_SERVER['HTTP_HOST'] . substr($_SERVER['REQUEST_URI'], 0, strpos($_SERVER['REQUEST_URI'], '?')) . '?m=candidates&amp;a=show&amp;candidateID=' . $candidateID . '">' .
-                        'http://' . $_SERVER['HTTP_HOST'] . substr($_SERVER['REQUEST_URI'], 0, strpos($_SERVER['REQUEST_URI'], '?')) . '?m=candidates&amp;a=show&amp;candidateID=' . $candidateID . '</a>',
+                    '<a href="http://' . $_SERVER['HTTP_HOST'] . substr((string) $_SERVER['REQUEST_URI'], 0, strpos((string) $_SERVER['REQUEST_URI'], '?')) . '?m=candidates&amp;a=show&amp;candidateID=' . $candidateID . '">' .
+                        'http://' . $_SERVER['HTTP_HOST'] . substr((string) $_SERVER['REQUEST_URI'], 0, strpos((string) $_SERVER['REQUEST_URI'], '?')) . '?m=candidates&amp;a=show&amp;candidateID=' . $candidateID . '</a>',
                 ];
                 $statusChangeTemplate = str_replace(
                     $stringsToFind,
@@ -1806,7 +1806,7 @@ class CandidatesUI extends UserInterface
             return;
         }
 
-        $query = trim($_GET['wildCardString']);
+        $query = trim((string) $_GET['wildCardString']);
 
         /* Initialize stored wildcard strings to safe default values. */
         $resumeWildCardString = '';
@@ -2337,7 +2337,7 @@ class CandidatesUI extends UserInterface
                 $resultSet[$rowIndex]['keySkills'] = '&nbsp;';
             } else {
                 $resultSet[$rowIndex]['keySkills'] = htmlspecialchars(
-                    $resultSet[$rowIndex]['keySkills']
+                    (string) $resultSet[$rowIndex]['keySkills']
                 );
             }
 
@@ -3051,7 +3051,7 @@ class CandidatesUI extends UserInterface
 
             $eventHTML = sprintf(
                 '<p>An event of type <span class="bold">%s</span> has been scheduled on <span class="bold">%s</span>.</p>',
-                htmlspecialchars($eventTypeDescription),
+                htmlspecialchars((string) $eventTypeDescription),
                 htmlspecialchars($formattedDate)
             );
             $eventScheduled = true;
@@ -3106,7 +3106,7 @@ class CandidatesUI extends UserInterface
             $emailSubject = $_POST['emailSubject'];
             $emailBody = $_POST['emailBody'];
 
-            $tmpDestination = explode(', ', $emailTo);
+            $tmpDestination = explode(', ', (string) $emailTo);
             $destination = [];
             foreach ($tmpDestination as $emailDest) {
                 $destination[] = [$emailDest, $emailDest];
@@ -3130,7 +3130,7 @@ class CandidatesUI extends UserInterface
                 $emailsToIDs = $_POST['candidateID'];
                 $candidateIDs = [];
                 foreach ($emailsToIDs as $email) {
-                    $temp = explode('=', $email);
+                    $temp = explode('=', (string) $email);
                     $candidateIDs[$temp[0]] = $temp[1];
                 }
                 foreach ($candidateIDs as $email => $ID) {
@@ -3205,9 +3205,9 @@ class CandidatesUI extends UserInterface
     private function onShowQuestionnaire()
     {
         $candidateID = isset($_GET[$id = 'candidateID']) ? $_GET[$id] : false;
-        $title = isset($_GET[$id = 'questionnaireTitle']) ? urldecode($_GET[$id]) : false;
+        $title = isset($_GET[$id = 'questionnaireTitle']) ? urldecode((string) $_GET[$id]) : false;
         $printOption = isset($_GET[$id = 'print']) ? $_GET[$id] : '';
-        $printValue = ! strcasecmp($printOption, 'yes') ? true : false;
+        $printValue = ! strcasecmp((string) $printOption, 'yes') ? true : false;
 
         if (! $candidateID || ! $title) {
             CommonErrors::fatal(COMMONERROR_BADINDEX, $this, 'Bad Server Information.');
@@ -3224,7 +3224,7 @@ class CandidatesUI extends UserInterface
         if (! empty($attachments)) {
             $resume = $candidates->getResume($attachments[0]['attachmentID']);
             $this->_template->assign('resumeText', str_replace("\n", "<br \>\n", htmlentities(DatabaseSearch::fulltextDecode($resume['text']))));
-            $this->_template->assign('resumeTitle', htmlentities($resume['title']));
+            $this->_template->assign('resumeTitle', htmlentities((string) $resume['title']));
         }
 
         $this->_template->assign('active', $this);
@@ -3330,7 +3330,7 @@ class CandidatesUI extends UserInterface
         $this->_template->display('./modules/candidates/Merge.tpl');
     }
 
-    private function removeDuplicity()
+    private function removeDuplicity(): never
     {
         $candidates = new Candidates($this->_siteID);
         $oldCandidateID = $_GET['oldCandidateID'];

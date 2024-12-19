@@ -161,7 +161,7 @@ class DocumentToText
                 if ($this->_rawOutput == null) {
                     return false;
                 }
-                $this->_linesArray = explode("\n", $this->_rawOutput);
+                $this->_linesArray = explode("\n", (string) $this->_rawOutput);
                 $this->_linesString = $this->_rawOutput;
 
                 return true;
@@ -172,7 +172,7 @@ class DocumentToText
                 if ($this->_rawOutput == null) {
                     return false;
                 }
-                $this->_linesArray = explode("\n", $this->_rawOutput);
+                $this->_linesArray = explode("\n", (string) $this->_rawOutput);
                 $this->_linesString = $this->_rawOutput;
 
                 return true;
@@ -410,7 +410,7 @@ class DocumentToText
                     $raw_text
                 );
                 // Return data without XML formatting tags
-                return utf8_encode(strip_tags($raw_text_patched));
+                return mb_convert_encoding(strip_tags($raw_text_patched), 'UTF-8', 'ISO-8859-1');
             }
             $zip->close();
         }
@@ -455,7 +455,7 @@ class DocumentToText
             if ($c == "\\") {
                 // have a tag
                 $tag = $this->gettag();
-                if (strlen($tag) > 0) {
+                if (strlen((string) $tag) > 0) {
                     // process known tags
                     switch ($tag) {
                         case 'par':
@@ -494,7 +494,7 @@ class DocumentToText
         }
         $ansa = str_replace('{', '', $ansa);
         $ansa = str_replace('}', '', $ansa);
-        return utf8_encode($ansa);
+        return mb_convert_encoding($ansa, 'UTF-8', 'ISO-8859-1');
     }
 
     private function getpgraph()
@@ -510,13 +510,13 @@ class DocumentToText
             if ($j >= $len) {
                 break;
             }
-            if (substr($text, $j, 1) == '}') {
+            if (substr((string) $text, $j, 1) == '}') {
                 if ($nest == 0) {
                     return;
                 }
                 $nest--;
             }
-            if (substr($text, $j, 1) == '{') {
+            if (substr((string) $text, $j, 1) == '{') {
                 $nest++;
             }
         }
@@ -535,7 +535,7 @@ class DocumentToText
             if ($j >= $len) {
                 break;
             }
-            $c = substr($text, $j, 1);
+            $c = substr((string) $text, $j, 1);
             if ($c == ' ') {
                 break;
             }

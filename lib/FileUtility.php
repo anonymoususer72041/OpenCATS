@@ -155,7 +155,7 @@ class FileUtility
     public static function makeSafeFilename($filename)
     {
         /* Strip out *nix directories. */
-        $filenameParts = explode('/', $filename);
+        $filenameParts = explode('/', (string) $filename);
         $filename = end($filenameParts);
 
         /* Strip out Windows directories. */
@@ -217,7 +217,7 @@ class FileUtility
      */
     public static function getUniqueDirectory($basePath, $extraData = '')
     {
-        if (! empty($basePath) && substr($basePath, -1, 1) != '/') {
+        if (! empty($basePath) && substr((string) $basePath, -1, 1) != '/') {
             $basePath .= '/';
         }
 
@@ -250,7 +250,7 @@ class FileUtility
      */
     public static function isDirectoryWritable($directory)
     {
-        if (substr($directory, -1, 1) != '/') {
+        if (substr((string) $directory, -1, 1) != '/') {
             $directory .= '/';
         }
 
@@ -292,10 +292,10 @@ class FileUtility
         $baseNameOnly = false
     ) {
         if ($baseNameOnly) {
-            $filename = basename($filename);
+            $filename = basename((string) $filename);
         }
 
-        return substr($filename, 0, strrpos($filename, '.'));
+        return substr((string) $filename, 0, strrpos((string) $filename, '.'));
     }
 
     /**
@@ -306,7 +306,7 @@ class FileUtility
      */
     public static function getFileExtension($filename)
     {
-        return strtolower(substr($filename, strrpos($filename, '.') + 1));
+        return strtolower(substr((string) $filename, strrpos((string) $filename, '.') + 1));
     }
 
     /**

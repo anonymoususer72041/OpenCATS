@@ -38,7 +38,7 @@ class Display
 {
     private $_siteID;
 
-    private \DatabaseConnection $_db;
+    private readonly \DatabaseConnection $_db;
 
     private $_profileLib;
 
@@ -107,7 +107,7 @@ class Display
         global $profileStylesheet;
         // Check if the current profile's style has been included, include if it hasn't
         $sheet = $this->_profileLib->getProfileStylesheet();
-        if ($profileStylesheet === false || strcmp($profileStylesheet, $sheet)) {
+        if ($profileStylesheet === false || strcmp((string) $profileStylesheet, (string) $sheet)) {
             echo sprintf('<link rel="stylesheet" type="text/css" href="%s" />', $sheet);
             $profileStylesheet = $sheet;
         }
@@ -120,7 +120,7 @@ class Display
     public function endTable()
     {
         $pageContent = $this->getTemplate('page');
-        [$pageTopContent, $pageBottomContent] = explode('<sections>', $pageContent);
+        [$pageTopContent, $pageBottomContent] = explode('<sections>', (string) $pageContent);
 
         $sectionContent = $this->getTemplate(
             'pageSection',
@@ -128,7 +128,7 @@ class Display
                 'sectionWidth' => $this->_profilePage['columnWidth'],
             ]
         );
-        [$sectionTopContent, $sectionBottomContent] = explode('<columns>', $sectionContent);
+        [$sectionTopContent, $sectionBottomContent] = explode('<columns>', (string) $sectionContent);
 
         $columnContent = $this->getTemplate('pageColumn');
 

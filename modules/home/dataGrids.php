@@ -232,8 +232,8 @@ class ImportantPipelineDashboard extends DataGrid
             PIPELINE_STATUS_INTERVIEWING,
             PIPELINE_STATUS_OFFERED,
             JobOrderStatuses::getOpenStatusSQL(),
-            (strlen($whereSQL) > 0) ? ' AND ' . $whereSQL : '',
-            (strlen($havingSQL) > 0) ? ' HAVING ' . $havingSQL : '',
+            (strlen((string) $whereSQL) > 0) ? ' AND ' . $whereSQL : '',
+            (strlen((string) $havingSQL) > 0) ? ' HAVING ' . $havingSQL : '',
             $orderSQL,
             $limitSQL
         );
@@ -474,14 +474,14 @@ class CallsDataGrid extends DataGrid
             $this->_userID,
             $this->_siteID,
             $this->dateCriterion,
-            (strlen($whereSQL) > 0) ? ' AND ' . $whereSQL : '',
+            (strlen((string) $whereSQL) > 0) ? ' AND ' . $whereSQL : '',
             $distinct,
             DATA_ITEM_CONTACT,
             $this->_userID,
             $this->_siteID,
             $this->dateCriterion,
-            (strlen($whereSQL) > 0) ? ' AND ' . $whereSQL : '',
-            (strlen($havingSQL) > 0) ? ' HAVING ' . $havingSQL : ''
+            (strlen((string) $whereSQL) > 0) ? ' AND ' . $whereSQL : '',
+            (strlen((string) $havingSQL) > 0) ? ' HAVING ' . $havingSQL : ''
         );
 
         return $sql;

@@ -238,7 +238,7 @@ class CompaniesUI extends UserInterface
          * strip leading empty lines and spaces.
          */
         $data['notes'] = trim(
-            nl2br(htmlspecialchars($data['notes'], ENT_QUOTES))
+            nl2br(htmlspecialchars((string) $data['notes'], ENT_QUOTES))
         );
 
         /* Chop $data['notes'] to make $data['shortNotes']. */
@@ -264,9 +264,9 @@ class CompaniesUI extends UserInterface
         /* Link to Google Maps for this address */
         if (! empty($data['address']) && ! empty($data['city']) && ! empty($data['state'])) {
             $data['googleMaps'] = '<a href="http://maps.google.com/maps?q=' .
-                     urlencode($data['address']) . '+' .
-                     urlencode($data['city']) . '+' .
-                     urlencode($data['state']);
+                     urlencode((string) $data['address']) . '+' .
+                     urlencode((string) $data['city']) . '+' .
+                     urlencode((string) $data['state']);
 
             /* Google Maps will find an address without Zip. */
             if (! empty($data['zip'])) {
@@ -727,8 +727,8 @@ class CompaniesUI extends UserInterface
                 $replacementStrings = [
                     $ownerDetails['fullName'],
                     $companyDetails['name'],
-                    '<a href="http://' . $_SERVER['HTTP_HOST'] . substr($_SERVER['REQUEST_URI'], 0, strpos($_SERVER['REQUEST_URI'], '?')) . '?m=companies&amp;a=show&amp;companyID=' . $companyID . '">' .
-                        'http://' . $_SERVER['HTTP_HOST'] . substr($_SERVER['REQUEST_URI'], 0, strpos($_SERVER['REQUEST_URI'], '?')) . '?m=companies&amp;a=show&amp;companyID=' . $companyID . '</a>',
+                    '<a href="http://' . $_SERVER['HTTP_HOST'] . substr((string) $_SERVER['REQUEST_URI'], 0, strpos((string) $_SERVER['REQUEST_URI'], '?')) . '?m=companies&amp;a=show&amp;companyID=' . $companyID . '">' .
+                        'http://' . $_SERVER['HTTP_HOST'] . substr((string) $_SERVER['REQUEST_URI'], 0, strpos((string) $_SERVER['REQUEST_URI'], '?')) . '?m=companies&amp;a=show&amp;companyID=' . $companyID . '</a>',
                 ];
                 $statusChangeTemplate = str_replace(
                     $stringsToFind,
@@ -903,7 +903,7 @@ class CompaniesUI extends UserInterface
             return;
         }
 
-        $query = trim($_GET['wildCardString']);
+        $query = trim((string) $_GET['wildCardString']);
 
         /* Set up sorting. */
         if ($this->isRequiredIDValid('page', $_GET)) {

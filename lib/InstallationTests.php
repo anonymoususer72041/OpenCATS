@@ -671,7 +671,7 @@ class InstallationTests
 
         $row = mysqli_fetch_row($queryResult);
 
-        $versionParts = explode('-', $row[0]);
+        $versionParts = explode('-', (string) $row[0]);
         $version = $versionParts[0];
 
         if (version_compare($version, '4.1.0', '>=')) {

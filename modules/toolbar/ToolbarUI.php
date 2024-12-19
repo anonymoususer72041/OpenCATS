@@ -39,6 +39,8 @@ define('TOOLBAR_LIB_VERSION', 32);
 
 class ToolbarUI extends UserInterface
 {
+    protected $_isTextExtractionError;
+    protected $_textExtractionError;
     public function __construct()
     {
         parent::__construct();
@@ -131,7 +133,7 @@ class ToolbarUI extends UserInterface
         // FIXME: Make protocol less bandwidth-intensive.
         echo 'cats_connected = true';
         if (isset($_GET['callback'])) {
-            echo ' EVAL=', trim(htmlspecialchars($_GET['callback']));
+            echo ' EVAL=', trim(htmlspecialchars((string) $_GET['callback']));
         }
     }
 

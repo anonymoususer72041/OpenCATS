@@ -163,7 +163,7 @@ class ParseUtility
     // Destroy unicode before it contaminates our soap, what's next? our children and our candy?
     public static function cleanText($txt)
     {
-        for ($i = 0; $i < strlen($txt); $i++) {
+        for ($i = 0; $i < strlen((string) $txt); $i++) {
             $ch = ord($txt[$i]);
 
             // ASCII control characters (character code 0-31)

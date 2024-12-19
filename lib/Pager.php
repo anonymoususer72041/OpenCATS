@@ -404,7 +404,7 @@ class Pager
 
                 /* Should we keep outputting characters till the last entry? */
                 $lastChar = ord(
-                    strtoupper(substr($rsNav[$i + 1][$sortBy], 0, 1))
+                    strtoupper(substr((string) $rsNav[$i + 1][$sortBy], 0, 1))
                 );
 
                 /* If it is the last entry, go to the first or last letter

@@ -49,16 +49,16 @@ if (function_exists('ImageCreateFromJpeg')) {
  */
 class GraphSimple
 {
-    private $xLabels;
+    public $xLabels;
 
-    private $xValues;
+    public $xValues;
 
-    private $color;
+    public $color;
 
-    private $title;
+    public $title;
 
-    private $width;
-    private $height;
+    public $width;
+    public $height;
     public function __construct($xLabels, $xValues, $color, $title, $width, $height)
     {
         $this->xLabels = $xLabels;
@@ -125,14 +125,14 @@ class GraphSimple
  */
 class GraphPie
 {
-    private $xLabels;
+    public $xLabels;
 
-    private $xValues;
+    public $xValues;
 
-    private $title;
+    public $title;
 
-    private $width;
-    private $height;
+    public $width;
+    public $height;
 
     public function __construct($xLabels, $xValues, $title, $width, $height)
     {
@@ -193,18 +193,19 @@ class GraphPie
  */
 class GraphComparisonChart
 {
-    private $xLabels;
+    public $xLabels;
+    public $colorArray;
 
-    private $xValues;
+    public $xValues;
 
-    private $color;
+    public $color;
 
-    private $title;
+    public $title;
 
-    private $width;
-    private $height;
+    public $width;
+    public $height;
 
-    private $totalValue;
+    public $totalValue;
 
     public function __construct($xLabels, $xValues, $colorArray, $title, $width, $height, $totalValue)
     {
@@ -276,26 +277,26 @@ class GraphComparisonChart
  */
 class pipelineStatisticsGraph
 {
-    private $xLabels;
-    private $colorArray;
-    private $width;
-    private $height;
+    public $xLabels;
+    public $colorArray;
+    public $width;
+    public $height;
 
-    private $xValues;
+    public $xValues;
 
-    private $color;
+    public $color;
 
-    private $totalValue;
+    public $totalValue;
 
-    private $legend1;
+    public $legend1;
 
-    private $legend2;
+    public $legend2;
 
-    private $legend3;
+    public $legend3;
 
-    private $view;
+    public $view;
 
-    private $noData;
+    public $noData;
 
     public function __construct($xLabels, $xValues, $colorArray, $width, $height, $legend1, $legend2, $legend3, $view, $noData)
     {
@@ -379,15 +380,17 @@ class pipelineStatisticsGraph
  */
 class jobOrderReportGraph
 {
-    private $xLabels;
+    public $xLabels;
+    public $colorArray;
+    public $width;
+    public $height;
+    public $xValues;
 
-    private $xValues;
+    public $color;
 
-    private $color;
+    public $title;
 
-    private $title;
-
-    private $totalValue;
+    public $totalValue;
 
     public function __construct($xLabels, $xValues, $colorArray, $title, $width, $height)
     {
@@ -449,7 +452,7 @@ class jobOrderReportGraph
  */
 class WordVerify
 {
-    private $text;
+    public $text;
 
     public function __construct($text)
     {

@@ -258,7 +258,7 @@ class AddressParser
             . ').* |R\.?\s*R\.?\s*\d+)/i';
 
         /* Does it match? */
-        if (! preg_match($regex, $string)) {
+        if (! preg_match($regex, (string) $string)) {
             return false;
         }
 
@@ -284,8 +284,8 @@ class AddressParser
 
         $POBox = 'P(?:ost|\.)?\s*O(?:ffice|\.)?\s+Box\s+';
 
-        if (preg_match('/^' . $cityStateZip . '$/i', $string) &&
-            ! preg_match('/^' . $POBox . '/i', $string)) {
+        if (preg_match('/^' . $cityStateZip . '$/i', (string) $string) &&
+            ! preg_match('/^' . $POBox . '/i', (string) $string)) {
             return true;
         }
 
@@ -304,8 +304,8 @@ class AddressParser
         $company = ',?\s+(?:Inc|LLC|GmbH|Ltd|Co|Company|Corp|Corporation|Enterprises)\b';
         $title = '\b(?:Manager|Director)\b';
 
-        if (preg_match('/' . $company . '/i', $string) &&
-            ! preg_match('/' . $title . '/i', $string)) {
+        if (preg_match('/' . $company . '/i', (string) $string) &&
+            ! preg_match('/' . $title . '/i', (string) $string)) {
             return true;
         }
 
@@ -332,8 +332,8 @@ class AddressParser
         $company = ',?\s+(?:Inc|LLC|Ltd|Corp(?:\b|oration))\b';
         $company = ',?\s(?:Inc|LLC|GmbH|Ltd|Co|Company|Corp|Corporation|Enterprises)\b';
 
-        if (preg_match('/^(?:' . $matchFirstMILast . '|' . $matchLastFirstMI . ')$/i', $string) &&
-            ! preg_match('/' . $company . '/i', $string)) {
+        if (preg_match('/^(?:' . $matchFirstMILast . '|' . $matchLastFirstMI . ')$/i', (string) $string) &&
+            ! preg_match('/' . $company . '/i', (string) $string)) {
             return true;
         }
 
@@ -373,7 +373,7 @@ class AddressParser
         $fullName = $possibleFirstName;
 
         /* Is it Lastname, Firstname; or Firstname Lastname? */
-        if (preg_match('/^[A-Za-z.\x27-]+\s*,/', $fullName)) {
+        if (preg_match('/^[A-Za-z.\x27-]+\s*,/', (string) $fullName)) {
             $lastCommaFirst = true;
         } else {
             $lastCommaFirst = false;
@@ -568,9 +568,9 @@ class AddressParser
         /* If the state is a United States Postal Service state abbreviation,
          * we can apply additional formatting.
          */
-        if (! empty($state) && strlen($state) == 3 &&
-            preg_match('/^(' . $USStateABBR . ')\.$/i', $state)) {
-            $state = strtoupper(substr($state, 0, 2));
+        if (! empty($state) && strlen((string) $state) == 3 &&
+            preg_match('/^(' . $USStateABBR . ')\.$/i', (string) $state)) {
+            $state = strtoupper(substr((string) $state, 0, 2));
         }
 
         /* Common spelling corrections. */
@@ -591,9 +591,9 @@ class AddressParser
         // FIXME: Convert US state names to abbreviations.
         // FIXME: Proper title case.
         return [
-            'city' => ucwords($city),
+            'city' => ucwords((string) $city),
             'state' => ucwords($state),
-            'zip' => strtoupper($zip),
+            'zip' => strtoupper((string) $zip),
         ];
     }
 
@@ -664,22 +664,22 @@ class AddressParser
              *
              * \x28 is a '(', \x5b is a '[', \x29 is a ')', \x5d is a ']'.
              */
-            if (preg_match($cell, $line)) {
+            if (preg_match($cell, (string) $line)) {
                 $numbers[] = [
                     'number' => StringUtility::extractPhoneNumber($line),
                     'type' => 'cell',
                 ];
-            } elseif (preg_match($home, $line)) {
+            } elseif (preg_match($home, (string) $line)) {
                 $numbers[] = [
                     'number' => StringUtility::extractPhoneNumber($line),
                     'type' => 'home',
                 ];
-            } elseif (preg_match($work, $line)) {
+            } elseif (preg_match($work, (string) $line)) {
                 $numbers[] = [
                     'number' => StringUtility::extractPhoneNumber($line),
                     'type' => 'work',
                 ];
-            } elseif (preg_match($general, $line)) {
+            } elseif (preg_match($general, (string) $line)) {
                 if ($this->_mode != ADDRESSPARSER_MODE_COMPANY) {
                     $unknownNumbers[] = StringUtility::extractPhoneNumber($line);
                 } else {
@@ -688,17 +688,17 @@ class AddressParser
                         'type' => 'general',
                     ];
                 }
-            } elseif (preg_match($fax, $line)) {
+            } elseif (preg_match($fax, (string) $line)) {
                 $numbers[] = [
                     'number' => StringUtility::extractPhoneNumber($line),
                     'type' => 'fax',
                 ];
-            } elseif (preg_match($tty, $line)) {
+            } elseif (preg_match($tty, (string) $line)) {
                 $numbers[] = [
                     'number' => StringUtility::extractPhoneNumber($line),
                     'type' => 'tty',
                 ];
-            } elseif (preg_match($pager, $line)) {
+            } elseif (preg_match($pager, (string) $line)) {
                 $numbers[] = [
                     'number' => StringUtility::extractPhoneNumber($line),
                     'type' => 'pager',
@@ -842,7 +842,7 @@ class AddressParser
     // FIXME: Document me.
     protected function _cleanAddressLine($line)
     {
-        $line = trim($line);
+        $line = trim((string) $line);
         $line = rtrim($line, ',');
         $line = preg_replace('/^(?:Address|Name):?\s/', '', $line);
 

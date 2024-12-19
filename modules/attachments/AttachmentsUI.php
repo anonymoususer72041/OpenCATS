@@ -82,7 +82,7 @@ class AttachmentsUI extends UserInterface
         $attachments = new Attachments(-1);
         $rs = $attachments->get($attachmentID, false);
 
-        if (empty($rs) || md5($rs['directoryName']) != $_GET['directoryNameHash']) {
+        if (empty($rs) || md5((string) $rs['directoryName']) != $_GET['directoryNameHash']) {
             CommonErrors::fatal(
                 COMMONERROR_BADFIELDS,
                 $this,

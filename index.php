@@ -82,7 +82,7 @@ function stripslashes_deep($value)
 {
     $value = is_array($value) ?
                 array_map('stripslashes_deep', $value) :
-                stripslashes($value);
+                stripslashes((string) $value);
 
     return $value;
 }
@@ -194,11 +194,11 @@ elseif (! isset($_GET['m']) || empty($_GET['m'])) {
         }
 
         if (isset($_GET['message'])) {
-            $URI .= '&message=' . urlencode($_GET['message']);
+            $URI .= '&message=' . urlencode((string) $_GET['message']);
         }
 
         if (isset($_GET['messageSuccess'])) {
-            $URI .= '&messageSuccess=' . urlencode($_GET['messageSuccess']);
+            $URI .= '&messageSuccess=' . urlencode((string) $_GET['messageSuccess']);
         }
 
         /* catsone.com demo domain doesn't relogin. */

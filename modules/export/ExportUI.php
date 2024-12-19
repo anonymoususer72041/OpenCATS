@@ -135,7 +135,7 @@ class ExportUI extends UserInterface
      * @param string error message
      * @param string module directory from which to load templates (optional)
      */
-    protected function fatal($error, $directoryOverride = '')
+    protected function fatal($error, $directoryOverride = ''): never
     {
         die("Fatal Error\n\n" . $error);
     }

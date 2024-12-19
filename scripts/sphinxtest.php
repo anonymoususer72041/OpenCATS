@@ -69,20 +69,20 @@ do {
     $errorMessage = $sphinx->GetLastError();
 } while (
     $results === false &&
-    strpos($errorMessage, 'server maxed out, retry') !== false &&
+    strpos((string) $errorMessage, 'server maxed out, retry') !== false &&
     $tries <= 5
 );
 
 /* Throw a fatal error if Sphinx errors occurred. */
 if ($results === false) {
-    fwrite($stderr, 'Sphinx Error: ' . ucfirst($errorMessage) . ".\n");
+    fwrite($stderr, 'Sphinx Error: ' . ucfirst((string) $errorMessage) . ".\n");
     exit(1);
 }
 
 /* Throw a fatal error (for now) if Sphinx warnings occurred. */
 $lastWarning = $sphinx->GetLastWarning();
 if (! empty($lastWarning)) {
-    fwrite($stderr, 'Sphinx Warning: ' . ucfirst($lastWarning) . ".\n");
+    fwrite($stderr, 'Sphinx Warning: ' . ucfirst((string) $lastWarning) . ".\n");
     exit(1);
 }
 

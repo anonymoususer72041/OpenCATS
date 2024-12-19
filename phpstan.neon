@@ -1,0 +1,17 @@
+parameters:
+    # Analyze everything in the current directory
+    paths:
+        - .
+
+    # Exclude specific directories
+    excludePaths:
+        - ./lib/simpletest
+        - ./lib/fpdf
+        - ./src
+        - ./vendor
+        - ./test
+        - ./scripts
+        - ./optional-updates
+
+    # Set analysis level (8 is the strictest)
+    level: 8

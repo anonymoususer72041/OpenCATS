@@ -36,7 +36,7 @@ class Profile
 {
     private $_siteID;
 
-    private \DatabaseConnection $_db;
+    private readonly \DatabaseConnection $_db;
 
     private $_savedProfileID;
 
@@ -916,7 +916,7 @@ class Profile
         if ($this->_savedProfileID !== false && $this->_savedProfileID == $profileID &&
             $this->_titleCache !== false) {
             foreach ($this->_titleCache as $item) {
-                if (! strcmp($item['columnName'], $columnName)) {
+                if (! strcmp((string) $item['columnName'], (string) $columnName)) {
                     return $item;
                 }
             }
@@ -951,7 +951,7 @@ class Profile
         if ($this->_savedProfileID !== false && $this->_savedProfileID == $profileID &&
             $this->_titleCache !== false) {
             foreach ($this->_titleCache as $item) {
-                if (! strcmp($item['columnName'], $columnName)) {
+                if (! strcmp((string) $item['columnName'], (string) $columnName)) {
                     return $item['title'];
                 }
             }

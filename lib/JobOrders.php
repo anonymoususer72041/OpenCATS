@@ -892,6 +892,9 @@ public static function typeCodeToString($typeCode)
 class JobOrdersDataGrid extends DataGrid
 {
     protected $_siteID;
+    protected $_db;
+    protected $_assignedCriterion;
+    protected $_classColumns;
 
     // FIXME: Fix ugly indenting - ~400 character lines = bad.
     public function __construct($instanceName, $siteID, $parameters, $misc)
@@ -1363,9 +1366,9 @@ class JobOrdersDataGrid extends DataGrid
             $joinSQL,
             $this->_siteID,
             $adminHiddenCriterion,
-            (strlen($whereSQL) > 0) ? ' AND ' . $whereSQL : '',
+            (strlen((string) $whereSQL) > 0) ? ' AND ' . $whereSQL : '',
             $this->_assignedCriterion,
-            (strlen($havingSQL) > 0) ? ' HAVING ' . $havingSQL : '',
+            (strlen((string) $havingSQL) > 0) ? ' HAVING ' . $havingSQL : '',
             $orderSQL,
             $limitSQL
         );

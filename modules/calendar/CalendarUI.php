@@ -458,7 +458,7 @@ class CalendarUI extends UserInterface
         $newGet['showEvent'] = $eventID;
 
         foreach ($newGet as $name => $value) {
-            $newParams[] = urlencode($name) . '=' . urlencode($value);
+            $newParams[] = urlencode($name) . '=' . urlencode((string) $value);
         }
 
         if (! eval(Hooks::get('CALENDAR_ADD_POST'))) {
@@ -644,7 +644,7 @@ class CalendarUI extends UserInterface
         $newGet['showEvent'] = $eventID;
 
         foreach ($newGet as $name => $value) {
-            $newParams[] = urlencode($name) . '=' . urlencode($value);
+            $newParams[] = urlencode($name) . '=' . urlencode((string) $value);
         }
 
         CATSUtility::transferRelativeURI(implode('&', $newParams));
@@ -685,7 +685,7 @@ class CalendarUI extends UserInterface
         unset($newGet['eventID']);
 
         foreach ($newGet as $name => $value) {
-            $newParams[] = urlencode($name) . '=' . urlencode($value);
+            $newParams[] = urlencode($name) . '=' . urlencode((string) $value);
         }
 
         CATSUtility::transferRelativeURI(implode('&', $newParams));

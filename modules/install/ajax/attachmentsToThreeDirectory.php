@@ -55,7 +55,7 @@ $db->query('ALTER IGNORE TABLE `attachment` CHANGE `directory_name` `directory_n
 $rs = $db->getAllAssoc('SELECT site_id, attachment_id, directory_name FROM attachment');
 
 foreach ($rs as $index => $data) {
-    if (strpos($data['directory_name'], '/') !== false) {
+    if (strpos((string) $data['directory_name'], '/') !== false) {
         continue;
     }
 

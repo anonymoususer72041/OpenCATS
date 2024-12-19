@@ -57,7 +57,7 @@ error_reporting($errorReporting & ~E_STRICT);
  */
 class Mailer
 {
-    private \PHPMailer\PHPMailer\PHPMailer $_mailer;
+    private readonly \PHPMailer\PHPMailer\PHPMailer $_mailer;
 
     private string $_errorMessage = '';
 
@@ -67,7 +67,7 @@ class Mailer
 
     private $_userID;
 
-    private \DatabaseConnection $_db;
+    private readonly \DatabaseConnection $_db;
 
     public function __construct($siteID, $userID = -1)
     {
@@ -228,7 +228,7 @@ class Mailer
             $this->_mailer->Body = '<div style="font: normal normal 12px Arial, Tahoma, sans-serif">'
                 . str_replace('<br>', "<br />\n", str_replace('<br />', '<br>', str_replace("\n", "<br>", $body))) . '</div>';
 
-            $this->_mailer->AltBody = strip_tags($body);
+            $this->_mailer->AltBody = strip_tags((string) $body);
         } else {
             if ($signature) {
                 $body .= "\n\nPowered by OpenCATS (http://www.opencats.org) Free ATS";
@@ -393,7 +393,7 @@ class Mailer
  */
 class MailerSettings
 {
-    private \DatabaseConnection $_db;
+    private readonly \DatabaseConnection $_db;
 
     private $_siteID;
 

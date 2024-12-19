@@ -545,7 +545,7 @@ class ContactsWebTest extends CATSWebTestCase
         $this->runPageLoadAssertions(false);
 
         /* Test the vCard content. */
-        $output = trim($this->getRawSource());
+        $output = trim((string) $this->getRawSource());
 
         $outputLines = explode("\n", $output);
         $outputLines = array_map('trim', $outputLines);

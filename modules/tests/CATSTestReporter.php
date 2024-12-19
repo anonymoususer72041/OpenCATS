@@ -172,7 +172,7 @@ class CATSTestReporter extends SimpleReporter
 
     private function _htmlEntities($message)
     {
-        return htmlentities($message, ENT_COMPAT, HTML_ENCODING);
+        return htmlentities((string) $message, ENT_COMPAT, HTML_ENCODING);
     }
 
     private function _getTestCase()

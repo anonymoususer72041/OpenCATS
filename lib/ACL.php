@@ -64,8 +64,8 @@ class ACL
             return $aclmap[$userCategory][$securedObjectName];
         }
 
-        while (($pos = strrpos($securedObjectName, ".")) !== false) {
-            $securedObjectName = substr($securedObjectName, 0, $pos);
+        while (($pos = strrpos((string) $securedObjectName, ".")) !== false) {
+            $securedObjectName = substr((string) $securedObjectName, 0, $pos);
             if (ACL::_hasACLEntry($aclmap, $userCategory, $securedObjectName)) {
                 return $aclmap[$userCategory][$securedObjectName];
             }

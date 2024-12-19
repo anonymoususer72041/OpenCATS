@@ -118,10 +118,10 @@ class MRU
 
         foreach ($rs as $rowIndex => $row)
         {
-            if (mb_strlen($row['dataItemText']) > MRU_ITEM_LENGTH)
+            if (mb_strlen((string) $row['dataItemText']) > MRU_ITEM_LENGTH)
             {
                 $rs[$rowIndex]['dataItemText'] = mb_substr(
-                    $row['dataItemText'], 0, MRU_ITEM_LENGTH
+                    (string) $row['dataItemText'], 0, MRU_ITEM_LENGTH
                 ) . "..";
             }
 

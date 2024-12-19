@@ -80,23 +80,24 @@ define('WF_CARD_TYPE_DISCOVER', 400);
  */
 class WebForm
 {
-    private $_fields;
+    protected $_fields;
 
-    private $_requiredFields;
+    protected $_requiredFields;
 
-    private $_layout;
+    protected $_layout;
 
-    private $_defaultLayout;
+    protected $_defaultLayout;
 
-    private $_printedPostBack;
+    protected $_printedPostBack;
+    protected $_printedPostback;
 
-    private $_tabIndex;
+    protected $_tabIndex;
 
-    private $_verifyForm;
+    protected $_verifyForm;
 
-    private $_printedHelpBox;
+    protected $_printedHelpBox;
 
-    private $_relPath;
+    protected $_relPath;
 
     /**
      * Populate private variables with default data.
@@ -326,7 +327,7 @@ class WebForm
     {
         foreach ($vfields as $vfieldname => $vfieldval) {
             for ($x = 0; $x < count($this->_fields); $x++) {
-                if (! strcmp($this->_fields[$x]['id'], $vfieldname)) {
+                if (! strcmp((string) $this->_fields[$x]['id'], (string) $vfieldname)) {
                     $this->_fields[$x]['validatedData'] = $vfieldval;
                 }
             }
@@ -382,7 +383,7 @@ class WebForm
                     }
                 }
             } elseif ($field['required'] && ! strlen(trim($this->getPostValue($field['id'])))) {
-                if (strlen($field['caption']) > 0) {
+                if (strlen((string) $field['caption']) > 0) {
                     $errors[] = $field['caption'] . ' is a required field';
                 } else {
                     $errors[] = 'This field is required';
@@ -415,7 +416,7 @@ class WebForm
                 // Clean credit card number input
                 $cardNumber = preg_replace('/[^0-9]/', '', $this->getPostValue($field['id']));
 
-                if ($field['required'] == false && ! strlen($cardNumber)) {
+                if ($field['required'] == false && ! strlen((string) $cardNumber)) {
                     $value = '';
                 } else {
                     // Guess the card type by using a pregex pattern matching algorithm
@@ -443,14 +444,14 @@ class WebForm
                 $value = trim($this->getPostValue($field['id']));
 
                 if (! ($field['required'] == false && ! strlen($value))) {
-                    if (strlen($field['regex_test']) > 0) {
+                    if (strlen((string) $field['regex_test']) > 0) {
                         if (! preg_match($field['regex_test'], $value)) {
                             $errors[] = $field['regex_fail'];
                         }
                     }
                     if (strlen($value) < $field['length'][0] || strlen($value) > $field['length'][1]) {
                         if ($field['length'][0] == $field['length'][1]) {
-                            if (strlen(trim($field['caption'])) > 0) {
+                            if (strlen(trim((string) $field['caption'])) > 0) {
                                 $errors[] = sprintf(
                                     "%s must be %d characters in length",
                                     $field['caption'],
@@ -484,7 +485,7 @@ class WebForm
                     }
                     break;
                 default:
-                    if (isset($this->_fields[$x]['validatedDataOverride']) && strlen($this->_fields[$x]['validatedDataOverride'])) {
+                    if (isset($this->_fields[$x]['validatedDataOverride']) && strlen((string) $this->_fields[$x]['validatedDataOverride'])) {
                         $this->_fields[$x]['validatedData'] = $this->_fields[$x]['validatedDataOverride'];
                     } else {
                         $this->_fields[$x]['validatedData'] = $value;
@@ -503,7 +504,7 @@ class WebForm
      */
     public function getForm($args = '')
     {
-        if (strlen($args) > 0) {
+        if (strlen((string) $args) > 0) {
             $args = ' ' . $args;
         }
         if (! strlen($form = $this->_layout)) {
@@ -519,7 +520,7 @@ class WebForm
         for ($x = 0; $x < count($this->_fields); $x++) {
             if (isset($this->_fields[$x])) {
                 $field = $this->_fields[$x];
-                if (strpos($form, $field['id']) !== false) {
+                if (strpos($form, (string) $field['id']) !== false) {
                     $form = str_replace(
                         '[' . $field['id'] . ']',
                         sprintf(
@@ -565,7 +566,7 @@ class WebForm
     public function addFieldHtml($id, $html_tag, $value)
     {
         for ($x = 0; $x < count($this->_fields); $x++) {
-            if (! strcmp($this->_fields[$x]['id'], $id)) {
+            if (! strcmp((string) $this->_fields[$x]['id'], (string) $id)) {
                 if (isset($this->_fields[$x]['html'][$html_tag])) {
                     $this->_fields[$x]['html'][$html_tag] .= ' ' . $value;
                 } else {
@@ -585,7 +586,7 @@ class WebForm
     public function getFieldHtml($id, $html_tag)
     {
         for ($x = 0; $x < count($this->_fields); $x++) {
-            if (! strcmp($this->_fields[$x]['id'], $id)) {
+            if (! strcmp((string) $this->_fields[$x]['id'], (string) $id)) {
                 if (isset($this->_fields[$x]['html'][$html_tag])) {
                     return $this->_fields[$x]['html'][$html_tag];
                 }
@@ -678,7 +679,7 @@ class WebForm
         switch ($field['type']) {
             case WFT_CC_TYPE: case WFT_SELECT: case WFT_BOOLEAN:
                 foreach ($field['defaultValue'] as $option) {
-                    if (! strcmp($option['id'], $field['validatedData'])) {
+                    if (! strcmp((string) $option['id'], (string) $field['validatedData'])) {
                         $caption = $option['caption'];
                     }
                 }
@@ -687,16 +688,16 @@ class WebForm
                 }
                 break;
             case WFT_PHONE:
-                if (strlen($field['validatedData']) == 10) {
-                    $caption = substr($field['validatedData'], 0, 3) . '-' . substr($field['validatedData'], 3, 3) . '-' . substr($field['validatedData'], 6, 4);
-                } elseif (strlen($field['validatedData']) == 0) {
+                if (strlen((string) $field['validatedData']) == 10) {
+                    $caption = substr((string) $field['validatedData'], 0, 3) . '-' . substr((string) $field['validatedData'], 3, 3) . '-' . substr((string) $field['validatedData'], 6, 4);
+                } elseif (strlen((string) $field['validatedData']) == 0) {
                     $caption = "<span style=\"color: #999999;\">(Empty)</span>";
                 } else {
                     $caption = $field['validatedData'];
                 }
                 break;
             default:
-                if (! strlen($field['validatedData'])) {
+                if (! strlen((string) $field['validatedData'])) {
                     $caption = "<span style=\"color: #999999;\">(Empty)</span>";
                 } else {
                     $caption = $field['validatedData'];
@@ -768,7 +769,7 @@ class WebForm
         $onmouseout .= 'webFormHideErrorBox(); ';
         $onkeyup .= 'webFormHideErrorBox(); ';
 
-        if (strlen($field['helpBody']) > 0) {
+        if (strlen((string) $field['helpBody']) > 0) {
             $onmouseover .= sprintf(
                 "webFormShowHelpBox(this, '%s', '%s', '%s'); ",
                 $field['caption'],
@@ -823,11 +824,11 @@ class WebForm
                     $type,
                     $field['id'],
                     $field['id'],
-                    (strlen($field['validatedData']) > 0 ? $field['validatedData'] : $field['defaultValue']),
+                    (strlen((string) $field['validatedData']) > 0 ? $field['validatedData'] : $field['defaultValue']),
                     $field['tabIndex'],
                     $field['size'],
                     $field['length'][1],
-                    (strlen($options) > 0 ? ' ' . $options : '')
+                    (strlen((string) $options) > 0 ? ' ' . $options : '')
                 );
                 $input .= sprintf(' %s', $extendedJavaScript);
                 $input .= " />\n";
@@ -842,9 +843,9 @@ class WebForm
                     $field['tabIndex'],
                     $field['size'],
                     $field['length'][1],
-                    (strlen($options) > 0 ? ' ' . $options : ''),
+                    (strlen((string) $options) > 0 ? ' ' . $options : ''),
                     $extendedJavaScript,
-                    (strlen($field['validatedData']) > 0 ? $field['validatedData'] : $field['defaultValue'])
+                    (strlen((string) $field['validatedData']) > 0 ? $field['validatedData'] : $field['defaultValue'])
                 );
                 break;
 
@@ -857,14 +858,14 @@ class WebForm
                     $field['id'],
                     $field['id'],
                     $field['tabIndex'],
-                    (strlen($options) > 0 ? ' ' . $options : ''),
+                    (strlen((string) $options) > 0 ? ' ' . $options : ''),
                     $extendedJavaScript,
                     ($field['required'] ? 'nosel' : '')
                 );
 
                 $selected = '';
                 foreach ($field['defaultValue'] as $option) {
-                    if (! strcmp($field['validatedData'], $option['id'])) {
+                    if (! strcmp((string) $field['validatedData'], (string) $option['id'])) {
                         $selected = $option['id'];
                     }
                 }
@@ -880,7 +881,7 @@ class WebForm
                     $input .= sprintf(
                         "<option value=\"%s\"%s>%s</option>\n",
                         $option['id'],
-                        (! strcmp($selected, $option['id']) ? ' selected' : ''),
+                        (! strcmp((string) $selected, (string) $option['id']) ? ' selected' : ''),
                         $option['caption']
                     );
                 }
@@ -889,8 +890,8 @@ class WebForm
 
             case WFT_CC_EXPIRATION:
                 $curYear = intval(date('Y'));
-                if (strlen($field['validatedData']) > 0) {
-                    $mp = explode('/', $field['validatedData']);
+                if (strlen((string) $field['validatedData']) > 0) {
+                    $mp = explode('/', (string) $field['validatedData']);
                     $selMonth = $mp[0];
                     $selYear = $mp[1];
                 } else {
@@ -924,14 +925,14 @@ class WebForm
                     $field['id'],
                     $field['tabIndex'],
                     $extendedJavaScript,
-                    (strlen($options) > 0 ? ' ' . $options : ''),
+                    (strlen((string) $options) > 0 ? ' ' . $options : ''),
                     ($field['required'] ? 'nosel' : ''),
                     $monthScript,
                     $field['id'],
                     $field['id'],
                     $field['tabIndex'] + 1,
                     $extendedJavaScript,
-                    (strlen($options) > 0 ? ' ' . $options : ''),
+                    (strlen((string) $options) > 0 ? ' ' . $options : ''),
                     ($field['required'] ? 'nosel' : '')
                 );
 
@@ -966,7 +967,7 @@ class WebForm
                     $field['id'],
                     $field['id'],
                     $field['tabIndex'],
-                    (strlen($options) > 0 ? ' ' . $options : ''),
+                    (strlen((string) $options) > 0 ? ' ' . $options : ''),
                     $extendedJavaScript,
                     $field['id']
                 );
@@ -1019,13 +1020,13 @@ class WebForm
      */
     private function getCreditCardType($name)
     {
-        if (! strcmp($name, WF_CARD_NAME_VISA)) {
+        if (! strcmp((string) $name, WF_CARD_NAME_VISA)) {
             return WF_CARD_TYPE_VISA;
-        } elseif (! strcmp($name, WF_CARD_NAME_MASTERCARD)) {
+        } elseif (! strcmp((string) $name, WF_CARD_NAME_MASTERCARD)) {
             return WF_CARD_TYPE_MASTERCARD;
-        } elseif (! strcmp($name, WF_CARD_NAME_AMERICANEXPRESS)) {
+        } elseif (! strcmp((string) $name, WF_CARD_NAME_AMERICANEXPRESS)) {
             return WF_CARD_TYPE_AMERICANEXPRESS;
-        } elseif (! strcmp($name, WF_CARD_NAME_DISCOVER)) {
+        } elseif (! strcmp((string) $name, WF_CARD_NAME_DISCOVER)) {
             return WF_CARD_TYPE_DISCOVER;
         } else {
             return -1;
@@ -1040,13 +1041,13 @@ class WebForm
      */
     private function getCreditCardName($name)
     {
-        if (! strcmp($name, WF_CARD_TYPE_VISA)) {
+        if (! strcmp((string) $name, WF_CARD_TYPE_VISA)) {
             return WF_CARD_NAME_VISA;
-        } elseif (! strcmp($name, WF_CARD_TYPE_MASTERCARD)) {
+        } elseif (! strcmp((string) $name, WF_CARD_TYPE_MASTERCARD)) {
             return WF_CARD_NAME_MASTERCARD;
-        } elseif (! strcmp($name, WF_CARD_TYPE_AMERICANEXPRESS)) {
+        } elseif (! strcmp((string) $name, WF_CARD_TYPE_AMERICANEXPRESS)) {
             return WF_CARD_NAME_AMERICANEXPRESS;
-        } elseif (! strcmp($name, WF_CARD_TYPE_DISCOVER)) {
+        } elseif (! strcmp((string) $name, WF_CARD_TYPE_DISCOVER)) {
             return WF_CARD_NAME_DISCOVER;
         } else {
             return -1;
@@ -1061,20 +1062,20 @@ class WebForm
      */
     private function getCreditCardTypeByNumber($cardNumber)
     {
-        if (! strcmp($cardNumber, '1234123412348888')) {
+        if (! strcmp((string) $cardNumber, '1234123412348888')) {
             return WF_CARD_TYPE_MASTERCARD;
         }
-        if (! strcmp($cardNumber, '1234123412349999')) {
+        if (! strcmp((string) $cardNumber, '1234123412349999')) {
             return WF_CARD_TYPE_VISA;
         }
 
-        if (preg_match('/^5[1-5]\d{14}$/', $cardNumber)) {
+        if (preg_match('/^5[1-5]\d{14}$/', (string) $cardNumber)) {
             return WF_CARD_TYPE_MASTERCARD;
-        } elseif (preg_match('/^4\d{12}(\d{3})?$/', $cardNumber)) {
+        } elseif (preg_match('/^4\d{12}(\d{3})?$/', (string) $cardNumber)) {
             return WF_CARD_TYPE_VISA;
-        } elseif (preg_match('/^3[47]\d{13}$/', $cardNumber)) {
+        } elseif (preg_match('/^3[47]\d{13}$/', (string) $cardNumber)) {
             return WF_CARD_TYPE_AMERICANEXPRESS;
-        } elseif (preg_match('/^6011\d{12}$/', $cardNumber)) {
+        } elseif (preg_match('/^6011\d{12}$/', (string) $cardNumber)) {
             return WF_CARD_TYPE_DISCOVER;
         } else {
             return -1;
@@ -1094,10 +1095,10 @@ class WebForm
             return false;
         }
 
-        if (! strcmp($cardNumber, '1234123412349999')) {
+        if (! strcmp((string) $cardNumber, '1234123412349999')) {
             return true;
         }
-        if (! strcmp($cardNumber, '1234123412348888')) {
+        if (! strcmp((string) $cardNumber, '1234123412348888')) {
             return true;
         }
 
@@ -1125,12 +1126,12 @@ class WebForm
         }
 
         /* Fail if the card number is not valid for the specified issuer. */
-        if (! preg_match($regex, $cardNumber)) {
+        if (! preg_match($regex, (string) $cardNumber)) {
             return false;
         }
 
         /* Reverse the card number; we have to start from the right. */
-        $reversedCardNumber = strrev($cardNumber);
+        $reversedCardNumber = strrev((string) $cardNumber);
 
         /* 1) Loop through each digit in the (reversed) card number.
          *      A) Multiply every second digit by 2.
@@ -1350,7 +1351,7 @@ class WebForm
                     ?>
                     var <?php echo $field['id'] ?> = document.getElementById('<?php echo $field['id'] ?>');
                     if (<?php echo $field['id'] ?>.value == 'nosel')
-                        errors += ":You must select a value for <?php echo addslashes($field['caption']) ?>";
+                        errors += ":You must select a value for <?php echo addslashes((string) $field['caption']) ?>";
                     <?php
                 } else {
                     ?>
@@ -1569,7 +1570,7 @@ class WebForm
                     if (data == '')
                     {
                         wf<?php echo $field['id']; ?>Error = true;
-                        return ':<?php echo(strlen($field['caption']) > 0 ? $field['caption'] : 'This field'); ?> is a required field';
+                        return ':<?php echo(strlen((string) $field['caption']) > 0 ? $field['caption'] : 'This field'); ?> is a required field';
                     }
                     <?php
                 }
@@ -1583,7 +1584,7 @@ class WebForm
                 if ($field['length'][0] == $field['length'][1]) {
                     ?>
                         wf<?php echo $field['id']; ?>Error = true;
-                        return ':<?php echo(strlen($field['caption']) > 0 ? $field['caption'] : 'This field'); ?> must be <?php echo $field['length'][0] ?> characters in length';
+                        return ':<?php echo(strlen((string) $field['caption']) > 0 ? $field['caption'] : 'This field'); ?> must be <?php echo $field['length'][0] ?> characters in length';
                         <?php
                 } else {
                     ?>
@@ -1597,7 +1598,7 @@ class WebForm
                 if (! $field['required']) {
                     echo "}\n";
                 }
-            if (strlen($field['regex_test']) > 0) {
+            if (strlen((string) $field['regex_test']) > 0) {
                 ?>
                     var re = <?php echo $field['regex_test']; ?>;
                     if (!data.match(re))

@@ -165,19 +165,19 @@ switch ($action) {
                 document.getElementById(\'mailSmtpPort\').value = \'' . htmlspecialchars(MAIL_SMTP_PORT) . '\';
                 document.getElementById(\'mailSmtpUsername\').value = \'' . htmlspecialchars(MAIL_SMTP_USER) . '\';
                 document.getElementById(\'mailSmtpPassword\').value = \'' . htmlspecialchars(MAIL_SMTP_PASS) . '\';
-                document.getElementById(\'mailFromAddress\').value = \'' . htmlspecialchars($mailFromAddress[0]) . '\';
+                document.getElementById(\'mailFromAddress\').value = \'' . htmlspecialchars((string) $mailFromAddress[0]) . '\';
                 changeMailForm();
             </script>';
         break;
 
     case 'setMailSettings':
         $mailSupportTxt = $_REQUEST['mailSupport'];
-        $mailSendmailPath = trim($_REQUEST['mailSendmail']);
-        $mailSmtpHost = trim($_REQUEST['mailSmtpHost']);
-        $mailSmtpPort = intval(trim($_REQUEST['mailSmtpPort']));
-        $mailSmtpUsername = trim($_REQUEST['mailSmtpUsername']);
-        $mailSmtpPassword = trim($_REQUEST['mailSmtpPassword']);
-        $fromAddress = substr(trim($_REQUEST['mailFromAddress']), 0, 255);
+        $mailSendmailPath = trim((string) $_REQUEST['mailSendmail']);
+        $mailSmtpHost = trim((string) $_REQUEST['mailSmtpHost']);
+        $mailSmtpPort = intval(trim((string) $_REQUEST['mailSmtpPort']));
+        $mailSmtpUsername = trim((string) $_REQUEST['mailSmtpUsername']);
+        $mailSmtpPassword = trim((string) $_REQUEST['mailSmtpPassword']);
+        $fromAddress = substr(trim((string) $_REQUEST['mailFromAddress']), 0, 255);
 
         // validate e-mail address reply-to field
         if (strlen($fromAddress) < 4) {
@@ -193,8 +193,8 @@ switch ($action) {
                 '
             );
         } else {
-            if (strlen($mailSupportTxt) == 4) {
-                $mailSupport = intval(substr($mailSupportTxt, 3, 1));
+            if (strlen((string) $mailSupportTxt) == 4) {
+                $mailSupport = intval(substr((string) $mailSupportTxt, 3, 1));
             }
 
             if ($mailSupport == 4) {
@@ -434,7 +434,7 @@ switch ($action) {
         $onClick .= 'showTextBlock(\'installingComponentsExtra\'); ';
         $onClick .= 'Installpage_populate(\'a=setupOptional&list=';
         foreach ($optionalComponents as $index => $component) {
-            $onClick .= htmlspecialchars($index) . ',\' + encodeURIComponent(getCheckedValue(document.getElementsByName(\'' . htmlspecialchars($index) . '\'))) + \',';
+            $onClick .= htmlspecialchars((string) $index) . ',\' + encodeURIComponent(getCheckedValue(document.getElementsByName(\'' . htmlspecialchars((string) $index) . '\'))) + \',';
         }
         $onClick .= '&timeZone=\' + encodeURIComponent(document.getElementById(\'timeZone\').value) + \'&dateFormat=\' + encodeURIComponent(document.getElementById(\'dateFormat\').value) + \'\');';
 
@@ -443,9 +443,9 @@ switch ($action) {
         echo 'document.getElementById(\'extrasList\').innerHTML = \'<table style="width: 450px;"><tr><td style="font-weight: bold;">Feature Name</td><td style="width: 85px; font-weight: bold">Install</td><td style="width: 85px; font-weight: bold">Do Not Install</td></tr>';
         foreach ($optionalComponents as $index => $component) {
             echo '<tr>';
-            echo '<td><a href="javascript:void(0);" onclick="function HTML' . htmlspecialchars($index) . '() { return \\\'<p style=\\\' + String.fromCharCode(34) + \\\'font-weight: bold; padding-left: 8px; padding-right: 8px;\\\' + String.fromCharCode(34) + \\\'>' . htmlspecialchars($component['name']) . '</p><p style=\\\' + String.fromCharCode(34) + \\\'padding-left: 8px; padding-right: 8px;\\\' + String.fromCharCode(34) + \\\'>' . htmlspecialchars($component['description']) . '</p>\\\'; } showPopWinHTML(HTML' . htmlspecialchars($index) . '(), 400, 100, null); return false;">' . htmlspecialchars($component['name']) . '</a>&nbsp;&nbsp;&nbsp;</td>';
-            echo '<td><input type="radio" name="' . htmlspecialchars($index) . '" value="true"' . ($component['componentExists'] ? ' checked' : '') . '></td>';
-            echo '<td><input type="radio" name="' . htmlspecialchars($index) . '" value="false"' . ($component['componentExists'] ? '' : ' checked') . '></td>';
+            echo '<td><a href="javascript:void(0);" onclick="function HTML' . htmlspecialchars((string) $index) . '() { return \\\'<p style=\\\' + String.fromCharCode(34) + \\\'font-weight: bold; padding-left: 8px; padding-right: 8px;\\\' + String.fromCharCode(34) + \\\'>' . htmlspecialchars((string) $component['name']) . '</p><p style=\\\' + String.fromCharCode(34) + \\\'padding-left: 8px; padding-right: 8px;\\\' + String.fromCharCode(34) + \\\'>' . htmlspecialchars((string) $component['description']) . '</p>\\\'; } showPopWinHTML(HTML' . htmlspecialchars((string) $index) . '(), 400, 100, null); return false;">' . htmlspecialchars((string) $component['name']) . '</a>&nbsp;&nbsp;&nbsp;</td>';
+            echo '<td><input type="radio" name="' . htmlspecialchars((string) $index) . '" value="true"' . ($component['componentExists'] ? ' checked' : '') . '></td>';
+            echo '<td><input type="radio" name="' . htmlspecialchars((string) $index) . '" value="false"' . ($component['componentExists'] ? '' : ' checked') . '></td>';
             echo '</tr>';
         }
 
@@ -470,7 +470,7 @@ switch ($action) {
         $_SESSION['timeZoneInstaller'] = $timeZone;
         $_SESSION['dateFormatInstaller'] = $dateFormat;
 
-        $list = explode(',', $_REQUEST['list']);
+        $list = explode(',', (string) $_REQUEST['list']);
 
         for ($i = 0; $i < count($list); $i += 2) {
             if (! isset($list[$i + 1])) {
@@ -546,7 +546,7 @@ switch ($action) {
                 </script>';
 
             foreach ($tables as $table => $data) {
-                echo '<script type="text/javascript">document.getElementById(\'tableNamesUnknown\').innerHTML += \'' . htmlspecialchars($table) . ', \';</script>';
+                echo '<script type="text/javascript">document.getElementById(\'tableNamesUnknown\').innerHTML += \'' . htmlspecialchars((string) $table) . ', \';</script>';
             }
         } else {
             echo '
@@ -571,7 +571,7 @@ switch ($action) {
         if (! isset($_REQUEST['type'])) {
             echo '<script type="text/javascript">Installpage_populate(\'a=detectRevision\');</script>';
         } else {
-            echo '<script type="text/javascript">Installpage_populate(\'a=selectDBType&type=' . urlencode($_REQUEST['type']) . '\');</script>';
+            echo '<script type="text/javascript">Installpage_populate(\'a=selectDBType&type=' . urlencode((string) $_REQUEST['type']) . '\');</script>';
         }
         break;
 
@@ -630,14 +630,14 @@ switch ($action) {
             $fileName = $data['filename'];
 
             /* Execute all sql files */
-            if (strpos($fileName, 'db/catsbackup.sql.') === 0) {
+            if (strpos((string) $fileName, 'db/catsbackup.sql.') === 0) {
                 $fileContents = $extractor->getFile($index);
                 MySQLQueryMultiple($fileContents, '((ENDOFQUERY))');
             }
             /* Extract everything else but ./database */
             elseif ($fileName != 'database') {
-                if (strpos($fileName, '/') !== false) {
-                    $directorySplit = explode('/', $fileName);
+                if (strpos((string) $fileName, '/') !== false) {
+                    $directorySplit = explode('/', (string) $fileName);
                     unset($directorySplit[count($directorySplit) - 1]);
                     $directory = implode('/', $directorySplit);
                     @mkdir($directory, 0777, true);
@@ -712,14 +712,14 @@ switch ($action) {
             $fileName = $data['filename'];
 
             /* Execute all sql files */
-            if (strpos($fileName, 'db/catsbackup.sql.') === 0) {
+            if (strpos((string) $fileName, 'db/catsbackup.sql.') === 0) {
                 $fileContents = $extractor->getFile($index);
                 MySQLQueryMultiple($fileContents, '((ENDOFQUERY))');
             }
             /* Extract everything else but ./database */
             elseif ($fileName != 'database') {
-                if (strpos($fileName, '/') !== false) {
-                    $directorySplit = explode('/', $fileName);
+                if (strpos((string) $fileName, '/') !== false) {
+                    $directorySplit = explode('/', (string) $fileName);
                     unset($directorySplit[count($directorySplit) - 1]);
                     $directory = implode('/', $directorySplit);
                     @mkdir($directory, 0777, true);
@@ -999,7 +999,7 @@ function MySQLQuery($query, $ignoreErrors = false)
 
 function MySQLQueryMultiple($SQLData, $delimiter = ';')
 {
-    $SQLStatments = explode($delimiter, $SQLData);
+    $SQLStatments = explode($delimiter, (string) $SQLData);
 
     foreach ($SQLStatments as $SQL) {
         $SQL = trim($SQL);

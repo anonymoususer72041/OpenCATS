@@ -37,7 +37,7 @@ include_once(LEGACY_ROOT . '/lib/Site.php');
 
 class ExtraFields
 {
-    private \DatabaseConnection $_db;
+    private readonly \DatabaseConnection $_db;
 
     private $_siteID;
 
@@ -179,16 +179,16 @@ class ExtraFields
 
         $rs = $this->_db->getAssoc($sql);
 
-        $options = explode(',', $rs['extraFieldOptions']);
+        $options = explode(',', (string) $rs['extraFieldOptions']);
 
         /* First delete it if it is already an option... */
         foreach ($options as $index => $data) {
-            if ($data == urlencode($optionName)) {
+            if ($data == urlencode((string) $optionName)) {
                 unset($options[$index]);
             }
         }
 
-        $options[] = urlencode($optionName);
+        $options[] = urlencode((string) $optionName);
 
         $sql = sprintf(
             "UPDATE
@@ -238,10 +238,10 @@ class ExtraFields
 
         $rs = $this->_db->getAssoc($sql);
 
-        $options = explode(',', $rs['extraFieldOptions']);
+        $options = explode(',', (string) $rs['extraFieldOptions']);
 
         foreach ($options as $index => $data) {
-            if ($data == urlencode($optionName)) {
+            if ($data == urlencode((string) $optionName)) {
                 unset($options[$index]);
             }
         }
@@ -542,7 +542,7 @@ class ExtraFields
                     break;
 
                 case EXTRA_FIELD_TEXTAREA:
-                    $extraFields[$index]['display'] = nl2br(htmlspecialchars($extraFields[$index]['value']));
+                    $extraFields[$index]['display'] = nl2br(htmlspecialchars((string) $extraFields[$index]['value']));
                     break;
 
                 case EXTRA_FIELD_DATE:
@@ -563,7 +563,7 @@ class ExtraFields
                     }
 
                     if ($dmy) {
-                        $dateParts = explode('-', $extraFields[$index]['value']);
+                        $dateParts = explode('-', (string) $extraFields[$index]['value']);
                         if (count($dateParts) > 2) {
                             $t = $dateParts[0];
                             $dateParts[0] = $dateParts[1];
@@ -573,7 +573,7 @@ class ExtraFields
 
                         $extraFields[$index]['display'] = htmlspecialchars($date);
                     } else {
-                        $extraFields[$index]['display'] = htmlspecialchars($extraFields[$index]['value']);
+                        $extraFields[$index]['display'] = htmlspecialchars((string) $extraFields[$index]['value']);
                     }
                     break;
 
@@ -581,7 +581,7 @@ class ExtraFields
                 case EXTRA_FIELD_DROPDOWN:
                 case EXTRA_FIELD_RADIO:
                 default:
-                    $extraFields[$index]['display'] = htmlspecialchars($extraFields[$index]['value']);
+                    $extraFields[$index]['display'] = htmlspecialchars((string) $extraFields[$index]['value']);
                     break;
             }
         }
@@ -627,7 +627,7 @@ class ExtraFields
                            <option value="" selected>- Select from List -</option>
                     ';
 
-                    $options = explode(',', $data['extraFieldOptions']);
+                    $options = explode(',', (string) $data['extraFieldOptions']);
 
                     foreach ($options as $option) {
                         if ($option != '') {
@@ -641,7 +641,7 @@ class ExtraFields
                     break;
 
                 case EXTRA_FIELD_RADIO:
-                    $options = explode(',', $data['extraFieldOptions']);
+                    $options = explode(',', (string) $data['extraFieldOptions']);
 
                     $extraFields[$index]['addHTML'] = '';
 
@@ -796,13 +796,13 @@ class ExtraFields
                 case EXTRA_FIELD_CHECKBOX:
                     $extraFields[$index]['editHTML'] = '
                         <input type="checkbox" class="inputbox" id="extraFieldCB' . $index . '" name="extraFieldCB' . $index . '" ' . ($data['value'] == 'Yes' ? 'checked' : '') . ' onclick="if (this.checked) {document.getElementById(\'extraField' . $index . '\').value=\'Yes\';} else {document.getElementById(\'extraField' . $index . '\').value=\'No\';}" />
-                        <input type="hidden" id="extraField' . $index . '" name="extraField' . $index . '" value="' . htmlspecialchars($data['value']) . '" />
+                        <input type="hidden" id="extraField' . $index . '" name="extraField' . $index . '" value="' . htmlspecialchars((string) $data['value']) . '" />
                     ';
                     break;
 
                 case EXTRA_FIELD_TEXTAREA:
                     $extraFields[$index]['editHTML'] = '
-                        <textarea id="extraField' . $index . '" class="inputbox" name="extraField' . $index . '" style="width: 150px;" >' . htmlspecialchars($data['value']) . '</textarea>
+                        <textarea id="extraField' . $index . '" class="inputbox" name="extraField' . $index . '" style="width: 150px;" >' . htmlspecialchars((string) $data['value']) . '</textarea>
                     ';
                     break;
 
@@ -812,7 +812,7 @@ class ExtraFields
                            <option value=""></option>
                     ';
 
-                    $options = explode(',', $data['extraFieldOptions']);
+                    $options = explode(',', (string) $data['extraFieldOptions']);
 
                     foreach ($options as $option) {
                         if ($option != '') {
@@ -821,14 +821,14 @@ class ExtraFields
                     }
 
                     if (! in_array($data['value'], $options)) {
-                        $extraFields[$index]['editHTML'] .= '<option value="' . htmlspecialchars($data['value']) . '" selected>' . htmlspecialchars($data['value']) . '</option>';
+                        $extraFields[$index]['editHTML'] .= '<option value="' . htmlspecialchars((string) $data['value']) . '" selected>' . htmlspecialchars((string) $data['value']) . '</option>';
                     }
 
                     $extraFields[$index]['editHTML'] .= '</select>';
                     break;
 
                 case EXTRA_FIELD_RADIO:
-                    $options = explode(',', $data['extraFieldOptions']);
+                    $options = explode(',', (string) $data['extraFieldOptions']);
 
                     $extraFields[$index]['editHTML'] = '';
 
@@ -846,7 +846,7 @@ class ExtraFields
                 case EXTRA_FIELD_TEXT:
                 default:
                     $extraFields[$index]['editHTML'] = '
-                        <input id="extraField' . $index . '" class="inputbox" name="extraField' . $index . '" value="' . htmlspecialchars($data['value']) . '" style="width: 150px;" />
+                        <input id="extraField' . $index . '" class="inputbox" name="extraField' . $index . '" value="' . htmlspecialchars((string) $data['value']) . '" style="width: 150px;" />
                     ';
                     break;
             }

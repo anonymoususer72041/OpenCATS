@@ -76,8 +76,8 @@ if (! $interface->isRequiredIDValid('dataItemType')) {
 
 $siteID = $interface->getSiteID();
 
-$listsToAdd = explode(',', $_REQUEST['listsToAdd']);
-$itemsToAdd = explode(',', $_REQUEST['itemsToAdd']);
+$listsToAdd = explode(',', (string) $_REQUEST['listsToAdd']);
+$itemsToAdd = explode(',', (string) $_REQUEST['itemsToAdd']);
 $dataItemType = $_REQUEST['dataItemType'];
 
 foreach ($listsToAdd as $index => $data) {

@@ -62,9 +62,9 @@ class ControlPanel
 
     private $_sections;
 
-    private \DatabaseConnection $_db;
+    private readonly \DatabaseConnection $_db;
 
-    private \WebForm $_wf;
+    private readonly \WebForm $_wf;
 
     private $_primaryKey;
 
@@ -165,7 +165,7 @@ class ControlPanel
 
         $uID = static::getPostValue('uID');
         $uIDName = static::getPostValue('uIDName');
-        $sql = $this->getTablesSQL(sprintf('%s = %d', addslashes($uIDName), addslashes($uID)));
+        $sql = $this->getTablesSQL(sprintf('%s = %d', addslashes((string) $uIDName), addslashes((string) $uID)));
         $rs = $this->_db->query($sql);
         if ($rs && mysqli_num_rows($rs) > 0) {
             $row = mysqli_fetch_array($rs, MYSQLI_ASSOC);
@@ -183,7 +183,7 @@ class ControlPanel
                         if (is_numeric($row[$fieldData['uniqueID']])) {
                             $keyVal = sprintf('%d', $row[$fieldData['uniqueID']]);
                         } else {
-                            $keyVal = '"' . addslashes($row[$fieldData['uniqueID']]) . '"';
+                            $keyVal = '"' . addslashes((string) $row[$fieldData['uniqueID']]) . '"';
                         }
                         $sql .= sprintf('%s = %s', $fieldName, $keyVal);
                     }
@@ -213,7 +213,7 @@ class ControlPanel
             // This is an edit, lookup information
             $uID = static::getPostValue('uID');
             $uIDName = static::getPostValue('uIDName');
-            $sql = $this->getTablesSQL(sprintf('%s = %d', addslashes($uIDName), addslashes($uID)));
+            $sql = $this->getTablesSQL(sprintf('%s = %d', addslashes((string) $uIDName), addslashes((string) $uID)));
             $rs = $this->_db->query($sql);
             if (! $rs) {
                 return $this->getListView();
@@ -232,7 +232,7 @@ class ControlPanel
 
         $html .= sprintf(
             '<form method="get" action="%s" name="cpBack">',
-            substr($_SERVER['REQUEST_URI'], 0, strpos($_SERVER['REQUEST_URI'], '?'))
+            substr((string) $_SERVER['REQUEST_URI'], 0, strpos((string) $_SERVER['REQUEST_URI'], '?'))
         );
         foreach ($_GET as $name => $value) {
             if (! strcmp($name, 'cpPageState')) {
@@ -244,7 +244,7 @@ class ControlPanel
                 $html .= sprintf(
                     '<input type="hidden" name="%s" value="%s" />',
                     htmlspecialchars($name),
-                    htmlspecialchars($value)
+                    htmlspecialchars((string) $value)
                 );
             }
         }
@@ -261,13 +261,13 @@ class ControlPanel
 
         $html .= sprintf(
             '<form method="get" action="%s" name="cpEditForm">',
-            substr($_SERVER['REQUEST_URI'], 0, strpos($_SERVER['REQUEST_URI'], '?'))
+            substr((string) $_SERVER['REQUEST_URI'], 0, strpos((string) $_SERVER['REQUEST_URI'], '?'))
         );
         foreach ($_GET as $name => $value) {
             $html .= sprintf(
                 '<input type="hidden" name="%s" value="%s" />',
                 htmlspecialchars($name),
-                htmlspecialchars($value)
+                htmlspecialchars((string) $value)
             );
         }
 
@@ -313,7 +313,7 @@ class ControlPanel
                     $fieldValue = trim($fieldValue);
                     foreach ($this->_tables as $subTableName => $subTableData) {
                         foreach ($subTableData['fields'] as $subFieldName => $subFieldData) {
-                            if (! strcmp($subFieldData['uniqueID'], $fieldName)) {
+                            if (! strcmp((string) $subFieldData['uniqueID'], $fieldName)) {
                                 if ($addRecord) {
                                     // this is an addition, build the SQL
                                     if (! isset($updateSql[$subTableName])) {
@@ -413,7 +413,7 @@ class ControlPanel
                                 if (is_numeric($row[$fieldData['uniqueID']])) {
                                     $keyVal = sprintf('%d', $row[$fieldData['uniqueID']]);
                                 } else {
-                                    $keyVal = '"' . addslashes($row[$fieldData['uniqueID']]) . '"';
+                                    $keyVal = '"' . addslashes((string) $row[$fieldData['uniqueID']]) . '"';
                                 }
                                 $ruleTableSql = sprintf('%s = %s', $fieldName, $keyVal);
                                 break;
@@ -463,7 +463,7 @@ class ControlPanel
                         $infoHtml .= "</div>\n";
                         $infoHtml .= sprintf(
                             '<form method="get" action="%s" name="cpBack">',
-                            substr($_SERVER['REQUEST_URI'], 0, strpos($_SERVER['REQUEST_URI'], '?'))
+                            substr((string) $_SERVER['REQUEST_URI'], 0, strpos((string) $_SERVER['REQUEST_URI'], '?'))
                         );
                         foreach ($_GET as $name => $value) {
                             if (! strcmp($name, 'cpPageState')) {
@@ -475,7 +475,7 @@ class ControlPanel
                                 $infoHtml .= sprintf(
                                     '<input type="hidden" name="%s" value="%s" />',
                                     htmlspecialchars($name),
-                                    htmlspecialchars($value)
+                                    htmlspecialchars((string) $value)
                                 );
                             }
                         }
@@ -483,7 +483,7 @@ class ControlPanel
                         $infoHtml .= '<img src="images/cp_back.gif" border="0" style="cursor: pointer;" alt="<-- Back to List" onclick="document.cpBack.submit();" />';
                         return $infoHtml;
                     } else {
-                        $src = substr($_SERVER['REQUEST_URI'], strpos($_SERVER['REQUEST_URI'], '?') + 1);
+                        $src = substr((string) $_SERVER['REQUEST_URI'], strpos((string) $_SERVER['REQUEST_URI'], '?') + 1);
                         CATSUtility::transferRelativeURI($src . '&cpChangesMade=1');
                     }
                 }
@@ -576,8 +576,8 @@ class ControlPanel
     {
         switch ($fieldData['webFormParams']['type']) {
             case WFT_BOOLEAN:
-                if ((! strcasecmp($newText, 'true') && $dbText) ||
-                    (! strcasecmp($newText, 'false') && ! $dbText)) {
+                if ((! strcasecmp((string) $newText, 'true') && $dbText) ||
+                    (! strcasecmp((string) $newText, 'false') && ! $dbText)) {
                     return false;
                 } else {
                     return true;
@@ -585,11 +585,11 @@ class ControlPanel
                 break;
             case WFT_CC_NUMBER:
                 // user hasn't changed credit card, it was just masked (not on ssl)
-                if (preg_match("/^[X]{4}[\-]?[X]{4}[\-]?[X]{4}[\-]?[0-9]{4}$/", $newText)) {
+                if (preg_match("/^[X]{4}[\-]?[X]{4}[\-]?[X]{4}[\-]?[0-9]{4}$/", (string) $newText)) {
                     return false;
-                } elseif (! strlen($dbText) && ! strlen($newText)) {
+                } elseif (! strlen((string) $dbText) && ! strlen((string) $newText)) {
                     return false;
-                } elseif (strcmp(EncryptionUtility::decryptCreditCardNumber($dbText), $newText)) {
+                } elseif (strcmp(EncryptionUtility::decryptCreditCardNumber($dbText), (string) $newText)) {
                     return true;
                 } else {
                     return false;
@@ -604,11 +604,11 @@ class ControlPanel
                 }
                 break;
             case WFT_CC_EXPIRATION:
-                if (strlen(trim($newText)) == 0 && strlen(trim($dbText)) == 0) {
+                if (strlen(trim((string) $newText)) == 0 && strlen(trim((string) $dbText)) == 0) {
                     return false;
                 }
-                if (strlen(trim($newText)) > 0) {
-                    [$month, $year] = explode('/', $newText);
+                if (strlen(trim((string) $newText)) > 0) {
+                    [$month, $year] = explode('/', (string) $newText);
                     if (strlen(strval($year)) == 2) {
                         $year += 2000;
                     }
@@ -617,21 +617,21 @@ class ControlPanel
                     $newTime = 0;
                 }
 
-                if ($newTime != strtotime($dbText)) {
+                if ($newTime != strtotime((string) $dbText)) {
                     return true;
                 } else {
                     return false;
                 }
                 break;
             case WFT_DATE:
-                if (strtotime($newText) != strtotime($dbText)) {
+                if (strtotime((string) $newText) != strtotime((string) $dbText)) {
                     return true;
                 } else {
                     return false;
                 }
                 break;
             default:
-                if (strcmp($dbText, $newText)) {
+                if (strcmp((string) $dbText, (string) $newText)) {
                     return true;
                 } else {
                     return false;
@@ -795,7 +795,7 @@ class ControlPanel
                             '%s.%s LIKE "%%%s%%"',
                             $tableName,
                             $fieldName,
-                            addslashes($searchString)
+                            addslashes((string) $searchString)
                         );
                     }
                 }
@@ -909,7 +909,7 @@ class ControlPanel
             // Print each field in the ListView section
             foreach ($this->_tables as $tableName => $tableData) {
                 foreach ($tableData['fields'] as $fieldName => $fieldData) {
-                    if (! strcmp($tableData['primaryKey'], $fieldName)) {
+                    if (! strcmp((string) $tableData['primaryKey'], (string) $fieldName)) {
                         $uniqueRowIDName = $tableName . '.' . $fieldName;
                         $uniqueRowID = $row[$fieldData['uniqueID']];
                     }
@@ -943,21 +943,21 @@ class ControlPanel
                             $headerRow[$fieldData['uniqueID']] .= sprintf(
                                 '<td class="cpFieldHeader%s" valign="center" align="%s">'
                                 . '<a href="%s%scpSortByField=%s&cpSortDesc=%s" class="cpFieldHeader">%s%s</a></td>',
-                                (! strcmp($this->_sortByField, $fieldData['uniqueID']) ? 'Sorted' : ''),
+                                (! strcmp($this->_sortByField, (string) $fieldData['uniqueID']) ? 'Sorted' : ''),
                                 $textAlign,
                                 $_SERVER['REQUEST_URI'],
-                                (strpos($_SERVER['REQUEST_URI'], '?') !== false ? '&' : '?'),
+                                (strpos((string) $_SERVER['REQUEST_URI'], '?') !== false ? '&' : '?'),
                                 $fieldData['uniqueID'],
                                 $this->_sortDesc ? 'false' : 'true',
                                 $fieldData['caption'],
-                                (($this->_sortDesc && ! strcmp($this->_sortByField, $fieldData['uniqueID'])) ? '' : '') // for showing desc
+                                (($this->_sortDesc && ! strcmp($this->_sortByField, (string) $fieldData['uniqueID'])) ? '' : '') // for showing desc
                             );
                         }
 
                         $viewUrl = sprintf(
                             '%s%scpPageState=%d&uID=%d&uIDName=%s',
                             $_SERVER['REQUEST_URI'],
-                            (strpos($_SERVER['REQUEST_URI'], '?') !== false ? '&' : '?'),
+                            (strpos((string) $_SERVER['REQUEST_URI'], '?') !== false ? '&' : '?'),
                             CPP_EDIT,
                             $uniqueRowID,
                             $uniqueRowIDName
@@ -984,7 +984,7 @@ class ControlPanel
 
                         $td_html = sprintf(
                             '%s%s%s%s%s',
-                            (! strcmp($this->_linkField, $fieldData['uniqueID']) ? '<a href="' . $viewUrl . '">' : ''),
+                            (! strcmp($this->_linkField, (string) $fieldData['uniqueID']) ? '<a href="' . $viewUrl . '">' : ''),
                             (isset($this->_fieldUrls[$fieldData['uniqueID']]) ? '<a class="cpExternalLink" href="'
                                 . $this->getFieldLinkText($row, $this->_fieldUrls[$fieldData['uniqueID']]['url']) . '" onmouseover='
                                 . '"document.getElementById(\'cpDescribeLink' . $rowNum . '\').style.display=\'\'; cpHideMouseOverRow = \'' . $rowNum . '\';" '
@@ -994,7 +994,7 @@ class ControlPanel
                                 . 'style="display: none; position: absolute; '
                                 . 'background-color: #d4e3ff; font-size: 11px; padding: 11px; border: 1px solid #87a6de; margin: 20px">'
                                 . $this->getFieldLinkText($row, $this->_fieldUrls[$fieldData['uniqueID']]['comments']) . '</div>' : ''),
-                            (! strcmp($this->_linkField, $fieldData['uniqueID']) ? '</a>' : '')
+                            (! strcmp($this->_linkField, (string) $fieldData['uniqueID']) ? '</a>' : '')
                         );
 
                         $td_final = '';
@@ -1033,7 +1033,7 @@ class ControlPanel
                         . '<a href="%s%scpPageState=%d&uID=%d&uIDName=%s"><img src="images/cp_edit.gif" '
                         . 'border="0" style="cursor: pointer;" /></a></td>',
                         $_SERVER['REQUEST_URI'],
-                        (strpos($_SERVER['REQUEST_URI'], '?') !== false ? '&' : '?'),
+                        (strpos((string) $_SERVER['REQUEST_URI'], '?') !== false ? '&' : '?'),
                         CPP_EDIT,
                         $uniqueRowID,
                         $uniqueRowIDName
@@ -1051,7 +1051,7 @@ class ControlPanel
                         . 'document.location.href=\'%s%scpPageState=%d&uID=%d&uIDName=%s\'; else cpMarkForDelete(%d,false);" /></a></td>',
                         $rowNum,
                         $_SERVER['REQUEST_URI'],
-                        (strpos($_SERVER['REQUEST_URI'], '?') !== false ? '&' : '?'),
+                        (strpos((string) $_SERVER['REQUEST_URI'], '?') !== false ? '&' : '?'),
                         CPP_DELETE,
                         $uniqueRowID,
                         $uniqueRowIDName,
@@ -1132,7 +1132,7 @@ class ControlPanel
         // Display pager if needed
         $pagerHtml = '';
         if ($numPages > 1) {
-            if (strpos($_SERVER['REQUEST_URI'], '?') !== false) {
+            if (strpos((string) $_SERVER['REQUEST_URI'], '?') !== false) {
                 $url = $_SERVER['REQUEST_URI'] . '&';
             } else {
                 $url = $_SERVER['REQUEST_URI'] . '?';
@@ -1178,7 +1178,7 @@ class ControlPanel
             $pagerHtml .= sprintf(
                 '<p /><a href="%s%scpPageState=%d"><img src="images/cp_add.gif" border="0" alt="Add (+)" /></a>',
                 $_SERVER['REQUEST_URI'],
-                (strpos($_SERVER['REQUEST_URI'], '?') !== false ? '&' : '?'),
+                (strpos((string) $_SERVER['REQUEST_URI'], '?') !== false ? '&' : '?'),
                 CPPS_ADD
             );
         }
@@ -1217,7 +1217,7 @@ class ControlPanel
     {
         $html = sprintf(
             '<form method="get" action="%s" name="cpSearch">',
-            substr($_SERVER['REQUEST_URI'], 0, strpos($_SERVER['REQUEST_URI'], '?'))
+            substr((string) $_SERVER['REQUEST_URI'], 0, strpos((string) $_SERVER['REQUEST_URI'], '?'))
         );
         foreach ($_GET as $name => $value) {
             if (! strcmp($name, 'cpPageState')) {
@@ -1229,7 +1229,7 @@ class ControlPanel
                 $html .= sprintf(
                     '<input type="hidden" name="%s" value="%s" />',
                     htmlspecialchars($name),
-                    htmlspecialchars($value)
+                    htmlspecialchars((string) $value)
                 );
             }
         }
@@ -1238,7 +1238,7 @@ class ControlPanel
 
     private function getFieldDBText($fieldData, $text)
     {
-        $text = trim($text);
+        $text = trim((string) $text);
         if (strlen($text) == 0) {
             return 'NULL';
         }
@@ -1261,12 +1261,12 @@ class ControlPanel
 
     private function getFieldInputText($fieldData, $rawData)
     {
-        if (strlen(trim($rawData)) == 0) {
+        if (strlen(trim((string) $rawData)) == 0) {
             return '';
         }
         switch ($fieldData['webFormType']) {
             case WFT_CC_EXPIRATION:
-                return date('n/Y', strtotime($rawData));
+                return date('n/Y', strtotime((string) $rawData));
             case WFT_BOOLEAN:
                 if (intval($rawData) != 0) {
                     return 'true';
@@ -1277,7 +1277,7 @@ class ControlPanel
             case WFT_CC_NUMBER:
                 return EncryptionUtility::decryptCreditCardNumber($rawData);
             case WFT_DATE:
-                return date('n/j/Y', strtotime($rawData));
+                return date('n/j/Y', strtotime((string) $rawData));
             case WFT_CURRENCY:
                 return '$' . number_format(floatval($rawData), 2, '.', ',');
             default:
@@ -1295,7 +1295,7 @@ class ControlPanel
 
     private function getFieldHtmlText($fieldData, $rawData)
     {
-        if (strlen(trim($rawData)) == 0) {
+        if (strlen(trim((string) $rawData)) == 0) {
             return CPSTR_EMPTY_FIELD;
         }
         switch ($fieldData['webFormType']) {
@@ -1311,14 +1311,14 @@ class ControlPanel
             case WFT_CC_NUMBER:
                 return EncryptionUtility::decryptCreditCardNumber($rawData);
             case WFT_DATE:
-                return date('n/j/Y', strtotime($rawData));
+                return date('n/j/Y', strtotime((string) $rawData));
             case WFT_CURRENCY:
                 return '$' . number_format(floatval($rawData), 2, '.', ',');
             default:
                 // Check for truncate
                 if (isset($this->_truncate[$fieldData['uniqueID']])) {
-                    $truncated = substr($rawData, 0, $this->_truncate[$fieldData['uniqueID']]);
-                    if (strlen($truncated) != strlen($rawData)) {
+                    $truncated = substr((string) $rawData, 0, $this->_truncate[$fieldData['uniqueID']]);
+                    if (strlen($truncated) != strlen((string) $rawData)) {
                         $id = $this->_truncateID++;
                         return sprintf(
                             '<span onmouseover="document.getElementById(\'%sTruncate%d\').style.display=\'\';" '
@@ -1345,7 +1345,7 @@ class ControlPanel
     public function addSection($name, $caption, $fields, $webFormLayout = '', $sectionLayout = '[WebForm]')
     {
         if ($name == CP_LISTVIEW) {
-            if (! strcmp($sectionLayout, '[WebForm]')) {
+            if (! strcmp((string) $sectionLayout, '[WebForm]')) {
                 $this->_listViewLayout = '[ListView]';
             } else {
                 $this->_listViewLayout = $sectionLayout;
@@ -1386,12 +1386,12 @@ class ControlPanel
     ) {
         foreach ($this->_tables as $tableName => $tableData) {
             foreach ($tableData['fields'] as $fieldName => $fieldData) {
-                if (! strcmp($fieldName, $name) || (isset($fieldData['uniqueID']) && ! strcmp($fieldData['uniqueID'], $name))) {
+                if (! strcmp((string) $fieldName, (string) $name) || (isset($fieldData['uniqueID']) && ! strcmp((string) $fieldData['uniqueID'], (string) $name))) {
                     // Set some fields automatically using database data
                     if (! $fieldData['allowNull']) {
                         $required = true;
                     }
-                    if (preg_match("/varchar\(([0-9]+)\)/", $fieldData['type'], $matches)) {
+                    if (preg_match("/varchar\(([0-9]+)\)/", (string) $fieldData['type'], $matches)) {
                         if ($maxlen == -1) {
                             $maxlen = intval($matches[1]);
                         }
@@ -1442,12 +1442,12 @@ class ControlPanel
         }
         // Sort ASC/DESC
         if (isset($_GET['cpSortDesc']) || isset($_POST['cpSortDesc'])) {
-            $this->_sortDesc = (! strcmp(static::getPostValue('cpSortDesc'), 'false') ? false : true);
+            $this->_sortDesc = (! strcmp((string) static::getPostValue('cpSortDesc'), 'false') ? false : true);
         }
 
         foreach ($this->_tables as $tableName => $tableData) {
             foreach ($tableData['fields'] as $fieldName => $fieldData) {
-                if ((isset($fieldData['activeField']) && $fieldData['activeField'] == true) || ! strcmp($tableData['primaryKey'], $fieldName)) {
+                if ((isset($fieldData['activeField']) && $fieldData['activeField'] == true) || ! strcmp((string) $tableData['primaryKey'], (string) $fieldName)) {
                     if ($fieldsSql != '') {
                         $fieldsSql .= ', ';
                     }
@@ -1466,7 +1466,7 @@ class ControlPanel
                 } // do not check the same table!
 
                 foreach ($subTableData['fields'] as $subFieldName => $subFieldData) {
-                    if (! strcmp($tableData['primaryKey'], $subFieldName)) {
+                    if (! strcmp((string) $tableData['primaryKey'], (string) $subFieldName)) {
                         if ($relationshipSql != '') {
                             $relationshipSql .= ' AND ';
                         }
@@ -1542,13 +1542,13 @@ class ControlPanel
         while ($row = mysqli_fetch_array($rs, MYSQLI_ASSOC)) {
             $this->_tables[$name]['fields'][$row['Field']] = [
                 'type' => $row['Type'],
-                'allowNull' => (strcmp($row['Null'], 'NO') ? true : false),
+                'allowNull' => (strcmp((string) $row['Null'], 'NO') ? true : false),
                 'defaultValue' => $row['Default'],
                 'description' => $row['Extra'],
                 'uniqueID' => $this->getConvertUnderscoreToCamel($name . '_' . $row['Field']),
-                'primaryKey' => (! strcmp($row['Key'], 'PRI') ? true : false),
+                'primaryKey' => (! strcmp((string) $row['Key'], 'PRI') ? true : false),
             ];
-            if (! strcmp($row['Key'], 'PRI')) {
+            if (! strcmp((string) $row['Key'], 'PRI')) {
                 $uniqueID = $this->_tables[$name]['fields'][$row['Field']]['uniqueID'];
                 if ($this->_primaryKey == '') {
                     $this->_primaryKey = $uniqueID;
@@ -1565,9 +1565,9 @@ class ControlPanel
 
     private function getConvertUnderscoreToCamel($text)
     {
-        for ($x = 0, $out = ''; $x < strlen($text); $x++) {
+        for ($x = 0, $out = ''; $x < strlen((string) $text); $x++) {
             if ($text[$x] == '_') {
-                $out .= strtoupper($text[++$x]);
+                $out .= strtoupper((string) $text[++$x]);
             } else {
                 $out .= $text[$x];
             }
@@ -1577,15 +1577,15 @@ class ControlPanel
 
     private function getConvertCamelToUnderscore($text)
     {
-        for ($x = 0, $out = ''; $x < strlen($text); $x++) {
-            if (strtoupper($text[$x]) == $text[$x]) {
-                $out .= '_' . strtolower($text[$x]);
+        for ($x = 0, $out = ''; $x < strlen((string) $text); $x++) {
+            if (strtoupper((string) $text[$x]) == $text[$x]) {
+                $out .= '_' . strtolower((string) $text[$x]);
                 $y = $x;
-                while (($x + 1) < strlen($text) && strtoupper($text[$x + 1]) == $text[$x + 1]) {
-                    $out .= strtolower($text[++$x]);
+                while (($x + 1) < strlen((string) $text) && strtoupper((string) $text[$x + 1]) == $text[$x + 1]) {
+                    $out .= strtolower((string) $text[++$x]);
                 }
                 if ($y != $x) {
-                    $out = substr($out, 0, -1) . '_' . strtolower($text[$x]);
+                    $out = substr($out, 0, -1) . '_' . strtolower((string) $text[$x]);
                 }
             } else {
                 $out .= $text[$x];

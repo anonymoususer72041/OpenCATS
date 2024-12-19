@@ -59,7 +59,7 @@ class BrowserDetection
      */
     public static function detect($userAgent)
     {
-        $userAgent = trim($userAgent);
+        $userAgent = trim((string) $userAgent);
 
         /* Blank User Agent */
         if (empty($userAgent)) {

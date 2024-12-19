@@ -28,6 +28,6 @@ $interface->outputXMLPage(
     "<data>\n" .
     "    <errorcode>0</errorcode>\n" .
     "    <errormessage></errormessage>\n" .
-    "    <text>" . htmlspecialchars($emailTemplateText) . "</text>\n" .
+    "    <text>" . htmlspecialchars((string) $emailTemplateText) . "</text>\n" .
     "</data>\n"
 );

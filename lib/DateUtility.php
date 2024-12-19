@@ -100,7 +100,7 @@ class DateUtility
         $day = null;
         $year = null;
         /* Extract the three date fields. */
-        $dateFields = explode($separator, $date);
+        $dateFields = explode($separator, (string) $date);
 
         /* Make sure explode() didn't fail. */
         if (sizeof($dateFields) < 3) {
@@ -170,12 +170,12 @@ class DateUtility
         }
 
         /* Make sure we have exactly two separators. */
-        if (substr_count($dateString, $separator) != 2) {
+        if (substr_count((string) $dateString, (string) $separator) != 2) {
             return false;
         }
 
         /* Extract the three date fields. */
-        $dateFields = explode($separator, $dateString);
+        $dateFields = explode($separator, (string) $dateString);
 
         /* Make sure explode() didn't fail. */
         if (sizeof($dateFields) < 3) {
@@ -718,7 +718,7 @@ class DateUtility
         foreach ($array as $key => $value) {
             /* Remove leading '0's from fields. */
             if ($array[$key][0] == '0') {
-                $array[$key] = substr($array[$key], 1);
+                $array[$key] = substr((string) $array[$key], 1);
             }
         }
 

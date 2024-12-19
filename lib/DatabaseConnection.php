@@ -460,7 +460,7 @@ class DatabaseConnection
         // user input. For instance see:
         // https://johnroach.info/2011/02/17/why-mysql_real_escape_string-isnt-enough-to-stop-sql-injection-attacks/
         // To be replaced with Symfony's stack
-        return mysqli_real_escape_string($this->_connection, $string);
+        return mysqli_real_escape_string($this->_connection, (string) $string);
     }
 
     /**
@@ -484,7 +484,7 @@ class DatabaseConnection
      */
     public function makeQueryStringOrNULL($string)
     {
-        $string = trim($string);
+        $string = trim((string) $string);
 
         if (empty($string)) {
             return 'NULL';
@@ -532,7 +532,7 @@ class DatabaseConnection
      */
     public function makeQueryDouble($value, $precision = false)
     {
-        $value = trim($value);
+        $value = trim((string) $value);
 
         if (empty($value) || ! preg_match('/^-?[0-9]+(?:\.[0-9]+)?$/', $value)) {
             return '0.0';
@@ -608,7 +608,7 @@ class DatabaseConnection
     public function allowQuery($query)
     {
         if (CATS_SLAVE &&
-            preg_match('/^\s*(?:UPDATE|INSERT|DELETE)\s/i', trim($query))) {
+            preg_match('/^\s*(?:UPDATE|INSERT|DELETE)\s/i', trim((string) $query))) {
             return false;
         }
 
@@ -619,7 +619,7 @@ class DatabaseConnection
     private function _localizationFilter($query)
     {
         /* Fix query to allow time results to be offset by $_timeZone. */
-        if (strpos($query, 'SELECT') !== 0) {
+        if (strpos((string) $query, 'SELECT') !== 0) {
             return $query;
         }
 
@@ -630,7 +630,7 @@ class DatabaseConnection
         $newQuery = '';
         while ($query != '') {
             /* Does the query contain a DATE_FORMAT()? */
-            $dateFormatPosition = strpos($query, 'DATE_FORMAT(');
+            $dateFormatPosition = strpos((string) $query, 'DATE_FORMAT(');
             if ($dateFormatPosition === false) {
                 $newQuery .= $query;
                 $query = '';
@@ -638,12 +638,12 @@ class DatabaseConnection
             }
 
             if ($dateFormatPosition > 0) {
-                $newQuery .= substr($query, 0, strpos($query, 'DATE_FORMAT('));
-                $query = substr($query, strpos($query, 'DATE_FORMAT('));
+                $newQuery .= substr((string) $query, 0, strpos((string) $query, 'DATE_FORMAT('));
+                $query = substr((string) $query, strpos((string) $query, 'DATE_FORMAT('));
             }
 
-            $working = substr($query, 0, strpos($query, ','));
-            $query = substr($query, strpos($query, ','));
+            $working = substr((string) $query, 0, strpos((string) $query, ','));
+            $query = substr((string) $query, strpos((string) $query, ','));
             if (strpos(substr($working, 13), '(') === false) {
                 /* Add or subtract time before the date format depeidng on the
                  * time zone offset. We don't have to do any replacement if the

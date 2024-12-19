@@ -414,13 +414,13 @@ class SphinxClient
         /////////////////
 
         $req = pack("NNNN", $this->_offset, $this->_limit, $this->_mode, $this->_sort); // mode and limits
-        $req .= pack("N", strlen($this->_sortby)) . $this->_sortby;
-        $req .= pack("N", strlen($query)) . $query; // query itself
+        $req .= pack("N", strlen((string) $this->_sortby)) . $this->_sortby;
+        $req .= pack("N", strlen((string) $query)) . $query; // query itself
         $req .= pack("N", count($this->_weights)); // weights
         foreach ($this->_weights as $weight) {
             $req .= pack("N", (int) $weight);
         }
-        $req .= pack("N", strlen($index)) . $index; // indexes
+        $req .= pack("N", strlen((string) $index)) . $index; // indexes
         $req .= // id range
             pack("N", (int) $this->_min_id) .
             pack("N", (int) $this->_max_id);
@@ -428,7 +428,7 @@ class SphinxClient
         // filters
         $req .= pack("N", count($this->_filters));
         foreach ($this->_filters as $filter) {
-            $req .= pack("N", strlen($filter["attr"])) . $filter["attr"];
+            $req .= pack("N", strlen((string) $filter["attr"])) . $filter["attr"];
             if (isset($filter["values"])) {
                 $req .= pack("N", count($filter["values"]));
                 foreach ($filter["values"] as $value) {
@@ -441,9 +441,9 @@ class SphinxClient
         }
 
         // group-by, max matches, sort-by-group flag
-        $req .= pack("NN", $this->_groupfunc, strlen($this->_groupby)) . $this->_groupby;
+        $req .= pack("NN", $this->_groupfunc, strlen((string) $this->_groupby)) . $this->_groupby;
         $req .= pack("N", $this->_maxmatches);
-        $req .= pack("N", strlen($this->_groupsort)) . $this->_groupsort;
+        $req .= pack("N", strlen((string) $this->_groupsort)) . $this->_groupsort;
 
         ////////////////////////////
         // send query, get response
@@ -461,45 +461,45 @@ class SphinxClient
         //////////////////
 
         $result = [];
-        $max = strlen($response); // protection from broken response
+        $max = strlen((string) $response); // protection from broken response
 
         // read schema
         $p = 0;
         $fields = [];
         $attrs = [];
 
-        list(, $nfields) = unpack("N*", substr($response, $p, 4));
+        list(, $nfields) = unpack("N*", substr((string) $response, $p, 4));
         $p += 4;
         while ($nfields-- > 0 && $p < $max) {
-            list(, $len) = unpack("N*", substr($response, $p, 4));
+            list(, $len) = unpack("N*", substr((string) $response, $p, 4));
             $p += 4;
-            $fields[] = substr($response, $p, $len);
+            $fields[] = substr((string) $response, $p, $len);
             $p += $len;
         }
         $result["fields"] = $fields;
 
-        list(, $nattrs) = unpack("N*", substr($response, $p, 4));
+        list(, $nattrs) = unpack("N*", substr((string) $response, $p, 4));
         $p += 4;
         while ($nattrs-- > 0 && $p < $max) {
-            list(, $len) = unpack("N*", substr($response, $p, 4));
+            list(, $len) = unpack("N*", substr((string) $response, $p, 4));
             $p += 4;
-            $attr = substr($response, $p, $len);
+            $attr = substr((string) $response, $p, $len);
             $p += $len;
-            list(, $type) = unpack("N*", substr($response, $p, 4));
+            list(, $type) = unpack("N*", substr((string) $response, $p, 4));
             $p += 4;
             $attrs[$attr] = $type;
         }
         $result["attrs"] = $attrs;
 
         // read match count
-        list(, $count) = unpack("N*", substr($response, $p, 4));
+        list(, $count) = unpack("N*", substr((string) $response, $p, 4));
         $p += 4;
 
         // read matches
         while ($count-- > 0 && $p < $max) {
             list($doc, $weight) = array_values(unpack(
                 "N*N*",
-                substr($response, $p, 8)
+                substr((string) $response, $p, 8)
             ));
             $p += 8;
 
@@ -508,24 +508,24 @@ class SphinxClient
 
             $result["matches"][$doc]["weight"] = $weight;
             foreach ($attrs as $attr => $type) {
-                list(, $val) = unpack("N*", substr($response, $p, 4));
+                list(, $val) = unpack("N*", substr((string) $response, $p, 4));
                 $p += 4;
                 $result["matches"][$doc]["attrs"][$attr] = sprintf("%u", $val);
             }
         }
         list($total, $total_found, $msecs, $words) =
-            array_values(unpack("N*N*N*N*", substr($response, $p, 16)));
+            array_values(unpack("N*N*N*N*", substr((string) $response, $p, 16)));
         $result["total"] = sprintf("%u", $total);
         $result["total_found"] = sprintf("%u", $total_found);
         $result["time"] = sprintf("%.3f", $msecs / 1000);
         $p += 16;
 
         while ($words-- > 0) {
-            list(, $len) = unpack("N*", substr($response, $p, 4));
+            list(, $len) = unpack("N*", substr((string) $response, $p, 4));
             $p += 4;
-            $word = substr($response, $p, $len);
+            $word = substr((string) $response, $p, $len);
             $p += $len;
-            list($docs, $hits) = array_values(unpack("N*N*", substr($response, $p, 8)));
+            list($docs, $hits) = array_values(unpack("N*N*", substr((string) $response, $p, 8)));
             $p += 8;
             $result["words"][$word] = [
                 "docs" => sprintf("%u", $docs),
@@ -601,9 +601,9 @@ class SphinxClient
         $req .= pack("N", strlen($words)) . $words; // req words
 
         // options
-        $req .= pack("N", strlen($opts["before_match"])) . $opts["before_match"];
-        $req .= pack("N", strlen($opts["after_match"])) . $opts["after_match"];
-        $req .= pack("N", strlen($opts["chunk_separator"])) . $opts["chunk_separator"];
+        $req .= pack("N", strlen((string) $opts["before_match"])) . $opts["before_match"];
+        $req .= pack("N", strlen((string) $opts["after_match"])) . $opts["after_match"];
+        $req .= pack("N", strlen((string) $opts["chunk_separator"])) . $opts["chunk_separator"];
         $req .= pack("N", (int) $opts["limit"]);
         $req .= pack("N", (int) $opts["around"]);
 
@@ -631,16 +631,16 @@ class SphinxClient
 
         $pos = 0;
         $res = [];
-        $rlen = strlen($response);
+        $rlen = strlen((string) $response);
         for ($i = 0; $i < count($docs); $i++) {
-            list(, $len) = unpack("N*", substr($response, $pos, 4));
+            list(, $len) = unpack("N*", substr((string) $response, $pos, 4));
             $pos += 4;
 
             if ($pos + $len > $rlen) {
                 $this->_error = "incomplete reply";
                 return false;
             }
-            $res[] = substr($response, $pos, $len);
+            $res[] = substr((string) $response, $pos, $len);
             $pos += $len;
         }
 
@@ -688,7 +688,7 @@ class SphinxClient
 
         $req .= pack("N", count($attrs));
         foreach ($attrs as $attr) {
-            $req .= pack("N", strlen($attr)) . $attr;
+            $req .= pack("N", strlen((string) $attr)) . $attr;
         }
 
         $req .= pack("N", count($values));
@@ -713,7 +713,7 @@ class SphinxClient
         }
 
         // parse response
-        list(, $updated) = unpack("N*", substr($response, $p, 4));
+        list(, $updated) = unpack("N*", substr((string) $response, $p, 4));
         return $updated;
     }
 }

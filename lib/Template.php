@@ -20,6 +20,8 @@
 class Template
 {
     public $activityType;
+    public $modePeriod = "all";
+    public $modeStatus = "";
     public $departmentString;
     public $placementsJobOrdersRS;
     protected $_templateFile;
@@ -27,10 +29,8 @@ class Template
     public $newCandidateID;
     public $rsOld = [];
     public $rsNew = [];
-
-
     public $theImage;
-
+    public $companyRS;
     protected $_filters = [];
 
     protected $messageSuccess;
@@ -137,9 +137,9 @@ class Template
 
     protected $extraFieldRS;
 
-    protected $EEOSettingsRS;
+    public $EEOSettingsRS;
 
-    protected $EEOValues;
+    public $EEOValues;
 
     protected $isShortNotes;
 
@@ -327,7 +327,7 @@ class Template
 
     protected $extraFieldsForJobOrders;
 
-    protected $eeoEnabled;
+    public $EEOEnabled;
 
     protected $extraFieldsForCandidates;
 

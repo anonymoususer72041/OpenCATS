@@ -67,11 +67,11 @@ class Encryption
                 $randomSeed
             );
         } else {
-            $iv = substr($iv, 0, mcrypt_enc_get_iv_size($this->_td));
+            $iv = substr((string) $iv, 0, mcrypt_enc_get_iv_size($this->_td));
         }
 
         /* Trim the key to the maximum allowed key size. */
-        $key = substr($key, 0, mcrypt_enc_get_key_size($this->_td));
+        $key = substr((string) $key, 0, mcrypt_enc_get_key_size($this->_td));
 
         /* Initialize the MCrypt library. */
         mcrypt_generic_init($this->_td, $key, $iv);
@@ -86,7 +86,7 @@ class Encryption
     public function decrypt($cypherText)
     {
         /* Base64-decode the encrypted data and decrypt it. */
-        $plainText = mdecrypt_generic($this->_td, base64_decode($cypherText));
+        $plainText = mdecrypt_generic($this->_td, base64_decode((string) $cypherText));
 
         /* Remove any \0 padding. */
         return rtrim($plainText, "\0");
