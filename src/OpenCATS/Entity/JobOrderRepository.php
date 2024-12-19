@@ -8,7 +8,7 @@ include_once(LEGACY_ROOT . '/lib/History.php');
 // Remove duplicated code
 class JobOrderRepository
 {
-    private $databaseConnection;
+    protected $databaseConnection;
 
     public function __construct(\DatabaseConnection $databaseConnection)
     {

@@ -6,55 +6,55 @@ include_once('./lib/JobOrderStatuses.php');
 
 class JobOrder
 {
-    private $id;
+    protected $id;
 
-    private $title;
+    protected $title;
 
-    private $companyId;
+    protected $companyId;
 
-    private $contactId;
+    protected $contactId;
 
-    private $description;
+    protected $description;
 
-    private $notes;
+    protected $notes;
 
-    private $duration;
+    protected $duration;
 
-    private $maxRate;
+    protected $maxRate;
 
-    private $type;
+    protected $type;
 
-    private $isHot;
+    protected $isHot;
 
-    private $isPublic;
+    protected $isPublic;
 
-    private $openings;
+    protected $openings;
 
-    private $availableOpenings;
+    protected $availableOpenings;
 
-    private $companyJobId;
+    protected $companyJobId;
 
-    private $salary;
+    protected $salary;
 
-    private $city;
+    protected $city;
 
-    private $state;
+    protected $state;
 
-    private $startDate;
+    protected $startDate;
 
-    private $enteredBy;
+    protected $enteredBy;
 
-    private $recruiter;
+    protected $recruiter;
 
-    private $owner;
+    protected $owner;
 
-    private $departmentId;
+    protected $departmentId;
 
-    private $questionnaire;
+    protected $questionnaire;
 
-    private $siteId;
+    protected $siteId;
 
-    private $status;
+    protected $status;
 
     public function __construct(
         $siteId,

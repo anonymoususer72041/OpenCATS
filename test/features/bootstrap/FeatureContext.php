@@ -28,7 +28,7 @@ class FeatureContext extends MinkContext implements Context, SnippetAcceptingCon
 
     protected static $wsendUser = null;
 
-    private $roleData;
+    protected $roleData;
 
     /**
      * Initializes context.
@@ -432,9 +432,9 @@ class FeatureContext extends MinkContext implements Context, SnippetAcceptingCon
 
 class Role
 {
-    private $userName;
+    protected $userName;
 
-    private $password;
+    protected $password;
 
     public function __construct($userName, $password)
     {

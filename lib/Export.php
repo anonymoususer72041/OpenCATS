@@ -105,15 +105,15 @@ class ExportUtility
  */
 class Export
 {
-    private $_siteID;
+    protected $_siteID;
 
-    private $_dataItemType;
+    protected $_dataItemType;
 
-    private $_separator;
+    protected $_separator;
 
-    private $_rs;
+    protected $_rs;
 
-    private $_IDs;
+    protected $_IDs;
 
     public function __construct($dataItemType, $IDs, $separator, $siteID)
     {

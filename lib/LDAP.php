@@ -11,7 +11,7 @@ class LDAP
 
     public $failureUrl = '';
 
-    private $_connection;
+    protected $_connection;
 
     private ?bool $_bind = null;
 

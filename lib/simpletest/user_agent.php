@@ -29,15 +29,15 @@ if (! defined('DEFAULT_CONNECTION_TIMEOUT')) {
  *    @subpackage WebTester
  */
 class SimpleUserAgent {
-    private $cookie_jar;
-    private $cookies_enabled = true;
-    private $authenticator;
-    private $max_redirects = DEFAULT_MAX_REDIRECTS;
-    private $proxy = false;
-    private $proxy_username = false;
-    private $proxy_password = false;
-    private $connection_timeout = DEFAULT_CONNECTION_TIMEOUT;
-    private $additional_headers = array();
+    protected $cookie_jar;
+    protected $cookies_enabled = true;
+    protected $authenticator;
+    protected $max_redirects = DEFAULT_MAX_REDIRECTS;
+    protected $proxy = false;
+    protected $proxy_username = false;
+    protected $proxy_password = false;
+    protected $connection_timeout = DEFAULT_CONNECTION_TIMEOUT;
+    protected $additional_headers = array();
 
     /**
      *    Starts with no cookies, realms or proxies.

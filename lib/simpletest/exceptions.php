@@ -68,7 +68,7 @@ class SimpleExceptionTrappingInvoker extends SimpleInvokerDecorator {
  *    @subpackage UnitTester
  */
 class ExceptionExpectation extends SimpleExpectation {
-    private $expected;
+    protected $expected;
 
     /**
      *    Sets up the conditions to test against.
@@ -135,9 +135,9 @@ class ExceptionExpectation extends SimpleExpectation {
  *    @subpackage   UnitTester
  */
 class SimpleExceptionTrap {
-    private $expected;
-    private $ignored;
-    private $message;
+    protected $expected;
+    protected $ignored;
+    protected $message;
 
     /**
      *    Clears down the queue ready for action.

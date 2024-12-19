@@ -12,7 +12,7 @@
  *    @subpackage   UnitTester
  */
 class SimpleArguments {
-    private $all = array();
+    protected $all = array();
 
     /**
      * Parses the command line arguments. The usual formats
@@ -136,9 +136,9 @@ class SimpleArguments {
  *    @subpackage   UnitTester
  */
 class SimpleHelp {
-    private $overview;
-    private $flag_sets = array();
-    private $explanations = array();
+    protected $overview;
+    protected $flag_sets = array();
+    protected $explanations = array();
 
     /**
      * Sets up the top level explanation for the program.

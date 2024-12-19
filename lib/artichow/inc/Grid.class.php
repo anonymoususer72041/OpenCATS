@@ -19,70 +19,70 @@ class awGrid
      *
      * @var array
      */
-    private $xgrid = [];
+    protected $xgrid = [];
 
     /**
      * Horizontal lines of the grid
      *
      * @var array
      */
-    private $ygrid = [];
+    protected $ygrid = [];
 
     /**
      * Is the component grid hidden ?
      *
      * @var bool
      */
-    private $hide = false;
+    protected $hide = false;
 
     /**
      * Are horizontal lines hidden ?
      *
      * @var bool
      */
-    private $hideHorizontal = false;
+    protected $hideHorizontal = false;
 
     /**
      * Are vertical lines hidden ?
      *
      * @var bool
      */
-    private $hideVertical = false;
+    protected $hideVertical = false;
 
     /**
      * Grid color
      *
      * @var Color
      */
-    private $color;
+    protected $color;
 
     /**
      * Grid space
      *
      * @var int
      */
-    private $space;
+    protected $space;
 
     /**
      * Line type
      *
      * @var int
      */
-    private $type = awLine::SOLID;
+    protected $type = awLine::SOLID;
 
     /**
      * Grid interval
      *
      * @var int
      */
-    private $interval = [1, 1];
+    protected $interval = [1, 1];
 
     /**
      * Grid background color
      *
      * @var Color
      */
-    private $background;
+    protected $background;
 
     /**
      * Build the factory

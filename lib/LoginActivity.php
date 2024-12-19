@@ -39,11 +39,11 @@ include_once(LEGACY_ROOT . '/lib/BrowserDetection.php');
  */
 class LoginActivityPager extends Pager
 {
-    private $_siteID;
+    protected $_siteID;
 
     private readonly \DatabaseConnection $_db;
 
-    private $_successful;
+    protected $_successful;
 
     public function __construct($rowsPerPage, $currentPage, $siteID, $successful = true)
     {

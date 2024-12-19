@@ -138,7 +138,7 @@ class WizardUI extends UserInterface
 
         // Get the current page of the wizard
         if (isset($_GET['currentPage'])) {
-            $currentPage = intval($_GET['currentPage']);
+            $currentPage = (int)($_GET['currentPage']);
         } else {
             $currentPage = 1;
         }

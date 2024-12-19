@@ -22,9 +22,9 @@ class awColor
 
     public $alpha;
 
-    private $resource;
+    protected $resource;
 
-    private $color;
+    protected $color;
 
     /**
      * Build your color

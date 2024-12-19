@@ -26,10 +26,10 @@ foreach (array('LEXER_ENTER', 'LEXER_MATCHED',
  *    @subpackage WebTester
  */
 class ParallelRegex {
-    private $patterns;
-    private $labels;
-    private $regex;
-    private $case;
+    protected $patterns;
+    protected $labels;
+    protected $regex;
+    protected $case;
 
     /**
      *    Constructor. Starts with no patterns.
@@ -122,7 +122,7 @@ class ParallelRegex {
  *    @subpackage WebTester
  */
 class SimpleStateStack {
-    private $stack;
+    protected $stack;
 
     /**
      *    Constructor. Starts in named state.
@@ -178,11 +178,11 @@ class SimpleStateStack {
  *    @subpackage WebTester
  */
 class SimpleLexer {
-    private $regexes;
-    private $parser;
-    private $mode;
-    private $mode_handlers;
-    private $case;
+    protected $regexes;
+    protected $parser;
+    protected $mode;
+    protected $mode_handlers;
+    protected $case;
 
     /**
      *    Sets up the lexer in case insensitive matching
@@ -541,11 +541,11 @@ class SimpleHtmlLexer extends SimpleLexer {
  *    @subpackage WebTester
  */
 class SimpleHtmlSaxParser {
-    private $lexer;
-    private $listener;
-    private $tag;
-    private $attributes;
-    private $current_attribute;
+    protected $lexer;
+    protected $listener;
+    protected $tag;
+    protected $attributes;
+    protected $current_attribute;
 
     /**
      *    Sets the listener.
@@ -689,15 +689,15 @@ class SimpleHtmlSaxParser {
  *    @subpackage WebTester
  */
 class SimplePhpPageBuilder {
-    private $tags;
-    private $page;
-    private $private_content_tag;
-    private $open_forms = array();
-    private $complete_forms = array();
-    private $frameset = false;
-    private $loading_frames = array();
-    private $frameset_nesting_level = 0;
-    private $left_over_labels = array();
+    protected $tags;
+    protected $page;
+    protected $private_content_tag;
+    protected $open_forms = array();
+    protected $complete_forms = array();
+    protected $frameset = false;
+    protected $loading_frames = array();
+    protected $frameset_nesting_level = 0;
+    protected $left_over_labels = array();
 
     /**
      *    Frees up any references so as to allow the PHP garbage

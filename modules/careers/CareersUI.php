@@ -338,7 +338,7 @@ class CareersUI extends UserInterface
         } elseif ($p == 'candidateRegistration' && $isRegistrationEnabled) {
             $content = $template['Content - Candidate Registration'];
 
-            $jobID = intval($_GET['ID']);
+            $jobID = (int)($_GET['ID']);
             $jobOrderData = $jobOrders->get($jobID);
             $js = '';
 
@@ -529,7 +529,7 @@ class CareersUI extends UserInterface
 
             // Force integer
             // FIXME: Input validation, and use isRequiredIDValid() to check for / force integer.
-            $jobID = intval(isset($_GET['ID']) ? $_GET['ID'] : $_POST['ID']);
+            $jobID = (int)(isset($_GET['ID']) ? $_GET['ID'] : $_POST['ID']);
 
             $jobOrderData = $jobOrders->get($jobID);
             if (! isset($jobOrderData['public']) || $jobOrderData['public'] == 0) {
@@ -690,7 +690,7 @@ class CareersUI extends UserInterface
             }
 
             // Check if this is a returning candidate
-            $candidateID = isset($_POST['candidateID']) ? intval($_POST['candidateID']) : -1;
+            $candidateID = isset($_POST['candidateID']) ? (int)($_POST['candidateID']) : -1;
             if ($candidateID == -1) {
                 $candidateID = false;
             }
@@ -699,7 +699,7 @@ class CareersUI extends UserInterface
              * Applicant has completed their application, check to see if a questionnaire
              * is tied to this job order. If so, present it.
              */
-            $jobID = intval($_POST['ID']);
+            $jobID = (int)($_POST['ID']);
             $jobOrderData = $jobOrders->get($jobID);
             $questionnaireLib = new Questionnaire($siteID);
 

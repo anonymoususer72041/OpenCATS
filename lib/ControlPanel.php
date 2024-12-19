@@ -56,45 +56,45 @@ define('CPPAGER_RESULTS_PER_PAGE', 14);
 
 class ControlPanel
 {
-    private $_fields;
+    protected $_fields;
 
-    private $_tables;
+    protected $_tables;
 
-    private $_sections;
+    protected $_sections;
 
     private readonly \DatabaseConnection $_db;
 
     private readonly \WebForm $_wf;
 
-    private $_primaryKey;
+    protected $_primaryKey;
 
-    private $_sortByField;
+    protected $_sortByField;
 
-    private $_linkField;
+    protected $_linkField;
 
-    private $_permissions;
+    protected $_permissions;
 
-    private $_selectBoundriesSql;
+    protected $_selectBoundriesSql;
 
-    private $_insertBoundriesSql;
+    protected $_insertBoundriesSql;
 
-    private $_deleteBoundriesSql;
+    protected $_deleteBoundriesSql;
 
-    private $_deleteBoundriesTable;
+    protected $_deleteBoundriesTable;
 
-    private $_showCurrencySums;
+    protected $_showCurrencySums;
 
-    private $_callBacks;
+    protected $_callBacks;
 
     private bool $_sortDesc;
 
-    private $_truncate;
+    protected $_truncate;
 
     private int $_truncateID;
 
-    private $_fieldUrls;
+    protected $_fieldUrls;
 
-    private $_listViewLayout;
+    protected $_listViewLayout;
 
     public function __construct()
     {
@@ -121,7 +121,7 @@ class ControlPanel
 
     public function getModal()
     {
-        $pageState = intval(static::getPostValue('cpPageState'));
+        $pageState = (int)(static::getPostValue('cpPageState'));
         switch ($pageState) {
             case CPPS_ADD:
                 if ($this->_permissions & CPP_ADD) {
@@ -842,18 +842,18 @@ class ControlPanel
         if ($pager_ResultsPerPage == '') {
             $pager_ResultsPerPage = CPPAGER_RESULTS_PER_PAGE;
         } else {
-            $pager_ResultsPerPage = intval($pager_ResultsPerPage);
+            $pager_ResultsPerPage = (int)($pager_ResultsPerPage);
         }
 
         if ($pager_CurrentPage == '') {
             $pager_CurrentPage = 0;
         } else {
-            $pager_CurrentPage = intval($pager_CurrentPage) - 1;
+            $pager_CurrentPage = (int)($pager_CurrentPage) - 1;
         }
 
         // get the records count
         $rs = $this->_db->query($sql = $this->getTablesSQL($searchSql, '', 'COUNT(*)'));
-        $rsCount = intval(mysqli_fetch_row($rs));
+        $rsCount = (int)(mysqli_fetch_row($rs));
         $numPages = ceil($rsCount / $pager_ResultsPerPage);
         if ($pager_CurrentPage >= $numPages) {
             $pager_CurrentPage = $numPages - 1;
@@ -1268,7 +1268,7 @@ class ControlPanel
             case WFT_CC_EXPIRATION:
                 return date('n/Y', strtotime((string) $rawData));
             case WFT_BOOLEAN:
-                if (intval($rawData) != 0) {
+                if ((int)($rawData) != 0) {
                     return 'true';
                 } else {
                     return 'false';
@@ -1302,7 +1302,7 @@ class ControlPanel
             case WFT_EMAIL:
                 return sprintf('<a href="mailto:%s">%s</a>', $rawData, $rawData);
             case WFT_BOOLEAN:
-                if (intval($rawData) != 0) {
+                if ((int)($rawData) != 0) {
                     return 'true';
                 } else {
                     return 'false';
@@ -1393,7 +1393,7 @@ class ControlPanel
                     }
                     if (preg_match("/varchar\(([0-9]+)\)/", (string) $fieldData['type'], $matches)) {
                         if ($maxlen == -1) {
-                            $maxlen = intval($matches[1]);
+                            $maxlen = (int)($matches[1]);
                         }
                     }
                     if ($defaultValue == -1) {

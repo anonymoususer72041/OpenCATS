@@ -60,7 +60,7 @@ class awShadow
      *
      * @var int
      */
-    private $size = 0;
+    protected $size = 0;
 
     /**
      * Hide shadow ?
@@ -74,21 +74,21 @@ class awShadow
      *
      * @var Color
      */
-    private $color;
+    protected $color;
 
     /**
      * Shadow position
      *
      * @var int
      */
-    private $position;
+    protected $position;
 
     /**
      * Smooth shadow ?
      *
      * @var bool
      */
-    private $smooth = false;
+    protected $smooth = false;
 
     /**
      * @param int $position Shadow position

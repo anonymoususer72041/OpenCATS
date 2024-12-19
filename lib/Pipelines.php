@@ -40,7 +40,7 @@ class Pipelines
 {
     private readonly \DatabaseConnection $_db;
 
-    private $_siteID;
+    protected $_siteID;
 
     public function __construct($siteID)
     {

@@ -195,8 +195,8 @@ class AJAXInterface
  */
 class SecureAJAXInterface extends AJAXInterface
 {
-    private $_siteID;
-    private $_userID;
+    protected $_siteID;
+    protected $_userID;
 
 
     public function __construct()

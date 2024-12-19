@@ -39,11 +39,11 @@ include_once(LEGACY_ROOT . '/lib/JobOrderStatuses.php');
  */
 class Statistics
 {
-    private $_db;
+    protected $_db;
 
-    private $_siteID;
+    protected $_siteID;
 
-    private $_timeZoneOffset;
+    protected $_timeZoneOffset;
 
     public function __construct($siteID)
     {

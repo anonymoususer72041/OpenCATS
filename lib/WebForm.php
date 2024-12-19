@@ -372,9 +372,9 @@ class WebForm
                     $monthValue = $yearValue = -1;
                     $value = '';
                 } else {
-                    $monthValue = intval($this->getPostValue($field['id'] . 'Month'));
-                    $yearValue = intval($this->getPostValue($field['id'] . 'Year'));
-                    $curYear = intval(date('Y'));
+                    $monthValue = (int)($this->getPostValue($field['id'] . 'Month'));
+                    $yearValue = (int)($this->getPostValue($field['id'] . 'Year'));
+                    $curYear = (int)(date('Y'));
                     if ($yearValue < $curYear) {
                         $errors[] = 'The expiration year is in the past';
                     }
@@ -889,7 +889,7 @@ class WebForm
                 break;
 
             case WFT_CC_EXPIRATION:
-                $curYear = intval(date('Y'));
+                $curYear = (int)(date('Y'));
                 if (strlen((string) $field['validatedData']) > 0) {
                     $mp = explode('/', (string) $field['validatedData']);
                     $selMonth = $mp[0];

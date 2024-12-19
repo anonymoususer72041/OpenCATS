@@ -66,31 +66,31 @@ class Task
 
     public function getDayOfMonth()
     {
-        return intval(date('j'));
+        return (int)(date('j'));
     }
 
     public function getDayOfWeek()
     {
-        return intval(date('w'));
+        return (int)(date('w'));
     }
 
     public function getMonth()
     {
-        return intval(date('n'));
+        return (int)(date('n'));
     }
 
     public function getYear()
     {
-        return intval(date('Y'));
+        return (int)(date('Y'));
     }
 
     public function getHour()
     {
-        return intval(date('G'));
+        return (int)(date('G'));
     }
 
     public function getMinute()
     {
-        return intval(date('i'));
+        return (int)(date('i'));
     }
 }

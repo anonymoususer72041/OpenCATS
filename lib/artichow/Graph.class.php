@@ -55,7 +55,7 @@ class awGraph extends awImage
      *
      * @var array
      */
-    private $components = [];
+    protected $components = [];
 
     /**
      * Some labels to add to the component

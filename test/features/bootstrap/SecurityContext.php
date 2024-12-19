@@ -16,9 +16,9 @@ define('ADMIN_ID', 1);
  */
 class SecurityContext extends MinkContext implements Context, SnippetAcceptingContext
 {
-    private $result;
+    protected $result;
 
-    private $accessLevel;
+    protected $accessLevel;
 
     /**
      * Initializes Security context.

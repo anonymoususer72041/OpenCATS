@@ -36,13 +36,13 @@ $profileStylesheet = false;
 
 class Display
 {
-    private $_siteID;
+    protected $_siteID;
 
     private readonly \DatabaseConnection $_db;
 
-    private $_profileLib;
+    protected $_profileLib;
 
-    private $_profilePage;
+    protected $_profilePage;
 
     private ?array $_table = null;
 
@@ -50,7 +50,7 @@ class Display
 
     private ?int $_columnIndex = null;
 
-    private $_currentColumn;
+    protected $_currentColumn;
 
     public function __construct($siteID, $profileLib, $profilePage)
     {

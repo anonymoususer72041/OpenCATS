@@ -51,13 +51,13 @@ class License
 
     private int $_numberOfSeats;
 
-    private $_name;
+    protected $_name;
 
-    private $_professional;
+    protected $_professional;
 
-    private $_professionalSchema;
+    protected $_professionalSchema;
 
-    private $_parsingSchema;
+    protected $_parsingSchema;
 
     public function __construct()
     {
@@ -100,7 +100,7 @@ class License
             return true;
         }
 
-        $this->_numberOfSeats = intval($formattedValue);
+        $this->_numberOfSeats = (int)($formattedValue);
         return true;
     }
 
@@ -184,7 +184,7 @@ class License
                 return true;
             }
 
-            $sKey[intval($e[$i])] = $segments[$i + 1];
+            $sKey[(int)($e[$i])] = $segments[$i + 1];
         }
 
         $unencodedKey = '';

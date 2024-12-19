@@ -7,7 +7,7 @@ include_once(LEGACY_ROOT . '/constants.php');
 
 class CompanyRepository
 {
-    private $databaseConnection;
+    protected $databaseConnection;
 
     public function __construct(\DatabaseConnection $databaseConnection)
     {

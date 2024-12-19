@@ -19,6 +19,8 @@
  */
 class Template
 {
+    public $departmentsString;
+    public $wildCardQuickSearch;
     public $EEOReportStatistics;
     public $urlEthnicGraph;
     public $urlVeteranGraph;

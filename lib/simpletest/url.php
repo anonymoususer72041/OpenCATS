@@ -23,18 +23,18 @@ require_once(dirname(__FILE__) . '/encoding.php');
  *    @subpackage WebTester
  */
 class SimpleUrl {
-    private $scheme;
-    private $username;
-    private $password;
-    private $host;
-    private $port;
+    protected $scheme;
+    protected $username;
+    protected $password;
+    protected $host;
+    protected $port;
     public $path;
-    private $request;
-    private $fragment;
-    private $x;
-    private $y;
-    private $target;
-    private $raw = false;
+    protected $request;
+    protected $fragment;
+    protected $x;
+    protected $y;
+    protected $target;
+    protected $raw = false;
 
     /**
      *    Constructor. Parses URL into sections.

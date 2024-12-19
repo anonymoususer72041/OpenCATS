@@ -78,7 +78,7 @@ class TestOfInequality extends UnitTestCase {
 }
 
 class RecursiveNasty {
-    private $me;
+    protected $me;
 
     function __construct() {
         $this->me = $this;
@@ -86,8 +86,8 @@ class RecursiveNasty {
 }
 
 class OpaqueContainer {
-    private $stuff;
-    private $value;
+    protected $stuff;
+    protected $value;
 
     public function __construct($value) {
         $this->value = $value;
@@ -97,11 +97,11 @@ class OpaqueContainer {
 class DerivedOpaqueContainer extends OpaqueContainer {
     // Deliberately have a variable whose name with the same suffix as a later
     // variable
-    private $new_value = 1;
+    protected $new_value = 1;
 
     // Deliberately obscures the variable of the same name in the base
     // class.
-    private $value;
+    protected $value;
 
     public function __construct($value, $base_value) {
         parent::__construct($base_value);

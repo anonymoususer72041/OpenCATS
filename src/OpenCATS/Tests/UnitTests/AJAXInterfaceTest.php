@@ -10,7 +10,7 @@ include_once(LEGACY_ROOT . '/lib/AJAXInterface.php');
 
 class AJAXInterfaceTest extends TestCase
 {
-    private $AJAXInterface;
+    protected $AJAXInterface;
 
     protected function setUp(): void
     {

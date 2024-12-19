@@ -41,19 +41,18 @@ include_once(LEGACY_ROOT . '/lib/Statistics.php');
  */
 class Graphs
 {
-    private ?bool $_graphsEnabled = null;
+    // Explicitly defined properties
+    protected bool $_graphsEnabled;
 
     public function __construct()
     {
-        if (function_exists('ImageCreateFromJpeg')) {
-            $this->_graphsEnabled = true;
-        } else {
-            $this->_graphsEnabled = false;
-        }
+        $this->_graphsEnabled = function_exists('ImageCreateFromJpeg');
     }
 
-    // FIXME: Document me.
-    public static function getColorOptions()
+    /**
+     * Get the list of color options.
+     */
+    public static function getColorOptions(): array
     {
         return [
             'Black' => [0, 0, 0],
@@ -109,68 +108,61 @@ class Graphs
         ];
     }
 
-    // FIXME: Document me.
-    public function activity($width, $height)
+    public function activity(int $width, int $height): string
     {
-        if (! $this->_graphsEnabled) {
+        if (!$this->_graphsEnabled) {
             return '';
         }
 
         return $this->_getGraphHTML('activity', $width, $height);
     }
 
-    // FIXME: Document me.
-    public function newCandidates($width, $height)
+    public function newCandidates(int $width, int $height): string
     {
-        if (! $this->_graphsEnabled) {
+        if (!$this->_graphsEnabled) {
             return '';
         }
 
         return $this->_getGraphHTML('newCandidates', $width, $height);
     }
 
-    // FIXME: Document me.
-    public function newJobOrders($width, $height)
+    public function newJobOrders(int $width, int $height): string
     {
-        if (! $this->_graphsEnabled) {
+        if (!$this->_graphsEnabled) {
             return '';
         }
 
         return $this->_getGraphHTML('newJobOrders', $width, $height);
     }
 
-    // FIXME: Document me.
-    public function newSubmissions($width, $height)
+    public function newSubmissions(int $width, int $height): string
     {
-        if (! $this->_graphsEnabled) {
+        if (!$this->_graphsEnabled) {
             return '';
         }
 
         return $this->_getGraphHTML('newSubmissions', $width, $height);
     }
 
-    // FIXME: Document me.
-    public function miniPipeline($width, $height, $params)
+    public function miniPipeline(int $width, int $height, array $params): string
     {
-        if (! $this->_graphsEnabled) {
+        if (!$this->_graphsEnabled) {
             return '';
         }
 
         return $this->_getGraphHTML('miniPipeline', $width, $height, $params);
     }
 
-    // FIXME: Document me.
-    public function miniJobOrderPipeline($width, $height, $params)
+    public function miniJobOrderPipeline(int $width, int $height, array $params): string
     {
-        if (! $this->_graphsEnabled) {
+        if (!$this->_graphsEnabled) {
             return '';
         }
 
         return $this->_getGraphHTML('miniJobOrderPipeline', $width, $height, $params, '#AAA 1px solid; float:right');
     }
 
-    // FIXME: Document me.
-    private function _getGraphHTML($graphName, $width, $height, $params = [], $borderStyle = "none")
+    private function _getGraphHTML(string $graphName, int $width, int $height, array $params = [], string $borderStyle = "none"): string
     {
         $indexName = CATSUtility::getIndexName();
 
@@ -188,7 +180,7 @@ class Graphs
             $height
         );
 
-        if (! empty($params)) {
+        if (!empty($params)) {
             $parameterString = urlencode(implode(',', $params));
             $newWindowImage .= '&params=' . $parameterString;
             $imageSRC .= '&amp;params=' . $parameterString;
@@ -200,41 +192,27 @@ class Graphs
             '<img src="%s" style="border: %s; width:%s; height:%s;" width="%s" height="%s" alt="Graph" /></a>',
             $indexName,
             urlencode($newWindowImage),
-            $imageSRC,
-            $borderStyle,
-            $width,
-            $height,
-            $width,
-            $height
+                       $imageSRC,
+                       $borderStyle,
+                       $width,
+                       $height,
+                       $width,
+                       $height
         );
     }
 
-    // FIXME: Document me.
-    public function verificationImage()
+    public function verificationImage(): string
     {
-        // FIXME: mt_rand()?!
         mt_srand((float) microtime() * 10000);
         $string = strtoupper(md5(random_int(0, 10000)));
         $verifyString = substr($string, 0, 6);
 
-        /* Replace some numbers so all of the characters are quite obviousally
-         * as they look.
-         */
-        $verifyString = str_replace('9', 'T', $verifyString);
-        $verifyString = str_replace('6', 'Q', $verifyString);
-        $verifyString = str_replace('5', 'R', $verifyString);
-        $verifyString = str_replace('0', 'X', $verifyString);
-        $verifyString = str_replace('1', 'P', $verifyString);
+        $verifyString = str_replace(['9', '6', '5', '0', '1'], ['T', 'Q', 'R', 'X', 'P'], $verifyString);
 
         $db = DatabaseConnection::getInstance();
         $sql = sprintf(
-            "INSERT INTO word_verification (
-                word
-             )
-             VALUES (
-                %s
-             )",
-            $db->makeQueryString($verifyString)
+            "INSERT INTO word_verification (word) VALUES (%s)",
+                       $db->makeQueryString($verifyString)
         );
         $db->query($sql);
 
@@ -245,42 +223,27 @@ class Graphs
         return $HTML;
     }
 
-    // FIXME: Document me.
-    public function getVerificationImageText($wordVerifyID)
+    public function getVerificationImageText(int $wordVerifyID): string
     {
         $db = DatabaseConnection::getInstance();
         $sql = sprintf(
-            "SELECT
-                word AS word
-             FROM
-                word_verification
-             WHERE
-                word_verification_id = %s",
+            "SELECT word AS word FROM word_verification WHERE word_verification_id = %s",
             $db->makeQueryInteger($wordVerifyID)
         );
         $rs = $db->getAssoc($sql);
 
-        if (isset($rs['word'])) {
-            $text = $rs['word'];
-        } else {
-            $text = '';
-        }
-
-        return $text;
+        return $rs['word'] ?? '';
     }
 
-    // FIXME: Document me.
-    public function clearVerificationImageText($wordVerifyID)
+    public function clearVerificationImageText(int $wordVerifyID): void
     {
         $db = DatabaseConnection::getInstance();
 
         $sql = sprintf(
-            "DELETE FROM
-                word_verification
-             WHERE
-                word_verification_id = %s",
+            "DELETE FROM word_verification WHERE word_verification_id = %s",
             $db->makeQueryInteger($wordVerifyID)
         );
         $db->query($sql);
     }
 }
+

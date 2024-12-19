@@ -93,7 +93,7 @@ class SimpleCollector {
  * @see SimpleCollector
  */
 class SimplePatternCollector extends SimpleCollector {
-    private $pattern;
+    protected $pattern;
 
     /**
      *

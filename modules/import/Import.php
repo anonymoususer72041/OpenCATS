@@ -29,9 +29,9 @@
 
 class Import
 {
-    private $_db;
+    protected $_db;
 
-    private $_siteID;
+    protected $_siteID;
 
     public function __construct($siteID)
     {
@@ -354,9 +354,9 @@ class Import
 
 class JobOrdersImport
 {
-    private $_db;
+    protected $_db;
 
-    private $_siteID;
+    protected $_siteID;
 
     public function __construct($siteID)
     {

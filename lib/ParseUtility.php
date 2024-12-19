@@ -43,9 +43,9 @@ define('PARSE_CODE_NOAUTH', 'noauth');
  */
 class ParseUtility
 {
-    private $_wsdl;
+    protected $_wsdl;
 
-    private $_client;
+    protected $_client;
 
     public function __construct()
     {

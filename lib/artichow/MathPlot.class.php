@@ -180,14 +180,14 @@ class awMathPlot extends awComponent
      *
      * @var Side
      */
-    private $extremum = null;
+    protected $extremum = null;
 
     /**
      * Interval
      *
      * @var float
      */
-    private $interval = 1;
+    protected $interval = 1;
 
     /**
      * Build the plot

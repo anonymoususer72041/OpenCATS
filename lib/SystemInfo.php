@@ -36,7 +36,7 @@
  */
 class SystemInfo
 {
-    private $_db;
+    protected $_db;
 
     public function __construct()
     {

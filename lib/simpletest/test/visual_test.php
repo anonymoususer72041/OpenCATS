@@ -18,7 +18,7 @@ require_once('../reporter.php');
 require_once('../xml.php');
 
 class TestDisplayClass {
-    private $a;
+    protected $a;
 
     function __construct($a) {
         $this->a = $a;

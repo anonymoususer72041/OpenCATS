@@ -60,11 +60,11 @@ define('LDAPUSER_PASSWORD', '_LDAPUSER_');
  */
 class Users
 {
-    private $_db;
+    protected $_db;
 
-    private $_siteID;
+    protected $_siteID;
 
-    private $_ldap;
+    protected $_ldap;
 
     public function __construct($siteID)
     {

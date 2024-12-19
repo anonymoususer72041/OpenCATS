@@ -4,35 +4,35 @@ namespace OpenCATS\Entity;
 
 class Company
 {
-    private $siteId;
+    protected $siteId;
 
-    private $name;
+    protected $name;
 
-    private $address;
+    protected $address;
 
-    private $city;
+    protected $city;
 
-    private $state;
+    protected $state;
 
-    private $zipCode;
+    protected $zipCode;
 
-    private $phoneNumberOne;
+    protected $phoneNumberOne;
 
-    private $phoneNumberTwo;
+    protected $phoneNumberTwo;
 
-    private $faxNumber;
+    protected $faxNumber;
 
-    private $url;
+    protected $url;
 
-    private $keyTechnologies;
+    protected $keyTechnologies;
 
-    private $isHot;
+    protected $isHot;
 
-    private $notes;
+    protected $notes;
 
-    private $enteredBy;
+    protected $enteredBy;
 
-    private $owner;
+    protected $owner;
 
     public function __construct($siteId, $name)
     {

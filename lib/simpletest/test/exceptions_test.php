@@ -122,7 +122,7 @@ class TestOfIgnoringExceptions extends UnitTestCase {
 }
 
 class TestOfCallingTearDownAfterExceptions extends UnitTestCase {
-    private $debri = 0;
+    protected $debri = 0;
 
     function tearDown() {
         $this->debri--;

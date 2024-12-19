@@ -335,9 +335,9 @@ class SearchUtility
  */
 class SearchCandidates
 {
-    private $_db;
+    protected $_db;
 
-    private $_siteID;
+    protected $_siteID;
 
     protected $_userID = -1;
 
@@ -939,9 +939,9 @@ class SearchCandidates
  */
 class SearchCompanies
 {
-    private $_db;
+    protected $_db;
 
-    private $_siteID;
+    protected $_siteID;
 
     protected $_userID = -1;
 
@@ -1144,9 +1144,9 @@ class SearchCompanies
  */
 class SearchJobOrders
 {
-    private $_db;
+    protected $_db;
 
-    private $_siteID;
+    protected $_siteID;
 
     protected $_userID = -1;
 
@@ -1421,9 +1421,9 @@ class SearchJobOrders
  */
 class ContactsSearch
 {
-    private $_db;
+    protected $_db;
 
-    private $_siteID;
+    protected $_siteID;
 
     protected $_userID = -1;
 
@@ -1630,9 +1630,9 @@ class ContactsSearch
  */
 class QuickSearch
 {
-    private $_db;
+    protected $_db;
 
-    private $_siteID;
+    protected $_siteID;
 
     protected $_userID = -1;
 
@@ -1956,9 +1956,9 @@ class QuickSearch
  */
 class SavedSearches
 {
-    private $_db;
+    protected $_db;
 
-    private $_siteID;
+    protected $_siteID;
 
     protected $_userID = -1;
 
@@ -2175,11 +2175,11 @@ class SavedSearches
  */
 class SearchByResumePager extends Pager
 {
-    private $_siteID;
+    protected $_siteID;
 
-    private $_db;
+    protected $_db;
 
-    private $_WHERE;
+    protected $_WHERE;
 
     public function __construct(
         $rowsPerPage,
@@ -2423,11 +2423,11 @@ class SearchByResumePager extends Pager
  */
 class SearchPager extends Pager
 {
-    private $_siteID;
+    protected $_siteID;
 
-    private $_db;
+    protected $_db;
 
-    private $_rs;
+    protected $_rs;
 
     public function __construct($rowsPerPage, $currentPage, $siteID)
     {

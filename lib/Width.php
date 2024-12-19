@@ -2,9 +2,9 @@
 
 class Width
 {
-    private $digit;
+    protected $digit;
 
-    private $unit;
+    protected $unit;
 
     public function __construct($digit, $unit = "px")
     {

@@ -85,28 +85,28 @@ abstract class awPlot extends awComponent
      *
      * @var mixed
      */
-    private $yMin = null;
+    protected $yMin = null;
 
     /**
      * Change max value for Y axis
      *
      * @var mixed
      */
-    private $yMax = null;
+    protected $yMax = null;
 
     /**
      * Change min value for X axis
      *
      * @var mixed
      */
-    private $xMin = null;
+    protected $xMin = null;
 
     /**
      * Change max value for X axis
      *
      * @var mixed
      */
-    private $xMax = null;
+    protected $xMax = null;
 
     /**
      * Left axis
@@ -819,42 +819,42 @@ class awPlotGroup extends awComponentGroup
      *
      * @var string
      */
-    private $yRealAxis = awPlot::LEFT;
+    protected $yRealAxis = awPlot::LEFT;
 
     /**
      * Real axis used for X axis
      *
      * @var string
      */
-    private $xRealAxis = awPlot::BOTTOM;
+    protected $xRealAxis = awPlot::BOTTOM;
 
     /**
      * Change min value for Y axis
      *
      * @var mixed
      */
-    private $yMin = null;
+    protected $yMin = null;
 
     /**
      * Change max value for Y axis
      *
      * @var mixed
      */
-    private $yMax = null;
+    protected $yMax = null;
 
     /**
      * Change min value for X axis
      *
      * @var mixed
      */
-    private $xMin = null;
+    protected $xMin = null;
 
     /**
      * Change max value for X axis
      *
      * @var mixed
      */
-    private $xMax = null;
+    protected $xMax = null;
 
     /**
      * Build the PlotGroup

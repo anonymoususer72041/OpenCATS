@@ -46,9 +46,9 @@
  */
 class VCard
 {
-    private $_properties = [];
+    protected $_properties = [];
 
-    private $_filename;
+    protected $_filename;
 
     /* vCard specification version. */
     public const VCARD_VERSION = '2.1';

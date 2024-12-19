@@ -9,7 +9,7 @@
 
 class JobOrderTypes
 {
-    private $_defaultTypes;
+    protected $_defaultTypes;
 
     public function __construct()
     {

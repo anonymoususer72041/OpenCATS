@@ -44,93 +44,93 @@ class CATSSession
 
     public $__dataGridColumnPreferences = [];
 
-    private $_siteID = -1;
+    protected $_siteID = -1;
 
-    private $_userID = -1;
+    protected $_userID = -1;
 
-    private $_siteCompanyID = -1;
+    protected $_siteCompanyID = -1;
 
-    private $_userLoginID = -1;
+    protected $_userLoginID = -1;
 
-    private $_accessLevel = -1;
+    protected $_accessLevel = -1;
 
-    private $_realAccessLevel = -1;
+    protected $_realAccessLevel = -1;
 
-    private $_isLoggedIn = false;
+    protected $_isLoggedIn = false;
 
-    private $_isDemo = false;
+    protected $_isDemo = false;
 
-    private $_isASP = false;
+    protected $_isASP = false;
 
-    private $_isFree = false;
+    protected $_isFree = false;
 
-    private $_isHrMode = false;
+    protected $_isHrMode = false;
 
-    private $_accountActive = true;
+    protected $_accountActive = true;
 
-    private $_accountDeleted = false;
+    protected $_accountDeleted = false;
 
-    private $_siteName = '';
+    protected $_siteName = '';
 
-    private $_unixName = '';
+    protected $_unixName = '';
 
-    private $_username = '';
+    protected $_username = '';
 
-    private $_password = '';
+    protected $_password = '';
 
-    private $_firstName = '';
+    protected $_firstName = '';
 
-    private $_lastName = '';
+    protected $_lastName = '';
 
-    private $_email = '';
+    protected $_email = '';
 
-    private $_ip = '';
+    protected $_ip = '';
 
-    private $_userAgent = '';
+    protected $_userAgent = '';
 
-    private $_userLicenses = 0;
+    protected $_userLicenses = 0;
 
-    private $_loginError = '';
+    protected $_loginError = '';
 
-    private $_checkBoxes = [];
+    protected $_checkBoxes = [];
 
-    private $_dropdowns = [];
+    protected $_dropdowns = [];
 
-    private $_categories = [];
+    protected $_categories = [];
 
-    private $_startTime;
+    protected $_startTime;
 
-    private $_endTime;
+    protected $_endTime;
 
-    private $_backupDirectory;
+    protected $_backupDirectory;
 
-    private $_storedBuild = -1;
+    protected $_storedBuild = -1;
 
-    private $_timeZoneOffset = 0;
+    protected $_timeZoneOffset = 0;
 
-    private $_timeZone = 0;
+    protected $_timeZone = 0;
 
-    private $_dateDMY = false;
+    protected $_dateDMY = false;
 
-    private $_pipelineEntriesPerPage = 15;
+    protected $_pipelineEntriesPerPage = 15;
 
-    private $_storedData = [];
+    protected $_storedData = [];
 
-    private $_storedValues = [];
+    protected $_storedValues = [];
 
-    private $_MRU = null;
+    protected $_MRU = null;
 
-    private $_dataGridColumnPreferences = [];
+    protected $_dataGridColumnPreferences = [];
 
-    private $_dataGridParameters = [];
+    protected $_dataGridParameters = [];
 
-    private $_isFirstTimeSetup = false;
+    protected $_isFirstTimeSetup = false;
 
-    private $_isAgreedToLicense = false;
+    protected $_isAgreedToLicense = false;
 
-    private $_isLocalizationConfigured = false;
+    protected $_isLocalizationConfigured = false;
 
-    private $_loggedInDirectory = '';
+    protected $_loggedInDirectory = '';
 
     /**
      * Returns this session's MRU object, and creates one if it doesn't exist.

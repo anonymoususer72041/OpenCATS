@@ -195,16 +195,11 @@ class GraphComparisonChart
 {
     public $xLabels;
     public $colorArray;
-
     public $xValues;
-
     public $color;
-
     public $title;
-
     public $width;
     public $height;
-
     public $totalValue;
 
     public function __construct($xLabels, $xValues, $colorArray, $title, $width, $height, $totalValue)

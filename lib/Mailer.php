@@ -63,9 +63,9 @@ class Mailer
 
     private array $_settings;
 
-    private $_siteID;
+    protected $_siteID;
 
-    private $_userID;
+    protected $_userID;
 
     private readonly \DatabaseConnection $_db;
 
@@ -395,7 +395,7 @@ class MailerSettings
 {
     private readonly \DatabaseConnection $_db;
 
-    private $_siteID;
+    protected $_siteID;
 
     public function __construct($siteID)
     {

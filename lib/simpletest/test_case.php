@@ -36,10 +36,10 @@ if (! defined('SIMPLE_TEST')) {
  *    @subpackage   UnitTester
  */
 class SimpleTestCase {
-    private $label = false;
+    protected $label = false;
     protected $reporter;
-    private $observers;
-    private $should_skip = false;
+    protected $observers;
+    protected $should_skip = false;
 
     /**
      *    Sets up the test with no display.
@@ -475,8 +475,8 @@ class SimpleFileLoader {
  *    @subpackage   UnitTester
  */
 class TestSuite {
-    private $label;
-    private $test_cases;
+    protected $label;
+    protected $test_cases;
 
     /**
      *    Sets the name of the test suite.
@@ -610,8 +610,8 @@ class TestSuite {
  *    @subpackage   UnitTester
  */
 class BadTestSuite {
-    private $label;
-    private $error;
+    protected $label;
+    protected $error;
 
     /**
      *    Sets the name of the test suite and error message.

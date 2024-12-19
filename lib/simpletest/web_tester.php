@@ -21,7 +21,7 @@ require_once(dirname(__FILE__) . '/expectation.php');
  *    @subpackage WebTester
  */
 class FieldExpectation extends SimpleExpectation {
-    private $value;
+    protected $value;
 
     /**
      *    Sets the field value to compare against.
@@ -132,8 +132,8 @@ class FieldExpectation extends SimpleExpectation {
  *    @subpackage WebTester
  */
 class HttpHeaderExpectation extends SimpleExpectation {
-    private $expected_header;
-    private $expected_value;
+    protected $expected_header;
+    protected $expected_value;
 
     /**
      *    Sets the field and value to compare against.
@@ -262,8 +262,8 @@ class HttpHeaderExpectation extends SimpleExpectation {
  *    @subpackage WebTester
  */
 class NoHttpHeaderExpectation extends HttpHeaderExpectation {
-    private $expected_header;
-    private $expected_value;
+    protected $expected_header;
+    protected $expected_value;
 
     /**
      *    Sets the field and value to compare against.
@@ -308,7 +308,7 @@ class NoHttpHeaderExpectation extends HttpHeaderExpectation {
  *    @subpackage UnitTester
  */
 class TextExpectation extends SimpleExpectation {
-    private $substring;
+    protected $substring;
 
     /**
      *    Sets the value to compare against.
@@ -431,8 +431,8 @@ class NoTextExpectation extends TextExpectation {
  *    @subpackage WebTester
  */
 class WebTestCase extends SimpleTestCase {
-    private $browser;
-    private $ignore_errors = false;
+    protected $browser;
+    protected $ignore_errors = false;
 
     /**
      *    Creates an empty test case. Should be subclassed

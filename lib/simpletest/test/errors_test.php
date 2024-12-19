@@ -37,7 +37,7 @@ class TestOfErrorQueue extends UnitTestCase {
 }
 
 class TestOfErrorTrap extends UnitTestCase {
-    private $old;
+    protected $old;
 
     function setUp() {
         $this->old = error_reporting(E_ALL);
@@ -84,7 +84,7 @@ class TestOfErrorTrap extends UnitTestCase {
 }
 
 class TestOfErrors extends UnitTestCase {
-    private $old;
+    protected $old;
 
     function setUp() {
         $this->old = error_reporting(E_ALL);

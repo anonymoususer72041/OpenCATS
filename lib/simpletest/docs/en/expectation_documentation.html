@@ -328,7 +328,7 @@ $authorisation-&gt;returns('isAllowed', false);</strong>
                 Here is a more typical example, matching part of a hash...
 <pre>
 <strong>class JustField extends EqualExpectation {
-    private $key;
+    protected $key;
     
     function __construct($key, $expected) {
         parent::__construct($expected);

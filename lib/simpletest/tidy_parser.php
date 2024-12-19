@@ -12,10 +12,10 @@
  *    @subpackage WebTester
  */
 class SimpleTidyPageBuilder {
-    private $page;
-    private $forms = array();
-    private $labels = array();
-    private $widgets_by_id = array();
+    protected $page;
+    protected $forms = array();
+    protected $labels = array();
+    protected $widgets_by_id = array();
 
     public function __destruct() {
         $this->free();

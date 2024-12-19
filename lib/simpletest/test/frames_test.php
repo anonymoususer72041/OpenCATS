@@ -239,8 +239,8 @@ class TestOfFrameNavigation extends UnitTestCase {
 }
 
 class TestOfFramesetPageInterface extends UnitTestCase {
-    private $page_interface;
-    private $frameset_interface;
+    protected $page_interface;
+    protected $frameset_interface;
 
     function __construct() {
         parent::__construct();

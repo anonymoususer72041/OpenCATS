@@ -22,10 +22,10 @@ require_once(dirname(__FILE__) . '/user_agent.php');
  *    @subpackage WebTester
  */
 class SimpleFrameset {
-    private $frameset;
-    private $frames;
-    private $focus;
-    private $names;
+    protected $frameset;
+    protected $frames;
+    protected $focus;
+    protected $names;
 
     /**
      *    Stashes the frameset page. Will make use of the

@@ -114,9 +114,9 @@ class SimpleTagBuilder {
  *    @subpackage WebTester
  */
 class SimpleTag {
-    private $name;
-    private $attributes;
-    private $content;
+    protected $name;
+    protected $attributes;
+    protected $content;
 
     /**
      *    Starts with a named tag with attributes only.
@@ -335,9 +335,9 @@ class SimpleAnchorTag extends SimpleTag {
  *    @subpackage WebTester
  */
 class SimpleWidget extends SimpleTag {
-    private $value;
-    private $label;
-    private $is_set;
+    protected $value;
+    protected $label;
+    protected $is_set;
 
     /**
      *    Starts with a named tag with attributes only.
@@ -804,8 +804,8 @@ class SimpleUploadTag extends SimpleWidget {
  *    @subpackage WebTester
  */
 class SimpleSelectionTag extends SimpleWidget {
-    private $options;
-    private $choice;
+    protected $options;
+    protected $choice;
 
     /**
      *    Starts with attributes only.
@@ -892,8 +892,8 @@ class SimpleSelectionTag extends SimpleWidget {
  *    @subpackage WebTester
  */
 class MultipleSelectionTag extends SimpleWidget {
-    private $options;
-    private $values;
+    protected $options;
+    protected $values;
 
     /**
      *    Starts with attributes only.
@@ -1170,7 +1170,7 @@ class SimpleCheckboxTag extends SimpleWidget {
  *    @subpackage WebTester
  */
 class SimpleTagGroup {
-    private $widgets = array();
+    protected $widgets = array();
 
     /**
      *    Adds a tag to the group.

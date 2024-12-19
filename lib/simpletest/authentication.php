@@ -16,10 +16,10 @@ require_once(dirname(__FILE__) . '/http.php');
  *    @subpackage WebTester
  */
 class SimpleRealm {
-    private $type;
-    private $root;
-    private $username;
-    private $password;
+    protected $type;
+    protected $root;
+    protected $username;
+    protected $password;
 
     /**
      *    Starts with the initial entry directory.
@@ -129,7 +129,7 @@ class SimpleRealm {
  *    @subpackage WebTester
  */
 class SimpleAuthenticator {
-    private $realms;
+    protected $realms;
 
     /**
      *    Clears the realms.

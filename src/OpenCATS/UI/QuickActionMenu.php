@@ -4,10 +4,10 @@ namespace OpenCATS\UI;
 
 class QuickActionMenu
 {
-    private $dataItemType;
-    private $accessLevel;
+    protected $dataItemType;
+    protected $accessLevel;
 
-    private $dataItemId;
+    protected $dataItemId;
 
     public function __construct($dataItemType, $dataItemId, $accessLevel)
     {

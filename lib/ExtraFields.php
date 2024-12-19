@@ -39,9 +39,9 @@ class ExtraFields
 {
     private readonly \DatabaseConnection $_db;
 
-    private $_siteID;
+    protected $_siteID;
 
-    private $_dataItemType;
+    protected $_dataItemType;
 
     public function __construct($siteID, $dataItemType)
     {

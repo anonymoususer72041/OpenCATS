@@ -4,7 +4,7 @@ include_once('./vendor/autoload.php'); // Google API Client Library Autoloader
 
 class ZipLookup
 {
-    private $apiKey;
+    protected $apiKey;
 
     // Constructor now uses the API key from config.php
     public function __construct($apiKey)

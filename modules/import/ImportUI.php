@@ -1311,13 +1311,13 @@ class ImportUI extends UserInterface
             return;
         }
         if (isset($_GET['cTime'])) {
-            $cTime = intval($_GET['cTime']);
+            $cTime = (int)($_GET['cTime']);
         } else {
             echo 'Fail';
             return;
         }
         if (isset($_GET['type'])) {
-            $type = intval($_GET['type']);
+            $type = (int)($_GET['type']);
         } else {
             echo 'Fail';
             return;
@@ -1388,7 +1388,7 @@ class ImportUI extends UserInterface
     public function massImportEdit()
     {
         if (isset($_GET['documentID'])) {
-            $documentID = intval($_GET['documentID']);
+            $documentID = (int)($_GET['documentID']);
         } else {
             CommonErrors::fatal(COMMONERROR_BADINDEX, $this);
         }
@@ -1485,7 +1485,7 @@ class ImportUI extends UserInterface
         }
 
         // Figure out what stage of the process we're on
-        if (isset($_GET['step']) && ($step = intval($_GET['step'])) >= 1 && $step <= 4) {
+        if (isset($_GET['step']) && ($step = (int)($_GET['step'])) >= 1 && $step <= 4) {
         }
 
         $this->_template->assign('step', $step);

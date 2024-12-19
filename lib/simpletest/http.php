@@ -21,7 +21,7 @@ require_once(dirname(__FILE__) . '/url.php');
  *    @subpackage WebTester
  */
 class SimpleRoute {
-    private $url;
+    protected $url;
 
     /**
      *    Sets the target URL.
@@ -114,9 +114,9 @@ class SimpleRoute {
  *    @subpackage WebTester
  */
 class SimpleProxyRoute extends SimpleRoute {
-    private $proxy;
-    private $username;
-    private $password;
+    protected $proxy;
+    protected $username;
+    protected $password;
 
     /**
      *    Stashes the proxy address.
@@ -195,10 +195,10 @@ class SimpleProxyRoute extends SimpleRoute {
  *    @subpackage WebTester
  */
 class SimpleHttpRequest {
-    private $route;
-    private $encoding;
-    private $headers;
-    private $cookies;
+    protected $route;
+    protected $encoding;
+    protected $headers;
+    protected $cookies;
 
     /**
      *    Builds the socket request from the different pieces.
@@ -294,14 +294,14 @@ class SimpleHttpRequest {
  *    @subpackage WebTester
  */
 class SimpleHttpHeaders {
-    private $raw_headers;
-    private $response_code;
-    private $http_version;
-    private $mime_type;
-    private $location;
-    private $cookies;
-    private $authentication;
-    private $realm;
+    protected $raw_headers;
+    protected $response_code;
+    protected $http_version;
+    protected $mime_type;
+    protected $location;
+    protected $cookies;
+    protected $authentication;
+    protected $realm;
 
     /**
      *    Parses the incoming header block.
@@ -480,11 +480,11 @@ class SimpleHttpHeaders {
  *    @subpackage WebTester
  */
 class SimpleHttpResponse extends SimpleStickyError {
-    private $url;
-    private $encoding;
-    private $sent;
-    private $content;
-    private $headers;
+    protected $url;
+    protected $encoding;
+    protected $sent;
+    protected $content;
+    protected $headers;
 
     /**
      *    Constructor. Reads and parses the incoming

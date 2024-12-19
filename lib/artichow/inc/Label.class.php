@@ -56,21 +56,21 @@ class awLabel implements awPositionable
      *
      * @var Color, Gradient
      */
-    private $background;
+    protected $background;
 
     /**
      * Callback function
      *
      * @var string
      */
-    private $function;
+    protected $function;
 
     /**
      * Padding
      *
      * @var int
      */
-    private $padding;
+    protected $padding;
 
     /**
      * Move position from this vector

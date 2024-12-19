@@ -34,15 +34,15 @@ include_once(LEGACY_ROOT . '/lib/Site.php');
 
 class Profile
 {
-    private $_siteID;
+    protected $_siteID;
 
     private readonly \DatabaseConnection $_db;
 
-    private $_savedProfileID;
+    protected $_savedProfileID;
 
-    private $_savedProfile;
+    protected $_savedProfile;
 
-    private $_titleCache;
+    protected $_titleCache;
 
     public function __construct($siteID, $profileID = false)
     {

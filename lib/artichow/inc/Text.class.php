@@ -19,14 +19,14 @@ class awText
      *
      * @var string
      */
-    private $text;
+    protected $text;
 
     /**
      * Text font
      *
      * @var Font
      */
-    private $font;
+    protected $font;
 
     /**
      * Text angle
@@ -34,28 +34,28 @@ class awText
      *
      * @var int
      */
-    private $angle;
+    protected $angle;
 
     /**
      * Text color
      *
      * @var Color
      */
-    private $color;
+    protected $color;
 
     /**
      * Text background
      *
      * @var Color, Gradient
      */
-    private $background;
+    protected $background;
 
     /**
      * Padding
      *
      * @var array Array for left, right, top and bottom paddings
      */
-    private $padding;
+    protected $padding;
 
     /**
      * Text border

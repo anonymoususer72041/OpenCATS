@@ -556,7 +556,7 @@ class FileUtility
 
                 if (preg_match('/(.*)_Copy([0-9]{1,3})$/', $fileNameBase, $matches)) {
                     // Copy already appending, increase the #
-                    $fileNameBase = sprintf('%s_Copy%d', $matches[1], intval($matches[2]) + 1);
+                    $fileNameBase = sprintf('%s_Copy%d', $matches[1], (int)($matches[2]) + 1);
                 } else {
                     $fileNameBase .= '_Copy1';
                 }

@@ -139,7 +139,7 @@ use OpenCATS\UI\CandidateDuplicateQuickActionMenu;
                                                                                         <td class="data"><?php $this->_($this->data['source']); ?></td>
                                                                                         </tr>
 
-                                                                                        <?php for ($i = 0; $i < intval(count($this->extraFieldRS)/2); $i++): ?>
+                                                                                        <?php for ($i = 0; $i < (int)(count($this->extraFieldRS)/2); $i++): ?>
                                                                                         <tr>
                                                                                         <td class="vertical"><?php $this->_($this->extraFieldRS[$i]['fieldName']); ?>:</td>
                                                                                         <td class="data"><?php echo($this->extraFieldRS[$i]['display']); ?></td>
@@ -209,7 +209,7 @@ use OpenCATS\UI\CandidateDuplicateQuickActionMenu;
                                                                                         <td class="data"><?php $this->_($this->data['ownerFullName']); ?></td>
                                                                                         </tr>
 
-                                                                                        <?php for ($i = intval(count($this->extraFieldRS) / 2); $i < count($this->extraFieldRS); $i++): ?>
+                                                                                        <?php for ($i = (int)(count($this->extraFieldRS) / 2); $i < count($this->extraFieldRS); $i++): ?>
                                                                                         <tr>
                                                                                         <td class="vertical"><?php $this->_($this->extraFieldRS[$i]['fieldName']); ?>:</td>
                                                                                         <td class="data"><?php echo($this->extraFieldRS[$i]['display']); ?></td>
@@ -255,7 +255,7 @@ use OpenCATS\UI\CandidateDuplicateQuickActionMenu;
                                                                                         <tr>
                                                                                         <td>
                                                                                         <table class="detailsInside">
-                                                                                        <?php for ($i = 0; $i < intval(count($this->EEOValues)/2); $i++): ?>
+                                                                                        <?php for ($i = 0; $i < (int)(count($this->EEOValues)/2); $i++): ?>
                                                                                         <tr>
                                                                                         <td class="vertical"><?php $this->_($this->EEOValues[$i]['fieldName']); ?>:</td>
                                                                                         <?php if($this->EEOSettingsRS['canSeeEEOInfo']): ?>
@@ -273,7 +273,7 @@ use OpenCATS\UI\CandidateDuplicateQuickActionMenu;
                                                                                         </td><td width="50%" height="100%" valign="top">
                                                                                         <?php endif; ?>
                                                                                         <table class="detailsInside">
-                                                                                        <?php for ($i = (intval(count($this->EEOValues))/2); $i < intval(count($this->EEOValues)); $i++): ?>
+                                                                                        <?php for ($i = ((int)(count($this->EEOValues))/2); $i < (int)(count($this->EEOValues)); $i++): ?>
                                                                                         <tr>
                                                                                         <td class="vertical"><?php $this->_($this->EEOValues[$i]['fieldName']); ?>:</td>
                                                                                         <?php if($this->EEOSettingsRS['canSeeEEOInfo']): ?>

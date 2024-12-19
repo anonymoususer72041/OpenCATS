@@ -4,9 +4,9 @@ namespace OpenCATS\UI;
 
 class CandidateDuplicateQuickActionMenu extends QuickActionMenu
 {
-    private $mergeUrl;
+    protected $mergeUrl;
 
-    private $removeUrl;
+    protected $removeUrl;
 
     public function __construct($dataItemType, $dataItemId, $accessLevel, $mergeUrl, $removeUrl)
     {

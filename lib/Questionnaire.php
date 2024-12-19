@@ -44,7 +44,7 @@ define('QUESTIONNAIRE_QUESTION_TYPE_RADIO', 4);
  */
 class Questionnaire
 {
-    private $_siteID;
+    protected $_siteID;
 
     private readonly \DatabaseConnection $_db;
 
@@ -606,7 +606,7 @@ class Questionnaire
                             $qData['questionnaireID'],
                             $question['questionID']
                         );
-                        $answerIDs = [isset($postData[$index]) ? intval($postData[$index]) : false];
+                        $answerIDs = [isset($postData[$index]) ? (int)($postData[$index]) : false];
                         break;
                     case QUESTIONNAIRE_QUESTION_TYPE_TEXT:
                     default:

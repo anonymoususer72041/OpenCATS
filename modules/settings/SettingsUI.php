@@ -1349,13 +1349,13 @@ class SettingsUI extends UserInterface
             switch ($args[0]) {
                 case 'ADDFIELD':
                     $args = explode(' ', $command, 4);
-                    $extraFields = new ExtraFields($this->_siteID, intval($args[1]));
-                    $extraFields->define(urldecode($args[3]), intval($args[2]));
+                    $extraFields = new ExtraFields($this->_siteID, (int)($args[1]));
+                    $extraFields->define(urldecode($args[3]), (int)($args[2]));
                     break;
 
                 case 'DELETEFIELD':
                     $args = explode(' ', $command, 3);
-                    $extraFields = new ExtraFields($this->_siteID, intval($args[1]));
+                    $extraFields = new ExtraFields($this->_siteID, (int)($args[1]));
                     $extraFields->remove(urldecode($args[2]));
                     break;
 
@@ -1363,7 +1363,7 @@ class SettingsUI extends UserInterface
                     $args = explode(' ', $command, 3);
                     $args2 = explode(':', $args[2]);
 
-                    $extraFields = new ExtraFields($this->_siteID, intval($args[1]));
+                    $extraFields = new ExtraFields($this->_siteID, (int)($args[1]));
                     $extraFields->addOptionToColumn(urldecode($args2[0]), urldecode($args2[1]));
                     break;
 
@@ -1371,7 +1371,7 @@ class SettingsUI extends UserInterface
                     $args = explode(' ', $command, 3);
                     $args2 = explode(':', $args[2]);
 
-                    $extraFields = new ExtraFields($this->_siteID, intval($args[1]));
+                    $extraFields = new ExtraFields($this->_siteID, (int)($args[1]));
                     $extraFields->deleteOptionFromColumn(urldecode($args2[0]), urldecode($args2[1]));
                     break;
 
@@ -1379,7 +1379,7 @@ class SettingsUI extends UserInterface
                     $args = explode(' ', $command, 3);
                     $args2 = explode(':', $args[2]);
 
-                    $extraFields = new ExtraFields($this->_siteID, intval($args[1]));
+                    $extraFields = new ExtraFields($this->_siteID, (int)($args[1]));
                     $extraFields->swapColumns(urldecode($args2[0]), urldecode($args2[1]));
                     break;
 
@@ -1387,7 +1387,7 @@ class SettingsUI extends UserInterface
                     $args = explode(' ', $command, 3);
                     $args2 = explode(':', $args[2]);
 
-                    $extraFields = new ExtraFields($this->_siteID, intval($args[1]));
+                    $extraFields = new ExtraFields($this->_siteID, (int)($args[1]));
                     $extraFields->renameColumn(urldecode($args2[0]), urldecode($args2[1]));
                     break;
             }
@@ -2227,7 +2227,7 @@ class SettingsUI extends UserInterface
         $careerPortalUnlock = false;
         $careerPortalSettings = new CareerPortalSettings($this->_siteID);
         $cpData = $careerPortalSettings->getAll();
-        if (intval($cpData['enabled']) || ! $_SESSION['CATS']->isFree() ||
+        if ((int)($cpData['enabled']) || ! $_SESSION['CATS']->isFree() ||
             LicenseUtility::isProfessional()) {
             $careerPortalUnlock = true;
         }
@@ -2730,8 +2730,8 @@ class SettingsUI extends UserInterface
         } else {
             $email = '';
         }
-        if (isset($_GET[$id = 'accessLevel']) && intval($_GET[$id]) < ACCESS_LEVEL_SA) {
-            $accessLevel = intval($_GET[$id]);
+        if (isset($_GET[$id = 'accessLevel']) && (int)($_GET[$id]) < ACCESS_LEVEL_SA) {
+            $accessLevel = (int)($_GET[$id]);
         } else {
             $accessLevel = ACCESS_LEVEL_READ;
         }
@@ -2779,7 +2779,7 @@ class SettingsUI extends UserInterface
     private function wizard_deleteUser()
     {
         if (isset($_GET[$id = 'userID'])) {
-            $userID = intval($_GET[$id]);
+            $userID = (int)($_GET[$id]);
         } else {
             echo 'Unable to find the user you are trying to delete.';
             return;
@@ -3125,7 +3125,7 @@ class SettingsUI extends UserInterface
             // Update the position of the question
             $field = sprintf('question%dPosition', $questionIndex);
             if (isset($_POST[$field])) {
-                $position = intval(trim((string) $_POST[$field]));
+                $position = (int)(trim((string) $_POST[$field]));
                 $questions[$questionIndex]['questionPosition'] = $position;
             }
 
@@ -3159,7 +3159,7 @@ class SettingsUI extends UserInterface
                 // Update the position of the question
                 $field = sprintf('question%dAnswer%dPosition', $questionIndex, $answerIndex);
                 if (isset($_POST[$field])) {
-                    $position = intval(trim((string) $_POST[$field]));
+                    $position = (int)(trim((string) $_POST[$field]));
                     $questions[$questionIndex]['answers'][$answerIndex]['answerPosition'] = $position;
                 }
 
@@ -3266,8 +3266,8 @@ class SettingsUI extends UserInterface
          * processed and then immediately removed if requested by the user (which is naughty).
          */
         $restrictAction = isset($_POST[$id = 'restrictAction']) ? $_POST[$id] : '';
-        $restrictQuestionID = isset($_POST[$id = 'restrictActionQuestionID']) ? intval($_POST[$id]) : '';
-        $restrictAnswerID = isset($_POST[$id = 'restrictActionAnswerID']) ? intval($_POST[$id]) : '';
+        $restrictQuestionID = isset($_POST[$id = 'restrictActionQuestionID']) ? (int)($_POST[$id]) : '';
+        $restrictAnswerID = isset($_POST[$id = 'restrictActionAnswerID']) ? (int)($_POST[$id]) : '';
 
         if (! strcasecmp((string) $restrictAction, 'question')) {
             // Adding a new question to the questionnaire
@@ -3399,8 +3399,8 @@ class SettingsUI extends UserInterface
                 for ($questionIndex3 = 0;
                     $questionIndex3 < count($questions) - 1;
                     $questionIndex3++) {
-                    if (intval($questions[$questionIndex3]['questionPosition']) >
-                        intval($questions[$questionIndex3 + 1]['questionPosition'])) {
+                    if ((int)($questions[$questionIndex3]['questionPosition']) >
+                        (int)($questions[$questionIndex3 + 1]['questionPosition'])) {
                         $tmp = $questions[$questionIndex3];
                         $questions[$questionIndex3] = $questions[$questionIndex3 + 1];
                         $questions[$questionIndex3 + 1] = $tmp;
@@ -3415,8 +3415,8 @@ class SettingsUI extends UserInterface
                 for ($answerIndex3 = 0;
                     $answerIndex3 < count($questions[$questionIndex2]['answers']) - 1;
                     $answerIndex3++) {
-                    if (intval($questions[$questionIndex2]['answers'][$answerIndex3]['answerPosition']) >
-                        intval($questions[$questionIndex2]['answers'][$answerIndex3 + 1]['answerPosition'])) {
+                    if ((int)($questions[$questionIndex2]['answers'][$answerIndex3]['answerPosition']) >
+                        (int)($questions[$questionIndex2]['answers'][$answerIndex3 + 1]['answerPosition'])) {
                         $tmp = $questions[$questionIndex2]['answers'][$answerIndex3];
                         $questions[$questionIndex2]['answers'][$answerIndex3] =
                             $questions[$questionIndex2]['answers'][$answerIndex3 + 1];
@@ -3444,7 +3444,7 @@ class SettingsUI extends UserInterface
             $_SESSION['CATS_QUESTIONNAIRE']['questions'] = [];
         } elseif (isset($_POST[$id = 'saveChanges']) && ! strcasecmp((string) $_POST[$id], 'yes')) {
             // User wants to add the new questionnaire
-            if (($id = intval($_SESSION['CATS_QUESTIONNAIRE']['id'])) != 0) {
+            if (($id = (int)($_SESSION['CATS_QUESTIONNAIRE']['id'])) != 0) {
                 $questionnaire->update(
                     $id, // the questionnaire id to update
                     $_SESSION['CATS_QUESTIONNAIRE']['title'],
@@ -3504,7 +3504,7 @@ class SettingsUI extends UserInterface
             CommonErrors::fatal(COMMONERROR_BADINDEX, $this, 'Bad index.');
         }
 
-        $questionnaireID = intval($_GET['questionnaireID']);
+        $questionnaireID = (int)($_GET['questionnaireID']);
         $questionnaire = new Questionnaire($this->_siteID);
         $data = $questionnaire->get($questionnaireID);
 

@@ -44,7 +44,7 @@ class Attachments
 {
     private readonly \DatabaseConnection $_db;
 
-    private $_siteID;
+    protected $_siteID;
 
     public function __construct($siteID)
     {
@@ -788,17 +788,17 @@ class AttachmentCreator
 
     private string $_textExtractionError = '';
 
-    private $_extractedText = '';
+    protected $_extractedText = '';
 
-    private $_siteID = -1;
+    protected $_siteID = -1;
 
     private bool $_duplicatesOccurred = false;
 
     private string $_newFilePath = '';
 
-    private $_containingDirectory = '';
+    protected $_containingDirectory = '';
 
-    private $_attachmentID = -1;
+    protected $_attachmentID = -1;
 
     // FIXME: Document me.
     public function __construct($siteID)

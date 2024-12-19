@@ -38,9 +38,9 @@ include_once(LEGACY_ROOT . '/lib/Site.php');
  */
 class Tags
 {
-    private $_db;
+    protected $_db;
 
-    private $_siteID;
+    protected $_siteID;
 
     public function __construct($siteID)
     {

@@ -44,7 +44,7 @@ input.userAddField:focus { background-color: #D7E0F5; border: 1px solid #666666;
                 <?php endif; ?>
             </td>
             <td class="userColumn<?php echo $shade ? '1' : '2'; ?>" nowrap="nowrap"><?php echo $user ? $user['email'] : '&nbsp;'; ?></td>
-            <td class="userColumn<?php echo $shade ? '1' : '2'; ?>" nowrap="nowrap"><?php echo $user && intval($user['accessLevel']) < ACCESS_LEVEL_SA ? '<a href="javascript:void(0);" onclick="deleteUser(' . $user['userID'] . ');">Delete</a>' : '&nbsp;'; ?></td>
+            <td class="userColumn<?php echo $shade ? '1' : '2'; ?>" nowrap="nowrap"><?php echo $user && (int)($user['accessLevel']) < ACCESS_LEVEL_SA ? '<a href="javascript:void(0);" onclick="deleteUser(' . $user['userID'] . ');">Delete</a>' : '&nbsp;'; ?></td>
         </tr>
         <?php $shade = !$shade; ?>
     <?php endfor; ?>
@@ -107,8 +107,8 @@ We strongly suggest adding another user to help you utilize the "team" features 
                 <td class="userAddColumn" valign="top">Access Level:</td>
                 <td colspan="3" class="userAddColumn" valign="top">
                     <?php foreach ($this->accessLevels as $level): ?>
-                        <?php if (intval($level['accessID']) < ACCESS_LEVEL_SA && intval($level['accessID']) > ACCESS_LEVEL_DISABLED ): ?>
-                            <input type="radio" name="accessLevel" id="accessLevel<?php echo $level['accessID']; ?>" value="<?php echo $level['accessID']; ?>"<?php if (intval($level['accessID']) == ACCESS_LEVEL_DELETE): ?> checked<?php endif; ?> /> <?php echo $level['longDescription']; ?><br />
+                        <?php if ((int)($level['accessID']) < ACCESS_LEVEL_SA && (int)($level['accessID']) > ACCESS_LEVEL_DISABLED ): ?>
+                            <input type="radio" name="accessLevel" id="accessLevel<?php echo $level['accessID']; ?>" value="<?php echo $level['accessID']; ?>"<?php if ((int)($level['accessID']) == ACCESS_LEVEL_DELETE): ?> checked<?php endif; ?> /> <?php echo $level['longDescription']; ?><br />
                         <?php endif; ?>
                     <?php endforeach; ?>
                 </td>

@@ -81,7 +81,7 @@ use OpenCATS\UI\QuickActionMenu;
                                 <td class="data"><?php $this->_($this->data['phoneOther']); ?></td>
                             </tr>
 
-                            <?php for ($i = 0; $i < intval(count($this->extraFieldRS)/2); $i++): ?>
+                            <?php for ($i = 0; $i < (int)(count($this->extraFieldRS)/2); $i++): ?>
                                <tr>
                                     <td class="vertical"><?php $this->_($this->extraFieldRS[$i]['fieldName']); ?>:</td>
                                     <td class="data"><?php echo($this->extraFieldRS[$i]['display']); ?></td>
@@ -143,13 +143,13 @@ use OpenCATS\UI\QuickActionMenu;
                                 <td class="vertical">Owner:</td>
                                 <td class="data"><?php $this->_($this->data['ownerFullName']); ?></td>
                             </tr>
-
-                            <?php for ($i = (intval(count($this->extraFieldRS))/2); $i < (count($this->extraFieldRS)); $i++): ?>
+                            <?php
+                            for ($i = (int) (count($this->extraFieldRS) / 2); $i < count($this->extraFieldRS); $i++): ?>
                                 <tr>
-                                    <td class="vertical"><?php $this->_($this->extraFieldRS[$i]['fieldName']); ?>:</td>
-                                    <td class="data"><?php echo($this->extraFieldRS[$i]['display']); ?></td>
+                                <td class="vertical"><?php $this->_($this->extraFieldRS[$i]['fieldName']); ?>:</td>
+                                <td class="data"><?php echo($this->extraFieldRS[$i]['display']); ?></td>
                                 </tr>
-                            <?php endfor; ?>
+                                <?php endfor; ?>
                         </table>
                     </td>
                 </tr>

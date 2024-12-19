@@ -174,7 +174,7 @@ switch ($action) {
         $mailSupportTxt = $_REQUEST['mailSupport'];
         $mailSendmailPath = trim((string) $_REQUEST['mailSendmail']);
         $mailSmtpHost = trim((string) $_REQUEST['mailSmtpHost']);
-        $mailSmtpPort = intval(trim((string) $_REQUEST['mailSmtpPort']));
+        $mailSmtpPort = (int)(trim((string) $_REQUEST['mailSmtpPort']));
         $mailSmtpUsername = trim((string) $_REQUEST['mailSmtpUsername']);
         $mailSmtpPassword = trim((string) $_REQUEST['mailSmtpPassword']);
         $fromAddress = substr(trim((string) $_REQUEST['mailFromAddress']), 0, 255);
@@ -194,7 +194,7 @@ switch ($action) {
             );
         } else {
             if (strlen((string) $mailSupportTxt) == 4) {
-                $mailSupport = intval(substr((string) $mailSupportTxt, 3, 1));
+                $mailSupport = (int)(substr((string) $mailSupportTxt, 3, 1));
             }
 
             if ($mailSupport == 4) {

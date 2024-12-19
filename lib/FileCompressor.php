@@ -56,12 +56,12 @@ class ZipFileCreator
     /* Full path (absolute or relative) to the zip file we're writing. Set by
      * the constructor.
      */
-    private $_filename = '';
+    protected $_filename = '';
 
     /* Allow existing files by the same name as our zip file to be overwritten
      * by the new zip file? Set by the constructor.
      */
-    private $_allowOverwrite = false;
+    protected $_allowOverwrite = false;
 
     /* Central Directory record data. The central directory gets written to the
      * end of the zip file, so it must be stored in memory until we're done
@@ -86,7 +86,7 @@ class ZipFileCreator
     private int $_centralDirectoryLength = 0;
 
     /* File handle for the open zip file we're writing as we're writing it. */
-    private $_fileHandle = null;
+    protected $_fileHandle = null;
 
     /* Current error message. */
     private string $_errorMessage = '';
@@ -933,10 +933,10 @@ class ZipFileExtractor
     /* Full path (absolute or relative) to the zip file we're reading. Set by
      * the constructor.
      */
-    private $_filename = '';
+    protected $_filename = '';
 
     /* File handle for the open zip file we're writing as we're writing it. */
-    private $_fileHandle = null;
+    protected $_fileHandle = null;
 
     /* Meta data and Central Directory. */
     private array $_metaData = [];

@@ -38,9 +38,9 @@ class History
 {
     private readonly \DatabaseConnection $_db;
 
-    private $_siteID;
+    protected $_siteID;
 
-    private $_userID;
+    protected $_userID;
 
     public function __construct($siteID)
     {

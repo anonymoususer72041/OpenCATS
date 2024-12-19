@@ -34,8 +34,8 @@ if (! defined('DEFAULT_MAX_NESTED_FRAMES')) {
  *    @subpackage WebTester
  */
 class SimpleBrowserHistory {
-    private $sequence = array();
-    private $position = -1;
+    protected $sequence = array();
+    protected $position = -1;
 
     /**
      *    Test for no entries yet.
@@ -155,12 +155,12 @@ class SimpleBrowserHistory {
  *    @subpackage WebTester
  */
 class SimpleBrowser {
-    private $user_agent;
-    private $page;
-    private $history;
-    private $ignore_frames;
-    private $maximum_nested_frames;
-    private $parser;
+    protected $user_agent;
+    protected $page;
+    protected $history;
+    protected $ignore_frames;
+    protected $maximum_nested_frames;
+    protected $parser;
 
     /**
      *    Starts with a fresh browser with no

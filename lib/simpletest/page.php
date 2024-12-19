@@ -22,21 +22,21 @@ require_once(dirname(__FILE__) . '/selector.php');
  *    @subpackage WebTester
  */
 class SimplePage {
-    private $links = array();
-    private $title = false;
-    private $last_widget;
-    private $label;
-    private $forms = array();
-    private $frames = array();
-    private $transport_error;
-    private $raw;
-    private $text = false;
-    private $sent;
-    private $headers;
-    private $method;
-    private $url;
-    private $base = false;
-    private $request_data;
+    protected $links = array();
+    protected $title = false;
+    protected $last_widget;
+    protected $label;
+    protected $forms = array();
+    protected $frames = array();
+    protected $transport_error;
+    protected $raw;
+    protected $text = false;
+    protected $sent;
+    protected $headers;
+    protected $method;
+    protected $url;
+    protected $base = false;
+    protected $request_data;
 
     /**
      *    Parses a page ready to access it's contents.

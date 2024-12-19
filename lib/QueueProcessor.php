@@ -517,7 +517,7 @@ class QueueProcessor
         if ($minute != '*') {
             $match = false;
             foreach (explode(',', $minute) as $_minute) {
-                if (intval($_minute) == self::getMinute()) {
+                if ((int)($_minute) == self::getMinute()) {
                     $match = true;
                 }
             }
@@ -528,7 +528,7 @@ class QueueProcessor
         if ($hour != '*') {
             $match = false;
             foreach (explode(',', $hour) as $_hour) {
-                if (intval($_hour) == self::getHour()) {
+                if ((int)($_hour) == self::getHour()) {
                     $match = true;
                 }
             }
@@ -546,7 +546,7 @@ class QueueProcessor
         if ($dayofmonth != '*') {
             $match = false;
             foreach (explode(',', $dayofmonth) as $_dayofmonth) {
-                if (intval($_dayofmonth) == self::getDayOfMonth()) {
+                if ((int)($_dayofmonth) == self::getDayOfMonth()) {
                     $match = true;
                 }
             }
@@ -570,7 +570,7 @@ class QueueProcessor
         if ($month != '*') {
             $match = false;
             foreach (explode(',', $month) as $_month) {
-                if (intval($_month) == self::getMonth()) {
+                if ((int)($_month) == self::getMonth()) {
                     $match = true;
                 }
             }
@@ -600,7 +600,7 @@ class QueueProcessor
         if ($dayofweek != '*') {
             $match = false;
             foreach (explode(',', $dayofweek) as $_dayofweek) {
-                if (intval($_dayofweek) == self::getDayOfWeek()) {
+                if ((int)($_dayofweek) == self::getDayOfWeek()) {
                     $match = true;
                 }
             }
@@ -633,36 +633,36 @@ class QueueProcessor
     // FIXME: Document me.
     public function getDayOfMonth()
     {
-        return intval(date('j'));
+        return (int)(date('j'));
     }
 
     // FIXME: Document me.
     public function getDayOfWeek()
     {
-        return intval(date('w'));
+        return (int)(date('w'));
     }
 
     // FIXME: Document me.
     public function getMonth()
     {
-        return intval(date('n'));
+        return (int)(date('n'));
     }
 
     // FIXME: Document me.
     public function getYear()
     {
-        return intval(date('Y'));
+        return (int)(date('Y'));
     }
     // FIXME: Document me.
 
     public function getHour()
     {
-        return intval(date('G'));
+        return (int)(date('G'));
     }
 
     // FIXME: Document me.
     public function getMinute()
     {
-        return intval(date('i'));
+        return (int)(date('i'));
     }
 }

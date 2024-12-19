@@ -51,9 +51,9 @@ include_once(LEGACY_ROOT . '/modules/tests/TestCaseList.php');
 
 class TestsUI extends UserInterface
 {
-    private $_testCaseList;
+    protected $_testCaseList;
 
-    private $reporter;
+    protected $reporter;
 
     public function __construct()
     {

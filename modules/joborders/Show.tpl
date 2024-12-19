@@ -126,7 +126,7 @@ use OpenCATS\UI\QuickActionMenu;
                                 <td class="data"><?php $this->_($this->data['startDate']); ?></td>
                             </tr>
 
-                            <?php for ($i = 0; $i < intval(count($this->extraFieldRS)/2); $i++): ?>
+                            <?php for ($i = 0; $i < (int)(count($this->extraFieldRS)/2); $i++): ?>
                                <?php if(($this->extraFieldRS[$i]['extraFieldType']) != EXTRA_FIELD_TEXTAREA): ?>
                                    <tr>
                                         <td class="vertical"><?php $this->_($this->extraFieldRS[$i]['fieldName']); ?>:</td>
@@ -192,7 +192,7 @@ use OpenCATS\UI\QuickActionMenu;
                                 <td class="data"><?php $this->_($this->data['ownerFullName']); ?></td>
                             </tr>
 
-                            <?php for ($i = (intval(count($this->extraFieldRS))/2); $i < (count($this->extraFieldRS)); $i++): ?>
+                            <?php for ($i = ((int)(count($this->extraFieldRS))/2); $i < (count($this->extraFieldRS)); $i++): ?>
                                 <?php if(($this->extraFieldRS[$i]['extraFieldType']) != EXTRA_FIELD_TEXTAREA): ?>
                                     <tr>
                                         <td class="vertical"><?php $this->_($this->extraFieldRS[$i]['fieldName']); ?>:</td>
@@ -288,7 +288,7 @@ use OpenCATS\UI\QuickActionMenu;
 
                             </tr>
                 
-                            <?php for ($i = (intval(count($this->extraFieldRS))/2); $i < (count($this->extraFieldRS)); $i++): ?>
+                            <?php for ($i = ((int)(count($this->extraFieldRS))/2); $i < (count($this->extraFieldRS)); $i++): ?>
                                 <?php if(($this->extraFieldRS[$i]['extraFieldType']) == EXTRA_FIELD_TEXTAREA): ?>
                                     <tr>
                                         <td class="vertical"><?php $this->_($this->extraFieldRS[$i]['fieldName']); ?>:</td>

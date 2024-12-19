@@ -8,7 +8,7 @@ use Exception;
 
 class DatabaseTestCase extends TestCase
 {
-    private $connection;
+    protected $connection;
 
     protected function setUp(): void
     {

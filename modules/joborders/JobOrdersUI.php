@@ -448,7 +448,7 @@ class JobOrdersUI extends UserInterface
 
         $careerPortalSettings = new CareerPortalSettings($this->_siteID);
         $cpSettings = $careerPortalSettings->getAll();
-        if (intval($cpSettings['enabled'])) {
+        if ((int)($cpSettings['enabled'])) {
             $careerPortalURL = CATSUtility::getAbsoluteURI() . 'careers/';
         }
 
@@ -584,7 +584,7 @@ class JobOrdersUI extends UserInterface
 
         $careerPortalSettings = new CareerPortalSettings($this->_siteID);
         $careerPortalSettingsRS = $careerPortalSettings->getAll();
-        $careerPortalEnabled = intval($careerPortalSettingsRS['enabled']) ? true : false;
+        $careerPortalEnabled = (int)($careerPortalSettingsRS['enabled']) ? true : false;
 
         $this->_template->assign('careerPortalEnabled', $careerPortalEnabled);
         $this->_template->assign('questionnaires', $questionnaires);
@@ -678,7 +678,7 @@ class JobOrdersUI extends UserInterface
             isset($_POST['questionnaire']) && ! empty($_POST['questionnaire']) &&
             strcmp((string) $_POST['questionnaire'], 'none') && $isPublic ?
             // The result will be an ID from the questionnaire table:
-            intval($_POST['questionnaire']) :
+            (int)($_POST['questionnaire']) :
             // If no questionnaire exists, boolean false
             false;
 
@@ -831,7 +831,7 @@ class JobOrdersUI extends UserInterface
         /* Check if career portal is enabled */
         $careerPortalSettings = new CareerPortalSettings($this->_siteID);
         $careerPortalSettingsRS = $careerPortalSettings->getAll();
-        $careerPortalEnabled = intval($careerPortalSettingsRS['enabled']) ? true : false;
+        $careerPortalEnabled = (int)($careerPortalSettingsRS['enabled']) ? true : false;
 
         /* Get questionnaire information (if exists) */
         $questionnaireID = false;
@@ -959,7 +959,7 @@ class JobOrdersUI extends UserInterface
             isset($_POST['questionnaire']) && ! empty($_POST['questionnaire']) &&
             strcmp((string) $_POST['questionnaire'], 'none') && $public ?
             // The result will be an ID from the questionnaire table:
-            intval($_POST['questionnaire']) :
+            (int)($_POST['questionnaire']) :
             // If no questionnaire exists, boolean false
             false;
 
@@ -1291,7 +1291,7 @@ class JobOrdersUI extends UserInterface
 
         $careerPortalSettings = new CareerPortalSettings($this->_siteID);
         $careerPortalSettingsRS = $careerPortalSettings->getAll();
-        $careerPortalEnabled = intval($careerPortalSettingsRS['enabled']) ? true : false;
+        $careerPortalEnabled = (int)($careerPortalSettingsRS['enabled']) ? true : false;
 
         /* Get questionnaires to attach (if public) */
         $questionnaire = new Questionnaire($this->_siteID);

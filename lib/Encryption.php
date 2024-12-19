@@ -36,7 +36,7 @@
  */
 class Encryption
 {
-    private $_td;
+    protected $_td;
 
     public function __construct($key, $algorithm, $mode = 'ecb', $iv = false)
     {

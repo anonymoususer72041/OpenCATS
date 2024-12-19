@@ -878,7 +878,7 @@ public static function typeCodeToString($typeCode)
             return false;
         }
 
-        $openingsAvailable = intval($rs[0]['openingsAvailable']);
+        $openingsAvailable = (int)($rs[0]['openingsAvailable']);
 
         if ($openingsAvailable > 0) {
             return true;

@@ -28,23 +28,23 @@ class CBFUtility
 {
     private readonly \DatabaseConnection $_db;
 
-    private $_siteID;
+    protected $_siteID;
 
-    private $_structure;
+    protected $_structure;
 
-    private $_keys;
+    protected $_keys;
 
     private int $_GUID;
 
-    private $_GUIDs;
+    protected $_GUIDs;
 
-    private $_GUIDRestores;
+    protected $_GUIDRestores;
 
-    private $_GUIDSwap;
+    protected $_GUIDSwap;
 
     private ?bool $_GUIDSwapEnabled = null;
 
-    private $_dataOverwrite;
+    protected $_dataOverwrite;
 
     public function __construct($siteID = 1, $dataOverwrite = true)
     {
@@ -177,7 +177,7 @@ class CBFUtility
     // FIXME: Document me.
     private function setGUID($fieldName, $id)
     {
-        $id = intval($id);
+        $id = (int)($id);
         if (! $this->_GUIDSwapEnabled) {
             if (! isset($this->_GUIDs[$fieldName])) {
                 return ($this->_GUIDs[$fieldName] = [
@@ -205,7 +205,7 @@ class CBFUtility
     // FIXME: Document me.
     private function getGUID($fieldName, $id)
     {
-        $id = intval($id);
+        $id = (int)($id);
         if (! $this->_GUIDSwapEnabled) {
             if (! isset($this->_GUIDs[$fieldName]) || ! isset($this->_GUIDs[$fieldName][$id])) {
                 // Record points to a non-existent row
@@ -472,13 +472,13 @@ class CBFUtility
     private function setRestoreGUID($GUID, $id)
     {
         // FIXME: add swap
-        $this->_GUIDRestores[intval($GUID)] = $id;
+        $this->_GUIDRestores[(int)($GUID)] = $id;
     }
 
     private function getRestoreGUID($GUID)
     {
-        if (isset($this->_GUIDRestores[intval($GUID)])) {
-            return $this->_GUIDRestores[intval($GUID)];
+        if (isset($this->_GUIDRestores[(int)($GUID)])) {
+            return $this->_GUIDRestores[(int)($GUID)];
         } else {
             return false;
         }

@@ -18,8 +18,8 @@ require_once(dirname(__FILE__) . '/socket.php');
  *    @subpackage WebTester
  */
 class SimpleEncodedPair {
-    private $key;
-    private $value;
+    protected $key;
+    protected $value;
 
     /**
      *    Stashes the data for rendering later.
@@ -87,9 +87,9 @@ class SimpleEncodedPair {
  *    @subpackage WebTester
  */
 class SimpleAttachment {
-    private $key;
-    private $content;
-    private $filename;
+    protected $key;
+    protected $content;
+    protected $filename;
 
     /**
      *    Stashes the data for rendering later.
@@ -189,7 +189,7 @@ class SimpleAttachment {
  *    @subpackage WebTester
  */
 class SimpleEncoding {
-    private $request;
+    protected $request;
 
     /**
      *    Starts empty.
@@ -439,8 +439,8 @@ class SimpleDeleteEncoding extends SimpleGetEncoding {
  *    @subpackage WebTester
  */
 class SimpleEntityEncoding extends SimpleEncoding {
-    private $content_type;
-    private $body;
+    protected $content_type;
+    protected $body;
 
     function __construct($query = false, $content_type = false) {
         $this->content_type = $content_type;
@@ -597,7 +597,7 @@ class SimplePutEncoding extends SimpleEntityEncoding {
  *    @subpackage WebTester
  */
 class SimpleMultipartEncoding extends SimplePostEncoding {
-    private $boundary;
+    protected $boundary;
 
     /**
      *    Starts empty.

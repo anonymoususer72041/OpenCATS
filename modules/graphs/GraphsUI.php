@@ -37,9 +37,11 @@ include_once(LEGACY_ROOT . '/lib/Dashboard.php');
 
 class GraphsUI extends UserInterface
 {
-    private $width;
+    protected int $width;
 
-    private $height;
+    protected int $height;
+    protected $_siteID;
+
 
     public function __construct()
     {

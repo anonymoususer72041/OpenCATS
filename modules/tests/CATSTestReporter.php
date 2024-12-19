@@ -15,7 +15,7 @@ class CATSTestReporter extends SimpleReporter
 
     public $showFails = true;
 
-    private $_microTimeStart;
+    protected $_microTimeStart;
 
     public function __construct($microTimeStart)
     {
