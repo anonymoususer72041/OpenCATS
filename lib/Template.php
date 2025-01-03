@@ -19,6 +19,7 @@
  */
 class Template
 {
+    public $jobOrderStatuses;
     public $departmentsString;
     public $wildCardQuickSearch;
     public $EEOReportStatistics;

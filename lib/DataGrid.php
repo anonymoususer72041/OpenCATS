@@ -860,7 +860,7 @@ class DataGrid
 
                     if (! isset($data['filterDescription'])) {
                         echo '\'', $index, '\'', $filterOperatorHuman,': ';
-                        echo '<input class="inputbox" style="width:180px;" value="', htmlspecialchars($filterValue), '" onChange="addColumnToFilter(\'filterArea', $md5InstanceName, '\', urlDecode(\'', urlencode($index), '\'), \'', $filterOperator, '\', this.value);" />';
+                        echo '<input class="inputbox" style="width:180px;" value="', htmlspecialchars($filterValue ?? ''), '" onChange="addColumnToFilter(\'filterArea', $md5InstanceName, '\', urlDecode(\'', urlencode($index), '\'), \'', $filterOperator, '\', this.value);" />';
                     } else {
                         echo($data['filterDescription']);
                     }
@@ -1467,7 +1467,7 @@ class DataGrid
                     $currentFilterString = '';
                 }
 
-                echo '<input type="hidden" id="filterArea' . $md5InstanceName . '" value="', htmlspecialchars((string) $currentFilterString), '" />';
+                echo '<input type="hidden" id="filterArea' . $md5InstanceName . '" value="', htmlspecialchars((string) $currentFilterString ?? ''), '" />';
                 echo '<script type="text/javascript">', $this->_getApplyFilterFunctionDefinition(), '</script>';
 
                 /* This makes the table able to be wider then the displayable area. */
@@ -1700,8 +1700,6 @@ class DataGrid
             }
             echo '</tr>', "\n";
             echo '</thead>', "\n";
-
-
             /* Table Data */
             foreach ($this->_rs as $rsIndex => $rsData) {
                 if (isset($this->listStyle) && $this->listStyle == true) {
@@ -1733,26 +1731,11 @@ class DataGrid
                         echo(' colspan="2">');
                     }
 
-                    $columnValue = '';
-                    if (isset($data['data']['sortableColumn'])) {
-                        $columnValue = $rsData[$data['data']['sortableColumn']] ?? '';
+                    if (! isset($data['data']['pagerRender'])) {
+                        echo($rsData[$data['data']['sortableColumn']]);
+                    } else {
+                        echo(eval($data['data']['pagerRender']));
                     }
-
-                    // Handle different rendering scenarios
-                    if (isset($data['data']['render'])) {
-                        switch ($data['data']['render']) {
-                            case 'date':
-                                $columnValue = date('Y-m-d', strtotime($columnValue));
-                                break;
-                            case 'currency':
-                                // Implement currency formatting logic here (e.g., using number_format)
-                                $columnValue = number_format($columnValue, 2, '.', ',');
-                                break;
-                                // Add more cases for other rendering needs
-                        }
-                    }
-
-                    echo($columnValue);
 
                     echo('</td>' . "\n");
                 }
@@ -1770,9 +1753,6 @@ class DataGrid
                 echo('</div>');
             }
         }
-
-
-
         /**
          * echos the action area.
          */
@@ -1821,7 +1801,7 @@ class DataGrid
             if ($allowAll) {
                 $html = sprintf(
                     '<div><div style="float:left; width:170px;">%s</div><div style="float:right; width:95px;"><a href="javascript:void(0);" onclick="if (exportArray%s.length>0) window.location.href=\'%s&i=%s&p=%s&dynamicArgument%s=\' + urlEncode(serializeArray(exportArray%s)); else dataGridNoSelected();">Selected</a>&nbsp;|&nbsp;<a href="%s&i=%s&p=%s">All</a></div></div>',
-                    htmlspecialchars((string) $actionTitle),
+                    htmlspecialchars((string) $actionTitle ?? ''),
                     md5((string) $this->_instanceName),
                     $actionURL,
                     urlencode((string) $this->_instanceName),
@@ -1835,7 +1815,7 @@ class DataGrid
             } else {
                 $html = sprintf(
                     '<div><div style="float:left; width:170px;">%s</div><div style="float:right; width:95px;"><a href="javascript:void(0);" onclick="if (exportArray%s.length>0) window.location.href=\'%s&i=%s&p=%s&dynamicArgument%s=\' + urlEncode(serializeArray(exportArray%s)); else dataGridNoSelected();">Selected</a></div></div>',
-                    htmlspecialchars((string) $actionTitle),
+                    htmlspecialchars((string) $actionTitle ?? ''),
                     md5((string) $this->_instanceName),
                     $actionURL,
                     urlencode((string) $this->_instanceName),
@@ -1877,7 +1857,7 @@ class DataGrid
             if ($allowAll) {
                 $html = sprintf(
                     '<div><div style="float:left; width:170px;">%s</div><div style="float:right; width:95px;"><a href="javascript:void(0);" onclick="if (exportArray%s.length>0) showPopWin(\'%s&i=%s&p=%s&dynamicArgument%s=\' + urlEncode(serializeArray(exportArray%s)), %s, %s); else dataGridNoSelected();">Selected</a>&nbsp;|&nbsp;<a href="javascript:void(0);" onclick="showPopWin(\'%s&i=%s&p=%s\', %s, %s);">All</a></div></div>',
-                    htmlspecialchars((string) $actionTitle),
+                    htmlspecialchars((string) $actionTitle ?? ''),
                     md5((string) $this->_instanceName),
                     $actionURL,
                     urlencode((string) $this->_instanceName),
@@ -1895,7 +1875,7 @@ class DataGrid
             } else {
                 $html = sprintf(
                     '<div><div style="float:left; width:170px;">%s</div><div style="float:right; width:95px;"><a href="javascript:void(0);" onclick="if (exportArray%s.length>0) showPopWin(\'%s&i=%s&p=%s&dynamicArgument%s=\' + urlEncode(serializeArray(exportArray%s)), %s, %s); else dataGridNoSelected();">Selected</a></div></div>',
-                    htmlspecialchars((string) $actionTitle),
+                    htmlspecialchars((string) $actionTitle ?? ''),
                     md5((string) $this->_instanceName),
                     $actionURL,
                     urlencode((string) $this->_instanceName),
