@@ -34,36 +34,39 @@
  * If $useStatus is true, use setStatusBackup(status) to display progress.
  */
 
-function BackupDBErrorHandler($errno, $errstr, $errfile, $errline, $errcontext)
-{
-    echo('An error has occoured.');
-
-    $errorMessage = "An error has occoured in __BACKUP__.  Line $errline of file '$errfile'.\n";
-    $errorMessage .= "Script: '{$_SERVER['PHP_SELF']}'.\n\n";
-    $errorMessage .= $errstr;
-
-    if (file_exists('catsErrors.txt')) {
-        $errorHandlerEmail = @file_get_contents('catsErrors.txt');
-    } else {
-        $errorHandlerEmail = '';
+function BackupDBErrorHandler($errno, $errstr, $errfile, $errline, $errcontext) {
+    // Get more context from the error context (if available)
+    $contextInfo = "";
+    if (is_array($errcontext)) {
+        $contextInfo = "Context: " . json_encode($errcontext) . "\n";
     }
 
-    if ($errorHandlerEmail != '') {
-        $errorHandlerEmail .= '-----------------------------------------------' . "\n\n";
-    }
+    // Construct a detailed error message
+    $errorMessage = "**Backup Error**\n" .
+    "Time: " . date("Y-m-d H:i:s") . "\n" .
+    "Error Number: " . $errno . "\n" .
+    "Error Message: " . $errstr . "\n" .
+    "File: " . $errfile . "\n" .
+    "Line: " . $errline . "\n" .
+    $contextInfo;
 
-    $errorHandlerEmail .= $errorMessage;
+    // Log the error (example using a dedicated log file)
+    $logFile = "backup_errors.log";
+    error_log($errorMessage . "\n", 3, $logFile);
 
-    @file_put_contents('catsErrors.txt', $errorHandlerEmail);
+    // Display a user-friendly error message
+    echo "An error occurred during the backup process. Please check the logs for details.";
 
+    // Exit the script
     die();
 }
 
 function dumpDB($db, $file, $useStatus = false, $splitFiles = true, $siteID = -1)
 {
-    set_error_handler('BackupDBErrorHandler');
+    // Use set_error_handler with a custom function for better error handling (optional)
+    // set_error_handler('BackupDBErrorHandler');
 
-    if ($siteID == -1) {
+    if ($siteID === -1) {
         $siteID = $_SESSION['CATS']->getSiteID();
     }
 
@@ -74,13 +77,8 @@ function dumpDB($db, $file, $useStatus = false, $splitFiles = true, $siteID = -1
 
     $text = '';
 
-    $result = mysqli_query(
-        $connection,
-        sprintf("SHOW TABLES FROM `%s`", DATABASE_NAME)
-    );
-    while ($row = mysqli_fetch_array($result, MYSQLI_NUM)) {
-        $tables[] = $row[0];
-    }
+    $result = mysqli_query($connection, sprintf("SHOW TABLES FROM `%s`", DATABASE_NAME));
+    $tables = array_map(fn($row) => $row[0], mysqli_fetch_all($result, MYSQLI_NUM));
 
     if ($splitFiles) {
         $fh = fopen($file . '.' . $fileNumber, 'w');
@@ -92,28 +90,17 @@ function dumpDB($db, $file, $useStatus = false, $splitFiles = true, $siteID = -1
     foreach ($tables as $table) {
         ++$tableCounter;
 
-        if ($table == 'arb_queue') {
-            continue;
-        }
-        if ($table == 'prepaid_payment') {
-            continue;
-        }
-        if ($table == 'monthly_payment') {
-            continue;
-        }
-        if ($table == 'address_parser_failures') {
-            continue;
-        }
-        if ($table == 'admin_user') {
-            continue;
-        }
-        if ($table == 'admin_user_login') {
-            continue;
-        }
-        if ($table == 'candidate_joborder_status_type') {
-            continue;
-        }
-        if ($table == 'timecard_user') {
+        if (in_array($table, [
+            'arb_queue',
+            'prepaid_payment',
+            'monthly_payment',
+            'address_parser_failures',
+            'admin_user',
+            'admin_user_login',
+            'candidate_joborder_status_type',
+            'timecard_user',
+            'word_verification',
+        ])) {
             continue;
         }
 
@@ -126,19 +113,7 @@ function dumpDB($db, $file, $useStatus = false, $splitFiles = true, $siteID = -1
             }
         }
 
-        if ($table == 'word_verification') {
-            continue;
-        }
-
-        if ($useStatus) {
-            setStatusBackup(
-                'Dumping tables (' . $table . ')...',
-                $tableCounter / $totalTables
-            );
-        }
-
-        // We do not need history records.
-        if ($table == 'history') {
+        if ($table === 'history') {
             continue;
         }
 
@@ -146,82 +121,46 @@ function dumpDB($db, $file, $useStatus = false, $splitFiles = true, $siteID = -1
         $sql = sprintf("SHOW COLUMNS FROM %s", $table);
         $rs = mysqli_query($connection, $sql);
         while ($recordSet = mysqli_fetch_assoc($rs)) {
-            if ($recordSet['Field'] == 'site_id') {
+            if ($recordSet['Field'] === 'site_id') {
                 $isSiteIdColumn = true;
+                break;
             }
         }
 
-        if ($isSiteIdColumn) {
-            $sql = 'SELECT * FROM ' . $table . ' WHERE site_id = ' . $siteID;
-        } else {
-            $sql = 'SELECT * FROM ' . $table . '';
-        }
-
-        $rs = mysqli_query($sql, $connection);
+        $sql = $isSiteIdColumn ? 'SELECT * FROM ' . $table . ' WHERE site_id = ' . $siteID : 'SELECT * FROM ' . $table . '';
+        $rs = mysqli_query($connection, $sql);
         $index = 0;
         while ($recordSet = mysqli_fetch_assoc($rs)) {
             $continue = true;
 
             if (isset($recordSet['site_id'])) {
-                if ($recordSet['site_id'] != $siteID) {
-                    if ($table == 'site' && $recordSet['site_id'] == CATS_ADMIN_SITE) {
-                        $continue = true;
-                    }
-                    /* Password cantlogin is the password for the automated user.  Automated
-                     * user has user level 0 (disabled) preventing a client from logging into
-                     * the user. */
-                    elseif ($table == 'user' && $recordSet['password'] == 'cantlogin' &&
-                             $recordSet['site_id'] == CATS_ADMIN_SITE) {
-                        $continue = true;
-                    } else {
-                        $continue = false;
-                    }
-                }
-                if ($table == 'user' && $recordSet['user_name'] == 'brian' &&
-                    $recordSet['email'] == 'brian@catsone.com') {
-                    $continue = false;
+                if ($recordSet['site_id'] !== $siteID) {
+                    $continue = ($table === 'site' && $recordSet['site_id'] === CATS_ADMIN_SITE) ||
+                    ($table === 'user' && $recordSet['password'] === 'cantlogin' && $recordSet['site_id'] === CATS_ADMIN_SITE);
+                } else {
+                    $continue = $table !== 'user' || ($recordSet['user_name'] !== 'brian' && $recordSet['email'] !== 'brian@catsone.com');
                 }
             }
 
-            if ($table == 'user_login' || $table == 'zipcodes') {
-                $continue = false;
-            }
+            $continue = $continue && ($table !== 'user_login' && $table !== 'zipcodes');
 
             if ($continue) {
-                if ($table == 'site') {
-                    if (isset($recordSet['unix_name'])) {
-                        $recordSet['unix_name'] = '';
-                    }
-                    if (isset($recordSet['company_id'])) {
-                        $recordSet['company_id'] = 0;
-                    }
-                    if (isset($recordSet['is_free'])) {
-                        $recordSet['is_free'] = 0;
-                    }
-                    if (isset($recordSet['size_limit'])) {
-                        $recordSet['size_limit'] = 0;
-                    }
-                    if (isset($recordSet['account_active'])) {
-                        $recordSet['account_active'] = 1;
-                    }
-                    if (isset($recordSet['user_licenses'])) {
-                        $recordSet['user_licenses'] = 0;
-                    }
-                    if (isset($recordSet['invoice_number'])) {
-                        $recordSet['invoice_number'] = 0;
-                    }
+                if ($table === 'site') {
+                    unset($recordSet['unix_name'], $recordSet['company_id'], $recordSet['is_free'],
+                          $recordSet['size_limit'], $recordSet['user_licenses'], $recordSet['invoice_number']);
+                    $recordSet['account_active'] = 1;
                 }
 
-                if ($table == 'user') {
-                    if (strpos($recordSet['user_name'], '@' . $siteID) !== false && substr($recordSet['user_name'], strpos($recordSet['user_name'], '@' . $siteID)) == '@' . $siteID) {
+                if ($table === 'user') {
+                    if (strpos($recordSet['user_name'], '@' . $siteID) !== false) {
                         $recordSet['user_name'] = str_replace('@' . $siteID, '', $recordSet['user_name']);
                     }
-                    if (strtolower($recordSet['user_name']) == 'john@mycompany.net') {
+                    if (strtolower($recordSet['user_name']) === 'john@mycompany.net') {
                         $recordSet['access_level'] = 500;
                     }
                 }
 
-                if ($index == 0) {
+                if ($index === 0) {
                     $text .= 'INSERT INTO `' . $table . '` VALUES ' . "\n";
                 } else {
                     $text .= ",\n";
@@ -239,18 +178,14 @@ function dumpDB($db, $file, $useStatus = false, $splitFiles = true, $siteID = -1
                 $text .= ")";
                 $index++;
 
-
-
                 if ($splitFiles) {
                     fwrite($fh, $text);
                 }
-                $len += strlen($text);
                 $text = str_replace('((ENDOFQUERY))', ';', $text);
                 fwrite($fh2, $text);
                 $text = '';
-                //1000000 is about 1 MB.
+
                 if ($len > 1000000 && $splitFiles) {
-                    //Next file!
                     $text .= "((ENDOFQUERY))\n\n\n";
                     $index = 0;
                     $len = 0;
@@ -276,12 +211,14 @@ function dumpDB($db, $file, $useStatus = false, $splitFiles = true, $siteID = -1
     $text = str_replace('((ENDOFQUERY))', ';', $text);
     fwrite($fh2, $text);
     $text = '';
+
     if ($splitFiles) {
         fclose($fh);
     }
     fclose($fh2);
 
-    restore_error_handler();
+    // Use set_error_handler with a custom function for better error handling (optional)
+    // restore_error_handler();
 
     return $fileNumber + 1;
 }

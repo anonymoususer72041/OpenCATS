@@ -253,24 +253,37 @@ class DatabaseConnection
      * @param integer Column number.
      * @return array Multi-dimensional associative result set array, or array()
      */
-    public function getColumn($query = null, $row, $column)
+    public function getColumn($query, $row, $column)
     {
-        if ($query != null) {
+        // Ensure the query is always executed
+        if ($query) {
             $this->query($query);
+        } else {
+            throw new InvalidArgumentException('Query must be provided.');
+        }
+
+        // Check if the query result is valid
+        if ($this->_queryResult === false) {
+            return false;
         }
 
         $numRows = mysqli_num_rows($this->_queryResult);
-        if ($numRows === false) {
-            return false;
-        } elseif ($row >= $numRows) {
-            return false;
-        } elseif ($row < 0) {
+        if ($numRows === false || $row >= $numRows || $row < 0) {
             return false;
         }
 
+        // Move the pointer to the desired row
         mysqli_data_seek($this->_queryResult, $row);
-        return mysqli_fetch_row($this->_queryResult);
+
+        // Fetch the row and return the specified column
+        $fetchedRow = mysqli_fetch_row($this->_queryResult);
+        if ($fetchedRow === null || !isset($fetchedRow[$column])) {
+            return false;
+        }
+
+        return $fetchedRow[$column];
     }
+
 
     /**
      * Returns one row from a query's result set in an associative array,

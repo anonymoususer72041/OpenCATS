@@ -90,7 +90,7 @@ class ControlPanel
 
     protected $_truncate;
 
-    private int $_truncateID;
+    protected int $_truncateID;
 
     protected $_fieldUrls;
 

@@ -27,7 +27,7 @@
  * $Id: backup.php 3402 2007-11-02 22:03:43Z brian $
  */
 
-@ini_set('memory_limit', '512M');
+//@ini_set('memory_limit', '512M');
 
 include_once(LEGACY_ROOT . '/lib/Attachments.php');
 
@@ -44,7 +44,7 @@ if (! isset($_REQUEST['a'])) {
 $action = $_REQUEST['a'];
 
 $completedTasks = '';
-function markCompleted($task)
+function markCompleted(string $task): void
 {
     global $completedTasks;
 
@@ -52,7 +52,7 @@ function markCompleted($task)
         . '</td><td><span class="passedText">DONE</span></td></tr>';
 }
 
-function setStatusBackup($status, $progress)
+function setStatusBackup(string $status, string $progress): void
 {
     global $completedTasks;
 
@@ -78,11 +78,7 @@ if ($action == 'start') {
     );
 
     /* Build title string. */
-    if ($attachmentsOnly) {
-        $title = 'CATS Attachments Backup';
-    } else {
-        $title = 'CATS Backup';
-    }
+    $title = $attachmentsOnly ? 'CATS Attachments Backup' : 'CATS Backup';
 
     $attachmentCreator = new AttachmentCreator(CATS_ADMIN_SITE);
     $attachmentCreator->createFromFile(
@@ -216,17 +212,21 @@ if ($action == 'backup') {
     /* Get attachments metadata for this site. */
     $sql = sprintf(
         "SELECT
-            directory_name,
-            stored_filename,
-            attachment_id
+        directory_name,
+        stored_filename,
+        attachment_id
         FROM
-            attachment
+        attachment
         WHERE
-            site_id = %s",
+        site_id = %d", // Use %d for integer values to ensure proper type handling
         $siteID
     );
-    $queryResult = mysqli_query($db, $sql);
-    $totalAttachments = mysqli_num_rows($queryResult);
+
+    /* Execute the query using the DatabaseConnection abstraction. */
+    $queryResult = $db->query($sql);
+
+    /* Get the total number of attachments. */
+    $totalAttachments = $db->getNumRows();
 
     /* Add each attachment to the zip file. */
     $attachmentCount = 0;

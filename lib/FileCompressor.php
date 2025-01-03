@@ -70,20 +70,20 @@ class ZipFileCreator
     private string $_centralDirectory = '';
 
     /* Total number of file records added to the zip file. */
-    private int $_fileRecordCount = 0;
+    protected int $_fileRecordCount = 0;
 
     /* Last file offset position. This starts at 0 and is increased each time a
      * file is added.
      */
-    private int $_lastOffset = 0;
+    protected int $_lastOffset = 0;
 
     /* Total length of file records. This will eventually point to the starting
      * offset of the Central Directory.
      */
-    private int $_fileRecordsLength = 0;
+    protected int $_fileRecordsLength = 0;
 
     /* Total length of Central Directory. */
-    private int $_centralDirectoryLength = 0;
+    protected int $_centralDirectoryLength = 0;
 
     /* File handle for the open zip file we're writing as we're writing it. */
     protected $_fileHandle = null;
@@ -729,7 +729,7 @@ class ZipFileCreator
         return true;
     }
 
-    private function createCentralDirectoryEntry(
+    protected function createCentralDirectoryEntry(
         $name,
         $DOSTime,
         $CRC32,
@@ -939,17 +939,17 @@ class ZipFileExtractor
     protected $_fileHandle = null;
 
     /* Meta data and Central Directory. */
-    private array $_metaData = [];
+    protected array $_metaData = [];
 
     /* Current error message. */
-    private string $_errorMessage = '';
+    protected string $_errorMessage = '';
 
     public function __construct($filename)
     {
         $this->_filename = $filename;
     }
 
-    private function getErrorMessage()
+    public function getErrorMessage()
     {
         return $this->_errorMessage;
     }
@@ -1122,7 +1122,7 @@ class ZipFileExtractor
         return true;
     }
 
-    private function parseCentralDirectory($startOffset, $length)
+    protected function parseCentralDirectory($startOffset, $length)
     {
         /* Seek to the start of the central directory. */
         if (fseek($this->_fileHandle, $startOffset, SEEK_SET) === -1) {
@@ -1238,6 +1238,7 @@ class ZipFileExtractor
         $compressedSize = null;
         $compressionMethod = null;
         $CRC32 = null;
+
         /* Seek to the start of the central directory. */
         if (fseek($this->_fileHandle, $startOffset, SEEK_SET) === -1) {
             $this->_errorMessage = 'Unexpected end of file.';
@@ -1246,29 +1247,13 @@ class ZipFileExtractor
 
         /* Read the first 30 bytes into memory. */
         $bytes = fread($this->_fileHandle, 30);
-        if (! $bytes) {
+        if (!$bytes) {
             $this->_errorMessage = 'Unexpected end of file.';
             return false;
         }
 
         /* Remove the Start of File Record marker. */
         $bytes = substr($bytes, 4);
-
-        /* Format:
-         *
-         * [4B] [Start of File Record Marker] [REMOVED]
-         * [2B] [Version Needed to Extract]
-         * [2B] [General Purpose Bit Flag (See Above)]
-         * [2B] [Compression Method (See Above)]
-         *
-         * [4B] [Last-Modified Timestamp in DOS Format]
-         * [4B] [CRC32 Checksum of Compressed Data]
-         * [4B] [Compressed Data Length]
-         * [4B] [Uncompressed Data Length]
-         *
-         * [2B] [Filename Length]
-         * [2B] [Extra Field Length]
-         */
 
         /* Parse the first 26 bytes (metadata). */
         $metaData = @unpack(
@@ -1285,7 +1270,7 @@ class ZipFileExtractor
         );
 
         /* Was parsing successful? */
-        if (! $metaData) {
+        if (!$metaData) {
             $this->_errorMessage = 'Failed to parse file meta information.';
             return false;
         }
@@ -1293,6 +1278,12 @@ class ZipFileExtractor
         /* Make things a bit easier down below. */
         extract($metaData);
         unset($metaData);
+
+        /* Validate the compressed size. */
+        if ($compressedSize <= 0) {
+            $this->_errorMessage = 'Invalid compressed size: ' . $compressedSize;
+            return false;
+        }
 
         /* Seek to the start of the compressed data. */
         $offset = $filenameLength + $extraFieldLength;
@@ -1303,7 +1294,7 @@ class ZipFileExtractor
 
         /* Read the compressed data into memory. */
         $bytes = fread($this->_fileHandle, $compressedSize);
-        if (! $bytes) {
+        if (!$bytes) {
             $this->_errorMessage = 'Unexpected end of file.';
             return false;
         }
@@ -1316,23 +1307,19 @@ class ZipFileExtractor
                 break;
 
                 /* BZIP2 compression. See manual for reduced-memory method. */
-            case 12:
-                $uncompressedData = bzdecompress($bytes);
-                break;
+                case 12:
+                    $uncompressedData = bzdecompress($bytes);
+                    break;
 
-                /* STORE (no compression). */
-            case 0:
-                $uncompressedData = $bytes;
-                break;
+                    /* STORE (no compression). */
+                    case 0:
+                        $uncompressedData = $bytes;
+                        break;
 
-                /* Something we don't know how to handle. There are several ZIP
-                 * compression methods allowed for in the APPNOTE that we don't
-                 * support.
-                 */
-            default:
-                $this->_errorMessage = 'Invalid / unknown compression method.';
-                return false;
-                break;
+                        /* Something we don't know how to handle. */
+                        default:
+                            $this->_errorMessage = 'Invalid / unknown compression method.';
+                            return false;
         }
 
         /* Free up a bit of memory. */
@@ -1347,7 +1334,8 @@ class ZipFileExtractor
         return $uncompressedData;
     }
 
-    private function findEndCentralDirectoryMarker($fileHandle, $fileLength)
+
+    protected function findEndCentralDirectoryMarker($fileHandle, $fileLength)
     {
         /* The marker we're looking for (a 4-byte sequence). */
         $markerBytes = pack('V', END_CENTRAL_DIRECTORY);

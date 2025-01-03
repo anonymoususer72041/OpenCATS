@@ -1924,11 +1924,20 @@ class SettingsUI extends UserInterface
         );
 
         foreach ($attachmentsRS as $index => $data) {
-            $attachmentsRS[$index]['fileSize'] = FileUtility::sizeToHuman(
-                filesize($data['retrievalURLLocal']),
-                2,
-                1
-            );
+            $filePath = $data['retrievalURLLocal'];
+
+            // Check if the updated file exists
+            if (!file_exists($filePath)) {
+                error_log('File not found: ' . $filePath); // Debug log
+                $attachmentsRS[$index]['fileSize'] = 'Missing';
+            } else {
+                // Use the updated file path for size calculation
+                $attachmentsRS[$index]['fileSize'] = FileUtility::sizeToHuman(
+                    filesize($filePath),
+                                                                              2,
+                                                                              1
+                );
+            }
         }
 
         $this->_template->assign('active', $this);
@@ -1936,6 +1945,7 @@ class SettingsUI extends UserInterface
         $this->_template->assign('attachmentsRS', $attachmentsRS);
         $this->_template->display('./modules/settings/Backup.tpl');
     }
+
 
     private function deleteBackup()
     {

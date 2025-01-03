@@ -27,7 +27,7 @@
  * $Id: ui.php 3807 2007-12-05 01:47:41Z will $
  */
 
-include_once('./config.php');
+include_once(LEGACY_ROOT . '/config.php');
 include_once(LEGACY_ROOT . '/lib/InstallationTests.php');
 include_once(LEGACY_ROOT . '/lib/CATSUtility.php');
 
@@ -141,34 +141,40 @@ switch ($action) {
     case 'mailSettings':
         MySQLConnect();
 
-        if (MAIL_MAILER == 3 && MAIL_SMTP_AUTH == 1) {
-            $mailOption = '4';
-        } else {
-            $mailOption = '';
-        }
+        // Determine mail option based on constants
+        $mailOption = MAIL_MAILER == 3 && MAIL_SMTP_AUTH == 1 ? '4' : '';
 
+        // Initialize default mail address
         $mailFromAddress = '';
+
+        // Query for existing mail address
         if (isset($tables['settings'])) {
             $rs = MySQLQuery('SELECT value FROM settings WHERE setting = "fromAddress" LIMIT 1');
-            if (mysqli_num_rows($rs) > 0) {
-                $mailFromAddress = mysqli_fetch_row($rs);
+            if ($rs && mysqli_num_rows($rs) > 0) {
+                $row = mysqli_fetch_row($rs);  // Get first row
+                $mailFromAddress = $row[0];   // Assign first value
             }
         }
 
+        // Ensure a fallback value if not set
+        $mailFromAddress = empty($mailFromAddress) ? 'admin@example.com' : $mailFromAddress;
+
+        // Output JavaScript with safe values
         echo '
-            <script type="text/javascript">
-                setActiveStep(5);
-                showTextBlock(\'mailSettings\');
-                document.getElementById(\'mailSupport\').value = \'opt' . ($mailOption != '' ? $mailOption : htmlspecialchars(MAIL_MAILER)) . '\';
-                document.getElementById(\'mailSendmail\').value = \'' . htmlspecialchars(MAIL_SENDMAIL_PATH) . '\';
-                document.getElementById(\'mailSmtpHost\').value = \'' . htmlspecialchars(MAIL_SMTP_HOST) . '\';
-                document.getElementById(\'mailSmtpPort\').value = \'' . htmlspecialchars(MAIL_SMTP_PORT) . '\';
-                document.getElementById(\'mailSmtpUsername\').value = \'' . htmlspecialchars(MAIL_SMTP_USER) . '\';
-                document.getElementById(\'mailSmtpPassword\').value = \'' . htmlspecialchars(MAIL_SMTP_PASS) . '\';
-                document.getElementById(\'mailFromAddress\').value = \'' . htmlspecialchars((string) $mailFromAddress[0]) . '\';
-                changeMailForm();
-            </script>';
+        <script type="text/javascript">
+        setActiveStep(5);
+        showTextBlock(\'mailSettings\');
+        document.getElementById(\'mailSupport\').value = \'opt' . ($mailOption !== '' ? $mailOption : htmlspecialchars(MAIL_MAILER)) . '\';
+        document.getElementById(\'mailSendmail\').value = \'' . htmlspecialchars(MAIL_SENDMAIL_PATH) . '\';
+        document.getElementById(\'mailSmtpHost\').value = \'' . htmlspecialchars(MAIL_SMTP_HOST) . '\';
+        document.getElementById(\'mailSmtpPort\').value = \'' . htmlspecialchars(MAIL_SMTP_PORT) . '\';
+        document.getElementById(\'mailSmtpUsername\').value = \'' . htmlspecialchars(MAIL_SMTP_USER) . '\';
+        document.getElementById(\'mailSmtpPassword\').value = \'' . htmlspecialchars(MAIL_SMTP_PASS) . '\';
+        document.getElementById(\'mailFromAddress\').value = \'' . htmlspecialchars((string) $mailFromAddress) . '\';
+        changeMailForm();
+        </script>';
         break;
+
 
     case 'setMailSettings':
         $mailSupportTxt = $_REQUEST['mailSupport'];
@@ -258,9 +264,9 @@ switch ($action) {
         } else {
             $antiwordWithSlashes = str_replace('\\', '\\\\', ANTIWORD_PATH);
 
-            include_once('lib/SystemUtility.php');
+            include_once(LEGACY_ROOT . '/lib/SystemUtility.php');
             /* Change Windows default command to UNIX default command hack. */
-            if (strpos(strtolower($antiwordWithSlashes), "c:\\") === 0 && ! SystemUtility::isWindows()) {
+            if (stripos($antiwordWithSlashes, "c:\\") === 0 && ! SystemUtility::isWindows()) {
                 $antiwordWithSlashes = '/usr/bin/antiword';
             }
 
@@ -284,9 +290,9 @@ switch ($action) {
         } else {
             $pdftotextWithSlashes = str_replace('\\', '\\\\', PDFTOTEXT_PATH);
 
-            include_once('lib/SystemUtility.php');
+            include_once(LEGACY_ROOT . '/lib/SystemUtility.php');
             /* Change Windows default command to UNIX default command hack. */
-            if (strpos(strtolower($pdftotextWithSlashes), "c:\\") === 0 && ! SystemUtility::isWindows()) {
+            if (stripos($pdftotextWithSlashes, "c:\\") === 0 && ! SystemUtility::isWindows()) {
                 $pdftotextWithSlashes = '/usr/bin/pdftotext';
             }
 
@@ -310,9 +316,9 @@ switch ($action) {
         } else {
             $html2textWithSlashes = str_replace('\\', '\\\\', HTML2TEXT_PATH);
 
-            include_once('lib/SystemUtility.php');
+            include_once(LEGACY_ROOT . '/lib/SystemUtility.php');
             /* Change Windows default command to UNIX default command hack. */
-            if (strpos(strtolower($html2textWithSlashes), "c:\\") === 0 && ! SystemUtility::isWindows()) {
+            if (stripos($html2textWithSlashes, "c:\\") === 0 && ! SystemUtility::isWindows()) {
                 $html2textWithSlashes = '/usr/bin/html2text';
             }
 
@@ -336,9 +342,9 @@ switch ($action) {
         } else {
             $unrtfWithSlashes = str_replace('\\', '\\\\', UNRTF_PATH);
 
-            include_once('lib/SystemUtility.php');
+            include_once(LEGACY_ROOT . '/lib/SystemUtility.php');
             /* Change Windows default command to UNIX default command hack. */
-            if (strpos(strtolower($unrtfWithSlashes), "c:\\") === 0 && ! SystemUtility::isWindows()) {
+            if (stripos($unrtfWithSlashes, "c:\\") === 0 && ! SystemUtility::isWindows()) {
                 $unrtfWithSlashes = '/usr/bin/unrtf';
             }
 
@@ -414,11 +420,7 @@ switch ($action) {
 
         /* Detect date format preferences. */
         $rs = MySQLQuery('SELECT date_format_ddmmyy FROM site', true);
-        if ($rs) {
-            $record = mysqli_fetch_assoc($rs);
-        } else {
-            $record = [];
-        }
+        $record = $rs ? mysqli_fetch_assoc($rs) : [];
 
         if (! isset($record['date_format_ddmmyy']) || $record['date_format_ddmmyy'] == 0) {
             echo 'document.getElementById(\'dateFormat\').value = \'mdy\';';
@@ -471,20 +473,19 @@ switch ($action) {
         $_SESSION['dateFormatInstaller'] = $dateFormat;
 
         $list = explode(',', (string) $_REQUEST['list']);
+        $counter = count($list);
 
-        for ($i = 0; $i < count($list); $i += 2) {
+        for ($i = 0; $i < $counter; $i += 2) {
             if (! isset($list[$i + 1])) {
                 continue;
             }
 
             if ($optionalComponents[$list[$i]]['componentExists'] == false) {
-                if ($list[$i + 1] == 'true') {
+                if ($list[$i + 1] === 'true') {
                     eval($optionalComponents[$list[$i]]['installCode']);
                 }
-            } else {
-                if ($list[$i + 1] == 'false') {
-                    eval($optionalComponents[$list[$i]]['removeCode']);
-                }
+            } elseif ($list[$i + 1] === 'false') {
+                eval($optionalComponents[$list[$i]]['removeCode']);
             }
         }
 
@@ -538,7 +539,7 @@ switch ($action) {
             die();
         }
 
-        if ($catsVersion == '') {
+        if ($catsVersion === '') {
             echo '
                 <script type="text/javascript">
                     showTextBlock(\'unknownDataInDatabase\');
@@ -660,29 +661,29 @@ switch ($action) {
         echo '<script type="text/javascript">Installpage_populate(\'a=detectRevision\', \'subFormBlock\', \'\');</script>';
         break;
 
-    case 'doInstallEmptyDatabase':
-        MySQLConnect();
+        case 'doInstallEmptyDatabase':
+            MySQLConnect();
 
-        CATSUtility::changeConfigSetting('ENABLE_DEMO_MODE', 'false');
+            CATSUtility::changeConfigSetting('ENABLE_DEMO_MODE', 'false');
 
-        $schema = file_get_contents('db/cats_schema.sql');
-        MySQLQueryMultiple($schema, ";\n");
+            $schema = file_get_contents('db/cats_schema.sql');
+            MySQLQueryMultiple($schema, ";\n");
 
-        //Check if we need to update from 0.6.0 to 0.7.0
-        $tables = [];
-        $result = MySQLQuery(sprintf("SHOW TABLES FROM `%s`", DATABASE_NAME));
-        while ($row = mysqli_fetch_array($result, MYSQLI_NUM)) {
-            $tables[$row[0]] = true;
-        }
+            //Check if we need to update from 0.6.0 to 0.7.0
+            $tables = [];
+            $result = MySQLQuery(sprintf("SHOW TABLES FROM `%s`", DATABASE_NAME));
+            while ($row = mysqli_fetch_array($result, MYSQLI_NUM)) {
+                $tables[$row[0]] = true;
+            }
 
-        if (! isset($tables['history'])) {
-            // FIXME: File exists?!
-            $schema = file_get_contents('db/upgrade-0.6.x-0.7.0.sql');
-            MySQLQueryMultiple($schema);
-        }
+            if (! isset($tables['history'])) {
+                // FIXME: File exists?!
+                $schema = file_get_contents('db/upgrade-0.6.x-0.7.0.sql');
+                MySQLQueryMultiple($schema);
+            }
 
-        echo '<script type="text/javascript">Installpage_populate(\'a=resumeParsing\');</script>';
-        break;
+            echo '<script type="text/javascript">Installpage_populate(\'a=resumeParsing\');</script>';
+            break;
 
     case 'onLoadDemoData':
         CATSUtility::changeConfigSetting('ENABLE_DEMO_MODE', 'true');
@@ -728,10 +729,25 @@ switch ($action) {
                 $fileContents = $extractor->getFile($index);
 
                 if ($fileContents === false) {
-                    /* Report error? */
+                    error_log("Failed to extract file contents for: " . $fileName);
+                    continue; // Skip this file
                 }
 
+                // Ensure $fileName is not a directory before writing
+                if (is_dir($fileName)) {
+                    error_log("Skipping directory instead of writing to file: " . $fileName);
+                    continue;
+                }
+
+                // Ensure the parent directory exists
+                $dirPath = dirname((string) $fileName);
+                if (!is_dir($dirPath)) {
+                    mkdir($dirPath, 0777, true); // Create directory if missing
+                }
+
+                error_log("Writing to file: " . $fileName);
                 file_put_contents($fileName, $fileContents);
+
             }
         }
 
@@ -927,10 +943,9 @@ switch ($action) {
 
     default:
         die('Invalid action.');
-        break;
 }
 
-function MySQLConnect()
+function MySQLConnect(): ?false
 {
     global $tables, $mySQLConnection;
 
@@ -949,7 +964,6 @@ function MySQLConnect()
             . ' normal normal bold 12px/130% Arial, Tahoma, sans-serif;">Error '
             . " Connecting to Database</p><pre>\n\n" . $error . "</pre>\n\n"
         );
-        return false;
     }
 
 
@@ -971,16 +985,18 @@ function MySQLConnect()
             . ' normal normal bold 12px/130% Arial, Tahoma, sans-serif;">Error'
             . " Selecting Database</p><pre>\n\n" . $error . "</pre>\n\n"
         );
-        return false;
     }
+    return null;
 }
 
-function MySQLQuery($query, $ignoreErrors = false)
+function MySQLQuery(string $query, $ignoreErrors = false): bool|\mysqli_result
 {
     global $mySQLConnection;
 
+    // Execute query
     $queryResult = mysqli_query($mySQLConnection, $query);
 
+    // Check for connection errors
     if (! $mySQLConnection) {
         $error = "errno: " . mysqli_connect_errno() . ", ";
         $error .= "error: " . mysqli_connect_error();
@@ -991,28 +1007,45 @@ function MySQLQuery($query, $ignoreErrors = false)
             . " Error -- Please Report This Bug!</p><pre>\n\nMySQL Query "
             . "Failed: " . $error . "\n\n" . $query . "</pre>\n\n"
         );
-        return false;
+    }
+
+    // Check for SQL query errors
+    if (! $queryResult && !$ignoreErrors) {
+        die(
+            '<p style="background: #ec3737; padding: 4px; margin-top: 0; font:'
+            . ' normal normal bold 12px/130% Arial, Tahoma, sans-serif;">SQL Query'
+            . " Error:</p><pre>\n\nError: " . mysqli_error($mySQLConnection)
+            . "\n\nQuery: " . $query . "</pre>\n\n"
+        );
     }
 
     return $queryResult;
 }
 
-function MySQLQueryMultiple($SQLData, $delimiter = ';')
+
+function MySQLQueryMultiple($SQLData, $delimiter = ';'): void
 {
     $SQLStatments = explode($delimiter, (string) $SQLData);
 
     foreach ($SQLStatments as $SQL) {
         $SQL = trim($SQL);
 
-        if (empty($SQL)) {
+        if ($SQL === '' || $SQL === '0') {
             continue;
         }
 
-        MySQLQuery($SQL);
+        try {
+            MySQLQuery($SQL);
+        } catch (mysqli_sql_exception $e) {
+            if (strpos($e->getMessage(), 'Duplicate column name') === false) {
+                throw $e; // Rethrow the exception if it's not a duplicate column
+            }
+        }
+
     }
 }
 
-function initializeOptionalComponents()
+function initializeOptionalComponents(): void
 {
     global $optionalComponents;
 
@@ -1020,10 +1053,6 @@ function initializeOptionalComponents()
     include_once(LEGACY_ROOT . '/modules/install/OptionalComponents.php');
 
     foreach ($optionalComponents as $index => $data) {
-        if (isset($data['detectCode'])) {
-            $optionalComponents[$index]['componentExists'] = eval($data['detectCode']);
-        } else {
-            $optionalComponents[$index]['componentExists'] = false;
-        }
+        $optionalComponents[$index]['componentExists'] = isset($data['detectCode']) ? eval($data['detectCode']) : false;
     }
 }

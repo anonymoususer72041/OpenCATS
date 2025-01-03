@@ -47,9 +47,9 @@ define('LICENSE_HASH_SIZE', 3);
  */
 class License
 {
-    private int $_expirationDate;
+    protected int $_expirationDate;
 
-    private int $_numberOfSeats;
+    protected int $_numberOfSeats;
 
     protected $_name;
 

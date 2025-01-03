@@ -1701,6 +1701,7 @@ class DataGrid
             echo '</tr>', "\n";
             echo '</thead>', "\n";
 
+
             /* Table Data */
             foreach ($this->_rs as $rsIndex => $rsData) {
                 if (isset($this->listStyle) && $this->listStyle == true) {
@@ -1732,11 +1733,26 @@ class DataGrid
                         echo(' colspan="2">');
                     }
 
-                    if (! isset($data['data']['pagerRender'])) {
-                        echo($rsData[$data['data']['sortableColumn']]);
-                    } else {
-                        echo(eval($data['data']['pagerRender']));
+                    $columnValue = '';
+                    if (isset($data['data']['sortableColumn'])) {
+                        $columnValue = $rsData[$data['data']['sortableColumn']] ?? '';
                     }
+
+                    // Handle different rendering scenarios
+                    if (isset($data['data']['render'])) {
+                        switch ($data['data']['render']) {
+                            case 'date':
+                                $columnValue = date('Y-m-d', strtotime($columnValue));
+                                break;
+                            case 'currency':
+                                // Implement currency formatting logic here (e.g., using number_format)
+                                $columnValue = number_format($columnValue, 2, '.', ',');
+                                break;
+                                // Add more cases for other rendering needs
+                        }
+                    }
+
+                    echo($columnValue);
 
                     echo('</td>' . "\n");
                 }
@@ -1754,6 +1770,8 @@ class DataGrid
                 echo('</div>');
             }
         }
+
+
 
         /**
          * echos the action area.

@@ -313,7 +313,7 @@ use OpenCATS\UI\QuickActionMenu;
                     <th style="text-align:center;">Action</th>
                 </tr>
 
-                <?php if (count($this->contactsRSWC) != 0): ?>
+                <?php if (!empty($this->contactsRSWC) && is_array($this->contactsRSWC) && count($this->contactsRSWC) != 0): ?>
                  <?php foreach ($this->contactsRSWC as $rowNumber => $contactsData): ?>
                     <tr id="ContactsDefault<?php echo($rowNumber) ?>" class="<?php TemplateUtility::printAlternatingRowClass($rowNumber); ?>">
                         <td valign="top" align="left">
@@ -351,7 +351,15 @@ use OpenCATS\UI\QuickActionMenu;
                <?php endif; ?>
 
                 <?php /* The following are hidden by default */ ?>
-                <?php if (count($this->contactsRSWC) != count($this->contactsRS) && count($this->contactsRS) != 0) : ?>
+                <?php
+                if (
+                    !empty($this->contactsRSWC) && is_array($this->contactsRSWC) &&
+                    !empty($this->contactsRS) && is_array($this->contactsRS) &&
+                    count($this->contactsRSWC) != count($this->contactsRS) &&
+                    count($this->contactsRS) != 0
+                ) :
+                ?>
+
                  <?php foreach ($this->contactsRS as $rowNumber => $contactsData): ?>
                     <tr id="ContactsFull<?php echo($rowNumber) ?>" class="<?php TemplateUtility::printAlternatingRowClass($rowNumber); ?>" style="display:none;">
                         <td valign="top" align="left">
@@ -395,7 +403,14 @@ use OpenCATS\UI\QuickActionMenu;
                     <img src="images/actions/add_contact.gif" width="16" height="16" class="absmiddle" alt="add contact" border="0" title="Add Contact"/>&nbsp;Add Contact
                 </a>
             <?php endif; ?>
-            <?php if (count($this->contactsRSWC) != count($this->contactsRS)) : ?>
+            <?php
+            if (
+                !empty($this->contactsRSWC) && is_array($this->contactsRSWC) &&
+                !empty($this->contactsRS) && is_array($this->contactsRS) &&
+                count($this->contactsRSWC) != count($this->contactsRS)
+            ) :
+            ?>
+
                 &nbsp;
                 <a href="javascript:void(0)" id="linkShowAll" onclick="javascript:for (i = 0; i< <?php echo(count($this->contactsRSWC)); ?>; i++) document.getElementById('ContactsDefault'+i).style.display='none'; for (i = 0; i< <?php echo(count($this->contactsRS)); ?>; i++) document.getElementById('ContactsFull'+i).style.display=''; document.getElementById('linkShowAll').style.display='none'; document.getElementById('linkHideSome').style.display='';">
                     <img src="images/actions/add_contact.gif" width="16" height="16" class="absmiddle" alt="add contact" border="0" title="Show All"/>

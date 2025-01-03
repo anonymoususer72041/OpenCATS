@@ -34,7 +34,7 @@ class CBFUtility
 
     protected $_keys;
 
-    private int $_GUID;
+    protected int $_GUID;
 
     protected $_GUIDs;
 

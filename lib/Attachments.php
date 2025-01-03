@@ -541,13 +541,17 @@ class Attachments
             $rs[$index]['retrievalURL'] = sprintf(
                 '%s?m=attachments&amp;a=getAttachment&amp;id=%s&amp;directoryNameHash=%s',
                 CATSUtility::getIndexName(),
-                $data['attachmentID'],
-                urlencode(md5((string) $data['directoryName']))
+                                                  $data['attachmentID'],
+                                                  urlencode(md5((string) $data['directoryName']))
             );
 
-            $directoryName = $data['directoryName'];
-            $fileName = $data['storedFilename'];
+            // Normalize directory and file names to avoid double slashes
+            $directoryName = trim($data['directoryName'], '/');
+            $fileName = trim($data['storedFilename'], '/');
+
+            // Construct the file path and normalize slashes
             $filePath = sprintf('attachments/%s/%s', $directoryName, $fileName);
+            $filePath = preg_replace('#/+#', '/', $filePath); // Remove any double slashes
 
             $rs[$index]['retrievalURLLocal'] = $filePath;
 
@@ -560,6 +564,7 @@ class Attachments
                 $rs[$index]['retrievalURL']
             );
         }
+
 
         return $rs;
     }
