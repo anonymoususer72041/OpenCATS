@@ -1,6 +1,6 @@
 <?php
 /**
- * CATS
+ * OPENCATS
  * Template Utility Library
  *
  * Copyright (C) 2005 - 2007 Cognizo Technologies, Inc.
@@ -100,7 +100,7 @@ class TemplateUtility
 
         echo '<div id="headerBlock">', "\n";
 
-        /* CATS Logo */
+        /* OPENCATS Logo */
         echo '<table cellspacing="0" cellpadding="0" style="margin: 0px; padding: 0px; float: left;">', "\n";
         echo '<tr>', "\n";
         echo '<td rowspan="2"><img src="images/applicationLogo.jpg" border="0" alt="CATS Applicant Tracking System" /></td>', "\n";

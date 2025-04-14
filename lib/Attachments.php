@@ -117,39 +117,39 @@ class Attachments
                 md5_sum,
                 md5_sum_text,
                 file_size_kb
-            )
-            VALUES (
-                %s,
-                %s,
-                %s,
-                %s,
-                %s,
-                %s,
-                %s,
-                %s,
-                %s,
-                %s,
-                NOW(),
-                NOW(),
-                %s,
-                %s,
-                %s,
-                %s
-            )",
-            $this->_db->makeQueryInteger($dataItemType),
-            $this->_db->makeQueryInteger($dataItemID),
-            $this->_db->makeQueryString($attachmentTitle),
-            $this->_db->makeQueryString($originalFilename),
-            $this->_db->makeQueryString($storedFilename),
-            $this->_db->makeQueryString($contentType),
-            ($isResume ? '1' : '0'),
-            $this->_db->makeQueryStringOrNULL($resumeText),
-            ($isProfileImage ? '1' : '0'),
-            $this->_siteID,
-            $this->_db->makeQueryString($directoryName),
-            $this->_db->makeQueryString($md5sum),
-            $this->_db->makeQueryString($md5sumText),
-            $this->_db->makeQueryInteger($fileSize)
+        )
+        VALUES (
+            %s,
+            %s,
+            %s,
+            %s,
+            %s,
+            %s,
+            %s,
+            %s,
+            %s,
+            %s,
+            NOW(),
+                       NOW(),
+                       %s,
+                       %s,
+                       %s,
+                       %s
+        )",
+        $this->_db->makeQueryInteger($dataItemType),
+                       $this->_db->makeQueryInteger($dataItemID),
+                       $this->_db->makeQueryString($attachmentTitle),
+                       $this->_db->makeQueryString($originalFilename),
+                       $this->_db->makeQueryString($storedFilename),
+                       $this->_db->makeQueryString($contentType),
+                       ($isResume ? '1' : '0'),
+                       $this->_db->makeQueryStringOrNULL($resumeText),
+                       ($isProfileImage ? '1' : '0'),
+                       $this->_siteID,
+                       $this->_db->makeQueryString($directoryName),
+                       $this->_db->makeQueryString($md5sum),
+                       $this->_db->makeQueryString($md5sumText),
+                       $this->_db->makeQueryInteger($fileSize)
         );
 
         $queryResult = $this->_db->query($sql);
@@ -224,18 +224,18 @@ class Attachments
     {
         $sql = sprintf(
             "UPDATE
-                attachment
+            attachment
             SET
-                file_size_kb = %s,
-                md5_sum = %s
+            file_size_kb = %s,
+            md5_sum = %s
             WHERE
-                attachment_id = %s
+            attachment_id = %s
             AND
-                site_id = %s",
+            site_id = %s",
             $this->_db->makeQueryInteger($fileSize),
-            $this->_db->makeQueryString($md5sum),
-            $this->_db->makeQueryInteger($attachmentID),
-            $this->_siteID
+                       $this->_db->makeQueryString($md5sum),
+                       $this->_db->makeQueryInteger($attachmentID),
+                       $this->_siteID
         );
 
         $queryResult = (bool) $this->_db->query($sql);
@@ -252,20 +252,20 @@ class Attachments
     {
         $sql = sprintf(
             "UPDATE
-                site
+            site
             SET
-                file_size_kb = (
-                    SELECT
-                        SUM(file_size_kb)
-                    FROM
-                        attachment
-                    WHERE
-                        site_id = %s
-                )
-            WHERE
-                site_id = %s",
-            $this->_siteID,
-            $this->_siteID
+            file_size_kb = (
+                SELECT
+                SUM(file_size_kb)
+        FROM
+        attachment
+        WHERE
+        site_id = %s
+        )
+        WHERE
+        site_id = %s",
+        $this->_siteID,
+        $this->_siteID
         );
 
         $this->_db->query($sql);
@@ -283,18 +283,18 @@ class Attachments
     {
         $sql = sprintf(
             "UPDATE
-                attachment
+            attachment
             SET
-                data_item_type = %s,
-                data_item_id = %s
+            data_item_type = %s,
+            data_item_id = %s
             WHERE
-                attachment_id = %s
+            attachment_id = %s
             AND
-                site_id = %s",
+            site_id = %s",
             $this->_db->makeQueryInteger($dataItemType),
-            $this->_db->makeQueryInteger($dataItemID),
-            $this->_db->makeQueryInteger($attachmentID),
-            $this->_siteID
+                       $this->_db->makeQueryInteger($dataItemID),
+                       $this->_db->makeQueryInteger($attachmentID),
+                       $this->_siteID
         );
 
         return (bool) $this->_db->query($sql);
@@ -312,17 +312,17 @@ class Attachments
     {
         $sql = sprintf(
             "SELECT
-                directory_name AS directoryName,
-                stored_filename AS storedFileName,
-                site_id AS siteId
+            directory_name AS directoryName,
+            stored_filename AS storedFileName,
+            site_id AS siteId
             FROM
-                attachment
+            attachment
             WHERE
-                attachment_id = %s
+            attachment_id = %s
             AND
-                site_id = %s",
+            site_id = %s",
             $this->_db->makeQueryInteger($attachmentID),
-            $this->_siteID
+                       $this->_siteID
         );
         $rs = $this->_db->getAssoc($sql);
 
@@ -332,13 +332,13 @@ class Attachments
 
         $sql = sprintf(
             "DELETE FROM
-                attachment
+            attachment
             WHERE
-                attachment_id = %s
+            attachment_id = %s
             AND
-                site_id = %s",
+            site_id = %s",
             $this->_db->makeQueryInteger($attachmentID),
-            $this->_siteID
+                       $this->_siteID
         );
         $queryResult = $this->_db->query($sql);
 
@@ -380,21 +380,21 @@ class Attachments
         /* Get all attachment IDs for the Data Item. */
         $sql = sprintf(
             "SELECT
-                attachment_id AS attachmentID,
-                directory_name AS directoryName
+            attachment_id AS attachmentID,
+            directory_name AS directoryName
             FROM
-                attachment
+            attachment
             WHERE
-                data_item_id = %s
+            data_item_id = %s
             AND
-                data_item_type = %s
+            data_item_type = %s
             AND
-                site_id = %s
+            site_id = %s
             %s",
             $this->_db->makeQueryInteger($dataItemID),
-            $this->_db->makeQueryInteger($dataItemType),
-            $this->_siteID,
-            $criteria
+                       $this->_db->makeQueryInteger($dataItemType),
+                       $this->_siteID,
+                       $criteria
         );
         $rs = $this->_db->getAllAssoc($sql);
 
@@ -420,18 +420,18 @@ class Attachments
         /* Delete the attachments metadata. */
         $sql = sprintf(
             "DELETE FROM
-                attachment
+            attachment
             WHERE
-                data_item_id = %s
+            data_item_id = %s
             AND
-                data_item_type = %s
+            data_item_type = %s
             AND
-                site_id = %s
+            site_id = %s
             %s",
             $this->_db->makeQueryInteger($dataItemID),
-            $this->_db->makeQueryInteger($dataItemType),
-            $this->_siteID,
-            $criteria
+                       $this->_db->makeQueryInteger($dataItemType),
+                       $this->_siteID,
+                       $criteria
         );
         $this->_db->query($sql);
     }
@@ -447,20 +447,20 @@ class Attachments
     {
         $sql = sprintf(
             "SELECT
-                attachment_id AS attachmentID
+            attachment_id AS attachmentID
             FROM
-                attachment
+            attachment
             WHERE
-                data_item_type = %s
+            data_item_type = %s
             AND
-                data_item_id = %s
+            data_item_id = %s
             AND
-                profile_image = 1
+            profile_image = 1
             AND
-                site_id = %s",
+            site_id = %s",
             $this->_db->makeQueryInteger($dataItemType),
-            $this->_db->makeQueryInteger($dataItemID),
-            $this->_siteID
+                       $this->_db->makeQueryInteger($dataItemID),
+                       $this->_siteID
         );
         $rs = $this->_db->getAllAssoc($sql);
 
@@ -483,16 +483,16 @@ class Attachments
     {
         $sql = sprintf(
             "UPDATE
-                attachment
+            attachment
             SET
-                directory_name = %s
+            directory_name = %s
             WHERE
-                attachment_id = %s
+            attachment_id = %s
             AND
-                site_id = %s",
+            site_id = %s",
             $this->_db->makeQueryString($directoryName),
-            $this->_db->makeQueryInteger($attachmentID),
-            $this->_siteID
+                       $this->_db->makeQueryInteger($attachmentID),
+                       $this->_siteID
         );
 
         return (bool) $this->_db->query($sql);
@@ -510,30 +510,30 @@ class Attachments
     {
         $sql = sprintf(
             "SELECT
-                IF(ISNULL(text), 0, 1) AS hasText,
-                attachment_id AS attachmentID,
-                data_item_id AS dataItemID,
-                data_item_type AS dataItemType,
-                title AS title,
-                original_filename AS originalFilename,
-                stored_filename AS storedFilename,
-                content_type AS contentType,
-                profile_image AS isProfileImage,
-                directory_name AS directoryName,
-                md5_sum AS md5sum,
-                file_size_kb AS fileSizeKB,
-                DATE_FORMAT(date_created, '%%m-%%d-%%y (%%h:%%i:%%s %%p)') AS dateCreated
-            FROM
-                attachment
-            WHERE
-                data_item_id = %s
-            AND
-                data_item_type = %s
-            AND
-                site_id = %s",
-            $this->_db->makeQueryInteger($dataItemID),
-            $this->_db->makeQueryInteger($dataItemType),
-            $this->_siteID
+            IF(ISNULL(text), 0, 1) AS hasText,
+                       attachment_id AS attachmentID,
+                       data_item_id AS dataItemID,
+                       data_item_type AS dataItemType,
+                       title AS title,
+                       original_filename AS originalFilename,
+                       stored_filename AS storedFilename,
+                       content_type AS contentType,
+                       profile_image AS isProfileImage,
+                       directory_name AS directoryName,
+                       md5_sum AS md5sum,
+                       file_size_kb AS fileSizeKB,
+                       DATE_FORMAT(date_created, '%%m-%%d-%%y (%%h:%%i:%%s %%p)') AS dateCreated
+                       FROM
+                       attachment
+                       WHERE
+                       data_item_id = %s
+                       AND
+                       data_item_type = %s
+                       AND
+                       site_id = %s",
+                       $this->_db->makeQueryInteger($dataItemID),
+                       $this->_db->makeQueryInteger($dataItemType),
+                       $this->_siteID
         );
         $rs = $this->_db->getAllAssoc($sql);
 
@@ -580,28 +580,28 @@ class Attachments
     {
         $sql = sprintf(
             "SELECT
-                IF(ISNULL(text), 0, 1) AS hasText,
-                attachment_id AS attachmentID,
-                data_item_id AS dataItemID,
-                data_item_type AS dataItemType,
-                title AS title,
-                original_filename AS originalFilename,
-                stored_filename AS storedFilename,
-                content_type AS contentType,
-                profile_image AS isProfileImage,
-                directory_name AS directoryName,
-                md5_sum AS md5sum,
-                file_size_kb AS fileSizeKB,
-                DATE_FORMAT(date_created, '%%m-%%d-%%y (%%h:%%i:%%s %%p)') AS dateCreated
-            FROM
-                attachment
-            WHERE
-                attachment_id = %s
-            AND
-                (site_id = %s || content_type = 'catsbackup' || %s)",
-            $this->_db->makeQueryInteger($attachmentID),
-            $this->_siteID,
-            ($verifySiteID ? 'false' : 'true')
+            IF(ISNULL(text), 0, 1) AS hasText,
+                       attachment_id AS attachmentID,
+                       data_item_id AS dataItemID,
+                       data_item_type AS dataItemType,
+                       title AS title,
+                       original_filename AS originalFilename,
+                       stored_filename AS storedFilename,
+                       content_type AS contentType,
+                       profile_image AS isProfileImage,
+                       directory_name AS directoryName,
+                       md5_sum AS md5sum,
+                       file_size_kb AS fileSizeKB,
+                       DATE_FORMAT(date_created, '%%m-%%d-%%y (%%h:%%i:%%s %%p)') AS dateCreated
+                       FROM
+                       attachment
+                       WHERE
+                       attachment_id = %s
+                       AND
+                       (site_id = %s || content_type = 'catsbackup' || %s)",
+                       $this->_db->makeQueryInteger($attachmentID),
+                       $this->_siteID,
+                       ($verifySiteID ? 'false' : 'true')
         );
         $rs = $this->_db->getAssoc($sql);
 
@@ -614,8 +614,8 @@ class Attachments
             $rs['retrievalURL'] = sprintf(
                 '%s?m=attachments&amp;a=getAttachment&amp;id=%s&amp;directoryNameHash=%s',
                 CATSUtility::getIndexName(),
-                $rs['attachmentID'],
-                urlencode(md5((string) $rs['directoryName']))
+                                          $rs['attachmentID'],
+                                          urlencode(md5((string) $rs['directoryName']))
             );
         }
 
@@ -656,27 +656,27 @@ class Attachments
 
         $sql = sprintf(
             "SELECT
-                attachment_id AS attachmentID,
-                original_filename AS originalFilename,
-                directory_name AS directoryName
+            attachment_id AS attachmentID,
+            original_filename AS originalFilename,
+            directory_name AS directoryName
             FROM
-                attachment
+            attachment
             WHERE
-                data_item_id = %s
+            data_item_id = %s
             AND
-                data_item_type = %s
+            data_item_type = %s
             AND
-                file_size_kb = %s
+            file_size_kb = %s
             AND
-                file_size_kb > 0
+            file_size_kb > 0
             AND
-                site_id = %s
+            site_id = %s
             %s",
             $this->_db->makeQueryInteger($dataItemID),
-            $this->_db->makeQueryInteger($dataItemType),
-            $this->_db->makeQueryInteger($fileSize),
-            $this->_siteID,
-            $md5Criterion
+                       $this->_db->makeQueryInteger($dataItemType),
+                       $this->_db->makeQueryInteger($fileSize),
+                       $this->_siteID,
+                       $md5Criterion
         );
 
         return $this->_db->getAllAssoc($sql);
@@ -724,18 +724,18 @@ class Attachments
     {
         $sql = sprintf(
             "SELECT
-                COUNT(attachment_id) as numBulkAttachments,
-                SUM(file_size_kb) as fileSizeKB,
-                MIN(date_created) as firstAttachmentCreatedDate,
-                MAX(date_created) as lastAttachmentCreatedDate
-            FROM
-                attachment
-            WHERE
-                data_item_type = %s
-            AND
-                site_id = %s",
-            $this->_db->makeQueryInteger(DATA_ITEM_BULKRESUME),
-            $this->_siteID
+            COUNT(attachment_id) as numBulkAttachments,
+                       SUM(file_size_kb) as fileSizeKB,
+                       MIN(date_created) as firstAttachmentCreatedDate,
+                       MAX(date_created) as lastAttachmentCreatedDate
+                       FROM
+                       attachment
+                       WHERE
+                       data_item_type = %s
+                       AND
+                       site_id = %s",
+                       $this->_db->makeQueryInteger(DATA_ITEM_BULKRESUME),
+                       $this->_siteID
         );
 
         return $this->_db->getAssoc($sql);
@@ -749,28 +749,28 @@ class Attachments
     {
         $sql = sprintf(
             "SELECT
-                attachment_id as attachmentID,
-                site_id as siteID,
-                title,
-                original_filename as originalFileName,
-                stored_filename as storedFileName,
-                content_type as contentType,
-                resume,
-                text,
-                date_created as dateCreated,
-                date_modified as dateModified,
-                directory_name as directoryName,
-                file_size_kb as fileSizeKB,
-                stored_on_s3 as storedOnS3,
-                stored_locally as storedLocally
+            attachment_id as attachmentID,
+            site_id as siteID,
+            title,
+            original_filename as originalFileName,
+            stored_filename as storedFileName,
+            content_type as contentType,
+            resume,
+            text,
+            date_created as dateCreated,
+            date_modified as dateModified,
+            directory_name as directoryName,
+            file_size_kb as fileSizeKB,
+            stored_on_s3 as storedOnS3,
+            stored_locally as storedLocally
             FROM
-                attachment
+            attachment
             WHERE
-                data_item_type = %s
+            data_item_type = %s
             AND
-                site_id = %d",
+            site_id = %d",
             $this->_db->makeQueryInteger(DATA_ITEM_BULKRESUME),
-            $this->_siteID
+                       $this->_siteID
         );
 
         return $this->_db->getAllAssoc($sql);
@@ -1137,9 +1137,9 @@ class AttachmentCreator
                 if ($dataItemType == DATA_ITEM_BULKRESUME &&
                     $this->_isTextExtractionError) {
                     $this->_isError = true;
-                    $this->_error = $this->_textExtractionError;
-                    return false;
-                }
+                $this->_error = $this->_textExtractionError;
+                return false;
+                    }
             }
         }
 
@@ -1394,7 +1394,7 @@ class AttachmentCreator
         if (! is_dir('./attachments/')) {
             $this->_isError = true;
             $this->_error = 'Directory \'./attachments/\' does not '
-                . 'exist. CATS is not configured correctly.';
+            . 'exist. CATS is not configured correctly.';
             return false;
         }
 

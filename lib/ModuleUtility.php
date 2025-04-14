@@ -1,6 +1,6 @@
 <?php
 /**
- * CATS
+ * OPENCATS
  * Module Utility Library
  *
  * Copyright (C) 2005 - 2007 Cognizo Technologies, Inc.

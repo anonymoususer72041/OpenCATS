@@ -1,33 +1,21 @@
 <?php
 /**
- * CATS
+ * OPENCATS
  * Session Library
  *
- * Copyright (C) 2005 - 2007 Cognizo Technologies, Inc.
  *
- *
- * The contents of this file are subject to the CATS Public License
- * Version 1.1a (the "License"); you may not use this file except in
- * compliance with the License. You may obtain a copy of the License at
- * http://www.catsone.com/.
- *
- * Software distributed under the License is distributed on an "AS IS"
- * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
- * License for the specific language governing rights and limitations
- * under the License.
- *
- * The Original Code is "CATS Standard Edition".
- *
- * The Initial Developer of the Original Code is Cognizo Technologies, Inc.
- * Portions created by the Initial Developer are Copyright (C) 2005 - 2007
- * (or from the year in which this file was created to the year 2007) by
- * Cognizo Technologies, Inc. All Rights Reserved.
- *
- * @package    CATS
- * @subpackage Library
- * @copyright Copyright (C) 2005 - 2007 Cognizo Technologies, Inc.
- * @version    $Id: Session.php 3676 2007-11-21 21:02:15Z brian $
  */
+
+// Ensure session is properly initialized
+if (session_status() === PHP_SESSION_NONE) {
+    session_name(CATS_SESSION_NAME);
+    session_start();
+}
+
+// Ensure $_SESSION['CATS'] is always set
+if (!isset($_SESSION['CATS'])) {
+    $_SESSION['CATS'] = new CATSSession();
+}
 
 include(LEGACY_ROOT . '/lib/ACL.php');
 
@@ -174,7 +162,7 @@ class CATSSession
 
         /* We don't want to force an update on the first check (when the stored
          * build -1), because we just reloaded all of the modules anyway.
-         * CATSUtility::getBuild() should never return -1, but just in case...
+         * OPENCATSUtility::getBuild() should never return -1, but just in case...
          */
         if ($this->_storedBuild != -1 && $this->_storedBuild != $build) {
             $this->forceUpdate();
@@ -1087,7 +1075,7 @@ class CATSSession
      * has not been validated.
      *
      * Practical example:  The browser sends a 300 kb file to CATS via AJAX.
-     * CATS remembers the contents of the file and sends back an ID number (0).
+     * OPENCATS remembers the contents of the file and sends back an ID number (0).
      * Now the browser can refer to ID 0 (being the entire file).
      *
      * @param mixed data to store

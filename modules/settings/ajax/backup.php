@@ -1,293 +1,115 @@
 <?php
 /*
- * CATS
+ * OPENCATS
  * AJAX Backup interface
- *
- * Copyright (C) 2005 - 2007 Cognizo Technologies, Inc.
- *
- *
- * The contents of this file are subject to the CATS Public License
- * Version 1.1 (the "License"); you may not use this file except in
- * compliance with the License. You may obtain a copy of the License at
- * http://www.catsone.com/.
- *
- * Software distributed under the License is distributed on an "AS IS"
- * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
- * License for the specific language governing rights and limitations
- * under the License.
- *
- * The Original Code is "CATS Standard Edition".
- *
- * The Initial Developer of the Original Code is Cognizo Technologies, Inc.
- * Portions created by the Initial Developer are Copyright (C) 2005 - 2007
- * (or from the year in which this file was created to the year 2007) by
- * Cognizo Technologies, Inc. All Rights Reserved.
- *
- *
- * $Id: backup.php 3402 2007-11-02 22:03:43Z brian $
  */
+@ini_set('memory_limit', '512M');
 
-//@ini_set('memory_limit', '512M');
+require_once __DIR__ . '/../../../config.php'; // Load config
 
-include_once(LEGACY_ROOT . '/lib/Attachments.php');
-
-$interface = new SecureAJAXInterface();
-
-if ($_SESSION['CATS']->getAccessLevel(ACL::SECOBJ_ROOT) < ACCESS_LEVEL_SA) {
-    die('No permision.');
+// Ensure LEGACY_ROOT is set
+if (!defined('LEGACY_ROOT')) {
+    die('Error: LEGACY_ROOT is not defined in backup.php!');
 }
 
-if (! isset($_REQUEST['a'])) {
+// Include required files
+require_once LEGACY_ROOT . '/constants.php';  // Ensure ACCESS_LEVEL_SA is defined
+require_once LEGACY_ROOT . '/lib/ACL.php';
+require_once LEGACY_ROOT . '/lib/Session.php';
+require_once LEGACY_ROOT . '/lib/AJAXInterface.php';
+
+// Ensure session is started if not active
+if (session_status() === PHP_SESSION_NONE) {
+    session_name(CATS_SESSION_NAME);
+    session_start();
+}
+
+// Debugging: Check if $_SESSION['CATS'] is set
+if (!isset($_SESSION['CATS'])) {
+    error_log('Error: $_SESSION["CATS"] is not set in backup.php!');
+    require_once LEGACY_ROOT . '/lib/Session.php'; // Ensure dependencies are loaded
+    $_SESSION['CATS'] = new CATSSession();  // Initialize session object
+}
+
+// Secure AJAX Interface
+$interface = new SecureAJAXInterface();
+
+
+
+
+
+if ($_SESSION['CATS']->getAccessLevel(ACL::SECOBJ_ROOT) < ACCESS_LEVEL_SA) {
+    die('No permission.');
+}
+
+if (!isset($_REQUEST['a'])) {
     die('No action.');
 }
 
 $action = $_REQUEST['a'];
+$backupDir = LEGACY_ROOT . '/backups';
 
-$completedTasks = '';
-function markCompleted(string $task): void
-{
-    global $completedTasks;
-
-    $completedTasks .= '<tr><td width="295px;">' . $task
-        . '</td><td><span class="passedText">DONE</span></td></tr>';
+if ($action === 'start') {
+    echo '<script type="text/javascript">startBackupProcess();</script>';
 }
 
-function setStatusBackup(string $status, string $progress): void
-{
-    global $completedTasks;
-
-    $command = '<script type="text/javascript">setStatus(\'' . $status . '\');'
-        . ' setProgress(' . $progress . ');'
-        . ' progressComplete(\'' . $completedTasks . '\');</script>';
-
-    $directory = $_SESSION['CATS']->retrieveValueByName('backupDirectory');
-    @file_put_contents($directory . 'progress.txt', $command);
-}
-
-
-if ($action == 'start') {
-    $companyID = $_SESSION['CATS']->getSiteCompanyID();
-    $attachmentsOnly = $interface->isChecked('attachmentsOnly');
-
-    /* Delete any old backups. */
-    $attachments = new Attachments(CATS_ADMIN_SITE);
-    $attachments->deleteAll(
-        DATA_ITEM_COMPANY,
-        $companyID,
-        "AND content_type = 'catsbackup'"
-    );
-
-    /* Build title string. */
-    $title = $attachmentsOnly ? 'CATS Attachments Backup' : 'CATS Backup';
-
-    $attachmentCreator = new AttachmentCreator(CATS_ADMIN_SITE);
-    $attachmentCreator->createFromFile(
-        DATA_ITEM_COMPANY,
-        $companyID,
-        'catsbackup.bak',
-        $title,
-        'catsbackup',
-        false,
-        false
-    );
-    if ($attachmentCreator->isError()) {
-        die($attachmentCreator->getError());
-    }
-
-    $attachmentID = $attachmentCreator->getAttachmentID();
-    $directory = $attachmentCreator->getContainingDirectory();
-
-    $_SESSION['CATS']->storeValueByName('backupDirectory', $directory);
-
-    /* Build request parameters. */
-    $extraPOSTData = '&attachmentID=' . $attachmentID;
-    if ($attachmentsOnly) {
-        $extraPOSTData .= '&attachmentsOnly=true';
-    }
-
-    echo '<script type="text/javascript">watchBackup(\'', $directory,
-    '\', \'', $extraPOSTData, '\', \'settings:backup\');</script>';
-}
-
-if ($action == 'backup') {
-    include_once(LEGACY_ROOT . '/lib/FileCompressor.php');
-
+if ($action === 'backup') {
     if (ini_get('safe_mode')) {
-        //don't do anything in safe mode
+        // Don't do anything in safe mode
     } else {
-        /* Don't limit the execution time during backup. */
-        set_time_limit(0);
+        set_time_limit(0); // Don't limit execution time
     }
 
-    // FIXME: Make this configurable.
-    @ini_set('memory_limit', '192M');
+    $backupCommand = "php " . LEGACY_ROOT . "/modules/install/backupDB.php backup";
+    exec($backupCommand, $output, $returnVar);
 
-    if (! $interface->isRequiredIDValid('attachmentID')) {
-        die('Error: Invalid attachment ID.');
+    if ($returnVar !== 0) {
+        echo json_encode(['status' => 'error', 'message' => 'Backup failed.']);
+        exit;
     }
 
-    $attachmentID = $_REQUEST['attachmentID'];
-    $attachmentsOnly = $interface->isChecked('attachmentsOnly');
-
-    $siteID = $_SESSION['CATS']->getSiteID();
-    $db = DatabaseConnection::getInstance();
-
-    /* Our "temp" path, as well as the path where the final zip file will be
-     * saved.
-     */
-    $directory = $_SESSION['CATS']->retrieveValueByName('backupDirectory');
-
-    // FIXME: Show progress.
-
-    /* Create a new zip file. */
-    $zipFilePath = $directory . 'catsbackup.bak';
-    $zipFileCreator = new ZipFileCreator($directory . 'catsbackup.bak', true);
-    if (! $zipFileCreator->open()) {
-        setStatusBackup('Error: Failed to open zip file.', 0);
-        die('Failed to open zip file.');
-    }
-
-    /* Backup the database if we're not in attachments-only mode. */
-    if (! $attachmentsOnly) {
-        include_once(LEGACY_ROOT . '/modules/install/backupDB.php');
-
-        $SQLDumpPath = $directory . 'catsbackup.sql';
-
-        /* Dump SQL tables to the filesystem. This will dump both a complete
-         * schema and special CATS restore files split into ~1MB chunks.
-         */
-        $totalFiles = dumpDB($db, $SQLDumpPath, true);
-        markCompleted('Dumping tables...');
-
-        /* Add the complete database dump to the zip file. */
-        setStatusBackup('Compressing database...', 0);
-        $status = $zipFileCreator->addFileFromDisk(
-            'database',
-            $SQLDumpPath
-        );
-        @unlink($SQLDumpPath);
-
-        /* Fail out if we were't successful writing the file to the zip. */
-        if (! $status) {
-            setStatusBackup('Error: Failed to add database to zip file.', 0);
-            $zipFileCreator->abort();
-            die('Failed to add database to zip file.');
-        }
-        markCompleted('Compressing SQL dump...');
-
-        /* Add the CATS restore files to the zip file. */
-        for ($i = 0; $i < $totalFiles; ++$i) {
-            $fileNumber = $i + 1;
-
-            setStatusBackup(
-                sprintf(
-                    'Compressing database (%s of %s files processed)...',
-                    $fileNumber,
-                    $totalFiles
-                ),
-                ($fileNumber / $totalFiles)
-            );
-
-            $status = $zipFileCreator->addFileFromDisk(
-                'db/catsbackup.sql.' . $i,
-                $SQLDumpPath . '.' . $i
-            );
-            if (! $status) {
-                setStatusBackup(
-                    'Error: Failed to add database part to zip file.',
-                    0
-                );
-                $zipFileCreator->abort();
-                die('Failed to add database part to zip file.');
-            }
-
-            @unlink($SQLDumpPath . '.' . $i);
-        }
-        markCompleted('Compressing database for CATS restore...');
-    }
-
-    /* Add all attachments to the archive. */
-    // FIXME: SQL shouldn't be trickling up to this layer.
-
-    /* Get attachments metadata for this site. */
-    $sql = sprintf(
-        "SELECT
-        directory_name,
-        stored_filename,
-        attachment_id
-        FROM
-        attachment
-        WHERE
-        site_id = %d", // Use %d for integer values to ensure proper type handling
-        $siteID
-    );
-
-    /* Execute the query using the DatabaseConnection abstraction. */
-    $queryResult = $db->query($sql);
-
-    /* Get the total number of attachments. */
-    $totalAttachments = $db->getNumRows();
-
-    /* Add each attachment to the zip file. */
-    $attachmentCount = 0;
-    while ($row = mysqli_fetch_assoc($queryResult)) {
-        ++$attachmentCount;
-        $relativePath = sprintf(
-            'attachments/%s/%s',
-            $row['directory_name'],
-            $row['stored_filename']
-        );
-        if (! file_exists($relativePath)) {
-            setStatusBackup(
-                sprintf(
-                    '%s - Skipping attachment as it\'s missing on the file system (%s of %s files processed)...',
-                    $relativePath,
-                    $attachmentCount,
-                    $totalAttachments
-                ),
-                ($attachmentCount / $totalAttachments)
-            );
-            continue;
-        }
-
-        setStatusBackup(
-            sprintf(
-                '%s - Adding attachments (%s of %s files processed)...',
-                $relativePath,
-                $attachmentCount,
-                $totalAttachments
-            ),
-            ($attachmentCount / $totalAttachments)
-        );
-        $attachmentID = $row['attachment_id'];
-
-        if (! eval(Hooks::get('FORCE_ATTACHMENT_LOCAL'))) {
-            return;
-        }
-
-        $status = $zipFileCreator->addFileFromDisk(
-            $relativePath,
-            $relativePath
-        );
-    }
-    markCompleted('Adding attachments...');
-
-    /* Finalize the zip file and write it to disk. */
-    setStatusBackup('Writing backup...', 1);
-    $status = $zipFileCreator->finalize();
-    if (! $status) {
-        setStatusBackup('Error: Failed to write zip file.', 0);
-        die('Failed to add write zip file.');
-    }
-
-    /* Update attachment metadata for the zip file now that it's completed. */
-    $md5sum = @md5_file($zipFilePath);
-    $fileSize = (int) @filesize($zipFilePath) / 1024;
-
-    $attachments = new Attachments(CATS_ADMIN_SITE);
-    $attachments->setSizeMD5($attachmentID, $fileSize, $md5sum);
-
-    echo '<html><head>',
-    '<script type="text/javascript">parent.backupFinished();</script>',
-    '</head><body>Backup Finished.</body></html>';
+    echo json_encode(['status' => 'success', 'message' => 'Backup completed']);
+    exit;
 }
+
+if ($action === 'list') {
+    $backups = glob("$backupDir/backup_*.sql.gz");
+    $attachments = glob("$backupDir/attachments_*.tar.gz");
+
+    $backupList = [];
+    foreach ($backups as $backup) {
+        $timestamp = preg_replace('/[^0-9_]/', '', basename($backup, ".sql.gz"));
+        $attachmentsFile = "$backupDir/attachments_$timestamp.tar.gz";
+
+        $backupList[] = [
+            'database' => basename($backup),
+            'attachments' => file_exists($attachmentsFile) ? basename($attachmentsFile) : 'N/A',
+            'timestamp' => $timestamp
+        ];
+    }
+
+    echo json_encode($backupList);
+    exit;
+}
+
+if ($action === 'delete') {
+    if (!isset($_REQUEST['timestamp'])) {
+        die('Invalid request.');
+    }
+
+    $timestamp = preg_replace('/[^0-9_]/', '', $_REQUEST['timestamp']);
+    $backupFile = "$backupDir/backup_$timestamp.sql.gz";
+    $attachmentsFile = "$backupDir/attachments_$timestamp.tar.gz";
+
+    if (file_exists($backupFile)) {
+        unlink($backupFile);
+    }
+    if (file_exists($attachmentsFile)) {
+        unlink($attachmentsFile);
+    }
+
+    echo json_encode(['status' => 'success', 'message' => 'Backup deleted.']);
+    exit;
+}
+
+die('Invalid action.');

@@ -1,224 +1,146 @@
 <?php
-/*
- * CATS
- * Database Backup Script
+
+/**
  *
- * Copyright (C) 2005 - 2007 Cognizo Technologies, Inc.
+ * OPENCATS
+ * Backup library
  *
- * The contents of this file are subject to the CATS Public License
- * Version 1.1a (the "License"); you may not use this file except in
- * compliance with the License. You may obtain a copy of the License at
- * http://www.catsone.com/.
- *
- * Software distributed under the License is distributed on an "AS IS"
- * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
- * License for the specific language governing rights and limitations
- * under the License.
- *
- * The Original Code is "CATS Standard Edition".
- *
- * The Initial Developer of the Original Code is Cognizo Technologies, Inc.
- * Portions created by the Initial Developer are Copyright (C) 2005 - 2007
- * (or from the year in which this file was created to the year 2007) by
- * Cognizo Technologies, Inc. All Rights Reserved.
- *
- * $Id: backupDB.php 3797 2007-12-04 17:13:21Z brian $
  */
 
+require __DIR__ . '/../../vendor/autoload.php';
+require __DIR__ . '/../../config.php'; // Load OpenCATS configuration
 
-/* Dumps the entire database schema for the currents site into $file, and
- * splits it up into ~1MB chunks with the naming convention $file.(number).
- *
- * The function returns the total number of chunks.
- *
- * If $useStatus is true, use setStatusBackup(status) to display progress.
- */
+use Spatie\DbDumper\Databases\MySql;
+use Spatie\DbDumper\Compressors\GzipCompressor;
+use PhpMyAdmin\SqlParser\Parser;
 
-function BackupDBErrorHandler($errno, $errstr, $errfile, $errline, $errcontext) {
-    // Get more context from the error context (if available)
-    $contextInfo = "";
-    if (is_array($errcontext)) {
-        $contextInfo = "Context: " . json_encode($errcontext) . "\n";
-    }
+// Load database credentials from config.php
+$DB_HOST = defined('DATABASE_HOST') ? DATABASE_HOST : 'localhost';
+$DB_NAME = defined('DATABASE_NAME') ? DATABASE_NAME : 'opencats';
+$DB_USER = defined('DATABASE_USER') ? DATABASE_USER : 'root';
+$DB_PASS = defined('DATABASE_PASS') ? DATABASE_PASS : '';
+$BACKUP_DIR = realpath(__DIR__ . '/../../') . '/backups';
+$ATTACHMENTS_DIR = __DIR__ . '/../../attachments';
 
-    // Construct a detailed error message
-    $errorMessage = "**Backup Error**\n" .
-    "Time: " . date("Y-m-d H:i:s") . "\n" .
-    "Error Number: " . $errno . "\n" .
-    "Error Message: " . $errstr . "\n" .
-    "File: " . $errfile . "\n" .
-    "Line: " . $errline . "\n" .
-    $contextInfo;
-
-    // Log the error (example using a dedicated log file)
-    $logFile = "backup_errors.log";
-    error_log($errorMessage . "\n", 3, $logFile);
-
-    // Display a user-friendly error message
-    echo "An error occurred during the backup process. Please check the logs for details.";
-
-    // Exit the script
-    die();
+if (!is_dir($BACKUP_DIR)) {
+    mkdir($BACKUP_DIR, 0777, true);
 }
 
-function dumpDB($db, $file, $useStatus = false, $splitFiles = true, $siteID = -1)
+$timestamp = date('Ymd_His');
+$backupFile = sprintf('%s/backup_%s.sql.gz', $BACKUP_DIR, $timestamp);
+$attachmentsBackupFile = sprintf('%s/attachments_%s.tar.gz', $BACKUP_DIR, $timestamp);
+
+function backupDatabase($dbHost, $dbName, $dbUser, $dbPass, $backupFile)
 {
-    // Use set_error_handler with a custom function for better error handling (optional)
-    // set_error_handler('BackupDBErrorHandler');
+    try {
+        MySql::create()
+        ->setHost($dbHost)
+        ->setDbName($dbName)
+        ->setUserName($dbUser)
+        ->setPassword($dbPass)
+        ->useCompressor(new GzipCompressor())
+        ->dumpToFile($backupFile);
 
-    if ($siteID === -1) {
-        $siteID = $_SESSION['CATS']->getSiteID();
+        echo "Database backup created successfully: $backupFile\n";
+    } catch (Exception $e) {
+        echo "Database backup failed: " . $e->getMessage() . "\n";
+        exit(1);
     }
+}
 
-    $len = 0;
-    $fileNumber = 0;
-
-    $connection = $db->getConnection();
-
-    $text = '';
-
-    $result = mysqli_query($connection, sprintf("SHOW TABLES FROM `%s`", DATABASE_NAME));
-    $tables = array_map(fn($row) => $row[0], mysqli_fetch_all($result, MYSQLI_NUM));
-
-    if ($splitFiles) {
-        $fh = fopen($file . '.' . $fileNumber, 'w');
+function backupAttachments($attachmentsDir, $backupFile)
+{
+    if (!is_dir($attachmentsDir)) {
+        echo "Attachments directory not found: $attachmentsDir\n";
+        return;
     }
-    $fh2 = fopen($file, 'w');
-
-    $tableCounter = 0;
-    $totalTables = count($tables);
-    foreach ($tables as $table) {
-        ++$tableCounter;
-
-        if (in_array($table, [
-            'arb_queue',
-            'prepaid_payment',
-            'monthly_payment',
-            'address_parser_failures',
-            'admin_user',
-            'admin_user_login',
-            'candidate_joborder_status_type',
-            'timecard_user',
-            'word_verification',
-        ])) {
-            continue;
-        }
-
-        $text .= 'DROP TABLE IF EXISTS `' . $table . '`((ENDOFQUERY))' . "\n";
-        $sql = 'SHOW CREATE TABLE ' . $table;
-        $rs = mysqli_query($connection, $sql);
-        if ($rs) {
-            if ($row = mysqli_fetch_assoc($rs)) {
-                $text .= $row['Create Table'] . "((ENDOFQUERY))\n\n";
-            }
-        }
-
-        if ($table === 'history') {
-            continue;
-        }
-
-        $isSiteIdColumn = false;
-        $sql = sprintf("SHOW COLUMNS FROM %s", $table);
-        $rs = mysqli_query($connection, $sql);
-        while ($recordSet = mysqli_fetch_assoc($rs)) {
-            if ($recordSet['Field'] === 'site_id') {
-                $isSiteIdColumn = true;
-                break;
-            }
-        }
-
-        $sql = $isSiteIdColumn ? 'SELECT * FROM ' . $table . ' WHERE site_id = ' . $siteID : 'SELECT * FROM ' . $table . '';
-        $rs = mysqli_query($connection, $sql);
-        $index = 0;
-        while ($recordSet = mysqli_fetch_assoc($rs)) {
-            $continue = true;
-
-            if (isset($recordSet['site_id'])) {
-                if ($recordSet['site_id'] !== $siteID) {
-                    $continue = ($table === 'site' && $recordSet['site_id'] === CATS_ADMIN_SITE) ||
-                    ($table === 'user' && $recordSet['password'] === 'cantlogin' && $recordSet['site_id'] === CATS_ADMIN_SITE);
-                } else {
-                    $continue = $table !== 'user' || ($recordSet['user_name'] !== 'brian' && $recordSet['email'] !== 'brian@catsone.com');
-                }
-            }
-
-            $continue = $continue && ($table !== 'user_login' && $table !== 'zipcodes');
-
-            if ($continue) {
-                if ($table === 'site') {
-                    unset($recordSet['unix_name'], $recordSet['company_id'], $recordSet['is_free'],
-                          $recordSet['size_limit'], $recordSet['user_licenses'], $recordSet['invoice_number']);
-                    $recordSet['account_active'] = 1;
-                }
-
-                if ($table === 'user') {
-                    if (strpos($recordSet['user_name'], '@' . $siteID) !== false) {
-                        $recordSet['user_name'] = str_replace('@' . $siteID, '', $recordSet['user_name']);
-                    }
-                    if (strtolower($recordSet['user_name']) === 'john@mycompany.net') {
-                        $recordSet['access_level'] = 500;
-                    }
-                }
-
-                if ($index === 0) {
-                    $text .= 'INSERT INTO `' . $table . '` VALUES ' . "\n";
-                } else {
-                    $text .= ",\n";
-                }
-
-                $text .= '(';
-                $i = 0;
-                foreach ($recordSet as $field) {
-                    $text .= "'" . mysqli_real_escape_string($connection, $field) . "'";
-                    $i++;
-                    if ($i != count($recordSet)) {
-                        $text .= ',';
-                    }
-                }
-                $text .= ")";
-                $index++;
-
-                if ($splitFiles) {
-                    fwrite($fh, $text);
-                }
-                $text = str_replace('((ENDOFQUERY))', ';', $text);
-                fwrite($fh2, $text);
-                $text = '';
-
-                if ($len > 1000000 && $splitFiles) {
-                    $text .= "((ENDOFQUERY))\n\n\n";
-                    $index = 0;
-                    $len = 0;
-                    fwrite($fh, $text);
-                    $text = str_replace('((ENDOFQUERY))', ';', $text);
-                    fwrite($fh2, $text);
-                    $text = '';
-                    fclose($fh);
-                    $fileNumber++;
-                    $fh = fopen($file . '.' . $fileNumber, 'w');
-                }
-            }
-        }
-
-        if ($index > 0) {
-            $text .= "((ENDOFQUERY))\n\n\n";
-        }
+    $command = "tar -czf \"$backupFile\" -C \"$attachmentsDir\" .";
+    exec($command, $output, $returnVar);
+    if ($returnVar === 0) {
+        echo "Attachments backup created successfully: $backupFile\n";
+    } else {
+        echo "Attachments backup failed.\n";
+        exit(1);
     }
+}
 
-    if ($splitFiles) {
-        fwrite($fh, $text);
+function restoreDatabase($dbHost, $dbName, $dbUser, $dbPass, $backupFile)
+{
+    if (!file_exists($backupFile)) {
+        echo "Database backup file not found: $backupFile\n";
+        exit(1);
     }
-    $text = str_replace('((ENDOFQUERY))', ';', $text);
-    fwrite($fh2, $text);
-    $text = '';
+    try {
+        $sql = gzdecode(file_get_contents($backupFile));
 
-    if ($splitFiles) {
-        fclose($fh);
+        // Remove all problematic SET statements to avoid MySQL restore issues
+        $sql = preg_replace("/SET .*?;/i", "", $sql);
+        $sql = preg_replace("/SET .*?= NULL;/i", "", $sql);
+
+        $pdo = new PDO("mysql:host=$dbHost;dbname=$dbName", $dbUser, $dbPass, [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        ]);
+
+        // Drop all existing tables before restoring
+        $tables = $pdo->query("SHOW TABLES")->fetchAll(PDO::FETCH_COLUMN);
+        foreach ($tables as $table) {
+            $pdo->exec("DROP TABLE IF EXISTS `$table`;");
+        }
+
+        $parser = new Parser($sql);
+        foreach ($parser->statements as $statement) {
+            $pdo->exec($statement->build());
+        }
+
+        echo "Database restored successfully from $backupFile\n";
+    } catch (Exception $e) {
+        echo "Restore failed: " . $e->getMessage() . "\n";
+        exit(1);
     }
-    fclose($fh2);
+}
 
-    // Use set_error_handler with a custom function for better error handling (optional)
-    // restore_error_handler();
+function restoreAttachments($backupFile, $restoreDir)
+{
+    if (!file_exists($backupFile)) {
+        echo "Attachments backup file not found: $backupFile\n";
+        return;
+    }
+    $command = "tar --no-same-owner --no-same-permissions --no-overwrite-dir -xzf \"$backupFile\" -C \"$restoreDir\"";
 
-    return $fileNumber + 1;
+
+    exec($command, $output, $returnVar);
+    if ($returnVar === 0) {
+        echo "Attachments restored successfully to $restoreDir\n";
+    } else {
+        echo "Attachments restore failed.\n";
+        exit(1);
+    }
+}
+
+// Command-line usage
+if ($argc < 2) {
+    echo "Usage: php backupDB.php [backup|restore] [file]\n";
+    exit(1);
+}
+
+$action = $argv[1];
+$file = $argv[2] ?? '';
+
+if ($action === 'backup') {
+    backupDatabase($DB_HOST, $DB_NAME, $DB_USER, $DB_PASS, $backupFile);
+    backupAttachments($ATTACHMENTS_DIR, $attachmentsBackupFile);
+} elseif ($action === 'restore') {
+    if (!file_exists($file)) {
+        echo "Specified backup file does not exist: $file\n";
+        exit(1);
+    }
+    restoreDatabase($DB_HOST, $DB_NAME, $DB_USER, $DB_PASS, $file);
+
+    $fileTimestamp = preg_replace('/backup_|[^0-9_]/', '', basename($file));
+
+    $attachmentsRestoreFile = sprintf('%s/attachments_%s.tar.gz', $BACKUP_DIR, $fileTimestamp);
+    restoreAttachments($attachmentsRestoreFile, $ATTACHMENTS_DIR);
+} else {
+    echo "Invalid command. Use 'backup' or 'restore'.\n";
+    exit(1);
 }

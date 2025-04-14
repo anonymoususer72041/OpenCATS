@@ -4,11 +4,17 @@
  * ACL Library
  * @package OpenCATS
  * @subpackage Library
- * @copyright (C) OpenCats
+ *
  */
 
-include_once("./config.php");
+require_once __DIR__ . '/../config.php';  // Load configuration
 
+if (!defined('LEGACY_ROOT')) {
+    die('Error: LEGACY_ROOT is not defined in ACL.php');
+}
+
+// Ensure the ACL class is only declared once
+if (!class_exists('ACL')) {
 class ACL
 {
     /* Constant to define root secured object for retrieveing access level
@@ -82,4 +88,5 @@ class ACL
             && array_key_exists($securedObjectName, $aclmap[$userCategory])
             && null !== $aclmap[$userCategory][$securedObjectName];
     }
+}
 }

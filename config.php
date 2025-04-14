@@ -1,39 +1,19 @@
 <?php
 /*
- * CATS
+ * OPENCATS
  * Configuration File
  *
- * Copyright (C) 2005 - 2007 Cognizo Technologies, Inc.
- *
- *
- * The contents of this file are subject to the CATS Public License
- * Version 1.1a (the "License"); you may not use this file except in
- * compliance with the License. You may obtain a copy of the License at
- * http://www.catsone.com/.
- *
- * Software distributed under the License is distributed on an "AS IS"
- * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
- * License for the specific language governing rights and limitations
- * under the License.
- *
- * The Original Code is "CATS Standard Edition".
- *
- * The Initial Developer of the Original Code is Cognizo Technologies, Inc.
- * Portions created by the Initial Developer are Copyright (C) 2005 - 2007
- * (or from the year in which this file was created to the year 2007) by
- * Cognizo Technologies, Inc. All Rights Reserved.
- *
- *
- * $Id: config.php 3826 2007-12-10 06:03:18Z will $
  */
 
 /* License key. */
 define('LICENSE_KEY', '3163GQ-54ISGW-14E4SHD-ES9ICL-X02DTG-GYRSQ6');
 
 /* legacy root. */
-if (! defined('LEGACY_ROOT')) {
-    define('LEGACY_ROOT', '.');
+// Only define LEGACY_ROOT if not already set
+if (!defined('LEGACY_ROOT')) {
+    define('LEGACY_ROOT', realpath(__DIR__)); // Set to absolute path of OpenCATS root
 }
+
 
 /* Database configuration. */
 define('DATABASE_USER', 'opencats');
@@ -49,7 +29,7 @@ define('AUTH_MODE', 'sql');
 /* Resfly.com Resume Import Services Enabled */
 define('PARSING_ENABLED', false);
 
-/* If you have an SSL compatible server, you can enable SSL for all of CATS. */
+/* If you have an SSL compatible server, you can enable SSL for all of OpenCATS. */
 define('SSL_ENABLED', true);
 
 /* Text parser settings. Remember to use double backslashes (\) to represent

@@ -1,30 +1,8 @@
 <?php
 /*
- * CATS
+ * OPENCATS
  * AJAX Installer Interface
  *
- * Copyright (C) 2005 - 2007 Cognizo Technologies, Inc.
- *
- *
- * The contents of this file are subject to the CATS Public License
- * Version 1.1a (the "License"); you may not use this file except in
- * compliance with the License. You may obtain a copy of the License at
- * http://www.catsone.com/.
- *
- * Software distributed under the License is distributed on an "AS IS"
- * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
- * License for the specific language governing rights and limitations
- * under the License.
- *
- * The Original Code is "CATS Standard Edition".
- *
- * The Initial Developer of the Original Code is Cognizo Technologies, Inc.
- * Portions created by the Initial Developer are Copyright (C) 2005 - 2007
- * (or from the year in which this file was created to the year 2007) by
- * Cognizo Technologies, Inc. All Rights Reserved.
- *
- *
- * $Id: ui.php 3807 2007-12-05 01:47:41Z will $
  */
 
 include_once(LEGACY_ROOT . '/config.php');
@@ -603,59 +581,54 @@ switch ($action) {
         }
         break;
 
-    case 'restoreFromBackup':
-        include_once(LEGACY_ROOT . '/lib/FileCompressor.php');
-        MySQLConnect();
-        $extractor = new ZipFileExtractor('./restore/catsbackup.bak');
+            case 'restoreFromBackup':
+                include_once(LEGACY_ROOT . '/lib/FileCompressor.php');
 
-        CATSUtility::changeConfigSetting('ENABLE_DEMO_MODE', 'false');
+                MySQLConnect();
+                global $mySQLConnection;
 
-        /* Extract the file.  This command also executes all sql commands in the file. */
-        /* Normally, we could just do the following lines, but we want a custom extractor
-           that ignores the file 'database', and executes all of the catsbackup.sql.xxx
-           files rather than extracting them. */
-        /*
-            if (!$extractor->open() || !$extractor->extractAll())
-            {
-                echo($extractor->getErrorMessage());
-            }
-        */
+                mysqli_set_charset($mySQLConnection, 'utf8mb4');
+                mysqli_query($mySQLConnection, "SET SESSION sql_mode = ''");
 
-        if (! $extractor->open()) {
-            echo($extractor->getErrorMessage());
-        }
-
-        $metaData = $extractor->getMetaData();
-
-        foreach ($metaData['centralDirectory'] as $index => $data) {
-            $fileName = $data['filename'];
-
-            /* Execute all sql files */
-            if (strpos((string) $fileName, 'db/catsbackup.sql.') === 0) {
-                $fileContents = $extractor->getFile($index);
-                MySQLQueryMultiple($fileContents, '((ENDOFQUERY))');
-            }
-            /* Extract everything else but ./database */
-            elseif ($fileName != 'database') {
-                if (strpos((string) $fileName, '/') !== false) {
-                    $directorySplit = explode('/', (string) $fileName);
-                    unset($directorySplit[count($directorySplit) - 1]);
-                    $directory = implode('/', $directorySplit);
-                    @mkdir($directory, 0777, true);
+                // Retrieve timestamp from request
+                if (!isset($_REQUEST['timestamp']) || empty($_REQUEST['timestamp'])) {
+                    die('Error: No backup selected for restoration.');
                 }
 
-                $fileContents = $extractor->getFile($index);
+                $timestamp = preg_replace('/[^0-9_]/', '', $_REQUEST['timestamp']);
+                $backupFile = LEGACY_ROOT . "/backups/backup_${timestamp}.sql.gz";
+                $attachmentsFile = LEGACY_ROOT . "/backups/attachments_${timestamp}.tar.gz";
 
-                if ($fileContents === false) {
-                    /* Report error? */
+                if (!file_exists($backupFile)) {
+                    die('Error: Selected backup file does not exist.');
                 }
 
-                file_put_contents($fileName, $fileContents);
-            }
-        }
+                error_log("Restoring from backup: " . $backupFile);
 
-        echo '<script type="text/javascript">Installpage_populate(\'a=upgradeCats\');</script>';
-        break;
+                // Run backupDB.php restore
+                $restoreCommand = "php " . LEGACY_ROOT . "/modules/install/backupDB.php restore " . escapeshellarg($backupFile);
+                exec($restoreCommand, $output, $returnVar);
+
+                if ($returnVar !== 0) {
+                    error_log("Backup restore failed: " . implode("\n", $output));
+                    die('Error: Database restore failed.');
+                }
+
+                // Restore attachments if available
+                if (file_exists($attachmentsFile)) {
+                    error_log("Restoring attachments from: " . $attachmentsFile);
+                    exec("tar -xzf " . escapeshellarg($attachmentsFile) . " -C " . escapeshellarg(LEGACY_ROOT . '/'), $output, $returnVar);
+                    if ($returnVar !== 0) {
+                        error_log("Attachment restore failed: " . implode("\n", $output));
+                    }
+                }
+
+                echo '<script type="text/javascript">Installpage_populate(\'a=upgradeCats\');</script>';
+                break;
+
+
+
+
 
     case 'doDeleteBackup':
         echo '<script type="text/javascript">Installpage_populate(\'a=detectRevision\', \'subFormBlock\', \'\');</script>';
@@ -993,7 +966,7 @@ function MySQLQuery(string $query, $ignoreErrors = false): bool|\mysqli_result
 {
     global $mySQLConnection;
 
-    // Execute query
+    error_log("SQL Query: " . $query);
     $queryResult = mysqli_query($mySQLConnection, $query);
 
     // Check for connection errors

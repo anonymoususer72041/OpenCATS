@@ -95,7 +95,7 @@ if ($phpVersionParts[0] >= 5) {
                                             <p style="text-align: justify; margin-top: 15px;">This process will help you set up the OpenCATS environment
                                             for the first time. Before we begin, OpenCATS needs to run some tests on your system to make sure that your
                                             web environment can support OpenCATS and is configured properly.</p>
-                                            
+
                                             <br />
                                             <span style="font-weight: bold;">Test Results</span>
                                             <table class="test_output">
@@ -381,19 +381,52 @@ if ($phpVersionParts[0] >= 5) {
                                             <input style="float: right;" type="button" class="button" value="Next -->" onclick="if (getCheckedValue(document.getElementsByName('installgroupexists')) == 'current') Installpage_populate('a=resumeParsing'); else {document.getElementById('catsUpToDate').style.display='none';showTextBlock('queryResetDatabase');}" />
                                         </div>
                                         <div id="queryInstallBackup" style="display: none;">
-                                            <span style="font-weight:bold;">Loading Data - Restore from Backup</span><br />
-                                            <br />
-                                            The installer is ready to restore your backup.<br />
-                                            <br />
-                                            Please upload the file catsbackup.bak into the <strong>restore</strong> directory. The installer will load the data
-                                            out of the catsbackup.bak and set up your site accordingly, and then it will delete the file (preventing
-                                            unauthorized access to the backup file).<br />
-                                            <br />
-                                            <input type="checkbox" id="continueRestoreCheck" onclick="if (this.checked) document.getElementById('continueRestoreButton').style.display = ''; else document.getElementById('continueRestoreButton').style.display = 'none';"> I have uploaded the file catsbackup.bak into the restore directory.<br />
-                                            <br />
-                                            <input type="button" class="button" value="Continue" id="continueRestoreButton" style="display: none;" onclick="document.getElementById('queryInstallBackup').style.display='none';showTextBlock('installingComponents');Installpage_populate('a=restoreFromBackup');" />&nbsp;&nbsp;&nbsp;
-                                            <input type="button" class="button" value="Cancel" onclick="Installpage_populate('a=detectRevision');" /><br /><br />
+                                        <span style="font-weight:bold;">Loading Data - Restore from Backup</span><br /><br />
+
+                                        <p>Select a backup to restore:</p>
+                                        <select id="backupSelection"></select>
+                                        <br /><br />
+
+                                        <input type="button" class="button" value="Continue" onclick="startBackupRestore();" />
+                                        <input type="button" class="button" value="Cancel" onclick="Installpage_populate('a=detectRevision');" />
                                         </div>
+
+                                        <script type="text/javascript">
+                                        function loadBackupList() {
+                                            fetch('modules/settings/ajax/backup.php?a=list')
+                                            .then(response => response.json())
+                                            .then(data => {
+                                                let backupDropdown = document.getElementById('backupSelection');
+                                                backupDropdown.innerHTML = '';
+
+                                            if (data.length === 0) {
+                                                backupDropdown.innerHTML = '<option value="">No backups found</option>';
+                                            return;
+                                            }
+
+                                            data.forEach(backup => {
+                                                let option = document.createElement('option');
+                                                option.value = backup.timestamp;
+                                                option.text = `Backup from ${backup.timestamp}`;
+                                                backupDropdown.appendChild(option);
+                                            });
+                                            })
+                                            .catch(error => console.error('Failed to load backups:', error));
+                                        }
+
+                                        function startBackupRestore() {
+                                            let selectedBackup = document.getElementById('backupSelection').value;
+                                            if (!selectedBackup) {
+                                                alert('Please select a backup to restore.');
+                                                return;
+                                            }
+
+                                            Installpage_populate(`a=restoreFromBackup&timestamp=${selectedBackup}`);
+                                        }
+
+                                        document.addEventListener("DOMContentLoaded", loadBackupList);
+                                        </script>
+
                                         <div id="queryInstallDemo" style="display: none;">
                                             <span style="font-weight:bold;">Loading Data - Demo</span><br />
                                             <br />

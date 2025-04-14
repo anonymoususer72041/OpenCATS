@@ -1,9 +1,9 @@
 <?php
 /*
- * CATS
+ * OPENCATS
  * RSS Display Module
  *
- * CATS Version: 0.9.8.2
+ * OPENCATS Version: 0.9.8.2
  *
  * Copyright (C) 2005 - 2007 Cognizo Technologies, Inc.
  *

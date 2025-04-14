@@ -25,6 +25,8 @@
         "phpmailer/phpmailer": "^6.5.0",
         "ckeditor/ckeditor": "^4.16.0",
         "google/apiclient": "^2.14",
-        "guzzlehttp/guzzle": "^6.5"
+        "guzzlehttp/guzzle": "^6.5",
+        "spatie/db-dumper": "^3.7",
+        "phpmyadmin/sql-parser": "^5.10"
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /*
- * CATS
+ * OPENCATS
  * CLI / Cron Backup Interface
  *
  * Copyright (C) 2005 - 2007 Cognizo Technologies, Inc.

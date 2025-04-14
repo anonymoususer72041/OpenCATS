@@ -1,6 +1,6 @@
 <?php
 /**
- * CATS
+ * OPENCATS
  * Data Grid Library
  *
  * Copyright (C) 2005 - 2007 Cognizo Technologies, Inc.

@@ -314,7 +314,7 @@ class ZipFileCreator
             $compressedLength,
             $uncompressedLength,
             strlen($name),
-            $extraFieldLength
+                           $extraFieldLength
         );
 
         /* Filename. */
@@ -575,7 +575,7 @@ class ZipFileCreator
             0,
             $uncompressedLength,
             strlen($name),
-            $extraFieldLength
+                           $extraFieldLength
         );
 
         /* Filename. */
@@ -689,8 +689,8 @@ class ZipFileCreator
         $compressedLength -= $gzipFooterLength;
 
         /* We need to seek back into the file and correct the 4B representation
-           of how large the compressed data is. It is stored at
-           pointer - $compressedSize - 12 bytes. */
+         *          of how large the compressed data is. It is stored at
+         *          pointer - $compressedSize - 12 bytes. */
         if (fseek($this->_fileHandle, 0 - $compressedLength - strlen($name) - $gzipFooterLength - 12, SEEK_CUR) === -1) {
             $this->_errorMessage = 'Unexpected end of file.';
             return false;
@@ -843,12 +843,12 @@ class ZipFileCreator
             $compressedLength,
             $uncompressedLength,
             strlen((string) $name),
-            $extraFieldLength,
-            $fileCommentLength,
-            $diskNumber,
-            $internalFileAttrbutes,
-            $externalFileAttributes,
-            $this->_lastOffset
+                                      $extraFieldLength,
+                                      $fileCommentLength,
+                                      $diskNumber,
+                                      $internalFileAttrbutes,
+                                      $externalFileAttributes,
+                                      $this->_lastOffset
         );
 
         /* File name. */
@@ -1058,28 +1058,28 @@ class ZipFileExtractor
         if ($centralDirectoryOffset <= 0 ||
             $centralDirectoryOffset >= $fileLength) {
             $this->_errorMessage = 'Invalid start of Central Directory.';
-            return false;
-        }
+        return false;
+            }
 
-        /* Parse the central directory into an array. */
-        $metaData['centralDirectory'] = $this->parseCentralDirectory(
-            $centralDirectoryOffset,
-            $metaData['centralDirectoryLength']
-        );
+            /* Parse the central directory into an array. */
+            $metaData['centralDirectory'] = $this->parseCentralDirectory(
+                $centralDirectoryOffset,
+                $metaData['centralDirectoryLength']
+            );
 
-        if ($metaData['centralDirectory'] === false) {
-            /* Error message was set by parseCentralDirectory. */
-            return false;
-        }
+            if ($metaData['centralDirectory'] === false) {
+                /* Error message was set by parseCentralDirectory. */
+                return false;
+            }
 
-        /* Set our position to the start of the file again. */
-        if (fseek($fileHandle, 0, SEEK_SET) === -1) {
-            $this->_errorMessage = 'Unexpected end of file.';
-            return false;
-        }
+            /* Set our position to the start of the file again. */
+            if (fseek($fileHandle, 0, SEEK_SET) === -1) {
+                $this->_errorMessage = 'Unexpected end of file.';
+                return false;
+            }
 
-        $this->_metaData = $metaData;
-        return true;
+            $this->_metaData = $metaData;
+            return true;
     }
 
     public function getMetaData()
@@ -1141,7 +1141,7 @@ class ZipFileExtractor
         /* Get an array of central directory entries. */
         $entries = explode(
             pack('V', START_CENTRAL_DIRECTORY_ENTRY),
-            $bytes
+                           $bytes
         );
         unset($bytes);
 

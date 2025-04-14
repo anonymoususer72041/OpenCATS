@@ -72,33 +72,33 @@ class FileUtility
         if ($contentType == 'application/rtf' || $contentType == 'text/rtf' ||
             $contentType == 'text/richtext' || $fileExtension == 'rtf') {
             return DOCUMENT_TYPE_RTF;
-        }
+            }
 
-        if ($contentType == 'application/msword' || $fileExtension == 'doc') {
-            return DOCUMENT_TYPE_DOC;
-        }
+            if ($contentType == 'application/msword' || $fileExtension == 'doc') {
+                return DOCUMENT_TYPE_DOC;
+            }
 
-        if ($contentType == 'application/vnd.ms-word.document.12' ||
-            $fileExtension == 'docx') {
-            return DOCUMENT_TYPE_DOCX;
-        }
+            if ($contentType == 'application/vnd.ms-word.document.12' ||
+                $fileExtension == 'docx') {
+                return DOCUMENT_TYPE_DOCX;
+                }
 
-        if ($contentType == 'application/pdf' || $fileExtension == 'pdf') {
-            return DOCUMENT_TYPE_PDF;
-        }
+                if ($contentType == 'application/pdf' || $fileExtension == 'pdf') {
+                    return DOCUMENT_TYPE_PDF;
+                }
 
-        if ($contentType === 'text/html' || $fileExtension == 'html' ||
-            $fileExtension == 'htm') {
-            return DOCUMENT_TYPE_HTML;
-        }
+                if ($contentType === 'text/html' || $fileExtension == 'html' ||
+                    $fileExtension == 'htm') {
+                    return DOCUMENT_TYPE_HTML;
+                    }
 
-        if ($contentType === 'application/vnd.oasis.opendocument.text' ||
-            $contentType === 'application/x-vnd.oasis.opendocument.text' ||
-            $fileExtension == 'odt') {
-            return DOCUMENT_TYPE_ODT;
-        }
+                    if ($contentType === 'application/vnd.oasis.opendocument.text' ||
+                        $contentType === 'application/x-vnd.oasis.opendocument.text' ||
+                        $fileExtension == 'odt') {
+                        return DOCUMENT_TYPE_ODT;
+                        }
 
-        return DOCUMENT_TYPE_UNKNOWN;
+                        return DOCUMENT_TYPE_UNKNOWN;
     }
 
     /**
@@ -174,17 +174,17 @@ class FileUtility
 
         /* Use a whitelist instead of a blacklist to prevent possible bypasses */
         /*
-                if (!preg_match("/(?i)\.(pdf|docx?|rtf|odt?g?|txt|wpd|jpe?g|png|csv|xlsx?|ppt|msg|heic|tiff?|html?|bmp|wps|xps)$/i", $fileExtension))
-        */
+         *               if (!preg_match("/(?i)\.(pdf|docx?|rtf|odt?g?|txt|wpd|jpe?g|png|csv|xlsx?|ppt|msg|heic|tiff?|html?|bmp|wps|xps)$/i", $fileExtension))
+         */
         $GoodFileExtensions = ['bak', 'bmp', 'csv', 'doc', 'docx', 'heic', 'html', 'jpeg', 'jpg', 'msg', 'odg', 'odt', 'pages', 'pdf', 'png', 'ppt', 'pptx', 'rtf', 'tiff', 'wpd', 'wps', 'xls', 'xlsx', 'xps'];
-        if (! in_array($fileExtension, $GoodFileExtensions)) {
-            $filename .= ".txt";
-        }
+      //  if (! in_array($fileExtension, $GoodFileExtensions)) {
+      //      $filename .= ".txt";
+      //  }
         /*        if (in_array($fileExtension, $GLOBALS['badFileExtensions']))
-                {
-                    $filename .= '.txt';
-                }
-        */
+         *               {
+         *                   $filename .= '.txt';
+    }
+    */
         return $filename;
     }
 
@@ -386,7 +386,7 @@ class FileUtility
 
             case UPLOAD_ERR_NO_TMP_DIR:
                 return 'No temporary directory exists. PHP is most likely '
-                    . 'configured incorrectly.';
+                . 'configured incorrectly.';
                 break;
 
             case UPLOAD_ERR_CANT_WRITE:
@@ -567,7 +567,7 @@ class FileUtility
             if (@move_uploaded_file($_FILES[$id]['tmp_name'], $uploadPath . '/' . $newFileName) &&
                 @chmod($uploadPath . '/' . $newFileName, 0777)) {
                 return $newFileName;
-            }
+                }
         }
 
         return false;

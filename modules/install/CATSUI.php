@@ -1,7 +1,7 @@
 <?php
 /*
- * CATS
- * CATS Schema module / install module
+ * OPENCATS
+ * OPENCATS Schema module / install module
  *
  * Copyright (C) 2005 - 2007 Cognizo Technologies, Inc.
  *

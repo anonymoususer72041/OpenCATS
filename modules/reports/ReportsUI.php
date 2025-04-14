@@ -1,6 +1,6 @@
 <?php
 /*
- * CATS
+ * OPENCATS
  * Reports Module
  *
  * Copyright (C) 2005 - 2007 Cognizo Technologies, Inc.

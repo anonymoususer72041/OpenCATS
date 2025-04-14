@@ -1,40 +1,14 @@
 <?php
 /*
- * CATS
+ * OPENCATS
  * Index (Delegation Module)
  *
- * CATS Version: 0.9.8.2
- *
- * Copyright (C) 2005 - 2007 Cognizo Technologies, Inc.
- *
- *
- * The contents of this file are subject to the CATS Public License
- * Version 1.1a (the "License"); you may not use this file except in
- * compliance with the License. You may obtain a copy of the License at
- * http://www.catsone.com/. Software distributed under the License is
- * distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY KIND, either
- * express or implied. See the License for the specific language governing
- * rights and limitations under the License.
- *
- * Software distributed under the License is distributed on an "AS IS"
- * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
- * License for the specific language governing rights and limitations
- * under the License.
- *
- * The Original Code is "CATS Standard Edition".
- *
- * The Initial Developer of the Original Code is Cognizo Technologies, Inc.
- * Portions created by the Initial Developer are Copyright (C) 2005 - 2007
- * (or from the year in which this file was created to the year 2007) by
- * Cognizo Technologies, Inc. All Rights Reserved.
- *
+ * OPENCATS Version: 0.9.8.2
  *
  * A properly formatted query string will look like this:
  *
  *    /index.php?m=candidates&a=edit&candidateID=55
  *
- *
- * $Id: index.php 3807 2007-12-05 01:47:41Z will $
  */
 
 /* Do we need to run the installer? */
@@ -69,8 +43,10 @@ include_once(LEGACY_ROOT . '/lib/TemplateUtility.php'); /* Depends: ModuleUtilit
 
 
 /* Give the session a unique name to avoid conflicts and start the session. */
-session_name(CATS_SESSION_NAME);
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_name(CATS_SESSION_NAME);
+    session_start();
+}
 
 /* Try to prevent caching. */
 header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
@@ -201,7 +177,7 @@ elseif (! isset($_GET['m']) || empty($_GET['m'])) {
             $URI .= '&messageSuccess=' . urlencode((string) $_GET['messageSuccess']);
         }
 
-        /* catsone.com demo domain doesn't relogin. */
+        /* OPENCATSone.com demo domain doesn't relogin. */
         if (strpos(CATSUtility::getIndexName(), '://demo.catsone.com') !== false) {
             CATSUtility::transferURL('http://www.catsone.com');
         } else {

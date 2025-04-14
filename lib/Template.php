@@ -19,6 +19,10 @@
  */
 class Template
 {
+    public $regardingID;
+    public $oldStatusDescription;
+    public $newStatusDescription;
+    public $pipelineData;
     public $jobOrderStatuses;
     public $departmentsString;
     public $wildCardQuickSearch;
