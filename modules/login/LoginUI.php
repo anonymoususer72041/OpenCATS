@@ -441,7 +441,16 @@ class LoginUI extends UserInterface
      */
     private function forgotPassword()
     {
-        if (!eval(Hooks::get('FORGOT_PASSWORD'))) return;
+        eval(Hooks::get('FORGOT_PASSWORD'));
+
+        /* Password reset via email is disabled for security reasons. */
+        $this->_template->assign('passwordResetDisabled', true);
+        $this->_template->assign(
+            'message',
+            'Password reset via email has been disabled. Please contact your administrator.'
+        );
+        $this->_template->assign('messageSuccess', false);
+        $this->_template->assign('complete', false);
 
         $this->_template->display('./modules/login/ForgotPassword.tpl');
     }
@@ -452,38 +461,16 @@ class LoginUI extends UserInterface
      */
     private function onForgotPassword()
     {
-        $username = $this->getTrimmedInput('username', $_POST);
+        /* Keep any hooks from running password reset logic. */
+        eval(Hooks::get('ON_FORGOT_PASSWORD'));
 
-        if (!eval(Hooks::get('ON_FORGOT_PASSWORD'))) return;
-
-        $user = new Users($this->_siteID);
-        if ($password = $user->getPassword($username))
-        {
-            $mailer = new Mailer($this->_siteID);
-            $mailerStatus = $mailer->sendToOne(
-                array($username, $username),
-                PASSWORD_RESET_SUBJECT,
-                sprintf(PASSWORD_RESET_BODY, $password),
-                true
-            );
-
-            if ($mailerStatus)
-            {
-                $this->_template->assign('username', $username);
-                $this->_template->assign('complete', true);
-            }
-            else
-            {
-                $this->_template->assign('message',' Unable to send password to address specified.');
-                $this->_template->assign('complete', false);
-            }
-        }
-        else
-        {
-            $this->_template->assign('message', 'No such username found.');
-            $this->_template->assign('complete', false);
-        }
-
+        $this->_template->assign('passwordResetDisabled', true);
+        $this->_template->assign(
+            'message',
+            'Password reset via email has been disabled. Please contact your administrator.'
+        );
+        $this->_template->assign('messageSuccess', false);
+        $this->_template->assign('complete', false);
         $this->_template->display('./modules/login/ForgotPassword.tpl');
     }
 
