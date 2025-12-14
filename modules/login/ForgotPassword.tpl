@@ -30,7 +30,8 @@
 
             <div id="formBlock">
                 <img src="images/login.gif" alt="Login" />
-                <?php if (!$this->complete): ?>
+                <?php $resetDisabled = !empty($this->passwordResetDisabled); ?>
+                <?php if (!$this->complete && !$resetDisabled): ?>
                     <form name="loginForm" id="loginForm" action="<?php echo(CATSUtility::getIndexName()); ?>?m=login&amp;a=forgotPassword" method="post" autocomplete="off">
                         <input type="hidden" name="postback" value="true" />
                         <div id="subFormBlock">
@@ -41,6 +42,11 @@
                             <input type="submit" id="submit" name="submit" class="login-submit-button" value="Email my Password" />
                         </div>
                     </form>
+                <?php elseif ($resetDisabled): ?>
+                    <p>
+                        Password reset via email has been disabled. Please contact your administrator for assistance.<br /><br />
+                        <a href="<?php echo(CATSUtility::getIndexName()); ?>?m=login">Return to login page</a>
+                    </p>
                 <?php else: ?>
                     <p>
                         An email has been sent to <?php $this->_($this->username); ?> containing your password.<br /><br />
@@ -58,7 +64,9 @@
         </div>
 
         <script type="text/javascript">
-            document.loginForm.username.focus();
+            if (document.loginForm && document.loginForm.username) {
+                document.loginForm.username.focus();
+            }
         </script>
 
         <br />
