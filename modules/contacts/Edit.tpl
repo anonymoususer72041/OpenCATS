@@ -225,7 +225,7 @@
                                     </td>
                                     <td class="tdData">
                                         <input type="text" name="zip" id="zip" value="<?php $this->_($this->data['zip']); ?>" class="inputbox" style="width: 150px" />
-                                        <input type="button" class="button" onclick="CityState_populate('zip', 'ajaxIndicator');" value="Lookup" />
+                                        <!-- <input type="button" class="button" onclick="CityState_populate('zip', 'ajaxIndicator');" value="Lookup" /> -->
                                         <img src="images/indicator2.gif" alt="AJAX" id="ajaxIndicator" style="vertical-align: middle; visibility: hidden; margin-left: 5px;" />
                                     </td>
                                 </tr>
