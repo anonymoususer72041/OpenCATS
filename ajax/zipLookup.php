@@ -8,6 +8,12 @@ include_once(LEGACY_ROOT . '/lib/StringUtility.php');
 
 $interface = new AJAXInterface();
 
+if (!defined('US_ZIPS_ENABLED') || !US_ZIPS_ENABLED)
+{
+    $interface->outputXMLErrorPage(-2, 'Zip lookup disabled.');
+    die();
+}
+
 if (!isset($_REQUEST['zip']))
 {
     $interface->outputXMLErrorPage(-1, 'Invalid zip code.');
