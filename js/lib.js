@@ -519,6 +519,9 @@ function toggleNode(showFull, shortNode, fullNode)
  */
 function CityState_populate(zipEditID, indicatorID)
 {
+    // Zip lookup disabled for security reasons.
+    return;
+
     var http = AJAX_getXMLHttpObject();
 
     var zip = document.getElementById(zipEditID).value;
