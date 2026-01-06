@@ -67,7 +67,14 @@ class ImportUI extends UserInterface
         switch ($action)
         {
             case 'revert':
-                $this->revert();
+                if ($this->isPostBack())
+                {
+                    $this->revert();
+                }
+                else
+                {
+                    CommonErrors::fatal(COMMONERROR_BADFIELDS, $this, 'Invalid request.');
+                }
                 break;
 
             case 'viewerrors':
@@ -107,11 +114,25 @@ class ImportUI extends UserInterface
                 break;
 
             case 'importBulkResumes':
-                $this->importBulkResumes();
+                if ($this->isPostBack())
+                {
+                    $this->importBulkResumes();
+                }
+                else
+                {
+                    CommonErrors::fatal(COMMONERROR_BADFIELDS, $this, 'Invalid request.');
+                }
                 break;
 
             case 'deleteBulkResumes':
-                $this->deleteBulkResumes();
+                if ($this->isPostBack())
+                {
+                    $this->deleteBulkResumes();
+                }
+                else
+                {
+                    CommonErrors::fatal(COMMONERROR_BADFIELDS, $this, 'Invalid request.');
+                }
                 break;
 
             case 'import':
@@ -133,13 +154,13 @@ class ImportUI extends UserInterface
     */
     private function revert()
     {
-        if (!$this->isRequiredIDValid('importID', $_GET))
+        if (!$this->isRequiredIDValid('importID', $_POST))
         {
             $this->import();
             return;
         }
 
-        $importID = $_GET['importID'];
+        $importID = $_POST['importID'];
 
         $import = new Import($this->_siteID);
         $tableName = $import->get($importID);

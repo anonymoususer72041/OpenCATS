@@ -118,7 +118,7 @@ class CATSWebTestCase extends WebTestCase
 
     public function logout()
     {
-        $this->get($this->_indexURL . '?m=logout');
+        $this->post($this->_indexURL . '?m=logout');
         $this->assertHTTPResponseOk();
     }
 
@@ -356,8 +356,12 @@ class CATSWebTestCase extends WebTestCase
 
     public function deleteJobOrder($jobOrderID)
     {
-        $this->assertGET(
-            $this->_indexURL . '?m=joborders&a=delete&jobOrderID=' . $jobOrderID,
+        $this->assertPOST(
+            $this->_indexURL . '?m=joborders&a=delete',
+            array(
+                'postback'  => 'postback',
+                'jobOrderID' => $jobOrderID
+            ),
             false,
             'Deleting job order [' . $jobOrderID . '] should succeed'
         );
@@ -369,8 +373,12 @@ class CATSWebTestCase extends WebTestCase
 
     public function deleteCandidate($candidateID)
     {
-        $this->assertGET(
-            $this->_indexURL . '?m=candidates&a=delete&candidateID=' . $candidateID,
+        $this->assertPOST(
+            $this->_indexURL . '?m=candidates&a=delete',
+            array(
+                'postback'    => 'postback',
+                'candidateID' => $candidateID
+            ),
             false,
             'Deleting candidate [' . $candidateID . '] should succeed'
         );
@@ -382,8 +390,12 @@ class CATSWebTestCase extends WebTestCase
 
     public function deleteCompany($companyID)
     {
-        $this->assertGET(
-            $this->_indexURL . '?m=companies&a=delete&companyID=' . $companyID,
+        $this->assertPOST(
+            $this->_indexURL . '?m=companies&a=delete',
+            array(
+                'postback'  => 'postback',
+                'companyID' => $companyID
+            ),
             false,
             'Deleting company [' . $companyID . '] should succeed'
         );
@@ -395,8 +407,12 @@ class CATSWebTestCase extends WebTestCase
 
     public function deleteContact($contactID)
     {
-        $this->assertGET(
-            $this->_indexURL . '?m=contacts&a=delete&contactID=' . $contactID,
+        $this->assertPOST(
+            $this->_indexURL . '?m=contacts&a=delete',
+            array(
+                'postback' => 'postback',
+                'contactID' => $contactID
+            ),
             false,
             'Deleting contact [' . $contactID . '] should succeed'
         );
@@ -408,8 +424,13 @@ class CATSWebTestCase extends WebTestCase
 
     public function deleteUser($userID)
     {
-        $this->assertGET(
-            $this->_indexURL . '?m=settings&a=deleteUser&iAmTheAutomatedTester=1&userID=' . $userID,
+        $this->assertPOST(
+            $this->_indexURL . '?m=settings&a=deleteUser',
+            array(
+                'postback' => 'postback',
+                'iAmTheAutomatedTester' => 1,
+                'userID' => $userID
+            ),
             false,
             'Deleting user [' . $userID . '] should succeed'
         );

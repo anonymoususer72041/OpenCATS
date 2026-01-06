@@ -130,7 +130,14 @@ class CandidatesUI extends UserInterface
                 {
                     CommonErrors::fatal(COMMONERROR_PERMISSION, $this, 'Invalid user level for action.');
                 }
-                $this->onDelete();
+                if ($this->isPostBack())
+                {
+                    $this->onDelete();
+                }
+                else
+                {
+                    CommonErrors::fatal(COMMONERROR_BADFIELDS, $this, 'Invalid request.');
+                }
                 break;
 
             case 'search':
@@ -185,7 +192,14 @@ class CandidatesUI extends UserInterface
                 {
                     CommonErrors::fatal(COMMONERROR_PERMISSION, $this, 'Invalid user level for action.');
                 }
-                $this->onAddToPipeline();
+                if ($this->isPostBack())
+                {
+                    $this->onAddToPipeline();
+                }
+                else
+                {
+                    CommonErrors::fatalModal(COMMONERROR_BADFIELDS, $this, 'Invalid request.');
+                }
                 break;
 
             case 'addCandidateTags':
@@ -226,7 +240,14 @@ class CandidatesUI extends UserInterface
                 {
                     CommonErrors::fatal(COMMONERROR_PERMISSION, $this, 'Invalid user level for action.');
                 }
-                $this->onRemoveFromPipeline();
+                if ($this->isPostBack())
+                {
+                    $this->onRemoveFromPipeline();
+                }
+                else
+                {
+                    CommonErrors::fatal(COMMONERROR_BADFIELDS, $this, 'Invalid request.');
+                }
                 break;
 
             case 'addEditImage':
@@ -271,7 +292,14 @@ class CandidatesUI extends UserInterface
                 {
                     CommonErrors::fatal(COMMONERROR_PERMISSION, $this, 'Invalid user level for action.');
                 }
-                $this->administrativeHideShow();
+                if ($this->isPostBack())
+                {
+                    $this->administrativeHideShow();
+                }
+                else
+                {
+                    CommonErrors::fatal(COMMONERROR_BADFIELDS, $this, 'Invalid request.');
+                }
                 break;
 
             /* Delete a candidate attachment */
@@ -280,7 +308,14 @@ class CandidatesUI extends UserInterface
                 {
                     CommonErrors::fatal(COMMONERROR_PERMISSION, $this, 'Invalid user level for action.');
                 }
-                $this->onDeleteAttachment();
+                if ($this->isPostBack())
+                {
+                    $this->onDeleteAttachment();
+                }
+                else
+                {
+                    CommonErrors::fatal(COMMONERROR_BADFIELDS, $this, 'Invalid request.');
+                }
                 break;
 
             /* Hot List Page */
@@ -336,7 +371,14 @@ class CandidatesUI extends UserInterface
                 {
                     CommonErrors::fatal(COMMONERROR_PERMISSION, $this, 'Invalid user level for action.');
                 }
-                $this->mergeDuplicatesInfo();
+                if ($this->isPostBack())
+                {
+                    $this->mergeDuplicatesInfo();
+                }
+                else
+                {
+                    CommonErrors::fatal(COMMONERROR_BADFIELDS, $this, 'Invalid request.');
+                }
                 break;
             
             /* Remove duplicity warning from a new candidate */
@@ -345,7 +387,14 @@ class CandidatesUI extends UserInterface
                 {
                     CommonErrors::fatal(COMMONERROR_PERMISSION, $this, 'Invalid user level for action.');
                 }
-                $this->removeDuplicity();
+                if ($this->isPostBack())
+                {
+                    $this->removeDuplicity();
+                }
+                else
+                {
+                    CommonErrors::fatalModal(COMMONERROR_BADFIELDS, $this, 'Invalid request.');
+                }
                 break;
             
             case 'addDuplicates':
@@ -353,7 +402,14 @@ class CandidatesUI extends UserInterface
                 {
                     CommonErrors::fatal(COMMONERROR_PERMISSION, $this, 'Invalid user level for action.');
                 }
-                $this->addDuplicates();
+                if ($this->isPostBack())
+                {
+                    $this->addDuplicates();
+                }
+                else
+                {
+                    CommonErrors::fatalModal(COMMONERROR_BADFIELDS, $this, 'Invalid request.');
+                }
                 break;
 
             /* Main candidates page. */
@@ -391,6 +447,31 @@ class CandidatesUI extends UserInterface
         $transferURI = str_replace(
             '__CANDIDATE_ID__', $candidateID, $transferURI
         );
+
+        if (strpos($transferURI, 'a=addToPipeline') !== false)
+        {
+            parse_str($transferURI, $params);
+            $action = CATSUtility::getIndexName();
+            if (isset($params['m']) && isset($params['a']))
+            {
+                $action .= '?m=' . urlencode($params['m']) . '&a=' . urlencode($params['a']);
+                unset($params['m']);
+                unset($params['a']);
+            }
+
+            echo '<html><body>';
+            echo '<form id="postRedirect" method="post" action="', $action, '">';
+            echo '<input type="hidden" name="postback" value="postback" />';
+            foreach ($params as $key => $value)
+            {
+                echo '<input type="hidden" name="', htmlspecialchars($key, ENT_QUOTES, 'UTF-8'), '" value="', htmlspecialchars($value, ENT_QUOTES, 'UTF-8'), '" />';
+            }
+            echo '</form>';
+            echo '<script type="text/javascript">document.getElementById(\'postRedirect\').submit();</script>';
+            echo '</body></html>';
+            return;
+        }
+
         CATSUtility::transferRelativeURI($transferURI);
     }
 
@@ -1407,12 +1488,12 @@ class CandidatesUI extends UserInterface
     private function onDelete()
     {
         /* Bail out if we don't have a valid candidate ID. */
-        if (!$this->isRequiredIDValid('candidateID', $_GET))
+        if (!$this->isRequiredIDValid('candidateID', $_POST))
         {
             CommonErrors::fatal(COMMONERROR_BADINDEX, $this, 'Invalid candidate ID.');
         }
 
-        $candidateID = $_GET['candidateID'];
+        $candidateID = $_POST['candidateID'];
 
         if (!eval(Hooks::get('CANDIDATE_DELETE'))) return;
 
@@ -1561,30 +1642,30 @@ class CandidatesUI extends UserInterface
     private function onAddToPipeline()
     {
         /* Bail out if we don't have a valid job order ID. */
-        if (!$this->isRequiredIDValid('jobOrderID', $_GET))
+        if (!$this->isRequiredIDValid('jobOrderID', $_POST))
         {
             CommonErrors::fatalModal(COMMONERROR_BADINDEX, $this, 'Invalid job order ID.');
         }
 
-        if (isset($_GET['candidateID']))
+        if (isset($_POST['candidateID']))
         {
             /* Bail out if we don't have a valid candidate ID. */
-            if (!$this->isRequiredIDValid('candidateID', $_GET))
+            if (!$this->isRequiredIDValid('candidateID', $_POST))
             {
                 CommonErrors::fatalModal(COMMONERROR_BADINDEX, $this, 'Invalid candidate ID.');
             }
 
-            $candidateIDArray = array($_GET['candidateID']);
+            $candidateIDArray = array($_POST['candidateID']);
         }
         else
         {
-            if (!isset($_REQUEST['candidateIDArrayStored']) || !$this->isRequiredIDValid('candidateIDArrayStored', $_REQUEST, true))
+            if (!isset($_POST['candidateIDArrayStored']) || !$this->isRequiredIDValid('candidateIDArrayStored', $_POST, true))
             {
                 CommonErrors::fatalModal(COMMONERROR_BADINDEX, $this, 'Invalid candidateIDArrayStored parameter.');
                 return;
             }
 
-            $candidateIDArray = $_SESSION['CATS']->retrieveData($_REQUEST['candidateIDArrayStored']);
+            $candidateIDArray = $_SESSION['CATS']->retrieveData($_POST['candidateIDArrayStored']);
 
             if (!is_array($candidateIDArray))
             {
@@ -1606,7 +1687,7 @@ class CandidatesUI extends UserInterface
         }
 
 
-        $jobOrderID  = $_GET['jobOrderID'];
+        $jobOrderID  = $_POST['jobOrderID'];
 
         if (!eval(Hooks::get('CANDIDATE_ADD_TO_PIPELINE_PRE'))) return;
 
@@ -1858,19 +1939,19 @@ class CandidatesUI extends UserInterface
     private function onRemoveFromPipeline()
     {
         /* Bail out if we don't have a valid candidate ID. */
-        if (!$this->isRequiredIDValid('candidateID', $_GET))
+        if (!$this->isRequiredIDValid('candidateID', $_POST))
         {
             CommonErrors::fatal(COMMONERROR_BADINDEX, $this, 'Invalid candidate ID.');
         }
 
         /* Bail out if we don't have a valid job order ID. */
-        if (!$this->isRequiredIDValid('jobOrderID', $_GET))
+        if (!$this->isRequiredIDValid('jobOrderID', $_POST))
         {
             CommonErrors::fatal(COMMONERROR_BADINDEX, $this, 'Invalid job order ID.');
         }
 
-        $candidateID = $_GET['candidateID'];
-        $jobOrderID  = $_GET['jobOrderID'];
+        $candidateID = $_POST['candidateID'];
+        $jobOrderID  = $_POST['jobOrderID'];
 
         if (!eval(Hooks::get('CANDIDATE_REMOVE_FROM_PIPELINE_PRE'))) return;
 
@@ -2363,19 +2444,19 @@ class CandidatesUI extends UserInterface
     private function onDeleteAttachment()
     {
         /* Bail out if we don't have a valid attachment ID. */
-        if (!$this->isRequiredIDValid('attachmentID', $_GET))
+        if (!$this->isRequiredIDValid('attachmentID', $_POST))
         {
             CommonErrors::fatalModal(COMMONERROR_BADINDEX, $this, 'Invalid attachment ID.');
         }
 
         /* Bail out if we don't have a valid candidate ID. */
-        if (!$this->isRequiredIDValid('candidateID', $_GET))
+        if (!$this->isRequiredIDValid('candidateID', $_POST))
         {
             CommonErrors::fatalModal(COMMONERROR_BADINDEX, $this, 'Invalid candidate ID.');
         }
 
-        $candidateID  = $_GET['candidateID'];
-        $attachmentID = $_GET['attachmentID'];
+        $candidateID  = $_POST['candidateID'];
+        $attachmentID = $_POST['attachmentID'];
 
         if (!eval(Hooks::get('CANDIDATE_ON_DELETE_ATTACHMENT_PRE'))) return;
 
@@ -2394,21 +2475,21 @@ class CandidatesUI extends UserInterface
     private function administrativeHideShow()
     {
         /* Bail out if we don't have a valid joborder ID. */
-        if (!$this->isRequiredIDValid('candidateID', $_GET))
+        if (!$this->isRequiredIDValid('candidateID', $_POST))
         {
             CommonErrors::fatal(COMMONERROR_BADINDEX, $this, 'Invalid Job Order ID.');
         }
 
         /* Bail out if we don't have a valid status ID. */
-        if (!$this->isRequiredIDValid('state', $_GET, true))
+        if (!$this->isRequiredIDValid('state', $_POST, true))
         {
             CommonErrors::fatal(COMMONERROR_BADINDEX, $this, 'Invalid state ID.');
         }
 
-        $candidateID = $_GET['candidateID'];
+        $candidateID = $_POST['candidateID'];
 
         // FIXME: Checkbox?
-        $state = (boolean) $_GET['state'];
+        $state = (boolean) $_POST['state'];
 
         $candidates = new Candidates($this->_siteID);
         $candidates->administrativeHideShow($candidateID, $state);
@@ -3479,6 +3560,15 @@ class CandidatesUI extends UserInterface
     
     private function mergeDuplicates()
     {
+        if (!$this->isRequiredIDValid('oldCandidateID', $_GET))
+        {
+            CommonErrors::fatal(COMMONERROR_BADINDEX, $this, 'Invalid candidate ID.');
+        }
+        if (!$this->isRequiredIDValid('newCandidateID', $_GET))
+        {
+            CommonErrors::fatal(COMMONERROR_BADINDEX, $this, 'Invalid candidate ID.');
+        }
+
         $candidates = new Candidates($this->_siteID);
         $oldCandidateID = $_GET['oldCandidateID'];
         $newCandidateID = $_GET['newCandidateID'];
@@ -3497,6 +3587,15 @@ class CandidatesUI extends UserInterface
     private function mergeDuplicatesInfo()
     {
         $candidates = new Candidates($this->_siteID);
+        if (!$this->isRequiredIDValid('oldCandidateID', $_POST))
+        {
+            CommonErrors::fatal(COMMONERROR_BADINDEX, $this, 'Invalid candidate ID.');
+        }
+        if (!$this->isRequiredIDValid('newCandidateID', $_POST))
+        {
+            CommonErrors::fatal(COMMONERROR_BADINDEX, $this, 'Invalid candidate ID.');
+        }
+
         $params = array();
         $params['firstName'] = $_POST['firstName'];
         $params['middleName'] =  $_POST['middleName'];
@@ -3518,15 +3617,24 @@ class CandidatesUI extends UserInterface
         $params['newCandidateID'] = $_POST['newCandidateID'];
         
         $candidates->mergeDuplicates($params, $candidates->getWithDuplicity($params['newCandidateID']));
-        $this->_template->assign('isFinishedMode', true); 
-        $this->_template->display('./modules/candidates/Merge.tpl');
+        CATSUtility::transferRelativeURI(
+            'm=candidates&a=show&candidateID=' . $params['oldCandidateID']
+        );
     }
     
     private function removeDuplicity()
     {
         $candidates = new Candidates($this->_siteID);
-        $oldCandidateID = $_GET['oldCandidateID'];
-        $newCandidateID = $_GET['newCandidateID'];
+        if (!$this->isRequiredIDValid('oldCandidateID', $_POST))
+        {
+            CommonErrors::fatal(COMMONERROR_BADINDEX, $this, 'Invalid candidate ID.');
+        }
+        if (!$this->isRequiredIDValid('newCandidateID', $_POST))
+        {
+            CommonErrors::fatal(COMMONERROR_BADINDEX, $this, 'Invalid candidate ID.');
+        }
+        $oldCandidateID = $_POST['oldCandidateID'];
+        $newCandidateID = $_POST['newCandidateID'];
         $candidates->removeDuplicity($oldCandidateID, $newCandidateID);
         $url = CATSUtility::getIndexName()."?m=candidates";
         header("Location: " . $url); /* Redirect browser */
@@ -3537,8 +3645,16 @@ class CandidatesUI extends UserInterface
     private function addDuplicates()
     {
         $candidates = new Candidates($this->_siteID);
-        $oldCandidateID = $_GET['candidateID'];
-        $newCandidateID = $_GET['duplicateCandidateID'];
+        if (!$this->isRequiredIDValid('candidateID', $_POST))
+        {
+            CommonErrors::fatalModal(COMMONERROR_BADINDEX, $this, 'Invalid candidate ID.');
+        }
+        if (!$this->isRequiredIDValid('duplicateCandidateID', $_POST))
+        {
+            CommonErrors::fatalModal(COMMONERROR_BADINDEX, $this, 'Invalid candidate ID.');
+        }
+        $oldCandidateID = $_POST['candidateID'];
+        $newCandidateID = $_POST['duplicateCandidateID'];
         $candidates->addDuplicates($newCandidateID, $oldCandidateID);
         $this->_template->assign('isFinishedMode', true);
         $this->_template->display('./modules/candidates/LinkDuplicity.tpl');

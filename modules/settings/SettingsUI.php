@@ -427,7 +427,14 @@ class SettingsUI extends UserInterface
                 {
                     CommonErrors::fatal(COMMONERROR_PERMISSION, $this, 'Invalid user level for action.');
                 }
-                $this->deleteBackup();
+                if ($this->isPostBack())
+                {
+                    $this->deleteBackup();
+                }
+                else
+                {
+                    CommonErrors::fatal(COMMONERROR_BADFIELDS, $this, 'Invalid request.');
+                }
                 break;
 
             case 'customizeExtraFields':
@@ -606,7 +613,14 @@ class SettingsUI extends UserInterface
                     CommonErrors::fatal(COMMONERROR_PERMISSION, $this, 'Invalid user level for action.');
                 }
 
-                $this->onCareerPortalTweak();
+                if ($_SERVER['REQUEST_METHOD'] === 'POST')
+                {
+                    $this->onCareerPortalTweak();
+                }
+                else
+                {
+                    CommonErrors::fatal(COMMONERROR_BADFIELDS, $this, 'Invalid request.');
+                }
                 break;
 
             /* This really only exists for automated testing at this point. */
@@ -615,7 +629,14 @@ class SettingsUI extends UserInterface
                 {
                     CommonErrors::fatal(COMMONERROR_PERMISSION, $this, 'Invalid user level for action.');
                 }
-                $this->onDeleteUser();
+                if ($this->isPostBack())
+                {
+                    $this->onDeleteUser();
+                }
+                else
+                {
+                    CommonErrors::fatal(COMMONERROR_BADFIELDS, $this, 'Invalid request.');
+                }
                 break;
 
             case 'emailTemplates':
@@ -678,6 +699,11 @@ class SettingsUI extends UserInterface
                     echo 'CATS has lost your session data!';
                     return;
                 }
+                if ($_SERVER['REQUEST_METHOD'] !== 'POST')
+                {
+                    echo 'Invalid request.';
+                    return;
+                }
                 $this->onAddNewTag();
                 break;
             
@@ -687,6 +713,11 @@ class SettingsUI extends UserInterface
                     echo 'CATS has lost your session data!';
                     return;
                 }
+                if ($_SERVER['REQUEST_METHOD'] !== 'POST')
+                {
+                    echo 'Invalid request.';
+                    return;
+                }
                 $this->onRemoveTag();
                 break;
 
@@ -694,6 +725,11 @@ class SettingsUI extends UserInterface
                 if (!isset($_SESSION['CATS']) || empty($_SESSION['CATS']))
                 {
                     echo 'CATS has lost your session data!';
+                    return;
+                }
+                if ($_SERVER['REQUEST_METHOD'] !== 'POST')
+                {
+                    echo 'Invalid request.';
                     return;
                 }
                 $this->onChangeTag();
@@ -717,6 +753,11 @@ class SettingsUI extends UserInterface
                 if (!isset($_SESSION['CATS']) || empty($_SESSION['CATS']))
                 {
                     echo 'CATS has lost your session data!';
+                    return;
+                }
+                if (!$this->isPostBack())
+                {
+                    echo 'Invalid request.';
                     return;
                 }
                 if ($this->getUserAccessLevel('settings.deleteUser') < ACCESS_LEVEL_SA)
@@ -873,11 +914,25 @@ class SettingsUI extends UserInterface
                 break;
             
             case 'addEmailTemplate':
-                $this->addEmailTemplate();
+                if ($this->isPostBack())
+                {
+                    $this->addEmailTemplate();
+                }
+                else
+                {
+                    CommonErrors::fatal(COMMONERROR_BADFIELDS, $this, 'Invalid request.');
+                }
                 break;
                 
             case 'deleteEmailTemplate':
-                $this->deleteEmailTemplate();
+                if ($this->isPostBack())
+                {
+                    $this->deleteEmailTemplate();
+                }
+                else
+                {
+                    CommonErrors::fatal(COMMONERROR_BADFIELDS, $this, 'Invalid request.');
+                }
                 break;
 
             /* Main settings page. */
@@ -901,7 +956,12 @@ class SettingsUI extends UserInterface
         }
         
         $emailTemplates = new EmailTemplates($this->_siteID);
-        $templateID = $_GET['id'];
+        if (!$this->isRequiredIDValid('id', $_POST))
+        {
+            CommonErrors::fatal(COMMONERROR_BADINDEX, $this, 'Invalid template ID.');
+        }
+
+        $templateID = $_POST['id'];
         $emailTemplates->delete($templateID);
        
         $this->emailTemplates();
@@ -1449,18 +1509,18 @@ class SettingsUI extends UserInterface
     private function onDeleteUser()
     {
         /* Bail out if we don't have a valid user ID. */
-        if (!$this->isRequiredIDValid('userID', $_GET))
+        if (!$this->isRequiredIDValid('userID', $_POST))
         {
             CommonErrors::fatal(COMMONERROR_BADINDEX, $this, 'Invalid user ID.');
         }
 
         /* Keep users other than the automated tester from trying this. */
-        if (!$this->isRequiredIDValid('iAmTheAutomatedTester', $_GET))
+        if (!$this->isRequiredIDValid('iAmTheAutomatedTester', $_POST))
         {
             CommonErrors::fatal(COMMONERROR_PERMISSION, $this, 'You are not the automated tester.');
         }
 
-        $userID = $_GET['userID'];
+        $userID = $_POST['userID'];
 
         $users = new Users($this->_siteID);
         $users->delete($userID);
@@ -1891,12 +1951,12 @@ class SettingsUI extends UserInterface
 
     private function onCareerPortalTweak()
     {
-        if (!isset($_GET['p']))
+        if (!isset($_POST['p']))
         {
             CommonErrors::fatal(COMMONERROR_BADINDEX, $this, 'Invalid page.');
         }
 
-        $page = $_GET['p'];
+        $page = $_POST['p'];
 
         $careerPortalSettings = new CareerPortalSettings($this->_siteID);
 
@@ -1905,6 +1965,10 @@ class SettingsUI extends UserInterface
             case 'new':
                 $origName = 'Blank Page';
                 $duplicateName = $this->getTrimmedInput('newName', $_POST);
+                if (empty($duplicateName))
+                {
+                    CommonErrors::fatal(COMMONERROR_MISSINGFIELDS, $this, 'Required fields are missing.');
+                }
 
                 /* Copy default templates or existing customized templates from orig to duplicate. */
                 $templateSource1 = $careerPortalSettings->getAllFromDefaultTemplate($origName);
@@ -1948,14 +2012,20 @@ class SettingsUI extends UserInterface
                 break;
 
             case 'delete':
-                //FIXME: Input validation.
-                $delName = $_POST['delName'];
+                $delName = $this->getTrimmedInput('delName', $_POST);
+                if (empty($delName))
+                {
+                    CommonErrors::fatal(COMMONERROR_MISSINGFIELDS, $this, 'Required fields are missing.');
+                }
                 $careerPortalSettings->deleteCustomTemplate($delName);
                 break;
 
             case 'setAsActive':
-                //FIXME: Input validation.
-                $activeName = $_POST['activeName'];
+                $activeName = $this->getTrimmedInput('activeName', $_POST);
+                if (empty($activeName))
+                {
+                    CommonErrors::fatal(COMMONERROR_MISSINGFIELDS, $this, 'Required fields are missing.');
+                }
                 $careerPortalSettings->set('activeBoard', $activeName);
                 break;
         }
@@ -2846,10 +2916,20 @@ class SettingsUI extends UserInterface
 
         if ($logout)
         {
-            CATSUtility::transferRelativeURI(
-                'm=logout&message=' . urlencode($message) .
-                '&messageSuccess=' . urlencode($messageSuccess)
-            );
+            $indexName = CATSUtility::getIndexName();
+
+            echo '<html><body>';
+            echo '<form id="logoutForm" method="post" action="', $indexName, '?m=logout">';
+            echo '<input type="hidden" name="message" value="',
+                htmlspecialchars($message, ENT_QUOTES, 'UTF-8'),
+                '" />';
+            echo '<input type="hidden" name="messageSuccess" value="',
+                htmlspecialchars($messageSuccess, ENT_QUOTES, 'UTF-8'),
+                '" />';
+            echo '</form>';
+            echo '<script type="text/javascript">document.getElementById("logoutForm").submit();</script>';
+            echo '</body></html>';
+            die();
         }
         else
         {
@@ -3060,12 +3140,12 @@ class SettingsUI extends UserInterface
 
     private function wizard_deleteUser()
     {
-        if (isset($_GET[$id = 'userID'])) $userID = intval($_GET[$id]);
-        else
+        if (!$this->isRequiredIDValid('userID', $_POST))
         {
             echo 'Unable to find the user you are trying to delete.';
             return;
         }
+        $userID = intval($_POST['userID']);
 
         if ($userID == $_SESSION['CATS']->getUserID())
         {

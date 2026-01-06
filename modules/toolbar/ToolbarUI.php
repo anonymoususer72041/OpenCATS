@@ -77,6 +77,10 @@ class ToolbarUI extends UserInterface
                 break;
 
             case 'storeMonsterResumeText':
+                if ($_SERVER['REQUEST_METHOD'] !== 'POST')
+                {
+                    $this->fatal('Invalid request.');
+                }
                 $this->storeMonsterResumeText();
                 break;
 

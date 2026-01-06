@@ -43,7 +43,15 @@ use OpenCATS\UI\CandidateDuplicateQuickActionMenu;
             <p class="note">Candidate Details</p>
 
             <?php if ($this->data['isAdminHidden'] == 1): ?>
-                <p class="warning">This Candidate is hidden.  Only CATS Administrators can view it or search for it.  To make it visible by the site users, click <a href="<?php echo(CATSUtility::getIndexName()); ?>?m=candidates&amp;a=administrativeHideShow&amp;candidateID=<?php echo($this->candidateID); ?>&amp;state=0" style="font-weight:bold;">Here.</a></p>
+                <div class="warning">
+                    This Candidate is hidden.  Only CATS Administrators can view it or search for it.  To make it visible by the site users, click
+                    <form method="post" action="<?php echo(CATSUtility::getIndexName()); ?>?m=candidates&amp;a=administrativeHideShow" style="display:inline;">
+                        <input type="hidden" name="postback" value="postback" />
+                        <input type="hidden" name="candidateID" value="<?php echo($this->candidateID); ?>" />
+                        <input type="hidden" name="state" value="0" />
+                        <button type="submit" class="linkButton">Here.</button>
+                    </form>
+                </div>
             <?php endif; ?>
 
             <table class="detailsOutside">
@@ -225,9 +233,12 @@ use OpenCATS\UI\CandidateDuplicateQuickActionMenu;
                                         <td style="text-align:center;" class="vertical">
                                             <?php if (!$this->isPopup): ?>
                                                 <?php if ($this->getUserAccessLevel('candidates.deleteAttachment') >= ACCESS_LEVEL_DELETE): ?>
-                                                    <a href="<?php echo(CATSUtility::getIndexName()); ?>?m=candidates&amp;a=deleteAttachment&amp;candidateID=<?php echo($this->candidateID); ?>&amp;attachmentID=<?php $this->_($attachmentsData['attachmentID']) ?>" onclick="javascript:return confirm('Delete this attachment?');">
-                                                        <img src="images/actions/delete.gif" alt="" width="16" height="16" border="0" title="Delete" />
-                                                    </a>
+                                                    <form method="post" action="<?php echo(CATSUtility::getIndexName()); ?>?m=candidates&amp;a=deleteAttachment" style="display:inline;" onsubmit="return confirm('Delete this attachment?');">
+                                                        <input type="hidden" name="postback" value="postback" />
+                                                        <input type="hidden" name="candidateID" value="<?php echo($this->candidateID); ?>" />
+                                                        <input type="hidden" name="attachmentID" value="<?php $this->_($attachmentsData['attachmentID']) ?>" />
+                                                        <input type="image" src="images/actions/delete.gif" alt="" width="16" height="16" border="0" title="Delete" />
+                                                    </form>
                                                 <?php endif; ?>
                                             <?php else: ?>
                                             &nbsp;&nbsp;&nbsp;&nbsp;
@@ -380,9 +391,12 @@ use OpenCATS\UI\CandidateDuplicateQuickActionMenu;
                                                     <td>
                                                         <?php if (!$this->isPopup): ?>
                                                             <?php if ($this->getUserAccessLevel('candidates.deleteAttachment') >= ACCESS_LEVEL_DELETE): ?>
-                                                                <a href="<?php echo(CATSUtility::getIndexName()); ?>?m=candidates&amp;a=deleteAttachment&amp;candidateID=<?php echo($this->candidateID); ?>&amp;attachmentID=<?php $this->_($attachmentsData['attachmentID']) ?>" onclick="javascript:return confirm('Delete this attachment?');">
-                                                                    <img src="images/actions/delete.gif" alt="" width="16" height="16" border="0" title="Delete" />
-                                                                </a>
+                                                                <form method="post" action="<?php echo(CATSUtility::getIndexName()); ?>?m=candidates&amp;a=deleteAttachment" style="display:inline;" onsubmit="return confirm('Delete this attachment?');">
+                                                                    <input type="hidden" name="postback" value="postback" />
+                                                                    <input type="hidden" name="candidateID" value="<?php echo($this->candidateID); ?>" />
+                                                                    <input type="hidden" name="attachmentID" value="<?php $this->_($attachmentsData['attachmentID']) ?>" />
+                                                                    <input type="image" src="images/actions/delete.gif" alt="" width="16" height="16" border="0" title="Delete" />
+                                                                </form>
                                                             <?php endif; ?>
                                                         <?php endif; ?>
                                                     </td>
@@ -429,9 +443,13 @@ use OpenCATS\UI\CandidateDuplicateQuickActionMenu;
                 &nbsp;&nbsp;&nbsp;&nbsp;
             <?php endif; ?>
             <?php if ($this->getUserAccessLevel('candidates.delete') >= ACCESS_LEVEL_DELETE): ?>
-                <a id="delete_link" href="<?php echo(CATSUtility::getIndexName()); ?>?m=candidates&amp;a=delete&amp;candidateID=<?php echo($this->candidateID); ?>" onclick="javascript:return confirm('Delete this candidate?');">
-                    <img src="images/actions/delete.gif" width="16" height="16" class="absmiddle" alt="delete" border="0" />&nbsp;Delete
-                </a>
+                <form id="delete_link" method="post" action="<?php echo(CATSUtility::getIndexName()); ?>?m=candidates&amp;a=delete" style="display:inline;" onsubmit="return confirm('Delete this candidate?');">
+                    <input type="hidden" name="postback" value="postback" />
+                    <input type="hidden" name="candidateID" value="<?php echo($this->candidateID); ?>" />
+                    <button type="submit" class="linkButton">
+                        <img src="images/actions/delete.gif" width="16" height="16" class="absmiddle" alt="delete" border="0" />&nbsp;Delete
+                    </button>
+                </form>
                 &nbsp;&nbsp;&nbsp;&nbsp;
             <?php endif; ?>
             <?php if ($this->privledgedUser): ?>
@@ -442,13 +460,23 @@ use OpenCATS\UI\CandidateDuplicateQuickActionMenu;
             <?php endif; ?>
             <?php if ($this->getUserAccessLevel('candidates.administrativeHideShow') >= ACCESS_LEVEL_MULTI_SA): ?>
                 <?php if ($this->data['isAdminHidden'] == 1): ?>
-                    <a href="<?php echo(CATSUtility::getIndexName()); ?>?m=candidates&amp;a=administrativeHideShow&amp;candidateID=<?php echo($this->candidateID); ?>&amp;state=0">
-                        <img src="images/resume_preview_inline.gif" width="16" height="16" class="absmiddle" alt="delete" border="0" />&nbsp;Administrative Show
-                    </a>
+                    <form method="post" action="<?php echo(CATSUtility::getIndexName()); ?>?m=candidates&amp;a=administrativeHideShow" style="display:inline;">
+                        <input type="hidden" name="postback" value="postback" />
+                        <input type="hidden" name="candidateID" value="<?php echo($this->candidateID); ?>" />
+                        <input type="hidden" name="state" value="0" />
+                        <button type="submit" class="linkButton">
+                            <img src="images/resume_preview_inline.gif" width="16" height="16" class="absmiddle" alt="delete" border="0" />&nbsp;Administrative Show
+                        </button>
+                    </form>
                     <?php else: ?>
-                    <a href="<?php echo(CATSUtility::getIndexName()); ?>?m=candidates&amp;a=administrativeHideShow&amp;candidateID=<?php echo($this->candidateID); ?>&amp;state=1">
-                        <img src="images/resume_preview_inline.gif" width="16" height="16" class="absmiddle" alt="delete" border="0" />&nbsp;Administrative Hide
-                    </a>
+                    <form method="post" action="<?php echo(CATSUtility::getIndexName()); ?>?m=candidates&amp;a=administrativeHideShow" style="display:inline;">
+                        <input type="hidden" name="postback" value="postback" />
+                        <input type="hidden" name="candidateID" value="<?php echo($this->candidateID); ?>" />
+                        <input type="hidden" name="state" value="1" />
+                        <button type="submit" class="linkButton">
+                            <img src="images/resume_preview_inline.gif" width="16" height="16" class="absmiddle" alt="delete" border="0" />&nbsp;Administrative Hide
+                        </button>
+                    </form>
                 <?php endif; ?>
                 &nbsp;&nbsp;&nbsp;&nbsp;
             <?php endif; ?>
@@ -531,9 +559,12 @@ use OpenCATS\UI\CandidateDuplicateQuickActionMenu;
                                 </a>
                             <?php endif; ?>
                             <?php if ($this->getUserAccessLevel('pipelines.removeFromPipeline') >= ACCESS_LEVEL_DELETE): ?>
-                                <a href="<?php echo(CATSUtility::getIndexName()); ?>?m=candidates&amp;a=removeFromPipeline&amp;candidateID=<?php echo($this->candidateID); ?>&amp;jobOrderID=<?php echo($pipelinesData['jobOrderID']); ?>"  onclick="javascript:return confirm('Delete from <?php $this->_(str_replace('\'', '\\\'', $pipelinesData['title'])); ?> (<?php $this->_(str_replace('\'', '\\\'', $pipelinesData['companyName'])); ?>) pipeline?')">
-                                    <img src="images/actions/delete.gif" width="16" height="16" class="absmiddle" alt="" border="0" title="Remove from Job Order"/>
-                                </a>
+                                <form method="post" action="<?php echo(CATSUtility::getIndexName()); ?>?m=candidates&amp;a=removeFromPipeline" style="display:inline;" onsubmit="return confirm('Delete from <?php $this->_(str_replace('\'', '\\\'', $pipelinesData['title'])); ?> (<?php $this->_(str_replace('\'', '\\\'', $pipelinesData['companyName'])); ?>) pipeline?')">
+                                    <input type="hidden" name="postback" value="postback" />
+                                    <input type="hidden" name="candidateID" value="<?php echo($this->candidateID); ?>" />
+                                    <input type="hidden" name="jobOrderID" value="<?php echo($pipelinesData['jobOrderID']); ?>" />
+                                    <input type="image" src="images/actions/delete.gif" width="16" height="16" class="absmiddle" alt="" border="0" title="Remove from Job Order"/>
+                                </form>
                             <?php endif; ?>
                         </td>
 <?php endif; ?>

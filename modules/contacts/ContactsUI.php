@@ -127,7 +127,14 @@ class ContactsUI extends UserInterface
                 {
                     CommonErrors::fatal(COMMONERROR_PERMISSION, $this, 'Invalid user level for action.');
                 }
-                $this->onDelete();
+                if ($this->isPostBack())
+                {
+                    $this->onDelete();
+                }
+                else
+                {
+                    CommonErrors::fatal(COMMONERROR_BADFIELDS, $this, 'Invalid request.');
+                }
                 break;
 
             case 'search':
@@ -866,12 +873,12 @@ class ContactsUI extends UserInterface
     {
 
         /* Bail out if we don't have a valid contact ID. */
-        if (!$this->isRequiredIDValid('contactID', $_GET))
+        if (!$this->isRequiredIDValid('contactID', $_POST))
         {
             CommonErrors::fatal(COMMONERROR_BADINDEX, $this, 'Invalid contact ID.');
         }
 
-        $contactID = $_GET['contactID'];
+        $contactID = $_POST['contactID'];
 
         if (!eval(Hooks::get('CONTACTS_DELETE_PRE'))) return;
 

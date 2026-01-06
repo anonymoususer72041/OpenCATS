@@ -132,6 +132,11 @@ class CareersUI extends UserInterface
         switch ($pa)
         {
             case 'logout':
+                if ($_SERVER['REQUEST_METHOD'] !== 'POST')
+                {
+                    CommonErrors::fatal(COMMONERROR_BADFIELDS, $this, 'Invalid request.');
+                }
+
                 if ($isRegistrationEnabled)
                 {
                     // Remove the saved information cookie
@@ -246,18 +251,24 @@ class CareersUI extends UserInterface
             );
             $content = str_replace('<input-submit>', '<input type="submit" name="submitButton" id="submitButton" class="submitButton" onclick="document.getElementById(\'submitButton\').disabled=true;" value="Save Profile" style="width: 150px;" />', $content);
 
+            $attachmentIDValue = $latestAttachment ? $latestAttachment : -1;
             $content = sprintf(
                 '<form name="updateForm" id="updateForm" enctype="multipart/form-data" method="post" '
-                . 'action="%s?m=careers&p=onRegisteredCandidateProfile&attachmentID=%d">',
-                CATSUtility::getIndexName(),
-                $latestAttachment ? $latestAttachment : -1
-            ) . $content . '</form>'
+                . 'action="%s?m=careers&p=onRegisteredCandidateProfile">',
+                CATSUtility::getIndexName()
+            ) . '<input type="hidden" name="attachmentID" value="' . $attachmentIDValue . '" />'
+            . $content . '</form>'
             . (isset($_GET[$id='isPostBack']) && !strcmp($_GET[$id], 'yes') ? '<script language="javascript" type="text/javascript">setTimeout(\'alert("Your changes have been saved!")\',25);</script>' : '');
 
             $template['Content'] = $content;
         }
         else if ($p == 'onRegisteredCandidateProfile' && $isRegistrationEnabled)
         {
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST')
+            {
+                CommonErrors::fatal(COMMONERROR_BADFIELDS, $this, 'Invalid request.');
+            }
+
             // Get information about the candidate from the cookie
             $fields = $this->getCookieFields($siteID);
             $candidate = $this->ProcessCandidateRegistration($siteID, $template['Content - Candidate Registration'], $fields, true);
@@ -288,8 +299,16 @@ class CareersUI extends UserInterface
             }
 
             // Get the attachment to replace (if exists)
-            $attachmentID = isset($_GET[$id='attachmentID']) ? $_GET[$id] : -1;
-            $attachmentID = $attachmentID != -1 ? $attachmentID : false;
+            $attachmentID = false;
+            if (isset($_POST['attachmentID']))
+            {
+                if (!$this->isOptionalIDValid('attachmentID', $_POST))
+                {
+                    CommonErrors::fatal(COMMONERROR_BADINDEX, $this, 'Invalid attachment ID.');
+                }
+
+                $attachmentID = $_POST['attachmentID'] != '-1' ? $_POST['attachmentID'] : false;
+            }
 
             $attachmentsLib = new Attachments($siteID);
             $candidatesLib = new Candidates($siteID);

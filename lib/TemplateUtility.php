@@ -151,9 +151,12 @@ class TemplateUtility
                 }
             }
 
-            echo '<a href="', $indexName, '?m=logout">';
+            echo '<form id="logoutForm" name="logoutForm" method="post" action="', $indexName, '?m=logout" '
+                . 'style="display: inline; padding: 0; margin: 0; border: 0;">';
+            echo '<a href="javascript:void(0);" onclick="document.getElementById(\'logoutForm\').submit(); return false;">';
             echo '<img src="images/tabs/small_logout.jpg" border="0" /> ';
             echo 'Logout</a>', "\n";
+            echo '</form>', "\n";
             echo '</div>', "\n";
             // End top-right action block
 
@@ -417,16 +420,24 @@ class TemplateUtility
 
                 if (count($savedSearchSaved) >= RECENT_SEARCH_MAX_ITEMS)
                 {
-                    echo '<a href="javascript:void(0);" onclick="alert(\'The maximum amount of saved searches is ',
-                         RECENT_SEARCH_MAX_ITEMS, '. To save this search, delete another saved search.\');">';
+                    $openTag = '<a href="javascript:void(0);" onclick="alert(\'The maximum amount of saved searches is ' .
+                               RECENT_SEARCH_MAX_ITEMS . '. To save this search, delete another saved search.\');">';
+                    $closeTag = '</a>';
                 }
                 else
                 {
-                    echo '<a href="', $indexName, '?m=home&amp;a=addSavedSearch&amp;searchID=',
-                         $savedSearchRow['searchID'], '&amp;currentURL=', $currentUrlGETString, '">';
+                    $openTag = '<form method="post" action="' . $indexName . '?m=home&amp;a=addSavedSearch" style="display:inline;">'
+                             . '<input type="hidden" name="postback" value="postback" />'
+                             . '<input type="hidden" name="searchID" value="' . $savedSearchRow['searchID'] . '" />'
+                             . '<input type="hidden" name="currentURL" value="' . $currentUrlGETString . '" />'
+                             . '<button type="submit" class="linkButton">';
+                    $closeTag = '</button></form>';
                 }
 
-                echo '<img src="images/actions/add_small.gif" alt="" style="border: none;" title="Save This Search" /></a>&nbsp;', "\n";
+                echo $openTag,
+                     '<img src="images/actions/add_small.gif" alt="" style="border: none;" title="Save This Search" />',
+                     $closeTag,
+                     '&nbsp;', "\n";
 
                 $escapedURL  = htmlspecialchars($savedSearchRow['URL']);
 
@@ -481,9 +492,12 @@ class TemplateUtility
                 }
                 $escapedURL = '/'.$escapedURL;
 
-                echo '<a href="', $indexName, '?m=home&amp;a=deleteSavedSearch&amp;searchID=',
-                     $savedSearchRow['searchID'], '&currentURL=', $currentUrlGETString, '">',
-                     '<img src="images/actions/delete_small.gif" style="border: none;" title="Delete This Search" /></a>&nbsp;';
+                echo '<form method="post" action="', $indexName, '?m=home&amp;a=deleteSavedSearch" style="display:inline;">',
+                     '<input type="hidden" name="postback" value="postback" />',
+                     '<input type="hidden" name="searchID" value="', $savedSearchRow['searchID'], '" />',
+                     '<input type="hidden" name="currentURL" value="', $currentUrlGETString, '" />',
+                     '<button type="submit" class="linkButton">',
+                     '<img src="images/actions/delete_small.gif" style="border: none;" title="Delete This Search" /></button></form>&nbsp;';
 
                 echo '<a href="', $escapedURL, '&amp;savedSearchID=', $savedSearchRow['searchID'],
                      '" onclick="gotoSearch(\'', $escapedText, "', '", $escapedURL,

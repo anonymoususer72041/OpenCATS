@@ -424,8 +424,24 @@ function confirmDeleteEntry()
         return;
     }
 
-    document.location = getCurrentCalendarUrl() + '&a=deleteEvent&eventID='
-        + document.getElementById('eventIDEdit').value;
+    var form = document.createElement('form');
+    form.method = 'post';
+    form.action = getCurrentCalendarUrl() + '&a=deleteEvent';
+
+    var postback = document.createElement('input');
+    postback.type = 'hidden';
+    postback.name = 'postback';
+    postback.value = 'postback';
+    form.appendChild(postback);
+
+    var eventID = document.createElement('input');
+    eventID.type = 'hidden';
+    eventID.name = 'eventID';
+    eventID.value = document.getElementById('eventIDEdit').value;
+    form.appendChild(eventID);
+
+    document.body.appendChild(form);
+    form.submit();
 }
 
 /* Hides all the main window views (month, week, day, etc). */

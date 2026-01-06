@@ -2009,6 +2009,80 @@ echo ('<script type="text/javascript">setTableWidth("table'.$md5InstanceName.'",
         
         return $html;
     }
+
+    /**
+     * Returns HTML to render a POST action under the action menu.
+     *
+     * @param string action title
+     * @param string action URL
+     * @param boolean (true) action can be applied to all items across every page
+     * @return string generated HTML
+     */
+    public function getInnerActionAreaItemPost($actionTitle, $actionURL, $allowAll = true)
+    {
+        //TODO:  If nothing is selected, display an error popup.
+
+        $newParameterArraySelected = $this->_parameters;
+        $newParameterArraySelected['rangeStart'] = 0;
+        $newParameterArraySelected['maxResults'] = 100000000;
+        $newParameterArraySelected['exportIDs'] = '<dynamic>';
+        $newParameterArraySelected['noSaveParameters'] = true;
+
+        $newParameterArrayAll = $this->_parameters;
+        $newParameterArrayAll['rangeStart'] = 0;
+        $newParameterArrayAll['maxResults'] = 100000000;
+        $newParameterArrayAll['noSaveParameters'] = true;
+
+        $instanceHash = md5($this->_instanceName);
+        $selectedParams = $allowAll ? serialize($newParameterArraySelected) : json_encode($newParameterArraySelected);
+        $allParams = serialize($newParameterArrayAll);
+
+        $actionSeparator = (strpos($actionURL, '?') !== false) ? '&amp;' : '?';
+        $selectedURL = $actionURL
+            . $actionSeparator . 'i=' . urlencode($this->_instanceName)
+            . '&amp;p=' . urlencode($selectedParams)
+            . '&amp;dynamicArgument' . $instanceHash . '=';
+        $allURL = $actionURL
+            . $actionSeparator . 'i=' . urlencode($this->_instanceName)
+            . '&amp;p=' . urlencode($allParams);
+
+        $selectedURL = str_replace(array('\\', '\''), array('\\\\', '\\\''), $selectedURL);
+        $allURL = str_replace(array('\\', '\''), array('\\\\', '\\\''), $allURL);
+
+        $selectedPostJS = sprintf(
+            "var url='%s' + urlEncode(serializeArray(exportArray%s));"
+            . "return quickActionPostFromUrl(url);",
+            $selectedURL,
+            $instanceHash
+        );
+
+        $allPostJS = sprintf(
+            "return quickActionPostFromUrl('%s');",
+            $allURL
+        );
+
+        if ($allowAll)
+        {
+            $html = sprintf(
+                '<div><div style="float:left; width:170px;">%s</div><div style="float:right; width:95px;"><a href="javascript:void(0);" onclick="if (exportArray%s.length>0) {%s} else { dataGridNoSelected(); } return false;">Selected</a>&nbsp;|&nbsp;<a href="javascript:void(0);" onclick="%s">All</a></div></div>',
+                htmlspecialchars($actionTitle),
+                $instanceHash,
+                $selectedPostJS,
+                $allPostJS
+            );
+        }
+        else
+        {
+            $html = sprintf(
+                '<div><div style="float:left; width:170px;">%s</div><div style="float:right; width:95px;"><a href="javascript:void(0);" onclick="if (exportArray%s.length>0) {%s} else { dataGridNoSelected(); } return false;">Selected</a></div></div>',
+                htmlspecialchars($actionTitle),
+                $instanceHash,
+                $selectedPostJS
+            );
+        }
+
+        return $html;
+    }
     
     /**
      * Returns HTML to render an action under the action menu which generates

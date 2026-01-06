@@ -125,7 +125,14 @@ class CompaniesUI extends UserInterface
                 {
                     CommonErrors::fatal(COMMONERROR_PERMISSION, $this, 'Invalid user level for action.');
                 }
-                $this->onDelete();
+                if ($this->isPostBack())
+                {
+                    $this->onDelete();
+                }
+                else
+                {
+                    CommonErrors::fatal(COMMONERROR_BADFIELDS, $this, 'Invalid request.');
+                }
                 break;
 
             case 'search':
@@ -171,7 +178,14 @@ class CompaniesUI extends UserInterface
                 {
                     CommonErrors::fatal(COMMONERROR_PERMISSION, $this, 'Invalid user level for action.');
                 }
-                $this->onDeleteAttachment();
+                if ($this->isPostBack())
+                {
+                    $this->onDeleteAttachment();
+                }
+                else
+                {
+                    CommonErrors::fatal(COMMONERROR_BADFIELDS, $this, 'Invalid request.');
+                }
                 break;
 
             /* Main companies page. */
@@ -869,13 +883,13 @@ class CompaniesUI extends UserInterface
     private function onDelete()
     {
         /* Bail out if we don't have a valid company ID. */
-        if (!$this->isRequiredIDValid('companyID', $_GET))
+        if (!$this->isRequiredIDValid('companyID', $_POST))
         {
             $this->listByView('Invalid company ID.');
             return;
         }
 
-        $companyID = $_GET['companyID'];
+        $companyID = $_POST['companyID'];
 
         $companies = new Companies($this->_siteID);
         $rs = $companies->get($companyID);
@@ -1130,19 +1144,19 @@ class CompaniesUI extends UserInterface
     private function onDeleteAttachment()
     {
         /* Bail out if we don't have a valid attachment ID. */
-        if (!$this->isRequiredIDValid('attachmentID', $_GET))
+        if (!$this->isRequiredIDValid('attachmentID', $_POST))
         {
             CommonErrors::fatalModal(COMMONERROR_BADINDEX, $this, 'Invalid attachment ID.');
         }
 
         /* Bail out if we don't have a valid joborder ID. */
-        if (!$this->isRequiredIDValid('companyID', $_GET))
+        if (!$this->isRequiredIDValid('companyID', $_POST))
         {
             CommonErrors::fatalModal(COMMONERROR_BADINDEX, $this, 'Invalid company ID.');
         }
 
-        $companyID  = $_GET['companyID'];
-        $attachmentID = $_GET['attachmentID'];
+        $companyID  = $_POST['companyID'];
+        $attachmentID = $_POST['attachmentID'];
 
         if (!eval(Hooks::get('CLIENTS_ON_DELETE_ATTACHMENT_PRE'))) return;
 

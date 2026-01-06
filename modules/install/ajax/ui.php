@@ -42,6 +42,13 @@ else
 }
 @ini_set('memory_limit', '192M');
 
+if ($_SERVER['REQUEST_METHOD'] !== 'POST')
+{
+    die('Invalid request.');
+}
+
+$_REQUEST = $_POST;
+
 if (file_exists('modules.cache')) @unlink('modules.cache');
 
 if (!isset($_REQUEST['a']) || empty($_REQUEST['a']))

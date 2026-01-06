@@ -206,9 +206,13 @@ use OpenCATS\UI\QuickActionMenu;
                 &nbsp;&nbsp;&nbsp;&nbsp;
             <?php endif; ?>
             <?php if ($this->getUserAccessLevel('contacts.delete') >= ACCESS_LEVEL_DELETE): ?>
-                <a id="delete_link" href="<?php echo(CATSUtility::getIndexName()); ?>?m=contacts&amp;a=delete&amp;contactID=<?php echo($this->contactID); ?>" onclick="javascript:return confirm('Delete this candidate?');">
-                    <img src="images/actions/delete.gif" width="16" height="16" class="absmiddle" alt="delete" border="0" />&nbsp;Delete
-                </a>
+                <form id="delete_link" method="post" action="<?php echo(CATSUtility::getIndexName()); ?>?m=contacts&amp;a=delete" style="display:inline;" onsubmit="return confirm('Delete this candidate?');">
+                    <input type="hidden" name="postback" value="postback" />
+                    <input type="hidden" name="contactID" value="<?php echo($this->contactID); ?>" />
+                    <button type="submit" class="linkButton">
+                        <img src="images/actions/delete.gif" width="16" height="16" class="absmiddle" alt="delete" border="0" />&nbsp;Delete
+                    </button>
+                </form>
                 &nbsp;&nbsp;&nbsp;&nbsp;
             <?php endif; ?>
             <?php if ($this->privledgedUser): ?>

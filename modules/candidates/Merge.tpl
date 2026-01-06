@@ -16,8 +16,9 @@
 
         <table class="searchTable">
             <form id="chooseMergeInformation" name="chooseMergeInformationForm" action="<?php echo(CATSUtility::getIndexName()); ?>?m=candidates&amp;a=mergeInfo" method="post">
-                <input type="hidden" id="oldCandidateID" name="oldCandidateID" value=<?php echo $this->oldCandidateID; ?> />
-                <input type="hidden" id="newCandidateID" name="newCandidateID" value=<?php echo $this->newCandidateID; ?> />
+                <input type="hidden" name="postback" value="postback" />
+                <input type="hidden" id="oldCandidateID" name="oldCandidateID" value="<?php echo $this->oldCandidateID; ?>" />
+                <input type="hidden" id="newCandidateID" name="newCandidateID" value="<?php echo $this->newCandidateID; ?>" />
                 
                 <tr>
                     <td colspan=2 align="right">Original candidate&nbsp;</td>

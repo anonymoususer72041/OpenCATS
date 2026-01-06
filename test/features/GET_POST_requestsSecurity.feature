@@ -1153,7 +1153,8 @@ Scenario Outline: Reports module actions
   | ADMIN       | GET  | index.php?m=settings&a=eeo                 |      |
   | ADMIN       | POST | index.php?m=settings&a=eeo                 |      |
   | ADMIN       | GET  | index.php?m=settings&a=onCareerPortalTweak |      |
-  | ADMIN       | GET  | index.php?m=settings&a=deleteUser          |      |
+  | ADMIN       | GET  | index.php?m=settings&a=deleteUser          | not  |
+  | ADMIN       | POST | index.php?m=settings&a=deleteUser          |      |
   | ADMIN       | GET  | index.php?m=settings&a=emailTemplates      |      |
   | ADMIN       | POST | index.php?m=settings&a=emailTemplates      |      |
   | ADMIN       | POST | index.php?m=settings&a=aspLocalization     |      |
@@ -1194,7 +1195,8 @@ Scenario Outline: Reports module actions
   | MULTI_ADMIN | GET  | index.php?m=settings&a=eeo                 |      |
   | MULTI_ADMIN | POST | index.php?m=settings&a=eeo                 |      |
   | MULTI_ADMIN | GET  | index.php?m=settings&a=onCareerPortalTweak |      |
-  | MULTI_ADMIN | GET  | index.php?m=settings&a=deleteUser          |      |
+  | MULTI_ADMIN | GET  | index.php?m=settings&a=deleteUser          | not  |
+  | MULTI_ADMIN | POST | index.php?m=settings&a=deleteUser          |      |
   | MULTI_ADMIN | GET  | index.php?m=settings&a=emailTemplates      |      |
   | MULTI_ADMIN | POST | index.php?m=settings&a=emailTemplates      |      |
   | MULTI_ADMIN | POST | index.php?m=settings&a=aspLocalization     |      |
@@ -1235,7 +1237,8 @@ Scenario Outline: Reports module actions
   | ROOT        | GET  | index.php?m=settings&a=eeo                 |      |
   | ROOT        | POST | index.php?m=settings&a=eeo                 |      |
   | ROOT        | GET  | index.php?m=settings&a=onCareerPortalTweak |      |
-  | ROOT        | GET  | index.php?m=settings&a=deleteUser          |      |
+  | ROOT        | GET  | index.php?m=settings&a=deleteUser          | not  |
+  | ROOT        | POST | index.php?m=settings&a=deleteUser          |      |
   | ROOT        | GET  | index.php?m=settings&a=emailTemplates      |      |
   | ROOT        | POST | index.php?m=settings&a=emailTemplates      |      |
   | ROOT        | POST | index.php?m=settings&a=aspLocalization     |      |
