@@ -1175,6 +1175,56 @@ class CATSSession
     }
 
     /**
+     * Returns the current session CSRF token. If no token exists yet,
+     * a new token is generated and stored.
+     *
+     * @return string CSRF token
+     */
+    public function getCSRFToken()
+    {
+        $token = $this->retrieveValueByName('csrfToken');
+
+        if (!is_string($token) || $token === '')
+        {
+            $token = $this->rotateCSRFToken();
+        }
+
+        return $token;
+    }
+
+    /**
+     * Generates a new CSRF token and stores it in the session.
+     *
+     * @return string new CSRF token
+     */
+    public function rotateCSRFToken()
+    {
+        $token = bin2hex(random_bytes(32));
+
+        $this->storeValueByName('csrfToken', $token);
+
+        return $token;
+    }
+
+    /**
+     * Validates a CSRF token against the current session token.
+     *
+     * @param string token
+     * @return boolean valid token
+     */
+    public function isCSRFTokenValid($token)
+    {
+        $storedToken = $this->retrieveValueByName('csrfToken');
+
+        if (!is_string($storedToken) || $storedToken === '' || !is_string($token))
+        {
+            return false;
+        }
+
+        return hash_equals($storedToken, $token);
+    }
+
+    /**
      * Returns a column layout.  Only called by the datagrid class.
      * Column layouts are loaded into the session from the database when the user logs in.
      *
