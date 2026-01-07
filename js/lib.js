@@ -342,6 +342,20 @@ function AJAX_getPOSTSessionID(sessionCookie)
 function AJAX_POST(http, url, POSTData, callBack, timeout, sessionCookie,
     silentTimeout)
 {
+    if (POSTData == null)
+    {
+        POSTData = '';
+    }
+
+    if (typeof CATSCsrfToken != 'undefined' && CATSCsrfToken !== null &&
+        CATSCsrfToken !== '')
+    {
+        if (POSTData.indexOf('csrfToken=') == -1)
+        {
+            POSTData += '&csrfToken=' + encodeURIComponent(CATSCsrfToken);
+        }
+    }
+
     /* Add a random hash to the POST data to keep IE from caching it. */
     POSTData += AJAX_getRandomPOSTHash();
 

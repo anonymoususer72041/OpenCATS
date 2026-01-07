@@ -1207,6 +1207,12 @@ class TemplateUtility
         echo '<script type="text/javascript" src="js/submodal/subModal.js'.$javascriptAntiCache.'"></script>', "\n";
         echo '<script type="text/javascript" src="js/jquery-1.3.2.min.js'.$javascriptAntiCache.'"></script>', "\n";
         echo '<script type="text/javascript">CATSIndexName = "'.CATSUtility::getIndexName().'";</script>', "\n";
+        if (isset($_SESSION['CATS']) && $_SESSION['CATS']->isLoggedIn())
+        {
+            $csrfToken = $_SESSION['CATS']->getCSRFToken();
+            echo '<script type="text/javascript">CATSCsrfToken = ',
+                 json_encode($csrfToken), ';</script>', "\n";
+        }
 
        $headIncludes[] = 'main.css';
 
