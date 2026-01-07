@@ -172,6 +172,32 @@ if ($_SESSION['CATS']->isLoggedIn())
     }
 }
 
+if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST' &&
+    $_SESSION['CATS']->isLoggedIn() &&
+    (!isset($careerPage) || !$careerPage) &&
+    (!isset($_GET['showCareerPortal']) || $_GET['showCareerPortal'] != '1') &&
+    (!isset($rssPage) || !$rssPage) &&
+    (!isset($xmlPage) || !$xmlPage))
+{
+    $module = isset($_GET['m']) ? $_GET['m'] : '';
+
+    if ($module == '' || $module == 'logout' ||
+        ModuleUtility::moduleRequiresAuthentication($module))
+    {
+        $token = null;
+
+        if (isset($_POST['csrfToken']))
+        {
+            $token = $_POST['csrfToken'];
+        }
+
+        if (!$_SESSION['CATS']->isCSRFTokenValid($token))
+        {
+            CommonErrors::fatal(COMMONERROR_BADFIELDS, null, 'Invalid request.');
+        }
+    }
+}
+
 /* Check to see if we are supposed to display the career page. */
 if (((isset($careerPage) && $careerPage) ||
     (isset($_GET['showCareerPortal']) && $_GET['showCareerPortal'] == '1')))

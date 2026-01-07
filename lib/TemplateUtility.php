@@ -153,6 +153,11 @@ class TemplateUtility
 
             echo '<form id="logoutForm" name="logoutForm" method="post" action="', $indexName, '?m=logout" '
                 . 'style="display: inline; padding: 0; margin: 0; border: 0;">';
+            if (isset($_SESSION['CATS']) && $_SESSION['CATS']->isLoggedIn())
+            {
+                $csrfToken = htmlspecialchars($_SESSION['CATS']->getCSRFToken(), ENT_QUOTES, 'UTF-8');
+                echo '<input type="hidden" name="csrfToken" value="', $csrfToken, '" />';
+            }
             echo '<a href="javascript:void(0);" onclick="document.getElementById(\'logoutForm\').submit(); return false;">';
             echo '<img src="images/tabs/small_logout.jpg" border="0" /> ';
             echo 'Logout</a>', "\n";
@@ -1212,6 +1217,65 @@ class TemplateUtility
             $csrfToken = $_SESSION['CATS']->getCSRFToken();
             echo '<script type="text/javascript">CATSCsrfToken = ',
                  json_encode($csrfToken), ';</script>', "\n";
+            echo '<script type="text/javascript">', "\n";
+            echo 'function catsInjectCSRFToken()', "\n";
+            echo '{', "\n";
+            echo '    if (typeof CATSCsrfToken == "undefined" || CATSCsrfToken === null || CATSCsrfToken === "")', "\n";
+            echo '    {', "\n";
+            echo '        return;', "\n";
+            echo '    }', "\n";
+            echo '    var forms = document.getElementsByTagName("form");', "\n";
+            echo '    for (var i = 0; i < forms.length; i++)', "\n";
+            echo '    {', "\n";
+            echo '        var form = forms[i];', "\n";
+            echo '        var method = form.method;', "\n";
+            echo '        if (!method || method.toLowerCase() != "post")', "\n";
+            echo '        {', "\n";
+            echo '            continue;', "\n";
+            echo '        }', "\n";
+            echo '        var action = form.action;', "\n";
+            echo '        if (action && (action.indexOf("http://") == 0 || action.indexOf("https://") == 0))', "\n";
+            echo '        {', "\n";
+            echo '            var parser = document.createElement("a");', "\n";
+            echo '            parser.href = action;', "\n";
+            echo '            if (parser.host && parser.host.toLowerCase() != window.location.host.toLowerCase())', "\n";
+            echo '            {', "\n";
+            echo '                continue;', "\n";
+            echo '            }', "\n";
+            echo '        }', "\n";
+            echo '        var hasToken = false;', "\n";
+            echo '        if (form.elements)', "\n";
+            echo '        {', "\n";
+            echo '            for (var j = 0; j < form.elements.length; j++)', "\n";
+            echo '            {', "\n";
+            echo '                if (form.elements[j].name == "csrfToken")', "\n";
+            echo '                {', "\n";
+            echo '                    hasToken = true;', "\n";
+            echo '                    break;', "\n";
+            echo '                }', "\n";
+            echo '            }', "\n";
+            echo '        }', "\n";
+            echo '        if (hasToken)', "\n";
+            echo '        {', "\n";
+            echo '            continue;', "\n";
+            echo '        }', "\n";
+            echo '        var input = document.createElement("input");', "\n";
+            echo '        input.type = "hidden";', "\n";
+            echo '        input.name = "csrfToken";', "\n";
+            echo '        input.value = CATSCsrfToken;', "\n";
+            echo '        form.appendChild(input);', "\n";
+            echo '    }', "\n";
+            echo '}', "\n";
+            echo 'var catsOldOnload = window.onload;', "\n";
+            echo 'window.onload = function()', "\n";
+            echo '{', "\n";
+            echo '    if (catsOldOnload)', "\n";
+            echo '    {', "\n";
+            echo '        catsOldOnload();', "\n";
+            echo '    }', "\n";
+            echo '    catsInjectCSRFToken();', "\n";
+            echo '};', "\n";
+            echo '</script>', "\n";
         }
 
        $headIncludes[] = 'main.css';
