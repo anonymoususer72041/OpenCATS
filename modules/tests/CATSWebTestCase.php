@@ -13,13 +13,69 @@ class CATSWebTestCase extends WebTestCase
 {
     private $_indexName;
     private $_indexURL;
+    private $_csrfToken;
 
 
     public function __construct()
     {
         $this->_indexName = CATSUtility::getIndexName();
         $this->_indexURL = CATSUtility::getAbsoluteURI($this->_indexName);
+        $this->_csrfToken = '';
         parent::__construct();
+    }
+
+    private function extractCSRFToken($html)
+    {
+        $matchResult = preg_match(
+            '/CATSCsrfToken\s*=\s*"(?P<token>[a-f0-9]{64})"/i',
+            $html,
+            $matches
+        );
+
+        if ($matchResult)
+        {
+            return $matches['token'];
+        }
+
+        return false;
+    }
+
+    private function updateCSRFTokenFromHTML($html)
+    {
+        $token = $this->extractCSRFToken($html);
+        if ($token !== false)
+        {
+            $this->_csrfToken = $token;
+            return true;
+        }
+
+        return false;
+    }
+
+    public function get($url, $parameters = false)
+    {
+        $result = parent::get($url, $parameters);
+        $this->updateCSRFTokenFromHTML($this->getRawSource());
+        return $result;
+    }
+
+    public function post($url, $parameters = false)
+    {
+        if ($parameters === false)
+        {
+            $parameters = array();
+        }
+
+        if ($this->_csrfToken !== '' &&
+            is_array($parameters) &&
+            !isset($parameters['csrfToken']))
+        {
+            $parameters['csrfToken'] = $this->_csrfToken;
+        }
+
+        $result = parent::post($url, $parameters);
+        $this->updateCSRFTokenFromHTML($this->getRawSource());
+        return $result;
     }
 
 
@@ -111,6 +167,11 @@ class CATSWebTestCase extends WebTestCase
         if (!$success)
         {
             return false;
+        }
+
+        if (!$this->updateCSRFTokenFromHTML($this->getRawSource()))
+        {
+            $this->get($this->_indexURL);
         }
 
         return true;
