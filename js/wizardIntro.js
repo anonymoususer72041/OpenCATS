@@ -260,6 +260,12 @@ function userActionPost(action, postData)
     var url = '?m=settings&a=ajax_wizard' + action;
     var payload = 'postback=postback&' + postData;
 
+    if (typeof CATSCsrfToken != 'undefined' && CATSCsrfToken !== null &&
+        CATSCsrfToken !== '' && payload.indexOf('csrfToken=') == -1)
+    {
+        payload += '&csrfToken=' + encodeURIComponent(CATSCsrfToken);
+    }
+
     try
     {
         // Firefox, Opera 8.0+, Safari

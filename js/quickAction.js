@@ -162,6 +162,12 @@ function quickActionPostFromUrl(url, confirmMessage)
 
     params.postback = 'postback';
 
+    if (typeof CATSCsrfToken != 'undefined' && CATSCsrfToken !== null &&
+        CATSCsrfToken !== '' && typeof params.csrfToken == 'undefined')
+    {
+        params.csrfToken = CATSCsrfToken;
+    }
+
     var form = document.createElement('form');
     form.method = 'post';
     form.action = action + (actionParams.length ? ('?' + actionParams.join('&')) : '');

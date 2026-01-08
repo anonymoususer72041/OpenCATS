@@ -221,6 +221,16 @@ function deleteListFromListView(savedListID, numberEntries)
     savedListInput.value = savedListID;
     form.appendChild(savedListInput);
 
+    if (typeof CATSCsrfToken != 'undefined' && CATSCsrfToken !== null &&
+        CATSCsrfToken !== '')
+    {
+        var csrfToken = document.createElement('input');
+        csrfToken.type = 'hidden';
+        csrfToken.name = 'csrfToken';
+        csrfToken.value = CATSCsrfToken;
+        form.appendChild(csrfToken);
+    }
+
     document.body.appendChild(form);
     form.submit();
 }

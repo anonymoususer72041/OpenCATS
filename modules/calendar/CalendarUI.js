@@ -440,6 +440,16 @@ function confirmDeleteEntry()
     eventID.value = document.getElementById('eventIDEdit').value;
     form.appendChild(eventID);
 
+    if (typeof CATSCsrfToken != 'undefined' && CATSCsrfToken !== null &&
+        CATSCsrfToken !== '')
+    {
+        var csrfToken = document.createElement('input');
+        csrfToken.type = 'hidden';
+        csrfToken.name = 'csrfToken';
+        csrfToken.value = CATSCsrfToken;
+        form.appendChild(csrfToken);
+    }
+
     document.body.appendChild(form);
     form.submit();
 }
