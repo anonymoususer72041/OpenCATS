@@ -2,3 +2,8 @@
 IndexIgnore *
 
 Options -Indexes
+
+# Security headers (requires mod_headers; AllowOverride FileInfo or All).
+<IfModule mod_headers.c>
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
