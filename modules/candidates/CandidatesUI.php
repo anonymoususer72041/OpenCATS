@@ -462,6 +462,12 @@ class CandidatesUI extends UserInterface
             echo '<html><body>';
             echo '<form id="postRedirect" method="post" action="', $action, '">';
             echo '<input type="hidden" name="postback" value="postback" />';
+            if (isset($_SESSION['CATS']))
+            {
+                echo '<input type="hidden" name="csrfToken" value="',
+                    htmlspecialchars($_SESSION['CATS']->getCSRFToken(), ENT_QUOTES, 'UTF-8'),
+                    '" />';
+            }
             foreach ($params as $key => $value)
             {
                 echo '<input type="hidden" name="', htmlspecialchars($key, ENT_QUOTES, 'UTF-8'), '" value="', htmlspecialchars($value, ENT_QUOTES, 'UTF-8'), '" />';

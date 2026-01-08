@@ -2920,6 +2920,12 @@ class SettingsUI extends UserInterface
 
             echo '<html><body>';
             echo '<form id="logoutForm" method="post" action="', $indexName, '?m=logout">';
+            if (isset($_SESSION['CATS']))
+            {
+                echo '<input type="hidden" name="csrfToken" value="',
+                    htmlspecialchars($_SESSION['CATS']->getCSRFToken(), ENT_QUOTES, 'UTF-8'),
+                    '" />';
+            }
             echo '<input type="hidden" name="message" value="',
                 htmlspecialchars($message, ENT_QUOTES, 'UTF-8'),
                 '" />';
