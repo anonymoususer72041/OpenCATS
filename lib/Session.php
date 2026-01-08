@@ -896,11 +896,26 @@ class CATSSession
                 // $domain = 'example.com';   // Adjust as needed
                 $secure = true;            // Adjust based on your environment
                 $httponly = true;
-                $samesite = 'Strict';
+                $samesite = 'Lax';
 
                 // Fixed setcookie call - define domain variable and remove invalid path format
                 $domain = '';  // Use empty string for current domain
-                setcookie('session_cookie', $cookieValue, $expires, $path, $domain, $secure, $httponly);
+                // TODO: Drop PHP < 7.3 fallback and always use setcookie() options array once legacy PHP is no longer supported.
+                if (PHP_VERSION_ID >= 70300)
+                {
+                    setcookie('session_cookie', $cookieValue, array(
+                        'expires' => $expires,
+                        'path' => $path,
+                        'domain' => $domain,
+                        'secure' => $secure,
+                        'httponly' => $httponly,
+                        'samesite' => $samesite
+                    ));
+                }
+                else
+                {
+                    setcookie('session_cookie', $cookieValue, $expires, $path, $domain, $secure, $httponly);
+                }
 
                 // Update the user session in the database
                 $sql = sprintf(
