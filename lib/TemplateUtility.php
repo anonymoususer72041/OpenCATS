@@ -158,9 +158,9 @@ class TemplateUtility
                 $csrfToken = htmlspecialchars($_SESSION['CATS']->getCSRFToken(), ENT_QUOTES, 'UTF-8');
                 echo '<input type="hidden" name="csrfToken" value="', $csrfToken, '" />';
             }
-            echo '<a href="javascript:void(0);" onclick="document.getElementById(\'logoutForm\').submit(); return false;">';
+            echo '<button type="submit" class="linkButton">';
             echo '<img src="images/tabs/small_logout.jpg" border="0" /> ';
-            echo 'Logout</a>', "\n";
+            echo 'Logout</button>', "\n";
             echo '</form>', "\n";
             echo '</div>', "\n";
             // End top-right action block
