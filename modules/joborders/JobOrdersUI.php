@@ -392,8 +392,8 @@ class JobOrdersUI extends UserInterface
             $data['city'], $data['state']
         );
 
-        $data['description'] = trim($data['description']);
-        $data['notes'] = trim($data['notes']);
+        $data['description'] = CATSUtility::sanitizeHtmlAllowlist(isset($data['description']) ? $data['description'] : '');
+        $data['notes'] = CATSUtility::sanitizeHtmlAllowlist(isset($data['notes']) ? $data['notes'] : '');
 
         /* Determine the Job Type Description */
         $data['typeDescription'] = $jobOrders->typeCodeToString($data['type']);
