@@ -1736,22 +1736,54 @@ class CareersUI extends UserInterface
     public function capturePostData($siteID, $ignore = array())
     {
         $hiddenTags = '';
+        $isValidName = function ($name)
+        {
+            return preg_match('/^[A-Za-z0-9_][A-Za-z0-9_.-]*(\[[A-Za-z0-9_.-]*\])*$/', (string) $name);
+        };
+        $escapeAttr = function ($value)
+        {
+            return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
+        };
+        $appendHiddenTag = function ($name, $value) use (&$hiddenTags, $isValidName, $escapeAttr, &$appendHiddenTag)
+        {
+            if (!$isValidName($name))
+            {
+                return;
+            }
+
+            if (is_array($value))
+            {
+                foreach ($value as $key => $item)
+                {
+                    $appendHiddenTag($name . '[' . $key . ']', $item);
+                }
+                return;
+            }
+
+            $hiddenTags .= sprintf('<input type="hidden" name="%s" value="%s" />%s',
+                $name,
+                $escapeAttr($value),
+                "\n"
+            );
+        };
 
         foreach ($_POST as $name => $value)
         {
             if (in_array($name, $ignore)) continue;
-            $hiddenTags .= sprintf('<input type="hidden" name="%s" value="%s" />%s',
-                $name,
-                htmlspecialchars($value),
-                "\n"
-            );
+            $appendHiddenTag($name, $value);
         }
 
         if (($uploadFile = FileUtility::getUploadFileFromPost($siteID, 'careerportaladd', 'file')) !== false)
         {
-            $hiddenTags .= sprintf('<input type="hidden" name="file" value="%s" />%s',
-                $uploadFile, "\n"
-            );
+            $fileFieldName = 'file';
+            if ($isValidName($fileFieldName))
+            {
+                $hiddenTags .= sprintf('<input type="hidden" name="%s" value="%s" />%s',
+                    $fileFieldName,
+                    $escapeAttr($uploadFile),
+                    "\n"
+                );
+            }
         }
 
         return $hiddenTags;
