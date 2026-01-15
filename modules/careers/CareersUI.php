@@ -88,6 +88,7 @@ class CareersUI extends UserInterface
         }
 
         $siteName = $siteRS['name'];
+        $siteNameEscaped = htmlspecialchars((string) $siteName, ENT_QUOTES, 'UTF-8');
 
         /* Get information on the current template. */
 
@@ -174,7 +175,7 @@ class CareersUI extends UserInterface
             }
             else
             {
-                $template['Content'] = str_replace('<searchResultsTable>', 'Sorry, Job Listings have been disabled by the '.$siteName.' administrator.', $template['Content']);
+                $template['Content'] = str_replace('<searchResultsTable>', 'Sorry, Job Listings have been disabled by the '.$siteNameEscaped.' administrator.', $template['Content']);
             }
         }
         else if ($p == 'search')
@@ -222,24 +223,41 @@ class CareersUI extends UserInterface
             }
 
             /* Replace input fields. */
-            $content = str_replace('<input-firstName>', '<input name="firstName" id="firstName" class="inputBoxName" value="' . $candidate['firstName'] . '" />', $content);
-            $content = str_replace('<input-lastName>', '<input name="lastName" id="lastName" class="inputBoxName" value="' . $candidate['lastName'] . '" />', $content);
-            $content = str_replace('<input-address>', '<textarea name="address" class="inputBoxArea">'. $candidate['address'] .'</textarea>', $content);
-            $content = str_replace('<input-city>', '<input name="city" id="city" class="inputBoxNormal" value="' . $candidate['city'] . '" />', $content);
-            $content = str_replace('<input-state>', '<input name="state" id="state" class="inputBoxNormal" value="' . $candidate['state'] . '" />', $content);
-            $content = str_replace('<input-zip>', '<input name="zip" id="zip" class="inputBoxNormal" value="' . $candidate['zip'] . '" />', $content);
-            $content = str_replace('<input-phoneWork>', '<input name="phoneWork" id="phoneWork" class="inputBoxNormal" value="' . $candidate['phoneWork'] . '" />', $content);
-            $content = str_replace('<input-email1>', '<input name="email1" id="email1" class="inputBoxNormal" value="' . $candidate['email1'] . '" />', $content);
-            $content = str_replace('<input-phoneHome>', '<input name="phoneHome" id="phoneHome" class="inputBoxNormal" value="' . $candidate['phoneHome'] . '" />', $content);
-            $content = str_replace('<input-phoneCell>', '<input name="phoneCell" id="phoneCell" class="inputBoxNormal" value="' . $candidate['phoneCell'] . '" />', $content);
-            $content = str_replace('<input-bestTimeToCall>', '<input name="bestTimeToCall" id="bestTimeToCall" class="inputBoxNormal" value="' . $candidate['bestTimeToCall'] . '" />', $content);
-            $content = str_replace('<input-keySkills>', '<input name="keySkills" id="keySkills" class="inputBoxNormal" value="' . $candidate['keySkills'] . '" />', $content);
-            $content = str_replace('<input-source>', '<input name="source" id="source" class="inputBoxNormal" value="' . $candidate['source'] . '" />', $content);
-            $content = str_replace('<input-currentEmployer>', '<input name="currentEmployer" id="currentEmployer" class="inputBoxNormal" value="' . $candidate['currentEmployer'] . '" />', $content);
+            $firstNameEscaped = htmlspecialchars((string) $candidate['firstName'], ENT_QUOTES, 'UTF-8');
+            $lastNameEscaped = htmlspecialchars((string) $candidate['lastName'], ENT_QUOTES, 'UTF-8');
+            $addressEscaped = htmlspecialchars((string) $candidate['address'], ENT_QUOTES, 'UTF-8');
+            $cityEscaped = htmlspecialchars((string) $candidate['city'], ENT_QUOTES, 'UTF-8');
+            $stateEscaped = htmlspecialchars((string) $candidate['state'], ENT_QUOTES, 'UTF-8');
+            $zipEscaped = htmlspecialchars((string) $candidate['zip'], ENT_QUOTES, 'UTF-8');
+            $phoneWorkEscaped = htmlspecialchars((string) $candidate['phoneWork'], ENT_QUOTES, 'UTF-8');
+            $email1Escaped = htmlspecialchars((string) $candidate['email1'], ENT_QUOTES, 'UTF-8');
+            $phoneHomeEscaped = htmlspecialchars((string) $candidate['phoneHome'], ENT_QUOTES, 'UTF-8');
+            $phoneCellEscaped = htmlspecialchars((string) $candidate['phoneCell'], ENT_QUOTES, 'UTF-8');
+            $bestTimeToCallEscaped = htmlspecialchars((string) $candidate['bestTimeToCall'], ENT_QUOTES, 'UTF-8');
+            $keySkillsEscaped = htmlspecialchars((string) $candidate['keySkills'], ENT_QUOTES, 'UTF-8');
+            $sourceEscaped = htmlspecialchars((string) $candidate['source'], ENT_QUOTES, 'UTF-8');
+            $currentEmployerEscaped = htmlspecialchars((string) $candidate['currentEmployer'], ENT_QUOTES, 'UTF-8');
+            $resumeTextEscaped = $latestAttachment !== false
+                ? htmlspecialchars((string) DatabaseSearch::fulltextDecode($myResume['text']), ENT_QUOTES, 'UTF-8')
+                : '';
+            $content = str_replace('<input-firstName>', '<input name="firstName" id="firstName" class="inputBoxName" value="' . $firstNameEscaped . '" />', $content);
+            $content = str_replace('<input-lastName>', '<input name="lastName" id="lastName" class="inputBoxName" value="' . $lastNameEscaped . '" />', $content);
+            $content = str_replace('<input-address>', '<textarea name="address" class="inputBoxArea">'. $addressEscaped .'</textarea>', $content);
+            $content = str_replace('<input-city>', '<input name="city" id="city" class="inputBoxNormal" value="' . $cityEscaped . '" />', $content);
+            $content = str_replace('<input-state>', '<input name="state" id="state" class="inputBoxNormal" value="' . $stateEscaped . '" />', $content);
+            $content = str_replace('<input-zip>', '<input name="zip" id="zip" class="inputBoxNormal" value="' . $zipEscaped . '" />', $content);
+            $content = str_replace('<input-phoneWork>', '<input name="phoneWork" id="phoneWork" class="inputBoxNormal" value="' . $phoneWorkEscaped . '" />', $content);
+            $content = str_replace('<input-email1>', '<input name="email1" id="email1" class="inputBoxNormal" value="' . $email1Escaped . '" />', $content);
+            $content = str_replace('<input-phoneHome>', '<input name="phoneHome" id="phoneHome" class="inputBoxNormal" value="' . $phoneHomeEscaped . '" />', $content);
+            $content = str_replace('<input-phoneCell>', '<input name="phoneCell" id="phoneCell" class="inputBoxNormal" value="' . $phoneCellEscaped . '" />', $content);
+            $content = str_replace('<input-bestTimeToCall>', '<input name="bestTimeToCall" id="bestTimeToCall" class="inputBoxNormal" value="' . $bestTimeToCallEscaped . '" />', $content);
+            $content = str_replace('<input-keySkills>', '<input name="keySkills" id="keySkills" class="inputBoxNormal" value="' . $keySkillsEscaped . '" />', $content);
+            $content = str_replace('<input-source>', '<input name="source" id="source" class="inputBoxNormal" value="' . $sourceEscaped . '" />', $content);
+            $content = str_replace('<input-currentEmployer>', '<input name="currentEmployer" id="currentEmployer" class="inputBoxNormal" value="' . $currentEmployerEscaped . '" />', $content);
             $content = str_replace('<input-resume>',
                 '<strong>My Resume</strong><br />'
                 . '<textarea name="resumeContents" class="inputBoxArea" style="width: 400px; height: 200px;" readonly>'
-                . ($latestAttachment !== false ? DatabaseSearch::fulltextDecode($myResume['text']) : '') .'</textarea>'
+                . $resumeTextEscaped .'</textarea>'
                 . '<br /><br /><strong>Upload new resume:</strong><br /> '
                 . '<input type="file" name="file" id="file" type="file" class="inputBoxFile" size="45" />',
                 $content
@@ -370,7 +388,7 @@ class CareersUI extends UserInterface
             $content = str_replace('<input-new>', '<input type="radio" id="isNewYes" name="isNew" value="yes" onchange="isCandidateRegisteredChange();" checked />', $content);
             $content = str_replace('<input-registered>', '<input type="radio" id="isNewNo" name="isNew" value="no" onchange="isCandidateRegisteredChange();" />', $content);
             $content = str_replace('<input-rememberMe>', '<input type="checkbox" id="rememberMe" name="rememberMe" value="yes" checked />', $content);
-            $content = str_replace('<title>', $jobOrderData['title'], $content);
+            $content = str_replace('<title>', htmlspecialchars((string) $jobOrderData['title'], ENT_QUOTES, 'UTF-8'), $content);
 
             // Process html-ish fields like <input-firstName> into the proper form
             $content = preg_replace(
@@ -565,10 +583,11 @@ class CareersUI extends UserInterface
             /* Get the attachment (friendly) file name is there is an attachment uploaded */
             if ($resumeFileLocation != '')
             {
+                $resumeFileLocationEscaped = htmlspecialchars((string) $resumeFileLocation, ENT_QUOTES, 'UTF-8');
                 $attachmentHTML = '<div style="height: 20px; background-color: #e0e0e0; margin: 5px 0 0px 0; '
                     . 'padding: 0 3px 0 5px; font-size: 11px;"> '
                     . '<img src="images/parser/attachment.gif" border="0" style="padding-top: 3px;" /> '
-                    . 'Attachment: <span style="font-weight: bold;">'.$resumeFileLocation.'</span> '
+                    . 'Attachment: <span style="font-weight: bold;">'.$resumeFileLocationEscaped.'</span> '
                     . '</div> ';
             }
             else
@@ -578,33 +597,52 @@ class CareersUI extends UserInterface
 
             /* Replace input fields. */
             $template['Content'] = str_replace('<jobid>', $jobID, $template['Content']);
-            $template['Content'] = str_replace('<title>', $jobOrderData['title'], $template['Content']);
-            $template['Content'] = str_replace('<input-firstName>', '<input name="firstName" id="firstName" class="inputBoxName" value="' . $firstName . '" />', $template['Content']);
-            $template['Content'] = str_replace('<input-lastName>', '<input name="lastName" id="lastName" class="inputBoxName" value="' . $lastName . '" />', $template['Content']);
-            $template['Content'] = str_replace('<input-address>', '<textarea name="address" class="inputBoxArea">'. $address .'</textarea>', $template['Content']);
-            $template['Content'] = str_replace('<input-city>', '<input name="city" id="city" class="inputBoxNormal" value="' . $city . '" />', $template['Content']);
-            $template['Content'] = str_replace('<input-state>', '<input name="state" id="state" class="inputBoxNormal" value="' . $state . '" />', $template['Content']);
-            $template['Content'] = str_replace('<input-zip>', '<input name="zip" id="zip" class="inputBoxNormal" value="' . $zip . '" />', $template['Content']);
-            $template['Content'] = str_replace('<input-phone>', '<input name="phone" id="phone" class="inputBoxNormal" value="' . $phone . '" />', $template['Content']);
-            $template['Content'] = str_replace('<input-email>', '<input name="email" id="email" class="inputBoxNormal" value="' . $email . '" />', $template['Content']);
-            $template['Content'] = str_replace('<input-phone-home>', '<input name="phoneHome" id="phoneHome" class="inputBoxNormal" value="' . $phoneHome . '" />', $template['Content']);
-            $template['Content'] = str_replace('<input-phone-cell>', '<input name="phoneCell" id="phoneCell" class="inputBoxNormal" value="' . $phoneCell . '" />', $template['Content']);
-            $template['Content'] = str_replace('<input-best-time-to-call>', '<input name="bestTimeToCall" id="bestTimeToCall" class="inputBoxNormal" value="' . $bestTimeToCall . '" />', $template['Content']);
-            $template['Content'] = str_replace('<input-email2>', '<input name="email2" id="email2" class="inputBoxNormal" value="' . $email2 . '" />', $template['Content']);
-            $template['Content'] = str_replace('<input-emailconfirm>', '<input name="emailconfirm" id="emailconfirm" class="inputBoxNormal" value="' . $emailconfirm . '" />', $template['Content']);
-            $template['Content'] = str_replace('<input-keySkills>', '<input name="keySkills" id="keySkills" class="inputBoxNormal" value="' . $keySkills . '" />', $template['Content']);
-            $template['Content'] = str_replace('<input-source>', '<input name="source" id="source" class="inputBoxNormal" value="' . $source . '" />', $template['Content']);
-            $template['Content'] = str_replace('<input-employer>', '<input name="employer" id="employer" class="inputBoxNormal" value="' . $employer . '" />', $template['Content']);
+            $firstNameEscaped = htmlspecialchars((string) $firstName, ENT_QUOTES, 'UTF-8');
+            $lastNameEscaped = htmlspecialchars((string) $lastName, ENT_QUOTES, 'UTF-8');
+            $addressEscaped = htmlspecialchars((string) $address, ENT_QUOTES, 'UTF-8');
+            $cityEscaped = htmlspecialchars((string) $city, ENT_QUOTES, 'UTF-8');
+            $stateEscaped = htmlspecialchars((string) $state, ENT_QUOTES, 'UTF-8');
+            $zipEscaped = htmlspecialchars((string) $zip, ENT_QUOTES, 'UTF-8');
+            $phoneEscaped = htmlspecialchars((string) $phone, ENT_QUOTES, 'UTF-8');
+            $emailEscaped = htmlspecialchars((string) $email, ENT_QUOTES, 'UTF-8');
+            $phoneHomeEscaped = htmlspecialchars((string) $phoneHome, ENT_QUOTES, 'UTF-8');
+            $phoneCellEscaped = htmlspecialchars((string) $phoneCell, ENT_QUOTES, 'UTF-8');
+            $bestTimeToCallEscaped = htmlspecialchars((string) $bestTimeToCall, ENT_QUOTES, 'UTF-8');
+            $email2Escaped = htmlspecialchars((string) $email2, ENT_QUOTES, 'UTF-8');
+            $emailconfirmEscaped = htmlspecialchars((string) $emailconfirm, ENT_QUOTES, 'UTF-8');
+            $keySkillsEscaped = htmlspecialchars((string) $keySkills, ENT_QUOTES, 'UTF-8');
+            $sourceEscaped = htmlspecialchars((string) $source, ENT_QUOTES, 'UTF-8');
+            $employerEscaped = htmlspecialchars((string) $employer, ENT_QUOTES, 'UTF-8');
+            $resumeFileLocationEscaped = htmlspecialchars((string) $resumeFileLocation, ENT_QUOTES, 'UTF-8');
+            $resumeContentsEscaped = htmlspecialchars((string) $resumeContents, ENT_QUOTES, 'UTF-8');
+            $extraNotesEscaped = htmlspecialchars((string) (isset($_POST[$id='extraNotes']) ? $_POST[$id] : ''), ENT_QUOTES, 'UTF-8');
+            $template['Content'] = str_replace('<title>', htmlspecialchars((string) $jobOrderData['title'], ENT_QUOTES, 'UTF-8'), $template['Content']);
+            $template['Content'] = str_replace('<input-firstName>', '<input name="firstName" id="firstName" class="inputBoxName" value="' . $firstNameEscaped . '" />', $template['Content']);
+            $template['Content'] = str_replace('<input-lastName>', '<input name="lastName" id="lastName" class="inputBoxName" value="' . $lastNameEscaped . '" />', $template['Content']);
+            $template['Content'] = str_replace('<input-address>', '<textarea name="address" class="inputBoxArea">'. $addressEscaped .'</textarea>', $template['Content']);
+            $template['Content'] = str_replace('<input-city>', '<input name="city" id="city" class="inputBoxNormal" value="' . $cityEscaped . '" />', $template['Content']);
+            $template['Content'] = str_replace('<input-state>', '<input name="state" id="state" class="inputBoxNormal" value="' . $stateEscaped . '" />', $template['Content']);
+            $template['Content'] = str_replace('<input-zip>', '<input name="zip" id="zip" class="inputBoxNormal" value="' . $zipEscaped . '" />', $template['Content']);
+            $template['Content'] = str_replace('<input-phone>', '<input name="phone" id="phone" class="inputBoxNormal" value="' . $phoneEscaped . '" />', $template['Content']);
+            $template['Content'] = str_replace('<input-email>', '<input name="email" id="email" class="inputBoxNormal" value="' . $emailEscaped . '" />', $template['Content']);
+            $template['Content'] = str_replace('<input-phone-home>', '<input name="phoneHome" id="phoneHome" class="inputBoxNormal" value="' . $phoneHomeEscaped . '" />', $template['Content']);
+            $template['Content'] = str_replace('<input-phone-cell>', '<input name="phoneCell" id="phoneCell" class="inputBoxNormal" value="' . $phoneCellEscaped . '" />', $template['Content']);
+            $template['Content'] = str_replace('<input-best-time-to-call>', '<input name="bestTimeToCall" id="bestTimeToCall" class="inputBoxNormal" value="' . $bestTimeToCallEscaped . '" />', $template['Content']);
+            $template['Content'] = str_replace('<input-email2>', '<input name="email2" id="email2" class="inputBoxNormal" value="' . $email2Escaped . '" />', $template['Content']);
+            $template['Content'] = str_replace('<input-emailconfirm>', '<input name="emailconfirm" id="emailconfirm" class="inputBoxNormal" value="' . $emailconfirmEscaped . '" />', $template['Content']);
+            $template['Content'] = str_replace('<input-keySkills>', '<input name="keySkills" id="keySkills" class="inputBoxNormal" value="' . $keySkillsEscaped . '" />', $template['Content']);
+            $template['Content'] = str_replace('<input-source>', '<input name="source" id="source" class="inputBoxNormal" value="' . $sourceEscaped . '" />', $template['Content']);
+            $template['Content'] = str_replace('<input-employer>', '<input name="employer" id="employer" class="inputBoxNormal" value="' . $employerEscaped . '" />', $template['Content']);
             $template['Content'] = str_replace('<input-resumeUpload>', '<input type="file" id="resume" name="file" class="inputBoxFile" />', $template['Content']);
             $template['Content'] = str_replace('<input-resumeUploadPreview>',
                 '<input type="hidden" id="applyToJobSubAction" name="applyToJobSubAction" value="" /> '
-                . '<input type="hidden" id="file" name="file" value="' . $resumeFileLocation . '" /> '
+                . '<input type="hidden" id="file" name="file" value="' . $resumeFileLocationEscaped . '" /> '
                 . '<input type="file" id="resumeFile" name="resumeFile" class="inputBoxFile" size="30" onchange="resumeLoadCheck();" /> '
                 . '<input type="button" id="resumeLoad" name="resumeLoad" value="Upload" onclick="resumeLoadFile();" disabled /><br /> '
                 . $attachmentHTML
                 . '<textarea id="resumeContents" name="resumeContents" class="inputBoxArea" onmousemove="resumeContentsChange(this);" '
                 . 'onchange="resumeContentsChange(this);" onmousedown="resumeContentsChange(this);" '
-                . 'style="width: 410px; height: 150px;">' . $resumeContents . '</textarea><br /> '
+                . 'style="width: 410px; height: 150px;">' . $resumeContentsEscaped . '</textarea><br /> '
                 . (
                 // If parsing is enabled, add the image link for it
                 LicenseUtility::isParsingEnabled() ?
@@ -614,7 +652,7 @@ class CareersUI extends UserInterface
                     ''
                 ),
                 $template['Content']);
-            $template['Content'] = str_replace('<input-extraNotes>', '<textarea name="extraNotes" id="extraNotes" class="inputBoxArea" maxlength="450" onkeyup="mlength=this.getAttribute ? parseInt(this.getAttribute(\'maxlength\')) : \'\'; if (this.getAttribute && this.value.length>(mlength+7)) { alert(\'Sorry, you may only enter \'+mlength+\' characters into the extra notes.\');} if (this.getAttribute && this.value.length>mlength) {this.value=this.value.substring(0,mlength); this.scrollTop = this.scrollHeight;}">'.(isset($_POST[$id='extraNotes'])?$_POST[$id]:'').'</textarea>', $template['Content']);
+            $template['Content'] = str_replace('<input-extraNotes>', '<textarea name="extraNotes" id="extraNotes" class="inputBoxArea" maxlength="450" onkeyup="mlength=this.getAttribute ? parseInt(this.getAttribute(\'maxlength\')) : \'\'; if (this.getAttribute && this.value.length>(mlength+7)) { alert(\'Sorry, you may only enter \'+mlength+\' characters into the extra notes.\');} if (this.getAttribute && this.value.length>mlength) {this.value=this.value.substring(0,mlength); this.scrollTop = this.scrollHeight;}">'.$extraNotesEscaped.'</textarea>', $template['Content']);
             $template['Content'] = str_replace('<submit', '<input type="submit" class="submitButton"', $template['Content']);
 
             /* EEO inputs. */
@@ -758,8 +796,8 @@ class CareersUI extends UserInterface
                 }
 
                 $template['Content'] = $template['Content - Thanks for your Submission'];
-                $template['Content'] = str_replace('<title>', $jobOrderData['title'], $template['Content']);
-                $template['Content'] = str_replace('<a-jobDetails>', '<a href="' . CATSUtility::getIndexName() . '?m=careers'.(isset($_GET['templateName']) ? '&templateName='.urlencode($_GET['templateName']) : '').'&p=showJob&ID='.$_POST['ID'].'">', $template['Content']);
+                $template['Content'] = str_replace('<title>', htmlspecialchars((string) $jobOrderData['title'], ENT_QUOTES, 'UTF-8'), $template['Content']);
+                $template['Content'] = str_replace('<a-jobDetails>', '<a href="' . CATSUtility::getIndexName() . '?m=careers'.(isset($_GET['templateName']) ? '&templateName='.urlencode($_GET['templateName']) : '').'&p=showJob&ID='.htmlspecialchars((string) $_POST['ID'], ENT_QUOTES, 'UTF-8').'">', $template['Content']);
             }
             else
             {
@@ -817,21 +855,21 @@ class CareersUI extends UserInterface
             }
 
             $template['Content'] = str_replace('<registeredCandidate>', $useCookie && $isRegistrationEnabled ? $this->getRegisteredCandidateBlock($siteID, $template['Content - Candidate Registration']) : '', $template['Content']);
-            $template['Content'] = str_replace('<title>',        $jobOrderData['title'], $template['Content']);
-            $template['Content'] = str_replace('<city>',         $jobOrderData['city'], $template['Content']);
-            $template['Content'] = str_replace('<openings>',     $jobOrderData['openings'], $template['Content']);
-            $template['Content'] = str_replace('<state>',        $jobOrderData['state'], $template['Content']);
-            $template['Content'] = str_replace('<type>',         $jobOrders->typeCodeToString($jobOrderData['type']), $template['Content']);
-            $template['Content'] = str_replace('<created>',      $jobOrderData['dateCreated'], $template['Content']);
-            $template['Content'] = str_replace('<recruiter>',    $jobOrderData['recruiterFullName'], $template['Content']);
-            $template['Content'] = str_replace('<companyName>',  $jobOrderData['companyName'], $template['Content']);
-            $template['Content'] = str_replace('<contactName>',  $jobOrderData['contactFullName'], $template['Content']);
-            $template['Content'] = str_replace('<contactPhone>', $jobOrderData['contactWorkPhone'], $template['Content']);
-            $template['Content'] = str_replace('<contactEmail>', $jobOrderData['contactEmail'], $template['Content']);
-            $template['Content'] = str_replace('<description>',  $jobOrderData['description'], $template['Content']);
-            $template['Content'] = str_replace('<rate>',         nl2br($jobOrderData['maxRate']), $template['Content']);
-            $template['Content'] = str_replace('<salary>',       nl2br($jobOrderData['salary']), $template['Content']);
-            $template['Content'] = str_replace('<daysOld>',      nl2br($jobOrderData['daysOld']), $template['Content']);
+            $template['Content'] = str_replace('<title>',        htmlspecialchars((string) $jobOrderData['title'], ENT_QUOTES, 'UTF-8'), $template['Content']);
+            $template['Content'] = str_replace('<city>',         htmlspecialchars((string) $jobOrderData['city'], ENT_QUOTES, 'UTF-8'), $template['Content']);
+            $template['Content'] = str_replace('<openings>',     htmlspecialchars((string) $jobOrderData['openings'], ENT_QUOTES, 'UTF-8'), $template['Content']);
+            $template['Content'] = str_replace('<state>',        htmlspecialchars((string) $jobOrderData['state'], ENT_QUOTES, 'UTF-8'), $template['Content']);
+            $template['Content'] = str_replace('<type>',         htmlspecialchars((string) $jobOrders->typeCodeToString($jobOrderData['type']), ENT_QUOTES, 'UTF-8'), $template['Content']);
+            $template['Content'] = str_replace('<created>',      htmlspecialchars((string) $jobOrderData['dateCreated'], ENT_QUOTES, 'UTF-8'), $template['Content']);
+            $template['Content'] = str_replace('<recruiter>',    htmlspecialchars((string) $jobOrderData['recruiterFullName'], ENT_QUOTES, 'UTF-8'), $template['Content']);
+            $template['Content'] = str_replace('<companyName>',  htmlspecialchars((string) $jobOrderData['companyName'], ENT_QUOTES, 'UTF-8'), $template['Content']);
+            $template['Content'] = str_replace('<contactName>',  htmlspecialchars((string) $jobOrderData['contactFullName'], ENT_QUOTES, 'UTF-8'), $template['Content']);
+            $template['Content'] = str_replace('<contactPhone>', htmlspecialchars((string) $jobOrderData['contactWorkPhone'], ENT_QUOTES, 'UTF-8'), $template['Content']);
+            $template['Content'] = str_replace('<contactEmail>', htmlspecialchars((string) $jobOrderData['contactEmail'], ENT_QUOTES, 'UTF-8'), $template['Content']);
+            $template['Content'] = str_replace('<description>',  htmlspecialchars((string) $jobOrderData['description'], ENT_QUOTES, 'UTF-8'), $template['Content']);
+            $template['Content'] = str_replace('<rate>',         nl2br(htmlspecialchars((string) $jobOrderData['maxRate'], ENT_QUOTES, 'UTF-8')), $template['Content']);
+            $template['Content'] = str_replace('<salary>',       nl2br(htmlspecialchars((string) $jobOrderData['salary'], ENT_QUOTES, 'UTF-8')), $template['Content']);
+            $template['Content'] = str_replace('<daysOld>',      nl2br(htmlspecialchars((string) $jobOrderData['daysOld'], ENT_QUOTES, 'UTF-8')), $template['Content']);
 
             $isRegistered = $this->isCandidateRegistered($siteID, $template['Content - Candidate Registration']);
 
@@ -850,7 +888,7 @@ class CareersUI extends UserInterface
 
             foreach($extraFieldsForJobOrders as $ef)
             {
-                $template['Content'] = str_replace('<extraField-' .urlencode($ef['fieldName']) . '>', $ef['display'], $template['Content']);
+                $template['Content'] = str_replace('<extraField-' .urlencode($ef['fieldName']) . '>', htmlspecialchars((string) $ef['display'], ENT_QUOTES, 'UTF-8'), $template['Content']);
             }
         }
         else if ($p == 'searchResults')
@@ -938,7 +976,7 @@ class CareersUI extends UserInterface
             $template[$index] = str_replace('<a-LinkMain>',   '<a href="'.$indexName.'?m=careers'.(isset($_GET['templateName']) ? '&templateName='.urlencode($_GET['templateName']) : '').'">', $template[$index]);
             $template[$index] = str_replace('<a-LinkSearch>', '<a href="'.$indexName.'?m=careers'.(isset($_GET['templateName']) ? '&templateName='.urlencode($_GET['templateName']) : '').'&amp;p=search">', $template[$index]);
             $template[$index] = str_replace('<a-ListAll>',    '<a href="'.$indexName.'?m=careers'.(isset($_GET['templateName']) ? '&templateName='.urlencode($_GET['templateName']) : '').'&amp;p=showAll">', $template[$index]);
-            $template[$index] = str_replace('<siteName>', $siteName, $template[$index]);
+            $template[$index] = str_replace('<siteName>', $siteNameEscaped, $template[$index]);
             $template[$index] = str_replace('<numberOfOpenPositions>', count($rs), $template[$index]);
 
             /* Hacks for loading from a nonstandard root directory. */
