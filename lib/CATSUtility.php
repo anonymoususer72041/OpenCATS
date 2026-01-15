@@ -508,7 +508,14 @@ class CATSUtility
         $indexParts = explode('.', $index);
         if ($indexParts[0] == 'ajax')
         {
-            $index = 'index.' . $indexParts[1];
+            if (isset($indexParts[1]) && $indexParts[1] !== '')
+            {
+                $index = 'index.' . $indexParts[1];
+            }
+            else
+            {
+                $index = 'index.php';
+            }
         }
 
         /* Older versions of apache sometimes don't concatinate script name by default. */
