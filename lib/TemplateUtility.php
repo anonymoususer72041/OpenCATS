@@ -82,8 +82,7 @@ class TemplateUtility
         echo '<body style="background: #eee;">', "\n";
         if ($title != '')
         {
-            $title = str_replace('\'', '\\\'', $title);
-            echo '<script type="text/javascript">parentSetPopTitle(\''.$title.'\');</script>';
+            echo '<script type="text/javascript">parentSetPopTitle(', json_encode((string) $title, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT), ');</script>';
         }
         self::_printQuickActionMenuHolder();
     }
@@ -159,7 +158,10 @@ class TemplateUtility
 
             if (!eval(Hooks::get('TEMPLATE_LOGIN_INFO_EXTENDED_SITE_NAME'))) return;
 
-            echo '<span>', $fullName, '&nbsp;&lt;', $username, '&gt;&nbsp;(', $siteName, ')</span>', "\n";
+            $fullNameEscaped = htmlspecialchars((string) $fullName, ENT_QUOTES, 'UTF-8');
+            $usernameEscaped = htmlspecialchars((string) $username, ENT_QUOTES, 'UTF-8');
+            $siteNameEscaped = htmlspecialchars((string) $siteName, ENT_QUOTES, 'UTF-8');
+            echo '<span>', $fullNameEscaped, '&nbsp;&lt;', $usernameEscaped, '&gt;&nbsp;(', $siteNameEscaped, ')</span>', "\n";
 
             if ($_SESSION['CATS']->getAccessLevel(ACL::SECOBJ_ROOT) >= ACCESS_LEVEL_SA)
             {
@@ -1179,7 +1181,7 @@ class TemplateUtility
         echo '"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">', "\n";
         echo '<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">', "\n";
         echo '<head>', "\n";
-        echo '<title>OpenCATS - ', $pageTitle, '</title>', "\n";
+        echo '<title>OpenCATS - ', htmlspecialchars((string) $pageTitle, ENT_QUOTES, 'UTF-8'), '</title>', "\n";
         echo '<meta http-equiv="Content-Type" content="text/html; charset=', HTML_ENCODING, '" />', "\n";
         echo '<link rel="icon" href="images/favicon.ico" type="image/x-icon" />', "\n";
         echo '<link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />', "\n";
@@ -1192,7 +1194,7 @@ class TemplateUtility
         echo '<script type="text/javascript" src="js/calendarDateInput.js'.$javascriptAntiCache.'"></script>', "\n";
         echo '<script type="text/javascript" src="js/submodal/subModal.js'.$javascriptAntiCache.'"></script>', "\n";
         echo '<script type="text/javascript" src="js/jquery-1.3.2.min.js'.$javascriptAntiCache.'"></script>', "\n";
-        echo '<script type="text/javascript">CATSIndexName = "'.CATSUtility::getIndexName().'";</script>', "\n";
+        echo '<script type="text/javascript">CATSIndexName = ', json_encode((string) CATSUtility::getIndexName(), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT), ';</script>', "\n";
 
        $headIncludes[] = 'main.css';
 
