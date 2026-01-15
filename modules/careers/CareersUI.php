@@ -153,7 +153,8 @@ class CareersUI extends UserInterface
         {
             $template['Content'] = $template['Content - Search Results'];
 
-            $template['Content'] = str_replace('<numberOfSearchResults>', count($rs), $template['Content']);
+            $numberOfSearchResultsEscaped = htmlspecialchars((string) count($rs), ENT_QUOTES, 'UTF-8');
+            $template['Content'] = str_replace('<numberOfSearchResults>', $numberOfSearchResultsEscaped, $template['Content']);
             $template['Content'] = str_replace('<registeredCandidate>', $useCookie && $isRegistrationEnabled ? $this->getRegisteredCandidateBlock($siteID, $template['Content - Candidate Registration']) : '', $template['Content']);
 
             if ($careerPortalSettingsRS['allowBrowse'] == 1)
@@ -381,6 +382,7 @@ class CareersUI extends UserInterface
             $jobID = intval($_GET['ID']);
             $jobOrderData = $jobOrders->get($jobID);
             $js = '';
+            $jobTitleEscaped = htmlspecialchars((string) $jobOrderData['title'], ENT_QUOTES, 'UTF-8');
 
             $content = str_replace(array('<applyContent>','</applyContent>'), '', $content);
 
@@ -388,7 +390,7 @@ class CareersUI extends UserInterface
             $content = str_replace('<input-new>', '<input type="radio" id="isNewYes" name="isNew" value="yes" onchange="isCandidateRegisteredChange();" checked />', $content);
             $content = str_replace('<input-registered>', '<input type="radio" id="isNewNo" name="isNew" value="no" onchange="isCandidateRegisteredChange();" />', $content);
             $content = str_replace('<input-rememberMe>', '<input type="checkbox" id="rememberMe" name="rememberMe" value="yes" checked />', $content);
-            $content = str_replace('<title>', htmlspecialchars((string) $jobOrderData['title'], ENT_QUOTES, 'UTF-8'), $content);
+            $content = str_replace('<title>', $jobTitleEscaped, $content);
 
             // Process html-ish fields like <input-firstName> into the proper form
             $content = preg_replace(
@@ -405,9 +407,9 @@ class CareersUI extends UserInterface
                 foreach ($fields as $tagName => $tagValue)
                 {
                     $js .= sprintf(
-                        'if (obj = document.getElementById(\'%s\')) obj.value = \'%s\';%s',
-                        urldecode($tagName),
-                        str_replace("'", "\\'", urldecode($tagValue)),
+                        'if (obj = document.getElementById(%s)) obj.value = %s;%s',
+                        json_encode((string) urldecode($tagName), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT),
+                        json_encode((string) urldecode($tagValue), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT),
                         "\n"
                     );
                 }
@@ -596,7 +598,8 @@ class CareersUI extends UserInterface
             }
 
             /* Replace input fields. */
-            $template['Content'] = str_replace('<jobid>', $jobID, $template['Content']);
+            $jobIdEscaped = htmlspecialchars((string) $jobID, ENT_QUOTES, 'UTF-8');
+            $template['Content'] = str_replace('<jobid>', $jobIdEscaped, $template['Content']);
             $firstNameEscaped = htmlspecialchars((string) $firstName, ENT_QUOTES, 'UTF-8');
             $lastNameEscaped = htmlspecialchars((string) $lastName, ENT_QUOTES, 'UTF-8');
             $addressEscaped = htmlspecialchars((string) $address, ENT_QUOTES, 'UTF-8');
@@ -616,7 +619,8 @@ class CareersUI extends UserInterface
             $resumeFileLocationEscaped = htmlspecialchars((string) $resumeFileLocation, ENT_QUOTES, 'UTF-8');
             $resumeContentsEscaped = htmlspecialchars((string) $resumeContents, ENT_QUOTES, 'UTF-8');
             $extraNotesEscaped = htmlspecialchars((string) (isset($_POST[$id='extraNotes']) ? $_POST[$id] : ''), ENT_QUOTES, 'UTF-8');
-            $template['Content'] = str_replace('<title>', htmlspecialchars((string) $jobOrderData['title'], ENT_QUOTES, 'UTF-8'), $template['Content']);
+            $jobTitleEscaped = htmlspecialchars((string) $jobOrderData['title'], ENT_QUOTES, 'UTF-8');
+            $template['Content'] = str_replace('<title>', $jobTitleEscaped, $template['Content']);
             $template['Content'] = str_replace('<input-firstName>', '<input name="firstName" id="firstName" class="inputBoxName" value="' . $firstNameEscaped . '" />', $template['Content']);
             $template['Content'] = str_replace('<input-lastName>', '<input name="lastName" id="lastName" class="inputBoxName" value="' . $lastNameEscaped . '" />', $template['Content']);
             $template['Content'] = str_replace('<input-address>', '<textarea name="address" class="inputBoxArea">'. $addressEscaped .'</textarea>', $template['Content']);
@@ -796,8 +800,22 @@ class CareersUI extends UserInterface
                 }
 
                 $template['Content'] = $template['Content - Thanks for your Submission'];
-                $template['Content'] = str_replace('<title>', htmlspecialchars((string) $jobOrderData['title'], ENT_QUOTES, 'UTF-8'), $template['Content']);
-                $template['Content'] = str_replace('<a-jobDetails>', '<a href="' . CATSUtility::getIndexName() . '?m=careers'.(isset($_GET['templateName']) ? '&templateName='.urlencode($_GET['templateName']) : '').'&p=showJob&ID='.htmlspecialchars((string) $_POST['ID'], ENT_QUOTES, 'UTF-8').'">', $template['Content']);
+                $jobTitleEscaped = htmlspecialchars((string) $jobOrderData['title'], ENT_QUOTES, 'UTF-8');
+                $jobDetailsUrl = CATSUtility::getIndexName() . '?m=careers'
+                    . (isset($_GET['templateName']) ? '&templateName=' . urlencode($_GET['templateName']) : '')
+                    . '&p=showJob&ID=' . (string) $_POST['ID'];
+                $jobDetailsUrl = (string) $jobDetailsUrl;
+                if (preg_match('/^\s*javascript:/i', $jobDetailsUrl))
+                {
+                    $jobDetailsUrl = '';
+                }
+                else if (preg_match('/^\s*[a-z][a-z0-9+\-.]*:/i', $jobDetailsUrl) && !preg_match('/^\s*https?:/i', $jobDetailsUrl))
+                {
+                    $jobDetailsUrl = '';
+                }
+                $jobDetailsUrlEscaped = htmlspecialchars($jobDetailsUrl, ENT_QUOTES, 'UTF-8');
+                $template['Content'] = str_replace('<title>', $jobTitleEscaped, $template['Content']);
+                $template['Content'] = str_replace('<a-jobDetails>', '<a href="' . $jobDetailsUrlEscaped . '">', $template['Content']);
             }
             else
             {
@@ -854,33 +872,74 @@ class CareersUI extends UserInterface
                 die ();
             }
 
+            $jobTitleEscaped = htmlspecialchars((string) $jobOrderData['title'], ENT_QUOTES, 'UTF-8');
+            $jobCityEscaped = htmlspecialchars((string) $jobOrderData['city'], ENT_QUOTES, 'UTF-8');
+            $jobOpeningsEscaped = htmlspecialchars((string) $jobOrderData['openings'], ENT_QUOTES, 'UTF-8');
+            $jobStateEscaped = htmlspecialchars((string) $jobOrderData['state'], ENT_QUOTES, 'UTF-8');
+            $jobTypeEscaped = htmlspecialchars((string) $jobOrders->typeCodeToString($jobOrderData['type']), ENT_QUOTES, 'UTF-8');
+            $jobCreatedEscaped = htmlspecialchars((string) $jobOrderData['dateCreated'], ENT_QUOTES, 'UTF-8');
+            $jobRecruiterEscaped = htmlspecialchars((string) $jobOrderData['recruiterFullName'], ENT_QUOTES, 'UTF-8');
+            $jobCompanyNameEscaped = htmlspecialchars((string) $jobOrderData['companyName'], ENT_QUOTES, 'UTF-8');
+            $jobContactNameEscaped = htmlspecialchars((string) $jobOrderData['contactFullName'], ENT_QUOTES, 'UTF-8');
+            $jobContactPhoneEscaped = htmlspecialchars((string) $jobOrderData['contactWorkPhone'], ENT_QUOTES, 'UTF-8');
+            $jobContactEmailEscaped = htmlspecialchars((string) $jobOrderData['contactEmail'], ENT_QUOTES, 'UTF-8');
+            $jobDescriptionEscaped = htmlspecialchars((string) $jobOrderData['description'], ENT_QUOTES, 'UTF-8');
+            $jobRateEscaped = nl2br(htmlspecialchars((string) $jobOrderData['maxRate'], ENT_QUOTES, 'UTF-8'));
+            $jobSalaryEscaped = nl2br(htmlspecialchars((string) $jobOrderData['salary'], ENT_QUOTES, 'UTF-8'));
+            $jobDaysOldEscaped = nl2br(htmlspecialchars((string) $jobOrderData['daysOld'], ENT_QUOTES, 'UTF-8'));
             $template['Content'] = str_replace('<registeredCandidate>', $useCookie && $isRegistrationEnabled ? $this->getRegisteredCandidateBlock($siteID, $template['Content - Candidate Registration']) : '', $template['Content']);
-            $template['Content'] = str_replace('<title>',        htmlspecialchars((string) $jobOrderData['title'], ENT_QUOTES, 'UTF-8'), $template['Content']);
-            $template['Content'] = str_replace('<city>',         htmlspecialchars((string) $jobOrderData['city'], ENT_QUOTES, 'UTF-8'), $template['Content']);
-            $template['Content'] = str_replace('<openings>',     htmlspecialchars((string) $jobOrderData['openings'], ENT_QUOTES, 'UTF-8'), $template['Content']);
-            $template['Content'] = str_replace('<state>',        htmlspecialchars((string) $jobOrderData['state'], ENT_QUOTES, 'UTF-8'), $template['Content']);
-            $template['Content'] = str_replace('<type>',         htmlspecialchars((string) $jobOrders->typeCodeToString($jobOrderData['type']), ENT_QUOTES, 'UTF-8'), $template['Content']);
-            $template['Content'] = str_replace('<created>',      htmlspecialchars((string) $jobOrderData['dateCreated'], ENT_QUOTES, 'UTF-8'), $template['Content']);
-            $template['Content'] = str_replace('<recruiter>',    htmlspecialchars((string) $jobOrderData['recruiterFullName'], ENT_QUOTES, 'UTF-8'), $template['Content']);
-            $template['Content'] = str_replace('<companyName>',  htmlspecialchars((string) $jobOrderData['companyName'], ENT_QUOTES, 'UTF-8'), $template['Content']);
-            $template['Content'] = str_replace('<contactName>',  htmlspecialchars((string) $jobOrderData['contactFullName'], ENT_QUOTES, 'UTF-8'), $template['Content']);
-            $template['Content'] = str_replace('<contactPhone>', htmlspecialchars((string) $jobOrderData['contactWorkPhone'], ENT_QUOTES, 'UTF-8'), $template['Content']);
-            $template['Content'] = str_replace('<contactEmail>', htmlspecialchars((string) $jobOrderData['contactEmail'], ENT_QUOTES, 'UTF-8'), $template['Content']);
-            $template['Content'] = str_replace('<description>',  htmlspecialchars((string) $jobOrderData['description'], ENT_QUOTES, 'UTF-8'), $template['Content']);
-            $template['Content'] = str_replace('<rate>',         nl2br(htmlspecialchars((string) $jobOrderData['maxRate'], ENT_QUOTES, 'UTF-8')), $template['Content']);
-            $template['Content'] = str_replace('<salary>',       nl2br(htmlspecialchars((string) $jobOrderData['salary'], ENT_QUOTES, 'UTF-8')), $template['Content']);
-            $template['Content'] = str_replace('<daysOld>',      nl2br(htmlspecialchars((string) $jobOrderData['daysOld'], ENT_QUOTES, 'UTF-8')), $template['Content']);
+            $template['Content'] = str_replace('<title>',        $jobTitleEscaped, $template['Content']);
+            $template['Content'] = str_replace('<city>',         $jobCityEscaped, $template['Content']);
+            $template['Content'] = str_replace('<openings>',     $jobOpeningsEscaped, $template['Content']);
+            $template['Content'] = str_replace('<state>',        $jobStateEscaped, $template['Content']);
+            $template['Content'] = str_replace('<type>',         $jobTypeEscaped, $template['Content']);
+            $template['Content'] = str_replace('<created>',      $jobCreatedEscaped, $template['Content']);
+            $template['Content'] = str_replace('<recruiter>',    $jobRecruiterEscaped, $template['Content']);
+            $template['Content'] = str_replace('<companyName>',  $jobCompanyNameEscaped, $template['Content']);
+            $template['Content'] = str_replace('<contactName>',  $jobContactNameEscaped, $template['Content']);
+            $template['Content'] = str_replace('<contactPhone>', $jobContactPhoneEscaped, $template['Content']);
+            $template['Content'] = str_replace('<contactEmail>', $jobContactEmailEscaped, $template['Content']);
+            $template['Content'] = str_replace('<description>',  $jobDescriptionEscaped, $template['Content']);
+            $template['Content'] = str_replace('<rate>',         $jobRateEscaped, $template['Content']);
+            $template['Content'] = str_replace('<salary>',       $jobSalaryEscaped, $template['Content']);
+            $template['Content'] = str_replace('<daysOld>',      $jobDaysOldEscaped, $template['Content']);
 
             $isRegistered = $this->isCandidateRegistered($siteID, $template['Content - Candidate Registration']);
 
             // If candidate registration is enabled, ask them if they would like to log in first
             if ($isRegistrationEnabled && !$isRegistered)
             {
-                $template['Content'] = str_replace('<a-applyToJob', '<a href="'.CATSUtility::getIndexName().'?m=careers'.(isset($_GET['templateName']) ? '&templateName='.urlencode($_GET['templateName']) : '').'&p=candidateRegistration&ID='.$jobID.'"', $template['Content']);
+                $applyToJobUrl = CATSUtility::getIndexName() . '?m=careers'
+                    . (isset($_GET['templateName']) ? '&templateName=' . urlencode($_GET['templateName']) : '')
+                    . '&p=candidateRegistration&ID=' . (string) $jobID;
+                $applyToJobUrl = (string) $applyToJobUrl;
+                if (preg_match('/^\s*javascript:/i', $applyToJobUrl))
+                {
+                    $applyToJobUrl = '';
+                }
+                else if (preg_match('/^\s*[a-z][a-z0-9+\-.]*:/i', $applyToJobUrl) && !preg_match('/^\s*https?:/i', $applyToJobUrl))
+                {
+                    $applyToJobUrl = '';
+                }
+                $applyToJobUrlEscaped = htmlspecialchars($applyToJobUrl, ENT_QUOTES, 'UTF-8');
+                $template['Content'] = str_replace('<a-applyToJob', '<a href="' . $applyToJobUrlEscaped . '"', $template['Content']);
             }
             else
             {
-                $template['Content'] = str_replace('<a-applyToJob', '<a href="'.CATSUtility::getIndexName().'?m=careers'.(isset($_GET['templateName']) ? '&templateName='.urlencode($_GET['templateName']) : '').'&p=applyToJob&ID='.$jobID.'"', $template['Content']);
+                $applyToJobUrl = CATSUtility::getIndexName() . '?m=careers'
+                    . (isset($_GET['templateName']) ? '&templateName=' . urlencode($_GET['templateName']) : '')
+                    . '&p=applyToJob&ID=' . (string) $jobID;
+                $applyToJobUrl = (string) $applyToJobUrl;
+                if (preg_match('/^\s*javascript:/i', $applyToJobUrl))
+                {
+                    $applyToJobUrl = '';
+                }
+                else if (preg_match('/^\s*[a-z][a-z0-9+\-.]*:/i', $applyToJobUrl) && !preg_match('/^\s*https?:/i', $applyToJobUrl))
+                {
+                    $applyToJobUrl = '';
+                }
+                $applyToJobUrlEscaped = htmlspecialchars($applyToJobUrl, ENT_QUOTES, 'UTF-8');
+                $template['Content'] = str_replace('<a-applyToJob', '<a href="' . $applyToJobUrlEscaped . '"', $template['Content']);
             }
 
             $jobOrders = new JobOrders($siteID);
@@ -973,11 +1032,45 @@ class CareersUI extends UserInterface
         $indexName = CATSUtility::getIndexName();
         foreach ($template as $index => $data)
         {
-            $template[$index] = str_replace('<a-LinkMain>',   '<a href="'.$indexName.'?m=careers'.(isset($_GET['templateName']) ? '&templateName='.urlencode($_GET['templateName']) : '').'">', $template[$index]);
-            $template[$index] = str_replace('<a-LinkSearch>', '<a href="'.$indexName.'?m=careers'.(isset($_GET['templateName']) ? '&templateName='.urlencode($_GET['templateName']) : '').'&amp;p=search">', $template[$index]);
-            $template[$index] = str_replace('<a-ListAll>',    '<a href="'.$indexName.'?m=careers'.(isset($_GET['templateName']) ? '&templateName='.urlencode($_GET['templateName']) : '').'&amp;p=showAll">', $template[$index]);
+            $linkMainUrl = $indexName . '?m=careers' . (isset($_GET['templateName']) ? '&templateName=' . urlencode($_GET['templateName']) : '');
+            $linkMainUrl = (string) $linkMainUrl;
+            if (preg_match('/^\s*javascript:/i', $linkMainUrl))
+            {
+                $linkMainUrl = '';
+            }
+            else if (preg_match('/^\s*[a-z][a-z0-9+\-.]*:/i', $linkMainUrl) && !preg_match('/^\s*https?:/i', $linkMainUrl))
+            {
+                $linkMainUrl = '';
+            }
+            $linkMainUrlEscaped = htmlspecialchars($linkMainUrl, ENT_QUOTES, 'UTF-8');
+            $linkSearchUrl = $indexName . '?m=careers' . (isset($_GET['templateName']) ? '&templateName=' . urlencode($_GET['templateName']) : '') . '&p=search';
+            $linkSearchUrl = (string) $linkSearchUrl;
+            if (preg_match('/^\s*javascript:/i', $linkSearchUrl))
+            {
+                $linkSearchUrl = '';
+            }
+            else if (preg_match('/^\s*[a-z][a-z0-9+\-.]*:/i', $linkSearchUrl) && !preg_match('/^\s*https?:/i', $linkSearchUrl))
+            {
+                $linkSearchUrl = '';
+            }
+            $linkSearchUrlEscaped = htmlspecialchars($linkSearchUrl, ENT_QUOTES, 'UTF-8');
+            $linkListAllUrl = $indexName . '?m=careers' . (isset($_GET['templateName']) ? '&templateName=' . urlencode($_GET['templateName']) : '') . '&p=showAll';
+            $linkListAllUrl = (string) $linkListAllUrl;
+            if (preg_match('/^\s*javascript:/i', $linkListAllUrl))
+            {
+                $linkListAllUrl = '';
+            }
+            else if (preg_match('/^\s*[a-z][a-z0-9+\-.]*:/i', $linkListAllUrl) && !preg_match('/^\s*https?:/i', $linkListAllUrl))
+            {
+                $linkListAllUrl = '';
+            }
+            $linkListAllUrlEscaped = htmlspecialchars($linkListAllUrl, ENT_QUOTES, 'UTF-8');
+            $template[$index] = str_replace('<a-LinkMain>',   '<a href="' . $linkMainUrlEscaped . '">', $template[$index]);
+            $template[$index] = str_replace('<a-LinkSearch>', '<a href="' . $linkSearchUrlEscaped . '">', $template[$index]);
+            $template[$index] = str_replace('<a-ListAll>',    '<a href="' . $linkListAllUrlEscaped . '">', $template[$index]);
             $template[$index] = str_replace('<siteName>', $siteNameEscaped, $template[$index]);
-            $template[$index] = str_replace('<numberOfOpenPositions>', count($rs), $template[$index]);
+            $numberOfOpenPositionsEscaped = htmlspecialchars((string) count($rs), ENT_QUOTES, 'UTF-8');
+            $template[$index] = str_replace('<numberOfOpenPositions>', $numberOfOpenPositionsEscaped, $template[$index]);
 
             /* Hacks for loading from a nonstandard root directory. */
             if (isset($careerPage) && $careerPage == true)
@@ -1189,7 +1282,7 @@ class CareersUI extends UserInterface
             if ($settings['showCompany'] == 1)
             {
                 $html .= '<td>';
-                $html .= htmlspecialchars($line['companyName']);
+                $html .= htmlspecialchars((string) $line['companyName'], ENT_QUOTES, 'UTF-8');
                 $html .= '</td>';
             }
 
@@ -1202,19 +1295,19 @@ class CareersUI extends UserInterface
                 }
                 else
                 {
-                    $html .= htmlspecialchars($line['departmentName']);
+                    $html .= htmlspecialchars((string) $line['departmentName'], ENT_QUOTES, 'UTF-8');
                 }
                 $html .= '</td>';
             }
 
             $html .= '<td>';
             $html .= '<a href="' . CATSUtility::getIndexName() . '?m=careers' . (isset($_GET['templateName']) ? '&amp;templateName=' . urlencode($_GET['templateName']) : '').'&amp;p=showJob&amp;ID=' . $line['jobOrderID'] . '">';
-            $html .= htmlspecialchars($line['title']);
+            $html .= htmlspecialchars((string) $line['title'], ENT_QUOTES, 'UTF-8');
             $html .= '</a>';
             $html .= '</td>';
 
             $html .= '<td>';
-            $html .= htmlspecialchars($line['city']) . ', ' . htmlspecialchars($line['state']);
+            $html .= htmlspecialchars((string) $line['city'], ENT_QUOTES, 'UTF-8') . ', ' . htmlspecialchars((string) $line['state'], ENT_QUOTES, 'UTF-8');
             $html .= '</td>';
 
             $html .= '</tr>'."\n";
