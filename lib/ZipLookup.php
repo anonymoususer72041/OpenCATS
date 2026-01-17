@@ -1,6 +1,6 @@
 <?php
 /**
-* OpenStreetMap Nominatim Zip Code Lookup library
+* Google API Zip Code Lookup library
 */
 class ZipLookup
 {
@@ -20,55 +20,32 @@ class ZipLookup
 	$aAddress[2] = '';
 	$aAddress[3] = '';
 
-	$loc_level_1 = '';
-	$loc_level_2 = '';
-	$loc_level_3 = '';
-	$loc_level_4 = '';
-
-	/* Switched from legacy Google XML to Nominatim JSON; User-Agent is required. */
-	$sUrl = 'https://nominatim.openstreetmap.org/search?format=jsonv2&addressdetails=1&limit=1&postalcode=';
+	$sUrl = 'http://maps.googleapis.com/maps/api/geocode/xml?sensor=false&address=';
 
 	if ($zip != '') {
-		$response = $this->_fetchZipLookupResponse($sUrl . urlencode($zip));
-		if ($response === false) {
-			$aAddress[0] = 1;
-		} else {
-			$data = json_decode($response, true);
-			if (is_array($data) && !empty($data) && isset($data[0]['address']) && is_array($data[0]['address'])) {
-				$address = $data[0]['address'];
-				if (isset($address['road'])) {
-					$aAddress[1] = $address['road'];
+		if (($oXml = simplexml_load_file($sUrl . $zip))) {
+			foreach($oXml->result->address_component as $value) {
+				if ($value->type == 'route') {
+					$aAddress[1] = (string) $value->long_name;
 				}
-				if (isset($address['city'])) {
-					$loc_level_1 = $address['city'];
-				} else if (isset($address['town'])) {
-					$loc_level_1 = $address['town'];
-				} else if (isset($address['village'])) {
-					$loc_level_1 = $address['village'];
-				} else if (isset($address['municipality'])) {
-					$loc_level_1 = $address['municipality'];
-				} else if (isset($address['hamlet'])) {
-					$loc_level_1 = $address['hamlet'];
-				} else if (isset($address['county'])) {
-					$loc_level_1 = $address['county'];
+				if ($value->type[0] == 'postal_town') {
+					$loc_level_1 = (string) $value->long_name;
 				}
-
-				if (isset($address['state'])) {
-					$loc_level_2 = $address['state'];
-				} else if (isset($address['region'])) {
-					$loc_level_2 = $address['region'];
-				} else if (isset($address['state_district'])) {
-					$loc_level_2 = $address['state_district'];
-				} else if (isset($address['county'])) {
-					$loc_level_2 = $address['county'];
+				if ($value->type[0] == 'locality') {
+					$loc_level_1 = (string) $value->long_name;
 				}
-
-				$loc_level_3 = $loc_level_2;
-
-				if (isset($address['country'])) {
-					$loc_level_4 = $address['country'];
+				if ($value->type[0] == 'administrative_area_level_1') {
+					$loc_level_2 = (string) $value->long_name;
+				}
+				if ($value->type[0] == 'administrative_area_level_2') {
+					$loc_level_3 = (string) $value->long_name;
+				}
+				if ($value->type[0] == 'country') {
+					$loc_level_4 = (string) $value->long_name;	
 				}
 			}
+		} else {
+			$aAddress[0] = 1;
 		}
 	} else {
 		$aAddress[0] = 2;
@@ -84,46 +61,6 @@ class ZipLookup
 	    
 	return $aAddress;
 
-    }
-
-    private function _fetchZipLookupResponse($url)
-    {
-	/* Use a Nominatim User-Agent to comply with their usage policy. */
-	$userAgent = 'OpenCATS ZipLookup (https://github.com/opencats/OpenCATS)';
-
-	if (function_exists('curl_init')) {
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, $url);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 4);
-		curl_setopt($ch, CURLOPT_TIMEOUT, 6);
-		curl_setopt($ch, CURLOPT_USERAGENT, $userAgent);
-		curl_setopt($ch, CURLOPT_HTTPHEADER, array('Accept: application/json'));
-		$response = curl_exec($ch);
-		if (curl_errno($ch)) {
-			curl_close($ch);
-			return false;
-		}
-		curl_close($ch);
-		return $response;
-	}
-
-	$context = stream_context_create(
-		array(
-			'http' => array(
-				'timeout' => 6,
-				'header' => "User-Agent: " . $userAgent . "\r\n" .
-					"Accept: application/json\r\n"
-			)
-		)
-	);
-
-	$response = @file_get_contents($url, false, $context);
-	if ($response === false) {
-		return false;
-	}
-
-	return $response;
     }
     
     /**
