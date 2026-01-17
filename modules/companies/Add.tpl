@@ -87,19 +87,28 @@
                         </td>
                     </tr>
 
-                    <tr>
-                        <td class="tdVertical">
-                            <label id="stateLabel" for="state">State:</label>
-                        </td>
-                        <td class="tdData">
-                            <input type="text" name="state" id="state" class="inputbox" style="width: 150px" />
-                        </td>
-                    </tr>
+                            <tr>
+                                <td class="tdVertical">
+                                    <label id="stateLabel" for="state">State:</label>
+                                </td>
+                                <td class="tdData">
+                                    <input type="text" name="state" id="state" class="inputbox" style="width: 150px" />
+                                </td>
+                            </tr>
 
-                    <tr>
-                        <td class="tdVertical">
-                            <label id="zipLabel" for="zip">Postal Code:</label>
-                        </td>
+                            <tr>
+                                <td class="tdVertical">
+                                    <label id="countryLabel" for="country">Country:</label>
+                                </td>
+                                <td class="tdData">
+                                    <?php TemplateUtility::printCountrySelect('country', 'width: 150px;', 'inputbox', $this->defaultCountry); ?>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="tdVertical">
+                                    <label id="zipLabel" for="zip">Postal Code:</label>
+                                </td>
                         <td class="tdData">
                             <input type="text" name="zip" id="zip" class="inputbox" style="width: 150px" />&nbsp;
                             <input type="button" class="button" onclick="CityState_populate('zip', 'ajaxIndicator');" value="Lookup" />

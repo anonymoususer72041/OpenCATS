@@ -8,6 +8,7 @@ class Company
     private $address;
     private $city;
     private $state;
+    private $country;
     private $zipCode;
     private $phoneNumberOne;
     private $phoneNumberTwo;
@@ -63,6 +64,16 @@ class Company
     function getState()
     {
         return $this->state;
+    }
+
+    function setCountry($value)
+    {
+        $this->country = $value;
+    }
+
+    function getCountry()
+    {
+        return $this->country;
     }
     
     function setZipCode($value)
@@ -175,6 +186,7 @@ class Company
         $address,
         $city,
         $state,
+        $country,
         $zipCode,
         $phoneNumberOne,
         $phoneNumberTwo,
@@ -191,6 +203,7 @@ class Company
         $company->setAddress($address);
         $company->setCity($city);
         $company->setState($state);
+        $company->setCountry($country);
         $company->setZipCode($zipCode);
         $company->setPhoneNumberOne($phoneNumberOne);
         $company->setPhoneNumberTwo($phoneNumberTwo);

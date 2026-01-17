@@ -457,6 +457,7 @@ class ContactsUI extends UserInterface
 
         if (!eval(Hooks::get('CONTACTS_ADD'))) return;
 
+        $this->_template->assign('defaultCountry', $this->getDefaultCountry());
         $this->_template->assign('defaultCompanyID', $defaultCompanyID);
         $this->_template->assign('defaultCompanyRS', $defaultCompanyRS);
         $this->_template->assign('active', $this);
@@ -529,6 +530,7 @@ class ContactsUI extends UserInterface
         $city       = $this->getSanitisedInput('city', $_POST);
         $state      = $this->getSanitisedInput('state', $_POST);
         $zip        = $this->getSanitisedInput('zip', $_POST);
+        $country    = $this->getValidatedCountry($this->getSanitisedInput('country', $_POST));
         $notes      = $this->getSanitisedInput('notes', $_POST);
 
          /* Hot contact? */
@@ -557,7 +559,7 @@ class ContactsUI extends UserInterface
         $contactID = $contacts->add(
             $companyID, $firstName, $lastName, $title, $department, $reportsTo,
             $email1, $email2, $phoneWork, $phoneCell, $phoneOther, $address,
-            $city, $state, $zip, $isHot, $notes, $this->_userID, $this->_userID
+            $city, $state, $zip, $isHot, $notes, $this->_userID, $this->_userID, $country
         );
 
         if ($contactID <= 0)
@@ -605,6 +607,8 @@ class ContactsUI extends UserInterface
         {
             CommonErrors::fatal(COMMONERROR_BADINDEX, $this, 'The specified contact ID could not be found.');
         }
+
+        $data['country'] = $this->getValidatedCountry($data['country']);
 
         $companies = new Companies($this->_siteID);
         $companiesRS = $companies->getSelectList();
@@ -817,6 +821,7 @@ class ContactsUI extends UserInterface
         $city       = $this->getSanitisedInput('city', $_POST);
         $state      = $this->getSanitisedInput('state', $_POST);
         $zip        = $this->getSanitisedInput('zip', $_POST);
+        $country    = $this->getValidatedCountry($this->getSanitisedInput('country', $_POST));
         $notes      = $this->getSanitisedInput('notes', $_POST);
 
         $isHot = $this->isChecked('isHot', $_POST);
@@ -844,7 +849,7 @@ class ContactsUI extends UserInterface
         if (!$contacts->update($contactID, $companyID, $firstName, $lastName,
             $title, $department, $reportsTo, $email1, $email2, $phoneWork, $phoneCell,
             $phoneOther, $address, $city, $state, $zip, $isHot,
-            $leftCompany, $notes, $owner, $email, $emailAddress))
+            $leftCompany, $notes, $owner, $email, $emailAddress, $country))
         {
             CommonErrors::fatal(COMMONERROR_RECORDERROR, $this, 'Failed to update contact.');
         }
@@ -1557,6 +1562,36 @@ class ContactsUI extends UserInterface
         $this->_template->display(
             './modules/contacts/AddActivityScheduleEventModal.tpl'
         );
+    }
+
+    private function getDefaultCountry()
+    {
+        $defaultCountry = $_SESSION['CATS']->getDefaultCountry();
+        if (strlen($defaultCountry) != 2)
+        {
+            $defaultCountry = 'US';
+        }
+
+        return $defaultCountry;
+    }
+
+    private function getValidatedCountry($country)
+    {
+        $country = strtoupper(trim($country));
+        $defaultCountry = $this->getDefaultCountry();
+
+        $validCountries = array();
+        foreach ($GLOBALS['countries'] as $countryData)
+        {
+            $validCountries[$countryData[0]] = true;
+        }
+
+        if (strlen($country) != 2 || !isset($validCountries[$country]))
+        {
+            return $defaultCountry;
+        }
+
+        return $country;
     }
 }
 

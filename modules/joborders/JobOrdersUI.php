@@ -621,6 +621,12 @@ class JobOrdersUI extends UserInterface
             $companyRS = $companies->get($selectedCompanyID);
         }
 
+        $defaultCountry = $this->getDefaultCountry();
+        if (!isset($selectedCompanyLocation['country']) || empty($selectedCompanyLocation['country']))
+        {
+            $selectedCompanyLocation['country'] = $defaultCountry;
+        }
+
         /* Should we prepopulate the blank JO with the contents of another JO? */
         if (isset($_GET['typeOfAdd']) &&
             $this->isRequiredIDValid('jobOrderID', $_GET) &&
@@ -762,6 +768,7 @@ class JobOrdersUI extends UserInterface
         $type        = $this->getTrimmedInput('type', $_POST);
         $city        = $this->getSanitisedInput('city', $_POST);
         $state       = $this->getSanitisedInput('state', $_POST);
+        $country     = $this->getValidatedCountry($this->getSanitisedInput('country', $_POST));
         $duration    = $this->getSanitisedInput('duration', $_POST);
         $department  = $this->getTrimmedInput('department', $_POST);
         $maxRate     = $this->getSanitisedInput('maxRate', $_POST);
@@ -782,7 +789,7 @@ class JobOrdersUI extends UserInterface
             $title, $companyID, $contactID, $description, $notes, $duration,
             $maxRate, $type, $isHot, $isPublic, $openings, $companyJobID,
             $salary, $city, $state, $startDate, $this->_userID, $recruiter,
-            $owner, $department, $questionnaireID
+            $owner, $department, $questionnaireID, $country
         );
 
         if ($jobOrderID <= 0)
@@ -822,6 +829,8 @@ class JobOrdersUI extends UserInterface
         {
             CommonErrors::fatal(COMMONERROR_BADINDEX, $this, 'The specified job order ID could not be found.');
         }
+
+        $data['country'] = $this->getValidatedCountry($data['country']);
 
         $users = new Users($this->_siteID);
         $usersRS = $users->getSelectList();
@@ -1105,6 +1114,7 @@ class JobOrdersUI extends UserInterface
         $type        = $this->getTrimmedInput('type', $_POST);
         $city        = $this->getSanitisedInput('city', $_POST);
         $state       = $this->getSanitisedInput('state', $_POST);
+        $country     = $this->getValidatedCountry($this->getSanitisedInput('country', $_POST));
         $status      = $this->getTrimmedInput('status', $_POST);
         $duration    = $this->getSanitisedInput('duration', $_POST);
         $department  = $this->getTrimmedInput('department', $_POST);
@@ -1124,7 +1134,7 @@ class JobOrdersUI extends UserInterface
         if (!$jobOrders->update($jobOrderID, $title, $companyJobID, $companyID, $contactID,
             $description, $notes, $duration, $maxRate, $type, $isHot,
             $openings, $openingsAvailable, $salary, $city, $state, $startDate, $status, $recruiter,
-            $owner, $public, $email, $emailAddress, $department, $questionnaireID))
+            $owner, $public, $email, $emailAddress, $department, $questionnaireID, $country))
         {
             CommonErrors::fatal(COMMONERROR_RECORDERROR, $this, 'Failed to update job order.');
         }
@@ -1966,6 +1976,36 @@ class JobOrdersUI extends UserInterface
         if (!eval(Hooks::get('JO_FORMAT_LIST_BY_VIEW_RESULTS'))) return;
 
         return $resultSet;
+    }
+
+    private function getDefaultCountry()
+    {
+        $defaultCountry = $_SESSION['CATS']->getDefaultCountry();
+        if (strlen($defaultCountry) != 2)
+        {
+            $defaultCountry = 'US';
+        }
+
+        return $defaultCountry;
+    }
+
+    private function getValidatedCountry($country)
+    {
+        $country = strtoupper(trim($country));
+        $defaultCountry = $this->getDefaultCountry();
+
+        $validCountries = array();
+        foreach ($GLOBALS['countries'] as $countryData)
+        {
+            $validCountries[$countryData[0]] = true;
+        }
+
+        if (strlen($country) != 2 || !isset($validCountries[$country]))
+        {
+            return $defaultCountry;
+        }
+
+        return $country;
     }
 }
 

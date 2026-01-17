@@ -18,6 +18,7 @@ class CompanyRepositoryTests extends TestCase
     const ADDRESS = "O'Higgins 123";
     const CITY = "Colonia";
     const STATE = "Maldonado";
+    const COUNTRY = "UY";
     const ZIP_CODE = "31337";
     const PHONE_NUMBER_ONE = "+53 123 45678";
     const PHONE_NUMBER_TWO = "+53 987 65432";
@@ -33,13 +34,14 @@ class CompanyRepositoryTests extends TestCase
     function test_persist_CreatesNewCompany_InputValuesAreEscaped()
     {
         $databaseConnectionMock = $this->getDatabaseConnectionMock();
-        $databaseConnectionMock->expects($this->exactly(11))
+        $databaseConnectionMock->expects($this->exactly(12))
             ->method('makeQueryString')
             ->withConsecutive(
                 [$this->equalTo(self::COMPANY_NAME)],
                 [$this->equalTo(self::ADDRESS)],
                 [$this->equalTo(self::CITY)],
                 [$this->equalTo(self::STATE)],
+                [$this->equalTo(self::COUNTRY)],
                 [$this->equalTo(self::ZIP_CODE)],
                 [$this->equalTo(self::PHONE_NUMBER_ONE)],
                 [$this->equalTo(self::PHONE_NUMBER_TWO)],
@@ -124,6 +126,7 @@ class CompanyRepositoryTests extends TestCase
             self::ADDRESS,
             self::CITY,
             self::STATE,
+            self::COUNTRY,
             self::ZIP_CODE,
             self::PHONE_NUMBER_ONE, 
             self::PHONE_NUMBER_TWO,

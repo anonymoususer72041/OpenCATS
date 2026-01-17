@@ -768,6 +768,15 @@ class CandidatesUI extends UserInterface
             $preassignedFields = array_merge($preassignedFields, $fields);
         }
 
+        if (isset($preassignedFields['country']))
+        {
+            $preassignedFields['country'] = $this->getValidatedCountry($preassignedFields['country']);
+        }
+        else
+        {
+            $preassignedFields['country'] = $this->getDefaultCountry();
+        }
+
         /* Get preattached resume, if any. */
         if ($this->isRequiredIDValid('attachmentID', $_GET))
         {
@@ -910,6 +919,7 @@ class CandidatesUI extends UserInterface
                 'address'         => $this->getSanitisedInput('address', $_POST),
                 'city'            => $this->getSanitisedInput('city', $_POST),
                 'state'           => $this->getSanitisedInput('state', $_POST),
+                'country'         => $this->getSanitisedInput('country', $_POST),
                 'zip'             => $this->getSanitisedInput('zip', $_POST),
                 'source'          => $this->getTrimmedInput('source', $_POST),
                 'keySkills'       => $this->getSanitisedInput('keySkills', $_POST),
@@ -1148,6 +1158,8 @@ class CandidatesUI extends UserInterface
             $data['dateAvailableMDY'] = $data['dateAvailable'];
         }
 
+        $data['country'] = $this->getValidatedCountry($data['country']);
+
         if (!eval(Hooks::get('CANDIDATE_EDIT'))) return;
 
         $EEOSettings = new EEOSettings($this->_siteID);
@@ -1319,6 +1331,7 @@ class CandidatesUI extends UserInterface
         $city            = $this->getSanitisedInput('city', $_POST);
         $state           = $this->getSanitisedInput('state', $_POST);
         $zip             = $this->getSanitisedInput('zip', $_POST);
+        $country         = $this->getValidatedCountry($this->getSanitisedInput('country', $_POST));
         $source          = $this->getSanitisedInput('source', $_POST);
         $keySkills       = $this->getSanitisedInput('keySkills', $_POST);
         $currentEmployer = $this->getSanitisedInput('currentEmployer', $_POST);
@@ -1376,7 +1389,8 @@ class CandidatesUI extends UserInterface
             $gender,
             $race,
             $veteran,
-            $disability
+            $disability,
+            $country
         );
         if (!$updateSuccess)
         {
@@ -2593,6 +2607,7 @@ class CandidatesUI extends UserInterface
         $city            = $this->getTrimmedInput('city', $_POST);
         $state           = $this->getTrimmedInput('state', $_POST);
         $zip             = $this->getTrimmedInput('zip', $_POST);
+        $country         = $this->getValidatedCountry($this->getTrimmedInput('country', $_POST));
         $source          = $this->getTrimmedInput('source', $_POST);
         $keySkills       = $this->getTrimmedInput('keySkills', $_POST);
         $currentEmployer = $this->getTrimmedInput('currentEmployer', $_POST);
@@ -2656,7 +2671,8 @@ class CandidatesUI extends UserInterface
             $gender,
             $race,
             $veteran,
-            $disability
+            $disability,
+            $country
         );
 
         
@@ -3542,6 +3558,36 @@ class CandidatesUI extends UserInterface
         $candidates->addDuplicates($newCandidateID, $oldCandidateID);
         $this->_template->assign('isFinishedMode', true);
         $this->_template->display('./modules/candidates/LinkDuplicity.tpl');
+    }
+
+    private function getDefaultCountry()
+    {
+        $defaultCountry = $_SESSION['CATS']->getDefaultCountry();
+        if (strlen($defaultCountry) != 2)
+        {
+            $defaultCountry = 'US';
+        }
+
+        return $defaultCountry;
+    }
+
+    private function getValidatedCountry($country)
+    {
+        $country = strtoupper(trim($country));
+        $defaultCountry = $this->getDefaultCountry();
+
+        $validCountries = array();
+        foreach ($GLOBALS['countries'] as $countryData)
+        {
+            $validCountries[$countryData[0]] = true;
+        }
+
+        if (strlen($country) != 2 || !isset($validCountries[$country]))
+        {
+            return $defaultCountry;
+        }
+
+        return $country;
     }
 }
 
