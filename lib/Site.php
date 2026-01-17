@@ -96,6 +96,28 @@ class Site
     }
 
     /**
+     * Sets the default country for the current site.
+     *
+     * @param string default country code
+     * @return boolean True if successful; false otherwise.
+     */
+    public function setDefaultCountry($countryCode)
+    {
+        $sql = sprintf(
+            "UPDATE
+                site
+            SET
+                default_country = %s
+            WHERE
+                site_id = %s",
+            $this->_db->makeQueryString($countryCode),
+            $this->_siteID
+        );
+
+        return (boolean) $this->_db->query($sql);
+    }
+
+    /**
      * Get site information by unix name.
      *
      * @param integer site ID

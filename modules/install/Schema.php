@@ -1328,6 +1328,9 @@ class CATSSchema
             '364' => '
                 UPDATE user SET password = md5(password) WHERE can_change_password=1;
             ',
+            '365' => '
+                ALTER TABLE site ADD COLUMN `default_country` VARCHAR(2) NOT NULL DEFAULT \'US\' AFTER time_zone;
+            ',
 
         );
     }

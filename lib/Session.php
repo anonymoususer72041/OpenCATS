@@ -72,6 +72,7 @@ class CATSSession
     private $_storedBuild = -1;
     private $_timeZoneOffset = 0;
     private $_timeZone = 0;
+    private $_defaultCountry = 'US';
     private $_dateDMY = false;
     private $_pipelineEntriesPerPage = 15;
     private $_storedData = array();
@@ -533,6 +534,16 @@ class CATSSession
         return $this->_timeZone;
     }
 
+    /**
+     * Gets the current site's default country code stored in the session.
+     *
+     * @return string Default country code.
+     */
+    public function getDefaultCountry()
+    {
+        return $this->_defaultCountry;
+    }
+
     // FIXME: Document me!
     public function getUserCategories()
     {
@@ -678,6 +689,7 @@ class CATSSession
                 site.account_active AS accountActive,
                 site.account_deleted AS accountDeleted,
                 site.time_zone AS timeZone,
+                site.default_country AS defaultCountry,
                 site.date_format_ddmmyy AS dateFormatDMY,
                 site.is_free AS isFree,
                 site.is_hr_mode AS isHrMode,
@@ -810,6 +822,7 @@ class CATSSession
                 $this->_userAgent              = $userAgent;
                 $this->_timeZoneOffset         = $rs['timeZone'] - OFFSET_GMT;
                 $this->_timeZone               = $rs['timeZone'];
+                $this->_defaultCountry         = $rs['defaultCountry'];
                 $this->_dateDMY                = ($rs['dateFormatDMY'] == 0 ? false : true);
                 $this->_canSeeEEOInfo          = ($rs['canSeeEEOInfo'] == 0 ? false : true);
                 $this->_pipelineEntriesPerPage = $rs['pipelineEntriesPerPage'];
@@ -958,6 +971,7 @@ class CATSSession
                 site.account_active AS accountActive,
                 site.account_deleted AS accountDeleted,
                 site.time_zone AS timeZone,
+                site.default_country AS defaultCountry,
                 site.date_format_ddmmyy AS dateFormatDMY,
                 site.is_free AS isFree,
                 site.is_hr_mode AS isHrMode
@@ -992,6 +1006,7 @@ class CATSSession
         $this->_accountDeleted  = ($rs['accountDeleted'] == 0 ? false : true);
         $this->_email           = $rs['email'];
         $this->_timeZone        = $rs['timeZone'];
+        $this->_defaultCountry  = $rs['defaultCountry'];
         $this->_dateDMY         = ($rs['dateFormatDMY'] == 0 ? false : true);
         $this->_isFirstTimeSetup = true;
         $this->_isAgreedToLicense = true;
