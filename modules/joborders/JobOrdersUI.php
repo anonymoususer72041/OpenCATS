@@ -621,11 +621,12 @@ class JobOrdersUI extends UserInterface
             $companyRS = $companies->get($selectedCompanyID);
         }
 
-        $defaultCountry = $this->getDefaultCountry();
-        if (!isset($selectedCompanyLocation['country']) || empty($selectedCompanyLocation['country']))
+        $selectedCountry = '';
+        if (isset($selectedCompanyLocation['country']))
         {
-            $selectedCompanyLocation['country'] = $defaultCountry;
+            $selectedCountry = $selectedCompanyLocation['country'];
         }
+        $selectedCompanyLocation['country'] = $this->getValidatedCountry($selectedCountry);
 
         /* Should we prepopulate the blank JO with the contents of another JO? */
         if (isset($_GET['typeOfAdd']) &&

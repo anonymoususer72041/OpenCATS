@@ -259,19 +259,6 @@ class TemplateUtility
     public static function printCountrySelect($selectID, $selectStyle,
         $selectClass, $selectedCountry)
     {
-        if (empty($selectedCountry))
-        {
-            if (isset($_SESSION['CATS']) && method_exists($_SESSION['CATS'], 'getDefaultCountry'))
-            {
-                $selectedCountry = $_SESSION['CATS']->getDefaultCountry();
-            }
-
-            if (empty($selectedCountry))
-            {
-                $selectedCountry = 'US';
-            }
-        }
-
         echo '<select id="', $selectID, '" name="', $selectID, '"';
 
         if (!empty($selectClass))
