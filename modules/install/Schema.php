@@ -1420,6 +1420,12 @@ class CATSSchema
             '373' => '
                 INSERT IGNORE INTO `activity_type` (`activity_type_id`, `short_description`) VALUES (800, \'Status Change\');
             ',
+            '374' => '
+                ALTER TABLE `candidate` ADD COLUMN `country` VARCHAR(2) DEFAULT NULL AFTER `zip`;
+                ALTER TABLE `company` ADD COLUMN `country` VARCHAR(2) DEFAULT NULL AFTER `zip`;
+                ALTER TABLE `contact` ADD COLUMN `country` VARCHAR(2) DEFAULT NULL AFTER `zip`;
+                ALTER TABLE `joborder` ADD COLUMN `country` VARCHAR(2) DEFAULT NULL AFTER `state`;
+            ',
 
         );
     }
