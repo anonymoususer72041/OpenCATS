@@ -171,6 +171,7 @@ CREATE TABLE `candidate` (
   `city` varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL,
   `state` varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL,
   `zip` varchar(16) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `country` varchar(2) COLLATE utf8_unicode_ci DEFAULT NULL,
   `source` varchar(128) COLLATE utf8_unicode_ci DEFAULT NULL,
   `date_available` datetime DEFAULT NULL,
   `can_relocate` int(1) NOT NULL DEFAULT '0',
@@ -459,6 +460,7 @@ CREATE TABLE `company` (
   `city` varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL,
   `state` varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL,
   `zip` varchar(16) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `country` varchar(2) COLLATE utf8_unicode_ci DEFAULT NULL,
   `phone1` varchar(40) COLLATE utf8_unicode_ci DEFAULT NULL,
   `phone2` varchar(40) COLLATE utf8_unicode_ci DEFAULT NULL,
   `url` varchar(128) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -485,7 +487,7 @@ CREATE TABLE `company` (
 
 /*Data for the table `company` */
 
-insert  into `company`(`company_id`,`site_id`,`billing_contact`,`name`,`address`,`city`,`state`,`zip`,`phone1`,`phone2`,`url`,`key_technologies`,`notes`,`entered_by`,`owner`,`date_created`,`date_modified`,`is_hot`,`fax_number`,`import_id`,`default_company`) values (1,1,NULL,'Internal Postings','','','','','','','','','',0,0,'1000-01-01 00:00:00','1000-01-01 00:00:00',0,'',NULL,1);
+insert  into `company`(`company_id`,`site_id`,`billing_contact`,`name`,`address`,`city`,`state`,`zip`,`country`,`phone1`,`phone2`,`url`,`key_technologies`,`notes`,`entered_by`,`owner`,`date_created`,`date_modified`,`is_hot`,`fax_number`,`import_id`,`default_company`) values (1,1,NULL,'Internal Postings','','','','',NULL,'','','','','',0,0,'1000-01-01 00:00:00','1000-01-01 00:00:00',0,'',NULL,1);
 
 /*Table structure for table `company_department` */
 
@@ -520,6 +522,7 @@ CREATE TABLE `contact` (
   `city` varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL,
   `state` varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL,
   `zip` varchar(16) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `country` varchar(2) COLLATE utf8_unicode_ci DEFAULT NULL,
   `is_hot` int(1) DEFAULT NULL,
   `notes` text COLLATE utf8_unicode_ci,
   `entered_by` int(11) NOT NULL DEFAULT '0',
@@ -801,6 +804,7 @@ CREATE TABLE `joborder` (
   `openings` int(11) DEFAULT NULL,
   `city` varchar(64) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `state` varchar(64) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `country` varchar(2) COLLATE utf8_unicode_ci DEFAULT NULL,
   `start_date` datetime DEFAULT NULL,
   `date_created` datetime NOT NULL DEFAULT '1000-01-01 00:00:00',
   `date_modified` datetime NOT NULL DEFAULT '1000-01-01 00:00:00',
@@ -850,7 +854,7 @@ insert  into `module_schema`(`module_schema_id`,`name`,`version`) values (9,'ext
 insert  into `module_schema`(`module_schema_id`,`name`,`version`) values (10,'graphs',0);
 insert  into `module_schema`(`module_schema_id`,`name`,`version`) values (11,'home',0);
 insert  into `module_schema`(`module_schema_id`,`name`,`version`) values (12,'import',0);
-insert  into `module_schema`(`module_schema_id`,`name`,`version`) values (13,'install',365);
+insert  into `module_schema`(`module_schema_id`,`name`,`version`) values (13,'install',366);
 insert  into `module_schema`(`module_schema_id`,`name`,`version`) values (14,'joborders',0);
 insert  into `module_schema`(`module_schema_id`,`name`,`version`) values (15,'lists',0);
 insert  into `module_schema`(`module_schema_id`,`name`,`version`) values (16,'login',0);
