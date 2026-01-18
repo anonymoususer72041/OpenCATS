@@ -262,6 +262,15 @@
 
                     <tr>
                         <td class="tdVertical">
+                            <label id="countryLabel" for="country">Country:</label>
+                        </td>
+                        <td class="tdData">
+                            <?php TemplateUtility::printCountrySelect('country', 'width: 150px;', 'inputbox', $this->preassignedFields['country']); ?>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="tdVertical">
                             <label id="zipLabel" for="zip">Postal Code:</label>
                         </td>
                         <td class="tdData">
