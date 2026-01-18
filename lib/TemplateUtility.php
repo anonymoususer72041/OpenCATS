@@ -248,6 +248,60 @@ class TemplateUtility
     }
 
     /**
+     * Prints the country selection dropdown list.
+     *
+     * @param integer ID and name attributes of the country select input
+     * @param string style attribute of the country select input
+     * @param string class attribute of the country select input
+     * @param string selected country code
+     * @return void
+     */
+    public static function printCountrySelect($selectID, $selectStyle,
+        $selectClass, $selectedCountry)
+    {
+        if (empty($selectedCountry))
+        {
+            if (isset($_SESSION['CATS']) && method_exists($_SESSION['CATS'], 'getDefaultCountry'))
+            {
+                $selectedCountry = $_SESSION['CATS']->getDefaultCountry();
+            }
+
+            if (empty($selectedCountry))
+            {
+                $selectedCountry = 'US';
+            }
+        }
+
+        echo '<select id="', $selectID, '" name="', $selectID, '"';
+
+        if (!empty($selectClass))
+        {
+            echo ' class="', $selectClass, '"';
+        }
+
+        if (!empty($selectStyle))
+        {
+            echo ' style="', $selectStyle, '"';
+        }
+
+        echo '>';
+
+        foreach ($GLOBALS['countries'] as $countryCode => $countryName)
+        {
+            echo '<option value="', htmlspecialchars($countryCode), '"';
+
+            if ($countryCode == $selectedCountry)
+            {
+                echo ' selected="selected"';
+            }
+
+            echo '>', htmlspecialchars($countryName), '</option>';
+        }
+
+        echo '</select>';
+    }
+
+    /**
      * Prints the Quick Search box and MRU list.
      *
      * @return void

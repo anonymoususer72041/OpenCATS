@@ -94,7 +94,7 @@ class JobOrders
     public function add($title, $companyId, $contactId, $description, $notes,
         $duration, $maxRate, $type, $isHot, $public, $openings, $companyJobId,
         $salary, $city, $state, $startDate, $enteredBy, $recruiter, $owner,
-        $department, $questionnaire = false)
+        $department, $questionnaire = false, $country = '')
     {
         /* Get the department ID of the selected department. */
         // FIXME: Move this up to the UserInterface level. I don't like this
@@ -120,6 +120,7 @@ class JobOrders
             $salary,
             $city,
             $state,
+            $country,
             $startDate,
             $enteredBy,
             $recruiter,
@@ -163,7 +164,7 @@ class JobOrders
     public function update($jobOrderID, $title, $companyJobID, $companyID,
         $contactID, $description, $notes, $duration, $maxRate, $type, $isHot,
         $openings, $openingsAvailable, $salary, $city, $state, $startDate, $status, $recruiter,
-        $owner, $public, $email, $emailAddress, $department, $questionnaire = false)
+        $owner, $public, $email, $emailAddress, $department, $questionnaire = false, $country = '')
     {
         /* Get the department ID of the selected department. */
         // FIXME: Move this up to the UserInterface level. I don't like this
@@ -195,6 +196,7 @@ class JobOrders
                 salary             = %s,
                 city               = %s,
                 state              = %s,
+                country            = %s,
                 company_department_id = %s,
                 recruiter          = %s,
                 owner              = %s,
@@ -222,6 +224,7 @@ class JobOrders
             $this->_db->makeQueryString($salary),
             $this->_db->makeQueryString($city),
             $this->_db->makeQueryString($state),
+            $this->_db->makeQueryString($country),
             $this->_db->makeQueryInteger($departmentID),
             $this->_db->makeQueryInteger($recruiter),
             $this->_db->makeQueryInteger($owner),
@@ -392,6 +395,7 @@ class JobOrders
                 joborder.status AS status,
                 joborder.city AS city,
                 joborder.state AS state,
+                joborder.country AS country,
                 joborder.recruiter AS recruiter,
                 joborder.owner AS owner,
                 joborder.public AS public,
