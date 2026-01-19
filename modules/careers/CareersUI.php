@@ -597,6 +597,8 @@ class CareersUI extends UserInterface
             /* Translate required fields into normal fields for replacement. */
             $template['Content'] = str_replace(' req>', '>', $template['Content']);
 
+            $captchaURL = CATSUtility::getIndexName() . '?p=captcha';
+
             /* Get the attachment (friendly) file name is there is an attachment uploaded */
             if ($resumeFileLocation != '')
             {
@@ -630,6 +632,12 @@ class CareersUI extends UserInterface
             $template['Content'] = str_replace('<input-keySkills>', '<input name="keySkills" id="keySkills" class="inputBoxNormal" value="' . $keySkills . '" />', $template['Content']);
             $template['Content'] = str_replace('<input-source>', '<input name="source" id="source" class="inputBoxNormal" value="' . $source . '" />', $template['Content']);
             $template['Content'] = str_replace('<input-employer>', '<input name="employer" id="employer" class="inputBoxNormal" value="' . $employer . '" />', $template['Content']);
+            $template['Content'] = str_replace('<input-captcha>',
+                '<img src="' . $captchaURL . '&amp;t=' . time() . '" id="captchaImage" alt="CAPTCHA" /> '
+                . '<a href="#" onclick="var img = document.getElementById(\'captchaImage\'); if (img) { img.src = \''
+                . $captchaURL . '&t=\' + new Date().getTime(); } return false;">Reload</a><br />'
+                . '<input name="captcha" id="captcha" class="inputBoxNormal" />',
+                $template['Content']);
             $template['Content'] = str_replace('<input-resumeUpload>', '<input type="file" id="resume" name="file" class="inputBoxFile" />', $template['Content']);
             $template['Content'] = str_replace('<input-resumeUploadPreview>',
                 '<input type="hidden" id="applyToJobSubAction" name="applyToJobSubAction" value="" /> '
@@ -1133,6 +1141,17 @@ class CareersUI extends UserInterface
                 {
                     alert(\'Please enter some extra notes.\');
                     document.getElementById(\'extraNotes\').focus();
+                    return false;
+                }';
+        }
+
+        if (strpos($template['Content'], '<input-captcha req>') !== false)
+        {
+            $validator .= '
+                if (document.getElementById(\'captcha\').value == \'\')
+                {
+                    alert(\'Please enter the characters from the image.\');
+                    document.getElementById(\'captcha\').focus();
                     return false;
                 }';
         }
