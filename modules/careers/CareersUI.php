@@ -1260,6 +1260,43 @@ class CareersUI extends UserInterface
             CommonErrors::fatal(COMMONERROR_BADINDEX, $this, 'The specified job order could not be found.');
             return;
         }
+
+        $careerPortalSettingsRS = $careerPortalSettings->getAll();
+        $templateName = $careerPortalSettingsRS['activeBoard'];
+        $template = $careerPortalSettings->getTemplate($templateName);
+
+        $captchaRequired = (strpos($template['Content - Apply for Position'], '<input-captcha req>') !== false);
+
+        if ($captchaRequired)
+        {
+            $qName = 'careersPortalApplyCaptcha';
+            $sessionKey = 'artichow_' . $qName;
+
+            if (!session_id())
+            {
+                @session_name(CATS_SESSION_NAME);
+                session_start();
+            }
+
+            include_once(LEGACY_ROOT . '/lib/artichow/AntiSpam.class.php');
+
+            $captchaValue = isset($_POST['captcha']) ? trim($_POST['captcha']) : '';
+            $expectedCaptcha = isset($_SESSION[$sessionKey]) ? $_SESSION[$sessionKey] : '';
+
+            $captcha = new AntiSpam();
+            $captchaValid = ($captchaValue != '' && $expectedCaptcha != '' && $captcha->check($qName, $captchaValue, true));
+
+            if (isset($_SESSION[$sessionKey]))
+            {
+                unset($_SESSION[$sessionKey]);
+            }
+
+            if (!$captchaValid)
+            {
+                CommonErrors::fatal(COMMONERROR_BADFIELDS, $this, 'Incorrect CAPTCHA. Please go back and try again.');
+                return;
+            }
+        }
 	    
     /* funciton getSanitisedInput used to fix XSS vuln in public portal */
         $lastName       = $this->getSanitisedInput('lastName', $_POST);
