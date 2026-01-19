@@ -58,6 +58,15 @@ class CareersUI extends UserInterface
 
     public function handleRequest()
     {
+        $p = isset($_GET['p']) ? $_GET['p'] : '';
+        $p = isset($_POST['p']) ? $_POST['p'] : $p;
+
+        if ($p == 'captcha')
+        {
+            $this->outputCaptchaImage();
+            return;
+        }
+
         $action = $this->getAction();
 
         switch ($action)
@@ -66,6 +75,32 @@ class CareersUI extends UserInterface
                 $this->careersPage();
                 break;
         }
+    }
+
+    private function outputCaptchaImage()
+    {
+        if (!function_exists('imagecreatetruecolor') ||
+            !function_exists('imagecreatefromjpeg') ||
+            !function_exists('imagettfbbox') ||
+            !function_exists('imagettftext'))
+        {
+            header('HTTP/1.0 404 Not Found');
+            exit;
+        }
+
+        include_once(LEGACY_ROOT . '/lib/artichow/AntiSpam.class.php');
+
+        header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+        header('Pragma: no-cache');
+        header('Expires: 0');
+
+        $captcha = new AntiSpam();
+        $captcha->setRand(6);
+        $captcha->setNoise(4);
+        $captcha->setFormat(awImage::JPEG);
+        $captcha->save('careersPortalApplyCaptcha');
+        $captcha->draw();
+        exit;
     }
 
     private function careersPage()
