@@ -64,7 +64,7 @@ function Activity_fillTypeSelect(selectList, selectedText)
     /* Email option. */
     optionElements[4] = document.createElement('option');
     optionElements[4].value = ACTIVITY_EMAIL;
-    optionElements[4].appendChild(document.createTextNode('E-Mail'));
+    optionElements[4].appendChild(document.createTextNode('Email'));
 
     /* Meeting option. */
     optionElements[5] = document.createElement('option');
@@ -95,7 +95,7 @@ function Activity_fillTypeSelect(selectList, selectedText)
         {
             optionElements[3].setAttribute('selected', 'selected');
         }
-        else if (selectedText == 'E-Mail')
+        else if (selectedText == 'Email')
         {
             optionElements[4].setAttribute('selected', 'selected');
         }

@@ -125,7 +125,7 @@
                             <option value="<?php echo(ACTIVITY_CALL_TALKED); ?>">Call (Talked)</option>
                             <option value="<?php echo(ACTIVITY_CALL_LVM); ?>">Call (LVM)</option>
                             <option value="<?php echo(ACTIVITY_CALL_MISSED); ?>">Call (Missed)</option>
-                            <option value="<?php echo(ACTIVITY_EMAIL); ?>">E-Mail</option>
+                            <option value="<?php echo(ACTIVITY_EMAIL); ?>">Email</option>
                             <option value="<?php echo(ACTIVITY_MEETING); ?>">Meeting</option>
                             <option value="<?php echo(ACTIVITY_OTHER); ?>">Other</option>
                         </select><br />
