@@ -45,7 +45,7 @@
                             <option value="<?php echo(ACTIVITY_CALL_TALKED); ?>">Call (Talked)</option>
                             <option value="<?php echo(ACTIVITY_CALL_LVM); ?>">Call (LVM)</option>
                             <option value="<?php echo(ACTIVITY_CALL_MISSED); ?>">Call (Missed)</option>
-                            <option value="<?php echo(ACTIVITY_EMAIL); ?>">E-Mail</option>
+                            <option value="<?php echo(ACTIVITY_EMAIL); ?>">Email</option>
                             <option value="<?php echo(ACTIVITY_MEETING); ?>">Meeting</option>
                             <option value="<?php echo(ACTIVITY_OTHER); ?>">Other</option>
                         </select><br />
@@ -122,7 +122,7 @@
                                     
                                     <div style="display:none;" id="reminderArea">
                                         <div>
-                                            <label>E-Mail To:</label><br />
+                                            <label>Email To:</label><br />
                                             <input type="text" id="sendEmail" name="sendEmail" class="inputbox" style="width: 150px" value="<?php $this->_($this->userEmail); ?>" />
                                         </div>
                                         <div>
