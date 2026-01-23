@@ -62,7 +62,7 @@ if (get_magic_quotes_gpc())
 
 if (!isset($_REQUEST['f']) || empty($_REQUEST['f']))
 {
-    header('Content-type: text/xml');
+    header('Content-type: text/xml; charset=' . AJAX_ENCODING);
     echo '<?xml version="1.0" encoding="', AJAX_ENCODING, '"?>', "\n";
     echo(
         "<data>\n" .
@@ -93,7 +93,7 @@ else
 
 if (!is_readable($filename))
 {
-    header('Content-type: text/xml');
+    header('Content-type: text/xml; charset=' . AJAX_ENCODING);
     echo '<?xml version="1.0" encoding="', AJAX_ENCODING, '"?>', "\n";
     echo(
         "<data>\n" .
