@@ -50,26 +50,12 @@ class Template
      */
     public function _($string)
     {
-        if ($string === null)
-        {
-            $string = '';
-        }
-        else if (is_array($string))
-        {
-            $string = '';
-        }
-        else if (is_object($string) && !method_exists($string, '__toString'))
+        if (!is_scalar($string) && !(is_object($string) && method_exists($string, '__toString')))
         {
             $string = '';
         }
 
-        $flags = ENT_QUOTES;
-        if (defined('ENT_SUBSTITUTE'))
-        {
-            $flags |= ENT_SUBSTITUTE;
-        }
-
-        echo(htmlspecialchars((string) $string, $flags, 'UTF-8'));
+        echo(htmlspecialchars((string) $string, ENT_QUOTES | ENT_SUBSTITUTE, HTML_ENCODING));
     }
 
     /**
