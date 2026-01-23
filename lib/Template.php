@@ -50,7 +50,7 @@ class Template
      */
     public function _($string)
     {
-        echo(htmlspecialchars($string));
+        echo(htmlspecialchars($string, ENT_COMPAT, HTML_ENCODING));
     }
 
     /**
