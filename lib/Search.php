@@ -277,7 +277,7 @@ class SearchUtility
 
         if (empty($keywords))
         {
-            return htmlspecialchars((string) $decoded, ENT_QUOTES, 'UTF-8');
+            return htmlspecialchars((string) $decoded, ENT_QUOTES, HTML_ENCODING);
         }
 
         /* CATS fulltext encode the search string. */
@@ -341,7 +341,7 @@ class SearchUtility
 
         if (empty($matches))
         {
-            return htmlspecialchars((string) $decoded, ENT_QUOTES, 'UTF-8');
+            return htmlspecialchars((string) $decoded, ENT_QUOTES, HTML_ENCODING);
         }
 
         usort($matches, function($a, $b)
@@ -369,7 +369,7 @@ class SearchUtility
                 'UTF-8'
             );
             $result .= '<span style="background-color: #ffff99">' .
-                htmlspecialchars((string) $match['text'], ENT_QUOTES, 'UTF-8') .
+                htmlspecialchars((string) $match['text'], ENT_QUOTES, HTML_ENCODING) .
                 '</span>';
             $cursor = $match['start'] + $match['length'];
         }

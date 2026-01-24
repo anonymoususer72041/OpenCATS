@@ -184,7 +184,7 @@ class ImportUI extends UserInterface
     
         if (isset($importData['importErrors']))
         {
-            $importErrors = htmlspecialchars($importData['importErrors'], ENT_QUOTES, 'UTF-8');
+            $importErrors = htmlspecialchars($importData['importErrors'], ENT_QUOTES, HTML_ENCODING);
             $this->_template->assign('importErrors', $importErrors);
         }
         else
@@ -192,7 +192,7 @@ class ImportUI extends UserInterface
             $this->_template->assign('importErrors', '');
         }
     
-        $importID = htmlspecialchars($importID, ENT_QUOTES, 'UTF-8');
+        $importID = htmlspecialchars($importID, ENT_QUOTES, HTML_ENCODING);
         $this->_template->assign('importID', $importID);
         $this->viewPending();
         return;
