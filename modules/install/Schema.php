@@ -1411,8 +1411,18 @@ class CATSSchema
                                 continue;
                             }
 
-                            $decodedValue = html_entity_decode($row[$columnName], ENT_QUOTES, HTML_ENCODING);
-                            if ($decodedValue !== $row[$columnName])
+                            $originalValue = $row[$columnName];
+                            $decodedValue = $originalValue;
+                            for ($i = 0; $i < 2; $i++)
+                            {
+                                $nextValue = html_entity_decode($decodedValue, ENT_QUOTES, HTML_ENCODING);
+                                if ($nextValue === $decodedValue)
+                                {
+                                    break;
+                                }
+                                $decodedValue = $nextValue;
+                            }
+                            if ($decodedValue !== $originalValue)
                             {
                                 $updates[] = "`" . $columnName . "` = " . $db->makeQueryString($decodedValue);
                             }
