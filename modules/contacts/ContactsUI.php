@@ -481,7 +481,7 @@ class ContactsUI extends UserInterface
         }
 
         $formattedPhoneWork = StringUtility::extractPhoneNumber(
-            $this->getSanitisedInput('phoneWork', $_POST)
+            $this->getTrimmedInput('phoneWork', $_POST)
         );
         if (!empty($formattedPhoneWork))
         {
@@ -489,11 +489,11 @@ class ContactsUI extends UserInterface
         }
         else
         {
-            $phoneWork = $this->getSanitisedInput('phoneWork', $_POST);
+            $phoneWork = $this->getTrimmedInput('phoneWork', $_POST);
         }
 
         $formattedPhoneCell = StringUtility::extractPhoneNumber(
-            $this->getSanitisedInput('phoneCell', $_POST)
+            $this->getTrimmedInput('phoneCell', $_POST)
         );
         if (!empty($formattedPhoneCell))
         {
@@ -501,11 +501,11 @@ class ContactsUI extends UserInterface
         }
         else
         {
-            $phoneCell = $this->getSanitisedInput('phoneCell', $_POST);
+            $phoneCell = $this->getTrimmedInput('phoneCell', $_POST);
         }
 
         $formattedPhoneOther = StringUtility::extractPhoneNumber(
-            $this->getSanitisedInput('phoneOther', $_POST)
+            $this->getTrimmedInput('phoneOther', $_POST)
         );
         if (!empty($formattedPhoneOther))
         {
@@ -513,23 +513,23 @@ class ContactsUI extends UserInterface
         }
         else
         {
-            $phoneOther = $this->getSanitisedInput('phoneOther', $_POST);
+            $phoneOther = $this->getTrimmedInput('phoneOther', $_POST);
         }
 
         $companyID = $_POST['companyID'];
 
-        $firstName  = $this->getSanitisedInput('firstName', $_POST);
-        $lastName   = $this->getSanitisedInput('lastName', $_POST);
-        $title      = $this->getSanitisedInput('title', $_POST);
+        $firstName  = $this->getTrimmedInput('firstName', $_POST);
+        $lastName   = $this->getTrimmedInput('lastName', $_POST);
+        $title      = $this->getTrimmedInput('title', $_POST);
         $department = $this->getTrimmedInput('department', $_POST);
         $reportsTo  = $this->getTrimmedInput('reportsTo', $_POST);
-        $email1     = $this->getSanitisedInput('email1', $_POST);
-        $email2     = $this->getSanitisedInput('email2', $_POST);
-        $address    = $this->getSanitisedInput('address', $_POST);
-        $city       = $this->getSanitisedInput('city', $_POST);
-        $state      = $this->getSanitisedInput('state', $_POST);
-        $zip        = $this->getSanitisedInput('zip', $_POST);
-        $notes      = $this->getSanitisedInput('notes', $_POST);
+        $email1     = $this->getTrimmedInput('email1', $_POST);
+        $email2     = $this->getTrimmedInput('email2', $_POST);
+        $address    = $this->getTrimmedInput('address', $_POST);
+        $city       = $this->getTrimmedInput('city', $_POST);
+        $state      = $this->getTrimmedInput('state', $_POST);
+        $zip        = $this->getTrimmedInput('zip', $_POST);
+        $notes      = $this->getTrimmedInput('notes', $_POST);
 
          /* Hot contact? */
         $isHot = $this->isChecked('isHot', $_POST);
@@ -707,7 +707,7 @@ class ContactsUI extends UserInterface
         $owner      = $_POST['owner'];
 
         $formattedPhoneWork = StringUtility::extractPhoneNumber(
-            $this->getSanitisedInput('phoneWork', $_POST)
+            $this->getTrimmedInput('phoneWork', $_POST)
         );
         if (!empty($formattedPhoneWork))
         {
@@ -715,11 +715,11 @@ class ContactsUI extends UserInterface
         }
         else
         {
-            $phoneWork = $this->getSanitisedInput('phoneWork', $_POST);
+            $phoneWork = $this->getTrimmedInput('phoneWork', $_POST);
         }
 
         $formattedPhoneCell = StringUtility::extractPhoneNumber(
-            $this->getSanitisedInput('phoneCell', $_POST)
+            $this->getTrimmedInput('phoneCell', $_POST)
         );
         if (!empty($formattedPhoneCell))
         {
@@ -727,11 +727,11 @@ class ContactsUI extends UserInterface
         }
         else
         {
-            $phoneCell = $this->getSanitisedInput('phoneCell', $_POST);
+            $phoneCell = $this->getTrimmedInput('phoneCell', $_POST);
         }
 
         $formattedPhoneOther = StringUtility::extractPhoneNumber(
-            $this->getSanitisedInput('phoneOther', $_POST)
+            $this->getTrimmedInput('phoneOther', $_POST)
         );
         if (!empty($formattedPhoneOther))
         {
@@ -739,7 +739,7 @@ class ContactsUI extends UserInterface
         }
         else
         {
-            $phoneOther = $this->getSanitisedInput('phoneOther', $_POST);
+            $phoneOther = $this->getTrimmedInput('phoneOther', $_POST);
         }
 
         $contacts = new Contacts($this->_siteID);
@@ -806,18 +806,18 @@ class ContactsUI extends UserInterface
             $emailAddress = '';
         }
 
-        $firstName  = $this->getSanitisedInput('firstName', $_POST);
-        $lastName   = $this->getSanitisedInput('lastName', $_POST);
-        $title      = $this->getSanitisedInput('title', $_POST);
+        $firstName  = $this->getTrimmedInput('firstName', $_POST);
+        $lastName   = $this->getTrimmedInput('lastName', $_POST);
+        $title      = $this->getTrimmedInput('title', $_POST);
         $department = $this->getTrimmedInput('department', $_POST);
         $reportsTo  = $this->getTrimmedInput('reportsTo', $_POST);
-        $email1     = $this->getSanitisedInput('email1', $_POST);
-        $email2     = $this->getSanitisedInput('email2', $_POST);
-        $address    = $this->getSanitisedInput('address', $_POST);
-        $city       = $this->getSanitisedInput('city', $_POST);
-        $state      = $this->getSanitisedInput('state', $_POST);
-        $zip        = $this->getSanitisedInput('zip', $_POST);
-        $notes      = $this->getSanitisedInput('notes', $_POST);
+        $email1     = $this->getTrimmedInput('email1', $_POST);
+        $email2     = $this->getTrimmedInput('email2', $_POST);
+        $address    = $this->getTrimmedInput('address', $_POST);
+        $city       = $this->getTrimmedInput('city', $_POST);
+        $state      = $this->getTrimmedInput('state', $_POST);
+        $zip        = $this->getTrimmedInput('zip', $_POST);
+        $notes      = $this->getTrimmedInput('notes', $_POST);
 
         $isHot = $this->isChecked('isHot', $_POST);
         $leftCompany = $this->isChecked('leftCompany', $_POST);
@@ -1344,9 +1344,7 @@ class ContactsUI extends UserInterface
 
             $activityTypeID = $_POST['activityTypeID'];
 
-            $activityNote = $this->getSanitisedInput('activityNote', $_POST);
-
-            $activityNote = htmlspecialchars($activityNote);
+            $activityNote = $this->getTrimmedInput('activityNote', $_POST);
 
             /* Add the activity entry. */
             $activityEntries = new ActivityEntries($this->_siteID);
@@ -1375,7 +1373,7 @@ class ContactsUI extends UserInterface
         if ($this->isChecked('scheduleEvent', $_POST))
         {
             /* Bail out if we received an invalid date. */
-            $trimmedDate = $this->getSanitisedInput('dateAdd', $_POST);
+            $trimmedDate = $this->getTrimmedInput('dateAdd', $_POST);
             if (empty($trimmedDate) ||
                 !DateUtility::validate('-', $trimmedDate, DATE_FORMAT_MMDDYY))
             {
@@ -1409,7 +1407,7 @@ class ContactsUI extends UserInterface
             $publicEntry = $this->isChecked('publicEntry', $_POST);
 
             $reminderEnabled = $this->isChecked('reminderToggle', $_POST);
-            $reminderEmail = $this->getSanitisedInput('sendEmail', $_POST);
+            $reminderEmail = $this->getTrimmedInput('sendEmail', $_POST);
             $reminderTime  = $this->getTrimmedInput('reminderTime', $_POST);
 
             $duration = -1;
@@ -1468,8 +1466,8 @@ class ContactsUI extends UserInterface
                 );
             }
 
-            $description = $this->getSanitisedInput('description', $_POST);
-            $title       = $this->getSanitisedInput('title', $_POST);
+            $description = $this->getTrimmedInput('description', $_POST);
+            $title       = $this->getTrimmedInput('title', $_POST);
 
             /* Bail out if any of the required fields are empty. */
             if (empty($title))
