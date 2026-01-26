@@ -220,6 +220,22 @@ class CandidatesUI extends UserInterface
 
                 break;
 
+            case 'addActivityScheduleEvent':
+                if ($this->getUserAccessLevel('pipelines.addActivityChangeStatus') < ACCESS_LEVEL_EDIT)
+                {
+                    CommonErrors::fatal(COMMONERROR_PERMISSION, $this, 'Invalid user level for action.');
+                }
+                if ($this->isPostBack())
+                {
+                    $this->onAddActivityScheduleEvent();
+                }
+                else
+                {
+                    $this->addActivityScheduleEvent();
+                }
+
+                break;
+
             /* Remove a candidate from a pipeline. */
             case 'removeFromPipeline':
                 if ($this->getUserAccessLevel('pipelines.removeFromPipeline') < ACCESS_LEVEL_DELETE)
@@ -1768,6 +1784,64 @@ class CandidatesUI extends UserInterface
         );
     }
 
+    private function addActivityScheduleEvent()
+    {
+        /* Bail out if we don't have a valid candidate ID. */
+        if (!$this->isRequiredIDValid('candidateID', $_GET))
+        {
+            CommonErrors::fatalModal(COMMONERROR_BADINDEX, $this, 'Invalid candidate ID.');
+        }
+
+        /* Bail out if we don't have a valid job order ID. */
+        if (!$this->isOptionalIDValid('jobOrderID', $_GET))
+        {
+            CommonErrors::fatalModal(COMMONERROR_BADINDEX, $this, 'Invalid job order ID.');
+        }
+
+        $selectedJobOrderID = isset($_GET['jobOrderID']) ? $_GET['jobOrderID'] : -1;
+        $candidateID        = $_GET['candidateID'];
+
+        $candidates = new Candidates($this->_siteID);
+        $candidateData = $candidates->get($candidateID);
+
+        /* Bail out if we got an empty result set. */
+        if (empty($candidateData))
+        {
+            CommonErrors::fatalModal(COMMONERROR_BADINDEX, $this);
+            return;
+        }
+
+        $pipelines = new Pipelines($this->_siteID);
+        $pipelineRS = $pipelines->getCandidatePipeline($candidateID);
+
+        /* Are we in "Only Schedule Event" mode? */
+        $onlyScheduleEvent = $this->isChecked('onlyScheduleEvent', $_GET);
+
+        $calendar = new Calendar($this->_siteID);
+        $calendarEventTypes = $calendar->getAllEventTypes();
+
+        if (SystemUtility::isSchedulerEnabled() && !$_SESSION['CATS']->isDemo())
+        {
+            $allowEventReminders = true;
+        }
+        else
+        {
+            $allowEventReminders = false;
+        }
+
+        $this->_template->assign('candidateID', $candidateID);
+        $this->_template->assign('pipelineRS', $pipelineRS);
+        $this->_template->assign('selectedJobOrderID', $selectedJobOrderID);
+        $this->_template->assign('onlyScheduleEvent', $onlyScheduleEvent);
+        $this->_template->assign('allowEventReminders', $allowEventReminders);
+        $this->_template->assign('userEmail', $_SESSION['CATS']->getEmail());
+        $this->_template->assign('calendarEventTypes', $calendarEventTypes);
+        $this->_template->assign('isFinishedMode', false);
+        $this->_template->display(
+            './modules/candidates/AddActivityScheduleEventModal.tpl'
+        );
+    }
+
     private function onAddCandidateTags()
     {
         /* Bail out if we don't have a valid regardingjob order ID. */
@@ -1846,6 +1920,19 @@ class CandidatesUI extends UserInterface
         $regardingID = $_POST['regardingID'];
 
         $this->_addActivityChangeStatus(false, $regardingID);
+    }
+
+    private function onAddActivityScheduleEvent()
+    {
+        /* Bail out if we don't have a valid regardingjob order ID. */
+        if (!$this->isOptionalIDValid('regardingID', $_POST))
+        {
+            CommonErrors::fatalModal(COMMONERROR_BADINDEX, $this, 'Invalid job order ID.');
+        }
+
+        $regardingID = $_POST['regardingID'];
+
+        $this->_addActivityScheduleEvent($regardingID);
     }
 
     /*
@@ -3301,6 +3388,272 @@ class CandidatesUI extends UserInterface
         $this->_template->assign('isJobOrdersMode', $isJobOrdersMode);
         $this->_template->display(
             './modules/candidates/AddActivityChangeStatusModal.tpl'
+        );
+    }
+
+    /**
+     * Processes an Add Activity / Schedule Event form and displays
+     * candidates/AddActivityScheduleEventModal.tpl.
+     *
+     * @param integer "regarding" job order ID or -1
+     * @param string module directory
+     * @return void
+     */
+    private function _addActivityScheduleEvent($regardingID, $directoryOverride = '')
+    {
+        /* Module directory override for fatal() calls. */
+        if ($directoryOverride != '')
+        {
+            $moduleDirectory = $directoryOverride;
+        }
+        else
+        {
+            $moduleDirectory = $this->_moduleDirectory;
+        }
+
+        /* Bail out if we don't have a valid candidate ID. */
+        if (!$this->isRequiredIDValid('candidateID', $_POST))
+        {
+            CommonErrors::fatalModal(COMMONERROR_BADINDEX, $this, 'Invalid candidate ID.');
+        }
+
+        $candidateID = $_POST['candidateID'];
+
+        if ($this->isChecked('addActivity', $_POST))
+        {
+            if (!$this->isRequiredIDValid('activityTypeID', $_POST))
+            {
+                $this->fatalModal('You must select an activity type.');
+            }
+
+            $activityTypeID = (int) $_POST['activityTypeID'];
+            $activityEntries = new ActivityEntries($this->_siteID);
+            $activityTypes = $activityEntries->getTypes();
+            if (ResultSetUtility::findRowByColumnValue(
+                $activityTypes, 'typeID', $activityTypeID
+            ) === false)
+            {
+                CommonErrors::fatalModal(COMMONERROR_BADINDEX, $this, 'Invalid activity type ID.');
+            }
+
+            $activityNote = $this->getTrimmedInput('activityNote', $_POST);
+            $activityNote = htmlspecialchars($activityNote);
+
+            /* Add the activity entry. */
+            $activityID = $activityEntries->add(
+                $candidateID,
+                DATA_ITEM_CANDIDATE,
+                $activityTypeID,
+                $activityNote,
+                $this->_userID,
+                $regardingID
+            );
+            $activityTypeDescription = ResultSetUtility::getColumnValueByIDValue(
+                $activityTypes, 'typeID', $activityTypeID, 'type'
+            );
+
+            $activityAdded = true;
+        }
+        else
+        {
+            $activityAdded = false;
+            $activityNote = '';
+            $activityTypeDescription = '';
+        }
+
+        if ($this->isChecked('scheduleEvent', $_POST))
+        {
+            /* Bail out if we received an invalid date. */
+            $trimmedDate = $this->getTrimmedInput('dateAdd', $_POST);
+            $dateFormatFlag = $_SESSION['CATS']->isDateDMY()
+                ? DATE_FORMAT_DDMMYY
+                : DATE_FORMAT_MMDDYY;
+            if (empty($trimmedDate) ||
+                !DateUtility::validate('-', $trimmedDate, $dateFormatFlag))
+            {
+                CommonErrors::fatalModal(COMMONERROR_MISSINGFIELDS, $this, 'Invalid date.');
+            }
+
+            /* Bail out if we don't have a valid event type. */
+            if (!$this->isRequiredIDValid('eventTypeID', $_POST))
+            {
+                CommonErrors::fatalModal(COMMONERROR_BADINDEX, $this, 'Invalid event type ID.');
+            }
+
+            /* Bail out if we don't have a valid time format ID. */
+            if (!isset($_POST['allDay']) ||
+                ($_POST['allDay'] != '0' && $_POST['allDay'] != '1'))
+            {
+                CommonErrors::fatalModal(COMMONERROR_MISSINGFIELDS, $this, 'Invalid time format ID.');
+            }
+
+            $eventTypeID = $_POST['eventTypeID'];
+
+            if ($_POST['allDay'] == 1)
+            {
+                $allDay = true;
+            }
+            else
+            {
+                $allDay = false;
+            }
+
+            $publicEntry = $this->isChecked('publicEntry', $_POST);
+
+            $reminderEnabled = $this->isChecked('reminderToggle', $_POST);
+            $reminderEmail = $this->getTrimmedInput('sendEmail', $_POST);
+            $reminderTime  = $this->getTrimmedInput('reminderTime', $_POST);
+            $duration = $this->getTrimmedInput('duration', $_POST);
+            if ($duration === '' || !is_numeric($duration))
+            {
+                $duration = -1;
+            }
+
+            /* Is this a scheduled event or an all day event? */
+            if ($allDay)
+            {
+                $date = DateUtility::convert(
+                    '-', $trimmedDate, $dateFormatFlag, DATE_FORMAT_YYYYMMDD
+                );
+
+                $hour = 12;
+                $minute = 0;
+                $meridiem = 'AM';
+            }
+            else
+            {
+                /* Bail out if we don't have a valid hour. */
+                if (!isset($_POST['hour']))
+                {
+                    CommonErrors::fatalModal(COMMONERROR_MISSINGFIELDS, $this, 'Invalid hour.');
+                }
+
+                /* Bail out if we don't have a valid minute. */
+                if (!isset($_POST['minute']))
+                {
+                    CommonErrors::fatalModal(COMMONERROR_MISSINGFIELDS, $this, 'Invalid minute.');
+                }
+
+                /* Bail out if we don't have a valid meridiem value. */
+                if (!isset($_POST['meridiem']) ||
+                    ($_POST['meridiem'] != 'AM' && $_POST['meridiem'] != 'PM'))
+                {
+                    $this->fatalModal(
+                        'Invalid meridiem value.', $moduleDirectory
+                    );
+                }
+
+                $hour     = $_POST['hour'];
+                $minute   = $_POST['minute'];
+                $meridiem = $_POST['meridiem'];
+
+                /* Convert formatted time to UNIX timestamp. */
+                $time = strtotime(
+                    sprintf('%s:%s %s', $hour, $minute, $meridiem)
+                );
+
+                /* Create MySQL date string w/ 24hr time (YYYY-MM-DD HH:MM:SS). */
+                $date = sprintf(
+                    '%s %s',
+                    DateUtility::convert(
+                        '-',
+                        $trimmedDate,
+                        $dateFormatFlag,
+                        DATE_FORMAT_YYYYMMDD
+                    ),
+                    date('H:i:00', $time)
+                );
+            }
+
+            $description = $this->getTrimmedInput('description', $_POST);
+            $title       = $this->getTrimmedInput('title', $_POST);
+
+            /* Bail out if any of the required fields are empty. */
+            if (empty($title))
+            {
+                CommonErrors::fatalModal(COMMONERROR_MISSINGFIELDS, $this);
+                return;
+            }
+
+            if ($regardingID > 0)
+            {
+                $eventJobOrderID = $regardingID;
+            }
+            else
+            {
+                $eventJobOrderID = -1;
+            }
+
+            $calendar = new Calendar($this->_siteID);
+            $eventID = $calendar->addEvent(
+                $eventTypeID, $date, $description, $allDay, $this->_userID,
+                $candidateID, DATA_ITEM_CANDIDATE, $eventJobOrderID, $title,
+                $duration, $reminderEnabled, $reminderEmail, $reminderTime,
+                $publicEntry, $_SESSION['CATS']->getTimeZoneOffset()
+            );
+
+            if ($eventID <= 0)
+            {
+                $this->fatalModal(
+                    'Failed to add calendar event.', $moduleDirectory
+                );
+            }
+
+            /* Extract the date parts from the specified date. */
+            $parsedDate = strtotime($date);
+            $formattedDate = date('l, F jS, Y', $parsedDate);
+
+            $calendar = new Calendar($this->_siteID);
+            $calendarEventTypes = $calendar->getAllEventTypes();
+
+            $eventTypeDescription = ResultSetUtility::getColumnValueByIDValue(
+                $calendarEventTypes, 'typeID', $eventTypeID, 'description'
+            );
+
+            $eventHTML = sprintf(
+                '<p>An event of type <span class="bold">%s</span> has been scheduled on <span class="bold">%s</span>.</p>',
+                htmlspecialchars($eventTypeDescription),
+                htmlspecialchars($formattedDate)
+
+            );
+            $eventScheduled = true;
+        }
+        else
+        {
+            $eventHTML = '<p>No event has been scheduled.</p>';
+            $eventScheduled = false;
+        }
+
+        if (isset($_GET['onlyScheduleEvent']))
+        {
+            $onlyScheduleEvent = true;
+        }
+        else
+        {
+            $onlyScheduleEvent = false;
+        }
+
+        if (!$activityAdded && !$eventScheduled)
+        {
+            $changesMade = false;
+        }
+        else
+        {
+            $changesMade = true;
+        }
+
+        $this->_template->assign('candidateID', $candidateID);
+        $this->_template->assign('regardingID', $regardingID);
+        $this->_template->assign('activityAdded', $activityAdded);
+        $this->_template->assign('activityDescription', $activityNote);
+        $this->_template->assign('activityType', $activityTypeDescription);
+        $this->_template->assign('eventScheduled', $eventScheduled);
+        $this->_template->assign('eventHTML', $eventHTML);
+        $this->_template->assign('onlyScheduleEvent', $onlyScheduleEvent);
+        $this->_template->assign('changesMade', $changesMade);
+        $this->_template->assign('isFinishedMode', true);
+        $this->_template->display(
+            './modules/candidates/AddActivityScheduleEventModal.tpl'
         );
     }
 
