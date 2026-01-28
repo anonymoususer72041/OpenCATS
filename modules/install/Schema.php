@@ -1328,6 +1328,11 @@ class CATSSchema
             '364' => '
                 UPDATE user SET password = md5(password) WHERE can_change_password=1;
             ',
+            '365' => '
+                UPDATE `activity`
+                SET `joborder_id` = NULL
+                WHERE `joborder_id` IN (0, -1);
+            ',
 
         );
     }
