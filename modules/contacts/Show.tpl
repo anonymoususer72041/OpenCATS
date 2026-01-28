@@ -276,7 +276,7 @@ use OpenCATS\UI\QuickActionMenu;
                         <td align="left" valign="top" id="activityDate<?php echo($activityData['activityID']); ?>"><?php $this->_($activityData['dateCreated']) ?></td>
                         <td align="left" valign="top" id="activityType<?php echo($activityData['activityID']); ?>"><?php $this->_($activityData['typeDescription']) ?></td>
                         <td align="left" valign="top"><?php $this->_($activityData['enteredByAbbrName']) ?></td>
-                        <td align="left" valign="top" id="activityRegarding<?php echo($activityData['activityID']); ?>"><?php $this->_($activityData['regarding']) ?></td>
+                        <td align="left" valign="top" id="activityRegarding<?php echo($activityData['activityID']); ?>" data-joborder-id="<?php echo(isset($activityData['jobOrderID']) ? $activityData['jobOrderID'] : ''); ?>"><?php $this->_($activityData['regarding']) ?></td>
                         <td align="left" valign="top" id="activityNotes<?php echo($activityData['activityID']); ?>"><?php $this->_($activityData['notes']) ?></td>
                         <td align="center" >
                             <?php if ($this->getUserAccessLevel('contacts.editActivity') >= ACCESS_LEVEL_EDIT): ?>
