@@ -1416,6 +1416,10 @@ class CATSSchema
             '372' => 'PHP:
                 include_once(\'modules/install/scripts/372.php\');
                 update_372($db);
+            '373' => '
+                UPDATE `activity`
+                SET `joborder_id` = NULL
+                WHERE `joborder_id` IN (0, -1);
             ',
 
         );
