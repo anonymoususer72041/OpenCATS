@@ -1425,6 +1425,23 @@ class CATSSchema
                 SET `joborder_id` = NULL
                 WHERE `joborder_id` IN (0, -1);
             ',
+            '375' => 'PHP:
+                $rs = $db->getAllAssoc(
+                    "SELECT
+                        TABLE_NAME AS table_name
+                     FROM
+                        information_schema.TABLES
+                     WHERE
+                        TABLE_SCHEMA = DATABASE()
+                        AND TABLE_TYPE = \'BASE TABLE\'
+                        AND ENGINE = \'MyISAM\'"
+                );
+
+                foreach ($rs as $rowIndex => $row)
+                {
+                    $db->query("ALTER TABLE `".$row[\'table_name\']."` ENGINE=InnoDB");
+                }
+            ',
 
         );
     }
