@@ -719,7 +719,7 @@ class DatabaseConnection
     {
         if (!$this->_inTransaction)
         {
-            // Ignore errors (if called for MyISAM, for example)
+            // Ignore errors (e.g., if transactions are not supported by the underlying storage engine)
             $this->query('BEGIN', true);
             return ($this->_inTransaction = true);
         }
