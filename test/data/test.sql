@@ -28,7 +28,7 @@ CREATE TABLE `access_level` (
   `long_description` text COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`access_level_id`),
   KEY `IDX_access_level` (`short_description`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -71,7 +71,7 @@ CREATE TABLE `activity` (
   KEY `IDX_data_item_id_type_site` (`site_id`,`data_item_id`,`data_item_type`),
   KEY `IDX_site_created` (`site_id`,`date_created`),
   KEY `IDX_activity_site_type_created_job` (`site_id`,`data_item_type`,`date_created`,`entered_by`,`joborder_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -95,7 +95,7 @@ CREATE TABLE `activity_type` (
   `short_description` varchar(32) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   PRIMARY KEY (`activity_type_id`),
   KEY `IDX_activity_type1` (`short_description`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -139,7 +139,7 @@ CREATE TABLE `attachment` (
   KEY `IDX_CANDIDATE_MD5_SUM` (`md5_sum`),
   KEY `IDX_site_file_size` (`site_id`,`file_size_kb`),
   KEY `IDX_site_file_size_created` (`site_id`,`file_size_kb`,`date_created`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -180,7 +180,7 @@ CREATE TABLE `calendar_event` (
   PRIMARY KEY (`calendar_event_id`),
   KEY `IDX_site_id_date` (`site_id`,`date`),
   KEY `IDX_site_data_item_type_id` (`site_id`,`data_item_type`,`data_item_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -205,7 +205,7 @@ CREATE TABLE `calendar_event_type` (
   `icon_image` varchar(128) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   PRIMARY KEY (`calendar_event_type_id`),
   KEY `IDX_short_description` (`short_description`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -275,7 +275,7 @@ CREATE TABLE `candidate` (
   KEY `IDX_date_modified` (`date_modified`),
   KEY `IDX_site_first_last_modified` (`site_id`,`first_name`,`last_name`,`date_modified`),
   KEY `IDX_site_id_email_1_2` (`site_id`,`email1`(8),`email2`(8))
-) ENGINE=MyISAM AUTO_INCREMENT=7211 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7211 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -299,7 +299,7 @@ CREATE TABLE `candidate_duplicates` (
   PRIMARY KEY (`old_candidate_id`, `new_candidate_id`),
   KEY `IDX_old_candidate_id` (`old_candidate_id`),
   KEY `IDX_new_candidate_id` (`new_candidate_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Table structure for table `candidate_joborder`
@@ -328,7 +328,7 @@ CREATE TABLE `candidate_joborder` (
   KEY `IDX_status_special` (`site_id`,`status`),
   KEY `IDX_site_joborder` (`site_id`,`joborder_id`),
   KEY `IDX_joborder_id` (`joborder_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -355,7 +355,7 @@ CREATE TABLE `candidate_joborder_status` (
   `is_enabled` int(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`candidate_joborder_status_id`),
   KEY `IDX_short_description` (`short_description`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -390,7 +390,7 @@ CREATE TABLE `candidate_joborder_status_history` (
   KEY `IDX_candidate_joborder_status_to_site` (`candidate_id`,`joborder_id`,`status_to`,`site_id`),
   KEY `IDX_joborder_site` (`joborder_id`,`site_id`),
   KEY `IDX_site_joborder_status_to` (`site_id`,`joborder_id`,`status_to`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -415,7 +415,7 @@ CREATE TABLE `candidate_jobordrer_status_type` (
   `can_be_scheduled` int(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`candidate_status_type_id`),
   KEY `IDX_short_description` (`short_description`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -441,7 +441,7 @@ CREATE TABLE `candidate_source` (
   `date_created` datetime DEFAULT NULL,
   PRIMARY KEY (`source_id`),
   KEY `siteID` (`site_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -466,7 +466,7 @@ CREATE TABLE `candidate_tag` (
   `candidate_id` int(10) unsigned NOT NULL,
   `tag_id` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=59 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=59 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -492,7 +492,7 @@ CREATE TABLE `career_portal_questionnaire` (
   `description` varchar(255) DEFAULT NULL,
   `is_active` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`career_portal_questionnaire_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -525,7 +525,7 @@ CREATE TABLE `career_portal_questionnaire_answer` (
   `position` int(4) NOT NULL DEFAULT '0',
   `site_id` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`career_portal_questionnaire_answer_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -554,7 +554,7 @@ CREATE TABLE `career_portal_questionnaire_history` (
   `questionnaire_description` varchar(255) NOT NULL DEFAULT '',
   `date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`career_portal_questionnaire_history_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -584,7 +584,7 @@ CREATE TABLE `career_portal_questionnaire_question` (
   `site_id` int(11) NOT NULL DEFAULT '0',
   `type` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`career_portal_questionnaire_question_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -609,7 +609,7 @@ CREATE TABLE `career_portal_template` (
   `setting` varchar(128) NOT NULL DEFAULT '',
   `value` text,
   PRIMARY KEY (`career_portal_template_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=78 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=78 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -636,7 +636,7 @@ CREATE TABLE `career_portal_template_site` (
   `setting` varchar(128) NOT NULL DEFAULT '',
   `value` text,
   PRIMARY KEY (`career_portal_template_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -686,7 +686,7 @@ CREATE TABLE `company` (
   KEY `IDX_date_created` (`date_created`),
   KEY `IDX_date_modified` (`date_modified`),
   KEY `IDX_is_hot` (`is_hot`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -713,7 +713,7 @@ CREATE TABLE `company_department` (
   `date_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `created_by` int(11) DEFAULT NULL,
   PRIMARY KEY (`company_department_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -767,7 +767,7 @@ CREATE TABLE `contact` (
   KEY `IDX_owner` (`owner`),
   KEY `IDX_date_created` (`date_created`),
   KEY `IDX_date_modified` (`date_modified`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -791,7 +791,7 @@ CREATE TABLE `data_item_type` (
   `short_description` varchar(32) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   PRIMARY KEY (`data_item_type_id`),
   KEY `IDX_short_description` (`short_description`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -815,7 +815,7 @@ CREATE TABLE `eeo_ethnic_type` (
   `eeo_ethnic_type_id` int(11) NOT NULL AUTO_INCREMENT,
   `type` varchar(128) NOT NULL DEFAULT '',
   PRIMARY KEY (`eeo_ethnic_type_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -839,7 +839,7 @@ CREATE TABLE `eeo_veteran_type` (
   `eeo_veteran_type_id` int(11) NOT NULL AUTO_INCREMENT,
   `type` varchar(128) NOT NULL DEFAULT '',
   PRIMARY KEY (`eeo_veteran_type_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -871,7 +871,7 @@ CREATE TABLE `email_history` (
   KEY `IDX_site_id` (`site_id`),
   KEY `IDX_date` (`date`),
   KEY `IDX_user_id` (`user_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -900,7 +900,7 @@ CREATE TABLE `email_template` (
   `possible_variables` text COLLATE utf8_unicode_ci,
   `disabled` int(1) DEFAULT '0',
   PRIMARY KEY (`email_template_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=32 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -927,7 +927,7 @@ CREATE TABLE `extension_statistics` (
   `user` varchar(128) CHARACTER SET utf8 NOT NULL DEFAULT '',
   `date` date DEFAULT NULL,
   PRIMARY KEY (`extension_statistics_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -957,7 +957,7 @@ CREATE TABLE `extra_field` (
   PRIMARY KEY (`extra_field_id`),
   KEY `assoc_id` (`data_item_id`),
   KEY `IDX_site_id` (`site_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=21502 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=21502 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -987,7 +987,7 @@ CREATE TABLE `extra_field_settings` (
   `extra_field_options` text COLLATE utf8_unicode_ci,
   `position` int(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`extra_field_settings_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=49 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1017,7 +1017,7 @@ CREATE TABLE `feedback` (
   `feedback` text COLLATE utf8_unicode_ci NOT NULL,
   `archived` int(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`feedback_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1050,7 +1050,7 @@ CREATE TABLE `history` (
   PRIMARY KEY (`history_id`),
   KEY `IDX_DATA_ENTERED_BY` (`entered_by`),
   KEY `IDX_data_item_id_type_site` (`data_item_id`,`data_item_type`,`site_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=20 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1082,7 +1082,7 @@ CREATE TABLE `http_log` (
   `log_type` int(11) NOT NULL,
   `date` datetime DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`log_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1107,7 +1107,7 @@ CREATE TABLE `http_log_types` (
   `description` varchar(255) DEFAULT NULL,
   `default_log_type` tinyint(1) unsigned zerofill NOT NULL DEFAULT '0',
   PRIMARY KEY (`log_type_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1136,7 +1136,7 @@ CREATE TABLE `import` (
   `added_lines` int(11) DEFAULT NULL,
   `date_created` datetime DEFAULT NULL,
   PRIMARY KEY (`import_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=19 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1158,7 +1158,7 @@ DROP TABLE IF EXISTS `installtest`;
 CREATE TABLE `installtest` (
   `id` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1220,7 +1220,7 @@ CREATE TABLE `joborder` (
   KEY `IDX_date_created` (`date_created`),
   KEY `IDX_date_modified` (`date_modified`),
   KEY `IDX_site_id_status` (`site_id`,`status`(8))
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1244,7 +1244,7 @@ CREATE TABLE `module_schema` (
   `name` varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL,
   `version` int(11) DEFAULT NULL,
   PRIMARY KEY (`module_schema_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=25 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1274,7 +1274,7 @@ CREATE TABLE `mru` (
   `date_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`mru_id`),
   KEY `IDX_user_site` (`user_id`,`site_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=194 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=194 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1306,7 +1306,7 @@ CREATE TABLE `queue` (
   `error` tinyint(1) unsigned DEFAULT '0',
   `response` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`queue_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1341,7 +1341,7 @@ CREATE TABLE `saved_list` (
   KEY `IDX_data_item_type` (`data_item_type`),
   KEY `IDX_description` (`description`),
   KEY `IDX_site_id` (`site_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1372,7 +1372,7 @@ CREATE TABLE `saved_list_entry` (
   KEY `IDX_data_item_type` (`data_item_type`),
   KEY `IDX_data_item_id` (`data_item_id`),
   KEY `IDX_hot_list_id` (`saved_list_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=7093 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7093 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1401,7 +1401,7 @@ CREATE TABLE `saved_search` (
   `site_id` int(11) DEFAULT NULL,
   `date_created` datetime DEFAULT NULL,
   PRIMARY KEY (`search_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=19 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1427,7 +1427,7 @@ CREATE TABLE `settings` (
   `site_id` int(11) NOT NULL DEFAULT '0',
   `settings_type` int(11) DEFAULT '0',
   PRIMARY KEY (`settings_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=21 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1474,7 +1474,7 @@ CREATE TABLE `site` (
   `limit_warning` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`site_id`),
   KEY `IDX_account_deleted` (`account_deleted`)
-) ENGINE=MyISAM AUTO_INCREMENT=181 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=181 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1498,7 +1498,7 @@ CREATE TABLE `sph_counter` (
   `counter_id` int(11) NOT NULL,
   `max_doc_id` int(11) NOT NULL,
   PRIMARY KEY (`counter_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1525,7 +1525,7 @@ CREATE TABLE `system` (
   `available_version_description` text COLLATE utf8_unicode_ci,
   `disable_version_check` int(1) DEFAULT '0',
   PRIMARY KEY (`system_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1553,7 +1553,7 @@ CREATE TABLE `tag` (
   `site_id` int(11) unsigned DEFAULT NULL,
   `date_created` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`tag_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=84 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=84 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1606,7 +1606,7 @@ CREATE TABLE `user` (
   KEY `IDX_first_name` (`first_name`),
   KEY `IDX_last_name` (`last_name`),
   KEY `IDX_access_level` (`access_level`)
-) ENGINE=MyISAM AUTO_INCREMENT=1254 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1254 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1643,7 +1643,7 @@ CREATE TABLE `user_login` (
   KEY `IDX_date_refreshed` (`date_refreshed`),
   KEY `IDX_site_id_date` (`site_id`,`date`),
   KEY `IDX_successful_site_id` (`successful`,`site_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=50 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=50 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1667,7 +1667,7 @@ CREATE TABLE `word_verification` (
   `word_verification_ID` int(11) NOT NULL AUTO_INCREMENT,
   `word` varchar(28) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   PRIMARY KEY (`word_verification_ID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1692,7 +1692,7 @@ CREATE TABLE `xml_feed_submits` (
   `feed_url` varchar(255) NOT NULL,
   `date_last_post` date NOT NULL,
   PRIMARY KEY (`feed_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1720,7 +1720,7 @@ CREATE TABLE `xml_feeds` (
   `success_string` varchar(255) NOT NULL,
   `xml_template_name` varchar(255) NOT NULL,
   PRIMARY KEY (`xml_feed_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1746,7 +1746,7 @@ CREATE TABLE `zipcodes` (
   `state` varchar(2) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `areacode` smallint(6) NOT NULL DEFAULT '0',
   PRIMARY KEY (`zipcode`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
