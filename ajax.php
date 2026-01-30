@@ -74,6 +74,31 @@ if (!isset($_REQUEST['f']) || empty($_REQUEST['f']))
     die();
 }
 
+$installerActive = (!file_exists('INSTALL_BLOCK'));
+if ($installerActive)
+{
+    $module = '';
+    if (strpos($_REQUEST['f'], ':') !== false)
+    {
+        $parameters = explode(':', $_REQUEST['f']);
+        $module = preg_replace("/[^A-Za-z0-9]/", "", $parameters[0]);
+    }
+
+    if ($module !== 'install')
+    {
+        header('Content-type: text/xml');
+        echo '<?xml version="1.0" encoding="', AJAX_ENCODING, '"?>', "\n";
+        echo(
+            "<data>\n" .
+            "    <errorcode>-1</errorcode>\n" .
+            "    <errormessage>Installer is active; only installer AJAX actions are allowed.</errormessage>\n" .
+            "</data>\n"
+        );
+
+        die();
+    }
+}
+
 if (strpos($_REQUEST['f'], ':') === false)
 {
     $function = preg_replace("/[^A-Za-z0-9]/", "", $_REQUEST['f']);
