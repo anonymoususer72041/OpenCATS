@@ -1328,6 +1328,23 @@ class CATSSchema
             '364' => '
                 UPDATE user SET password = md5(password) WHERE can_change_password=1;
             ',
+            '365' => 'PHP:
+                $rs = $db->getAllAssoc(
+                    "SELECT
+                        TABLE_NAME AS table_name
+                     FROM
+                        information_schema.TABLES
+                     WHERE
+                        TABLE_SCHEMA = DATABASE()
+                        AND TABLE_TYPE = \'BASE TABLE\'
+                        AND ENGINE = \'MyISAM\'"
+                );
+
+                foreach ($rs as $rowIndex => $row)
+                {
+                    $db->query("ALTER TABLE `".$row[\'table_name\']."` ENGINE=InnoDB");
+                }
+            ',
 
         );
     }
