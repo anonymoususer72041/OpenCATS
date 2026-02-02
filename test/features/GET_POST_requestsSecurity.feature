@@ -156,7 +156,7 @@ Scenario Outline: Candidate module actions
   | ADMIN       | GET     | index.php?m=candidates&a=removeFromPipeline      |         |
   | ADMIN       | GET     | index.php?m=candidates&a=addEditImage            |         |
   | ADMIN       | GET     | index.php?m=candidates&a=createAttachment        |         |
-  | ADMIN       | GET     | index.php?m=candidates&a=administrativeHideShow  | not     |
+  | ADMIN       | GET     | index.php?m=candidates&a=administrativeHideShow  |         |
   | ADMIN       | GET     | index.php?m=candidates&a=deleteAttachment        |         |
   | ADMIN       | GET     | index.php?m=candidates&a=savedLists              |         |
   | ADMIN       | GET     | index.php?m=candidates&a=emailCandidates         |         |
@@ -351,7 +351,7 @@ Scenario Outline: Job Order module actions
   | ADMIN       | GET     | index.php?m=joborders&a=search                  |      |
   | ADMIN       | GET     | index.php?m=joborders&a=search&getback=getback  |      |
   | ADMIN       | GET     | index.php?m=joborders&a=addActivityChangeStatus |      |
-  | ADMIN       | GET     | index.php?m=joborders&a=administrativeHideShow  | not  |
+  | ADMIN       | GET     | index.php?m=joborders&a=administrativeHideShow  |      |
   | ADMIN       | GET     | index.php?m=joborders&a=listByView              |      |
   | ADMIN       | GET     | index.php?m=joborders&a=considerCandidateSearch |      |
   | ADMIN       | GET     | index.php?m=joborders&a=addToPipeline           |      |
