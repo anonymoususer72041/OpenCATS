@@ -25,7 +25,7 @@ use OpenCATS\UI\QuickActionMenu;
             <p class="note">Job Order Details</p>
 
             <?php if ($this->data['isAdminHidden'] == 1): ?>
-                <p class="warning">This Job Order is hidden.  Only CATS Administrators can view it or search for it.  To make it visible by the site users, click <a href="<?php echo(CATSUtility::getIndexName()); ?>?m=joborders&amp;a=administrativeHideShow&amp;jobOrderID=<?php echo($this->jobOrderID); ?>&amp;state=0" style="font-weight:bold;">Here.</a></p>
+                <p class="warning">This Job Order is hidden.  Only Site Administrators can view it or search for it.  To make it visible by the site users, click <a href="<?php echo(CATSUtility::getIndexName()); ?>?m=joborders&amp;a=administrativeHideShow&amp;jobOrderID=<?php echo($this->jobOrderID); ?>&amp;state=0" style="font-weight:bold;">Here.</a></p>
             <?php endif; ?>
 
             <?php if (isset($this->frozen)): ?>
@@ -332,7 +332,7 @@ use OpenCATS\UI\QuickActionMenu;
                         </a>
                         &nbsp;&nbsp;&nbsp;&nbsp;
                     <?php endif; ?>
-                    <?php if ($this->getUserAccessLevel('joborders.hidden') >= ACCESS_LEVEL_MULTI_SA): ?>
+                    <?php if ($this->getUserAccessLevel('joborders.hidden') >= ACCESS_LEVEL_SA): ?>
                         <?php if ($this->data['isAdminHidden'] == 1): ?>
                             <a href="<?php echo(CATSUtility::getIndexName()); ?>?m=joborders&amp;a=administrativeHideShow&amp;jobOrderID=<?php echo($this->jobOrderID); ?>&amp;state=0">
                                 <img src="images/resume_preview_inline.gif" width="16" height="16" class="absmiddle" alt="delete" border="0" />&nbsp;Administrative Show
