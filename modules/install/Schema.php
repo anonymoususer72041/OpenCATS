@@ -1334,6 +1334,56 @@ class CATSSchema
                 COLLATE utf8_unicode_ci NOT NULL DEFAULT \'+1\'
                 AFTER `date_format_ddmmyy`;
             ',
+            '366' => 'PHP:
+                $templateRow = $db->getAssoc(
+                    "SELECT
+                        career_portal_template_id,
+                        value
+                     FROM
+                        career_portal_template
+                     WHERE
+                        career_portal_name = \'CATS 2.0\'
+                        AND setting = \'Content - Apply for Position\'
+                     LIMIT 1"
+                );
+
+                if (!empty($templateRow))
+                {
+                    $value = $templateRow[\'value\'];
+
+                    if (strpos($value, \'<input-captcha\') === false)
+                    {
+                        $submitMarker = \'<img src="images/careers_submit.gif"\';
+                        $markerPos = strpos($value, $submitMarker);
+
+                        if ($markerPos !== false)
+                        {
+                            $beforeMarker = substr($value, 0, $markerPos);
+                            $trPos = strrpos($beforeMarker, \'<tr\');
+
+                            if ($trPos !== false)
+                            {
+                                $eol = (strpos($value, \"\\r\\n\") !== false) ? \"\\r\\n\" : \"\\n\";
+                                $captchaRow = \'<tr>\' . $eol .
+                                    \'    <td class="label"><label id="captchaLabel" for="captcha">*CAPTCHA:</label></td>\' . $eol .
+                                    \'    <td><input-captcha req></td>\' . $eol .
+                                    \'</tr>\' . $eol;
+
+                                $newValue = substr($value, 0, $trPos) . $captchaRow . substr($value, $trPos);
+
+                                $db->query(
+                                    "UPDATE
+                                        career_portal_template
+                                     SET
+                                        value = " . $db->makeQueryString($newValue) . "
+                                     WHERE
+                                        career_portal_template_id = " . $templateRow[\'career_portal_template_id\']
+                                );
+                            }
+                        }
+                    }
+                }
+            ',
 
         );
     }
