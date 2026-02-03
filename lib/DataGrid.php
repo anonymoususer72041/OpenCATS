@@ -253,10 +253,32 @@ class DataGrid
                 }
 
                 $parameters[$index] = $_REQUEST['dynamicArgument' . md5($indentifier)];
-                
-                if ($index = 'exportIDs')
+
+                if ($index === 'exportIDs')
                 {
-                   $parameters['exportIDs'] = json_decode(urldecode($parameters['exportIDs']), true);
+                    $decoded = json_decode($parameters['exportIDs'], true);
+                    if (!is_array($decoded))
+                    {
+                        $decoded = array();
+                    }
+
+                    $parameters['exportIDs'] = array();
+                    foreach ($decoded as $value)
+                    {
+                        if (is_scalar($value))
+                        {
+                            $intValue = (int) $value;
+                            if ($intValue > 0 && !in_array($intValue, $parameters['exportIDs']))
+                            {
+                                $parameters['exportIDs'][] = $intValue;
+                            }
+                        }
+                    }
+
+                    if (empty($parameters['exportIDs']))
+                    {
+                        $parameters['exportIDs'] = array(0);
+                    }
                 }
             }
         }
