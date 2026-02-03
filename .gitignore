@@ -13,3 +13,4 @@ uploads/*
 /vendor/
 *.diff
 *.rej
+config.php
