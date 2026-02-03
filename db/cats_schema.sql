@@ -859,7 +859,7 @@ insert  into `module_schema`(`module_schema_id`,`name`,`version`) values (9,'ext
 insert  into `module_schema`(`module_schema_id`,`name`,`version`) values (10,'graphs',0);
 insert  into `module_schema`(`module_schema_id`,`name`,`version`) values (11,'home',0);
 insert  into `module_schema`(`module_schema_id`,`name`,`version`) values (12,'import',0);
-insert  into `module_schema`(`module_schema_id`,`name`,`version`) values (13,'install',365);
+insert  into `module_schema`(`module_schema_id`,`name`,`version`) values (13,'install',366);
 insert  into `module_schema`(`module_schema_id`,`name`,`version`) values (14,'joborders',0);
 insert  into `module_schema`(`module_schema_id`,`name`,`version`) values (15,'lists',0);
 insert  into `module_schema`(`module_schema_id`,`name`,`version`) values (16,'login',0);
@@ -868,9 +868,8 @@ insert  into `module_schema`(`module_schema_id`,`name`,`version`) values (18,'re
 insert  into `module_schema`(`module_schema_id`,`name`,`version`) values (19,'rss',0);
 insert  into `module_schema`(`module_schema_id`,`name`,`version`) values (20,'settings',0);
 insert  into `module_schema`(`module_schema_id`,`name`,`version`) values (21,'tests',0);
-insert  into `module_schema`(`module_schema_id`,`name`,`version`) values (22,'toolbar',0);
-insert  into `module_schema`(`module_schema_id`,`name`,`version`) values (23,'wizard',0);
-insert  into `module_schema`(`module_schema_id`,`name`,`version`) values (24,'xml',0);
+insert  into `module_schema`(`module_schema_id`,`name`,`version`) values (22,'wizard',0);
+insert  into `module_schema`(`module_schema_id`,`name`,`version`) values (23,'xml',0);
 
 /*Table structure for table `mru` */
 

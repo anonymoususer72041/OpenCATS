@@ -1043,7 +1043,6 @@ Scenario Outline: Reports module actions
   | DISABLED    | POST | index.php?m=settings&a=aspLocalization     | not  |
   | DISABLED    | GET  | index.php?m=settings&a=loginActivity       | not  |
   | DISABLED    | GET  | index.php?m=settings&a=viewItemHistory     | not  |
-  | DISABLED    | GET  | index.php?m=settings&a=getFirefoxModal     | not  |
   | DISABLED    | GET  | index.php?m=settings&a=administration      | not  |
   | DISABLED    | POST | index.php?m=settings&a=administration      | not  |
   | DISABLED    | GET  | index.php?m=settings&a=myProfile           | not  |
@@ -1085,7 +1084,6 @@ Scenario Outline: Reports module actions
   | READONLY    | POST | index.php?m=settings&a=aspLocalization     | not  |
   | READONLY    | GET  | index.php?m=settings&a=loginActivity       | not  |
   | READONLY    | GET  | index.php?m=settings&a=viewItemHistory     | not  |
-  | READONLY    | GET  | index.php?m=settings&a=getFirefoxModal     |      |
   | READONLY    | GET  | index.php?m=settings&a=administration      | not  |
   | READONLY    | POST | index.php?m=settings&a=administration      | not  |
   | READONLY    | GET  | index.php?m=settings&a=myProfile           |      |
@@ -1127,7 +1125,6 @@ Scenario Outline: Reports module actions
   | EDIT        | POST | index.php?m=settings&a=aspLocalization     | not  |
   | EDIT        | GET  | index.php?m=settings&a=loginActivity       | not  |
   | EDIT        | GET  | index.php?m=settings&a=viewItemHistory     | not  |
-  | EDIT        | GET  | index.php?m=settings&a=getFirefoxModal     |      |
   | EDIT        | GET  | index.php?m=settings&a=administration      | not  |
   | EDIT        | POST | index.php?m=settings&a=administration      | not  |
   | EDIT        | GET  | index.php?m=settings&a=myProfile           |      |
@@ -1169,7 +1166,6 @@ Scenario Outline: Reports module actions
   | DELETE      | POST | index.php?m=settings&a=aspLocalization     | not  |
   | DELETE      | GET  | index.php?m=settings&a=loginActivity       | not  |
   | DELETE      | GET  | index.php?m=settings&a=viewItemHistory     | not  |
-  | DELETE      | GET  | index.php?m=settings&a=getFirefoxModal     |      |
   | DELETE      | GET  | index.php?m=settings&a=administration      | not  |
   | DELETE      | POST | index.php?m=settings&a=administration      | not  |
   | DELETE      | GET  | index.php?m=settings&a=myProfile           |      |
@@ -1211,7 +1207,6 @@ Scenario Outline: Reports module actions
   | DEMO        | POST | index.php?m=settings&a=aspLocalization     | not  |
   | DEMO        | GET  | index.php?m=settings&a=loginActivity       |      |
   | DEMO        | GET  | index.php?m=settings&a=viewItemHistory     |      |
-  | DEMO        | GET  | index.php?m=settings&a=getFirefoxModal     |      |
   | DEMO        | GET  | index.php?m=settings&a=administration      |      |
   | DEMO        | POST | index.php?m=settings&a=administration      | not  |
   | DEMO        | GET  | index.php?m=settings&a=myProfile           |      |
@@ -1254,7 +1249,6 @@ Scenario Outline: Reports module actions
   | ADMIN       | POST | index.php?m=settings&a=aspLocalization     |      |
   | ADMIN       | GET  | index.php?m=settings&a=loginActivity       |      |
   | ADMIN       | GET  | index.php?m=settings&a=viewItemHistory     |      |
-  | ADMIN       | GET  | index.php?m=settings&a=getFirefoxModal     |      |
   | ADMIN       | GET  | index.php?m=settings&a=administration      |      |
   | ADMIN       | POST | index.php?m=settings&a=administration      |      |
   | ADMIN       | GET  | index.php?m=settings&a=myProfile           |      |
@@ -1297,7 +1291,6 @@ Scenario Outline: Reports module actions
   | MULTI_ADMIN | POST | index.php?m=settings&a=aspLocalization     |      |
   | MULTI_ADMIN | GET  | index.php?m=settings&a=loginActivity       |      |
   | MULTI_ADMIN | GET  | index.php?m=settings&a=viewItemHistory     |      |
-  | MULTI_ADMIN | GET  | index.php?m=settings&a=getFirefoxModal     |      |
   | MULTI_ADMIN | GET  | index.php?m=settings&a=administration      |      |
   | MULTI_ADMIN | POST | index.php?m=settings&a=administration      |      |
   | MULTI_ADMIN | GET  | index.php?m=settings&a=myProfile           |      |
@@ -1340,7 +1333,6 @@ Scenario Outline: Reports module actions
   | ROOT        | POST | index.php?m=settings&a=aspLocalization     |      |
   | ROOT        | GET  | index.php?m=settings&a=loginActivity       |      |
   | ROOT        | GET  | index.php?m=settings&a=viewItemHistory     |      |
-  | ROOT        | GET  | index.php?m=settings&a=getFirefoxModal     |      |
   | ROOT        | GET  | index.php?m=settings&a=administration      |      |
   | ROOT        | POST | index.php?m=settings&a=administration      |      |
   | ROOT        | GET  | index.php?m=settings&a=myProfile           |      |

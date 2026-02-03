@@ -929,8 +929,8 @@ class CandidatesUI extends UserInterface
         {
             $isParsingEnabled = false;
         }
-        /* For CATS Toolbar, if e-mail has been sent and it wasn't set by
-         * parser, it's toolbar and it needs the old format.
+        /* If e-mail has been sent and it wasn't set by the parser, it needs
+         * the old format.
          */
         else if (!isset($preassignedFields['email']))
         {

@@ -1334,6 +1334,9 @@ class CATSSchema
                 COLLATE utf8_unicode_ci NOT NULL DEFAULT \'+1\'
                 AFTER `date_format_ddmmyy`;
             ',
+            '366' => '
+                DELETE FROM module_schema WHERE name = \'toolbar\';
+            ',
 
         );
     }

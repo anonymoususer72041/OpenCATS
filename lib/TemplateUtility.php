@@ -847,7 +847,7 @@ class TemplateUtility
 
         echo '<div class="footerBlock">', "\n";
         echo '<p id="footerText">OpenCATS Version ', CATS_VERSION, $buildString,
-             '. <span id="toolbarVersion"></span>Powered by <a href="http://www.opencats.org/"><strong>OpenCATS</strong></a>.</p>', "\n";
+             '. Powered by <a href="http://www.opencats.org/"><strong>OpenCATS</strong></a>.</p>', "\n";
         echo '<span id="footerResponse">Server Response Time: ', $loadTime, ' seconds.</span><br />';
         echo '<span id="footerCopyright">', COPYRIGHT_HTML, '</span>', "\n";
         if (!eval(Hooks::get('TEMPLATEUTILITY_SHOWPRIVACYPOLICY'))) return;

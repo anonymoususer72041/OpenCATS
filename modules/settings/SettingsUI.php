@@ -689,10 +689,6 @@ class SettingsUI extends UserInterface
                 $this->viewItemHistory();
                 break;
 
-            case 'getFirefoxModal':
-                $this->getFirefoxModal();
-                break;
-
             case 'ajax_tags_add':
                 if (!isset($_SESSION['CATS']) || empty($_SESSION['CATS']))
                 {
@@ -988,16 +984,6 @@ class SettingsUI extends UserInterface
         }
     }
     
-    /*
-     * Called by handleRequest() to process loading the get firefox modal dialog.
-     */
-    private function getFirefoxModal()
-    {
-        $this->_template->display(
-            './modules/settings/getFirefoxModal.tpl'
-        );
-    }
-
     /*
      * Called by handleRequest() to process loading the my profile page.
      */

@@ -1253,7 +1253,7 @@ CREATE TABLE `module_schema` (
 
 LOCK TABLES `module_schema` WRITE;
 /*!40000 ALTER TABLE `module_schema` DISABLE KEYS */;
-INSERT INTO `module_schema` VALUES (1,'activity',0),(2,'attachments',0),(3,'calendar',0),(4,'candidates',0),(5,'careers',0),(6,'companies',0),(7,'contacts',0),(8,'export',0),(9,'extension-statistics',1),(10,'graphs',0),(11,'home',0),(12,'import',0),(13,'install',364),(14,'joborders',0),(15,'lists',0),(16,'login',0),(17,'queue',0),(18,'reports',0),(19,'rss',0),(20,'settings',0),(21,'tests',0),(22,'toolbar',0),(23,'wizard',0),(24,'xml',0);
+INSERT INTO `module_schema` VALUES (1,'activity',0),(2,'attachments',0),(3,'calendar',0),(4,'candidates',0),(5,'careers',0),(6,'companies',0),(7,'contacts',0),(8,'export',0),(9,'extension-statistics',1),(10,'graphs',0),(11,'home',0),(12,'import',0),(13,'install',366),(14,'joborders',0),(15,'lists',0),(16,'login',0),(17,'queue',0),(18,'reports',0),(19,'rss',0),(20,'settings',0),(21,'tests',0),(22,'wizard',0),(23,'xml',0);
 /*!40000 ALTER TABLE `module_schema` ENABLE KEYS */;
 UNLOCK TABLES;
 
