@@ -2018,12 +2018,12 @@ echo ('<script type="text/javascript">setTableWidth("table'.$md5InstanceName.'",
                 md5($this->_instanceName),
                 $actionURL,
                 urlencode($this->_instanceName),
-                urlencode(serialize($newParameterArraySelected)),
+                urlencode(json_encode($newParameterArraySelected)),
                 md5($this->_instanceName),
                 md5($this->_instanceName),
                 $actionURL,
                 urlencode($this->_instanceName),
-                urlencode(serialize($newParameterArrayAll))
+                urlencode(json_encode($newParameterArrayAll))
             );        
         }
         else
@@ -2067,8 +2067,8 @@ echo ('<script type="text/javascript">setTableWidth("table'.$md5InstanceName.'",
         $newParameterArrayAll['noSaveParameters'] = true;
 
         $instanceHash = md5($this->_instanceName);
-        $selectedParams = $allowAll ? serialize($newParameterArraySelected) : json_encode($newParameterArraySelected);
-        $allParams = serialize($newParameterArrayAll);
+        $selectedParams = json_encode($newParameterArraySelected);
+        $allParams = json_encode($newParameterArrayAll);
 
         $actionSeparator = (strpos($actionURL, '?') !== false) ? '&amp;' : '?';
         $selectedURL = $actionURL

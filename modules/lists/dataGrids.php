@@ -187,7 +187,7 @@ class ListsDataGrid extends DataGrid
             '<a href="javascript:void(0);" onclick="window.location.href=\'%s?m=export&amp;a=exportByDataGrid&amp;i=%s&amp;p=%s&amp;&dynamicArgument%s=\' + serializeArray(exportArray%s);">Export Selected</a><br />',
             CATSUtility::getIndexName(),
             urlencode($this->_instanceName),
-            urlencode(serialize($newParameterArray)),
+            urlencode(json_encode($newParameterArray)),
             urlencode($this->_instanceName),
             md5($this->_instanceName)
         );

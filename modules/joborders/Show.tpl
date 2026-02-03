@@ -427,7 +427,7 @@ use OpenCATS\UI\QuickActionMenu;
 ?>
 					var exportArray<?= $instance_md5 ?> = getSelected_candidates();
             		if (exportArray<?= $instance_md5 ?>.length>0) {
-                		window.location.href='<?= CATSUtility::getIndexName()?>?m=export&a=exportByDataGrid&i=<?= urlencode($instance_name); ?>&p=<?= urlencode(serialize($params)) ?>&dynamicArgument<?= $instance_md5 ?>=' + serializeArray(exportArray<?= $instance_md5 ?>);
+                		window.location.href='<?= CATSUtility::getIndexName()?>?m=export&a=exportByDataGrid&i=<?= urlencode($instance_name); ?>&p=<?= urlencode(json_encode($params)) ?>&dynamicArgument<?= $instance_md5 ?>=' + serializeArray(exportArray<?= $instance_md5 ?>);
             		} else {
                 		alert('No data selected');
             		}
