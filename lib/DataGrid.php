@@ -2002,7 +2002,7 @@ echo ('<script type="text/javascript">setTableWidth("table'.$md5InstanceName.'",
         if ($allowAll)
         {
             $html = sprintf(
-                '<div><div style="float:left; width:170px;">%s</div><div style="float:right; width:95px;"><a href="javascript:void(0);" onclick="if (exportArray%s.length>0) window.location.href=\'%s&i=%s&p=%s&dynamicArgument%s=\' + urlEncode(serializeArray(exportArray%s)); else dataGridNoSelected();">Selected</a>&nbsp;|&nbsp;<a href="%s&i=%s&p=%s">All</a></div></div>',
+                '<div><div style="float:left; width:170px;">%s</div><div style="float:right; width:95px;"><a href="javascript:void(0);" onclick="if (exportArray%s.length>0) window.location.href=\'%s&i=%s&p=%s&dynamicArgument%s=\' + serializeArray(exportArray%s); else dataGridNoSelected();">Selected</a>&nbsp;|&nbsp;<a href="%s&i=%s&p=%s">All</a></div></div>',
                 htmlspecialchars($actionTitle),
                 md5($this->_instanceName),
                 $actionURL,
@@ -2018,7 +2018,7 @@ echo ('<script type="text/javascript">setTableWidth("table'.$md5InstanceName.'",
         else
         {
             $html = sprintf(
-                '<div><div style="float:left; width:170px;">%s</div><div style="float:right; width:95px;"><a href="javascript:void(0);" onclick="if (exportArray%s.length>0) window.location.href=\'%s&i=%s&p=%s&dynamicArgument%s=\' + urlEncode(serializeArray(exportArray%s)); else dataGridNoSelected();">Selected</a></div></div>',
+                '<div><div style="float:left; width:170px;">%s</div><div style="float:right; width:95px;"><a href="javascript:void(0);" onclick="if (exportArray%s.length>0) window.location.href=\'%s&i=%s&p=%s&dynamicArgument%s=\' + serializeArray(exportArray%s); else dataGridNoSelected();">Selected</a></div></div>',
                 htmlspecialchars($actionTitle),
                 md5($this->_instanceName),
                 $actionURL,
@@ -2072,7 +2072,7 @@ echo ('<script type="text/javascript">setTableWidth("table'.$md5InstanceName.'",
         $allURL = str_replace(array('\\', '\''), array('\\\\', '\\\''), $allURL);
 
         $selectedPostJS = sprintf(
-            "var url='%s' + urlEncode(serializeArray(exportArray%s));"
+            "var url='%s' + serializeArray(exportArray%s);"
             . "return quickActionPostFromUrl(url);",
             $selectedURL,
             $instanceHash
@@ -2135,7 +2135,7 @@ echo ('<script type="text/javascript">setTableWidth("table'.$md5InstanceName.'",
         if ($allowAll)
         {
             $html = sprintf(
-                '<div><div style="float:left; width:170px;">%s</div><div style="float:right; width:95px;"><a href="javascript:void(0);" onclick="if (exportArray%s.length>0) showPopWin(\'%s&i=%s&p=%s&dynamicArgument%s=\' + urlEncode(serializeArray(exportArray%s)), %s, %s); else dataGridNoSelected();">Selected</a>&nbsp;|&nbsp;<a href="javascript:void(0);" onclick="showPopWin(\'%s&i=%s&p=%s\', %s, %s);">All</a></div></div>',
+                '<div><div style="float:left; width:170px;">%s</div><div style="float:right; width:95px;"><a href="javascript:void(0);" onclick="if (exportArray%s.length>0) showPopWin(\'%s&i=%s&p=%s&dynamicArgument%s=\' + serializeArray(exportArray%s), %s, %s); else dataGridNoSelected();">Selected</a>&nbsp;|&nbsp;<a href="javascript:void(0);" onclick="showPopWin(\'%s&i=%s&p=%s\', %s, %s);">All</a></div></div>',
                 htmlspecialchars($actionTitle),
                 md5($this->_instanceName),
                 $actionURL,
@@ -2155,7 +2155,7 @@ echo ('<script type="text/javascript">setTableWidth("table'.$md5InstanceName.'",
         else
         {
             $html = sprintf(
-                '<div><div style="float:left; width:170px;">%s</div><div style="float:right; width:95px;"><a href="javascript:void(0);" onclick="if (exportArray%s.length>0) showPopWin(\'%s&i=%s&p=%s&dynamicArgument%s=\' + urlEncode(serializeArray(exportArray%s)), %s, %s); else dataGridNoSelected();">Selected</a></div></div>',
+                '<div><div style="float:left; width:170px;">%s</div><div style="float:right; width:95px;"><a href="javascript:void(0);" onclick="if (exportArray%s.length>0) showPopWin(\'%s&i=%s&p=%s&dynamicArgument%s=\' + serializeArray(exportArray%s), %s, %s); else dataGridNoSelected();">Selected</a></div></div>',
                 htmlspecialchars($actionTitle),
                 md5($this->_instanceName),
                 $actionURL,
