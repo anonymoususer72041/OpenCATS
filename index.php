@@ -179,22 +179,16 @@ if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST' &
     (!isset($rssPage) || !$rssPage) &&
     (!isset($xmlPage) || !$xmlPage))
 {
-    $module = isset($_GET['m']) ? $_GET['m'] : '';
+    $token = null;
 
-    if ($module == '' || $module == 'logout' ||
-        ModuleUtility::moduleRequiresAuthentication($module))
+    if (isset($_POST['csrfToken']))
     {
-        $token = null;
+        $token = $_POST['csrfToken'];
+    }
 
-        if (isset($_POST['csrfToken']))
-        {
-            $token = $_POST['csrfToken'];
-        }
-
-        if (!$_SESSION['CATS']->isCSRFTokenValid($token))
-        {
-            CommonErrors::fatal(COMMONERROR_BADFIELDS, null, 'Invalid request.');
-        }
+    if (!$_SESSION['CATS']->isCSRFTokenValid($token))
+    {
+        CommonErrors::fatal(COMMONERROR_BADFIELDS, null, 'Invalid request.');
     }
 }
 
