@@ -314,13 +314,24 @@ class DataGrid
      */
     public static function getFromRequest()
     {
-        if (!isset($_REQUEST['i']) || !isset($_REQUEST['p']))
+        if (!isset($_REQUEST['i']) || $_REQUEST['i'] === '')
         {
-            trigger_error('getFromRequest datagrid failed : no request variables i or p set.');
+            trigger_error('getFromRequest datagrid failed : no request variables i set.');
+            return null;
         }
         
         $indentifier = $_REQUEST['i'];
-        $parameters = json_decode($_REQUEST['p'], true);
+        $parameters = array();
+
+        if (isset($_REQUEST['p']))
+        {
+            $decoded = json_decode($_REQUEST['p'], true);
+
+            if (is_array($decoded))
+            {
+                $parameters = $decoded;
+            }
+        }
 
         return self::get($indentifier, $parameters);
     }
