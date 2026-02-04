@@ -676,6 +676,36 @@ class CATSSession
             $this->_isLoggedIn = false;
             $this->_loginError = 'Invalid username or password.';
 
+            if (isset($_SERVER['REMOTE_ADDR']))
+            {
+                $ip = $_SERVER['REMOTE_ADDR'];
+            }
+            else
+            {
+                $ip = '';
+            }
+
+            if (isset($_SERVER['HTTP_USER_AGENT']))
+            {
+                $userAgent = $_SERVER['HTTP_USER_AGENT'];
+            }
+            else
+            {
+                $userAgent = '';
+            }
+
+            /* Log the login as unsuccessful. */
+            if ($addToHistory)
+            {
+                $users->addLoginHistory(
+                    null,
+                    0,
+                    $ip,
+                    $userAgent,
+                    false
+                );
+            }
+
             return;
         }
 
