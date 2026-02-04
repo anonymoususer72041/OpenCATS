@@ -667,6 +667,50 @@ class CATSSession
     {
         $db = DatabaseConnection::getInstance();
 
+        if (isset($_SERVER['REMOTE_ADDR']))
+        {
+            $ip = $_SERVER['REMOTE_ADDR'];
+        }
+        else
+        {
+            $ip = '';
+        }
+
+        if (isset($_SERVER['HTTP_USER_AGENT']))
+        {
+            $userAgent = $_SERVER['HTTP_USER_AGENT'];
+        }
+        else
+        {
+            $userAgent = '';
+        }
+
+        if (!empty($ip))
+        {
+            $sql = sprintf(
+                "SELECT
+                    COUNT(*) AS failedAttempts
+                FROM
+                    user_login
+                WHERE
+                    ip = %s
+                AND
+                    successful = 0
+                AND
+                    date >= (NOW() - INTERVAL 10 MINUTE)",
+                $db->makeQueryString($ip)
+            );
+
+            $rs = $db->getAssoc($sql);
+            if (!empty($rs) && $rs['failedAttempts'] > 10)
+            {
+                $this->_isLoggedIn = false;
+                $this->_loginError = 'Too many failed login attempts. Please try again later.';
+
+                return;
+            }
+        }
+
         /* Is the login information supplied correct? Get the status flag. */
         $users = new Users(-1);
         $loginStatus = $users->isCorrectLogin($username, $password);
@@ -675,24 +719,6 @@ class CATSSession
         {
             $this->_isLoggedIn = false;
             $this->_loginError = 'Invalid username or password.';
-
-            if (isset($_SERVER['REMOTE_ADDR']))
-            {
-                $ip = $_SERVER['REMOTE_ADDR'];
-            }
-            else
-            {
-                $ip = '';
-            }
-
-            if (isset($_SERVER['HTTP_USER_AGENT']))
-            {
-                $userAgent = $_SERVER['HTTP_USER_AGENT'];
-            }
-            else
-            {
-                $userAgent = '';
-            }
 
             /* Log the login as unsuccessful. */
             if ($addToHistory)
@@ -756,24 +782,6 @@ class CATSSession
             $this->_isLoggedIn = false;
             $this->_loginError = 'Invalid username or password.';
             return;
-        }
-
-        if (isset($_SERVER['REMOTE_ADDR']))
-        {
-            $ip = $_SERVER['REMOTE_ADDR'];
-        }
-        else
-        {
-            $ip = '';
-        }
-
-        if (isset($_SERVER['HTTP_USER_AGENT']))
-        {
-            $userAgent = $_SERVER['HTTP_USER_AGENT'];
-        }
-        else
-        {
-            $userAgent = '';
         }
 
         switch ($loginStatus)
