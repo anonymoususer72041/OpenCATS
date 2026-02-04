@@ -956,6 +956,20 @@ class Users
     public function addLoginHistory($userID, $siteID, $ip, $userAgent,
             $wasSuccessful)
     {
+        if ($userID === null || $userID === '')
+        {
+            $userIDSQL = 'NULL';
+        }
+        else
+        {
+            $userIDSQL = $this->_db->makeQueryInteger($userID);
+        }
+
+        if ($siteID === null || $siteID === '')
+        {
+            $siteID = 0;
+        }
+
         if (ENABLE_HOSTNAME_LOOKUP)
         {
             $hostname = @gethostbyaddr($ip);
@@ -986,8 +1000,8 @@ class Users
                     %s,
                     NOW()
                     )",
-            $userID,
-            $siteID,
+            $userIDSQL,
+            $this->_db->makeQueryInteger($siteID),
             $this->_db->makeQueryString($ip),
             $this->_db->makeQueryString($userAgent),
             $this->_db->makeQueryString($hostname),
