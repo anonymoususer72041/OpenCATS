@@ -1,7 +1,7 @@
 <?php
 /*
  * CATS
- * Update 366 - decode HTML entities twice for text fields
+ * Update 366 - decode HTML entities until stable for text fields
  *
  * Copyright (C) 2005 - 2007 Cognizo Technologies, Inc.
  *
@@ -135,7 +135,8 @@ function update_366($db)
 
                 $originalValue = $row[$columnName];
                 $decodedValue = $originalValue;
-                for ($i = 0; $i < 2; $i++)
+                $maxDecodePasses = 10;
+                for ($i = 0; $i < $maxDecodePasses; $i++)
                 {
                     $nextValue = html_entity_decode($decodedValue, ENT_QUOTES, HTML_ENCODING);
                     if ($nextValue === $decodedValue)
