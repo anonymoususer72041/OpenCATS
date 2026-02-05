@@ -50,7 +50,31 @@ function update_366($db)
         ),
         'calendar_event' => array(
             'primaryKey' => 'calendar_event_id',
-            'columns' => array('title', 'description', 'location')
+            'columns' => array('title', 'description', 'location', 'reminder_email')
+        ),
+        'history' => array(
+            'primaryKey' => 'history_id',
+            'columns' => array('previous_value', 'new_value', 'description')
+        ),
+        'email_history' => array(
+            'primaryKey' => 'email_history_id',
+            'columns' => array('text', 'recipients')
+        ),
+        'email_template' => array(
+            'primaryKey' => 'email_template_id',
+            'columns' => array('text', 'title', 'possible_variables')
+        ),
+        'extra_field' => array(
+            'primaryKey' => 'extra_field_id',
+            'columns' => array('value')
+        ),
+        'attachment' => array(
+            'primaryKey' => 'attachment_id',
+            'columns' => array('text')
+        ),
+        'feedback' => array(
+            'primaryKey' => 'feedback_id',
+            'columns' => array('feedback', 'subject')
         )
     );
 
