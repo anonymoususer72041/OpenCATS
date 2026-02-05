@@ -3,7 +3,7 @@ Feature: Security using ACL - actions - GET & POST
   In order to protect sensitive information from users who shouldd not have access to them
   All accesses in the system need to be controlled by the Access Control List
 
-@candidates @actions
+@candidates @actions @reset_login_attempts
 Scenario Outline: Candidate module actions
   Given I am logged in with <accessLevel> access level
   
@@ -255,7 +255,7 @@ Scenario Outline: Candidate module actions
   
   
 
-@joborders @actions
+@joborders @actions @reset_login_attempts
 Scenario Outline: Job Order module actions
   Given I am logged in with <accessLevel> access level
   
@@ -475,7 +475,7 @@ Scenario Outline: Job Order module actions
   
  
   
- @companies @actions
+ @companies @actions @reset_login_attempts
  Scenario Outline: Companies module actions
   Given I am logged in with <accessLevel> access level
   
@@ -606,7 +606,7 @@ Examples:
   | ROOT        | POST | index.php?m=companies&a=deleteAttachment   |      |
 
 
-@contacts @actions
+@contacts @actions @reset_login_attempts
 Scenario Outline: Contacts module actions
   Given I am logged in with <accessLevel> access level
   
@@ -728,7 +728,7 @@ Scenario Outline: Contacts module actions
   | ROOT        | POST    | index.php?m=contacts&a=addActivityScheduleEvent |       |    
   | ROOT        | POST    | index.php?m=contacts&a=delete                   |       |
   
-@activities @actions
+@activities @actions @reset_login_attempts
 Scenario Outline: Activity module actions
   Given I am logged in with <accessLevel> access level
   
@@ -762,7 +762,7 @@ Scenario Outline: Activity module actions
   | ROOT        | GET  | index.php?m=activity&a=listByViewDataGrid  |      |  
   | ROOT        | POST | index.php?m=activity&a=viewByDate          |      |
   
-@dashboard @home @actions
+@dashboard @home @actions @reset_login_attempts
 Scenario Outline: Home module actions
   Given I am logged in with <accessLevel> access level
   
@@ -828,7 +828,7 @@ Scenario Outline: Home module actions
   | ROOT        | POST | index.php?m=home&a=deleteSavedSearch   |      |
   | ROOT        | POST | index.php?m=home&a=addSavedSearch      |      |
   
-@lists @actions
+@lists @actions @reset_login_attempts
 Scenario Outline: Lists module actions
   Given I am logged in with <accessLevel> access level
   
@@ -903,7 +903,7 @@ Scenario Outline: Lists module actions
   | ROOT        | GET  | index.php?m=lists&a=listByView                 |      |
   
  
-@calendar @actions
+@calendar @actions @reset_login_attempts
 Scenario Outline: Calendar module actions
   Given I am logged in with <accessLevel> access level
   
@@ -953,7 +953,7 @@ Scenario Outline: Calendar module actions
   | ROOT        | POST | index.php?m=calendar&a=addEvent                |      |
   | ROOT        | POST | index.php?m=calendar&a=editEvent               |      |
   
-@reports @actions
+@reports @actions @reset_login_attempts
 Scenario Outline: Reports module actions
   Given I am logged in with <accessLevel> access level
   
@@ -1027,7 +1027,7 @@ Scenario Outline: Reports module actions
   | ROOT        | GET  | index.php?m=reports&a=generateEEOReportPreview     |      |
   | ROOT        | GET  | index.php?m=reports&a=reports                      |      |
   
- @settings @actions
+ @settings @actions @reset_login_attempts
   Scenario Outline: Settings module actions
   Given I am logged in with <accessLevel> access level
   
