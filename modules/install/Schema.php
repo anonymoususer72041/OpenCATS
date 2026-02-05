@@ -1328,9 +1328,15 @@ class CATSSchema
             '364' => '
                 UPDATE user SET password = md5(password) WHERE can_change_password=1;
             ',
-            '365' => 'PHP:
-                include_once(\'modules/install/scripts/365.php\');
-                update_365($db);
+            '365' => '
+                ALTER IGNORE TABLE `site`
+                ADD COLUMN `default_phone_country_code` varchar(8)
+                COLLATE utf8_unicode_ci NOT NULL DEFAULT \'+1\'
+                AFTER `date_format_ddmmyy`;
+            ',
+            '366' => 'PHP:
+                include_once(\'modules/install/scripts/366.php\');
+                update_366($db);
             ',
 
         );

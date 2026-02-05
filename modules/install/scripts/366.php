@@ -1,7 +1,7 @@
 <?php
 /*
  * CATS
- * Update 365 - decode HTML entities twice for text fields
+ * Update 366 - decode HTML entities twice for text fields
  *
  * Copyright (C) 2005 - 2007 Cognizo Technologies, Inc.
  *
@@ -22,10 +22,10 @@
  * (or from the year in which this file was created to the year 2007) by
  * Cognizo Technologies, Inc. All Rights Reserved.
  *
- * $Id: 365.php $
+ * $Id: 366.php $
  */
 
-function update_365($db)
+function update_366($db)
 {
     $tables = array(
         'joborder' => array(

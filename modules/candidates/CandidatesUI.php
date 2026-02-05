@@ -1137,16 +1137,7 @@ class CandidatesUI extends UserInterface
         }
 
         /* Date format for DateInput()s. */
-        if ($_SESSION['CATS']->isDateDMY())
-        {
-            $data['dateAvailableMDY'] = DateUtility::convert(
-                '-', $data['dateAvailable'], DATE_FORMAT_DDMMYY, DATE_FORMAT_MMDDYY
-            );
-        }
-        else
-        {
-            $data['dateAvailableMDY'] = $data['dateAvailable'];
-        }
+        $data['dateAvailableUser'] = $data['dateAvailable'];
 
         if (!eval(Hooks::get('CANDIDATE_EDIT'))) return;
 
@@ -1191,16 +1182,19 @@ class CandidatesUI extends UserInterface
          * ahead and convert the date to MySQL format.
          */
         $dateAvailable = $this->getTrimmedInput('dateAvailable', $_POST);
+        $dateFormatFlag = $_SESSION['CATS']->isDateDMY()
+            ? DATE_FORMAT_DDMMYY
+            : DATE_FORMAT_MMDDYY;
         if (!empty($dateAvailable))
         {
-            if (!DateUtility::validate('-', $dateAvailable, DATE_FORMAT_MMDDYY))
+            if (!DateUtility::validate('-', $dateAvailable, $dateFormatFlag))
             {
                 CommonErrors::fatal(COMMONERROR_MISSINGFIELDS, $this, 'Invalid availability date.');
             }
 
             /* Convert start_date to something MySQL can understand. */
             $dateAvailable = DateUtility::convert(
-                '-', $dateAvailable, DATE_FORMAT_MMDDYY, DATE_FORMAT_YYYYMMDD
+                '-', $dateAvailable, $dateFormatFlag, DATE_FORMAT_YYYYMMDD
             );
         }
 
@@ -1904,6 +1898,7 @@ class CandidatesUI extends UserInterface
         $this->_template->assign('keySkillsWildCardString', '');
         $this->_template->assign('fullNameWildCardString', '');
         $this->_template->assign('phoneNumberWildCardString', '');
+        $this->_template->assign('cityWildCardString', '');
         $this->_template->assign('mode', '');
         $this->_template->display('./modules/candidates/Search.tpl');
     }
@@ -1929,6 +1924,7 @@ class CandidatesUI extends UserInterface
         $keySkillsWildCardString   = '';
         $phoneNumberWildCardString = '';
         $fullNameWildCardString    = '';
+        $cityWildCardString        = '';
 
         /* Set up sorting. */
         if ($this->isRequiredIDValid('page', $_GET))
@@ -2106,6 +2102,37 @@ class CandidatesUI extends UserInterface
                 $resumeWildCardString = $query;
                 break;
 
+            case 'searchByCity':
+                $rs = $search->byCity($query, $sortBy, $sortDirection);
+
+                foreach ($rs as $rowIndex => $row)
+                {
+                    if (!empty($row['ownerFirstName']))
+                    {
+                        $rs[$rowIndex]['ownerAbbrName'] = StringUtility::makeInitialName(
+                            $row['ownerFirstName'],
+                            $row['ownerLastName'],
+                            false,
+                            LAST_NAME_MAXLEN
+                        );
+                    }
+                    else
+                    {
+                        $rs[$rowIndex]['ownerAbbrName'] = 'None';
+                    }
+
+                    $rsResume = $candidates->getResumes($row['candidateID']);
+                    if (isset($rsResume[0]))
+                    {
+                        $rs[$rowIndex]['resumeID'] = $rsResume[0]['attachmentID'];
+                    }
+                }
+
+                $isResumeMode = false;
+
+                $cityWildCardString = $query;
+                break;
+            
             case 'phoneNumber':
                 $rs = $search->byPhone($query, $sortBy, $sortDirection);
 
@@ -2172,6 +2199,7 @@ class CandidatesUI extends UserInterface
         $this->_template->assign('keySkillsWildCardString', $keySkillsWildCardString);
         $this->_template->assign('fullNameWildCardString', $fullNameWildCardString);
         $this->_template->assign('phoneNumberWildCardString', $phoneNumberWildCardString);
+        $this->_template->assign('cityWildCardString', $cityWildCardString);
         $this->_template->assign('mode', $mode);
         $this->_template->display('./modules/candidates/Search.tpl');
     }
@@ -2532,16 +2560,19 @@ class CandidatesUI extends UserInterface
          * ahead and convert the date to MySQL format.
          */
         $dateAvailable = $this->getTrimmedInput('dateAvailable', $_POST);
+        $dateFormatFlag = $_SESSION['CATS']->isDateDMY()
+            ? DATE_FORMAT_DDMMYY
+            : DATE_FORMAT_MMDDYY;
         if (!empty($dateAvailable))
         {
-            if (!DateUtility::validate('-', $dateAvailable, DATE_FORMAT_MMDDYY))
+            if (!DateUtility::validate('-', $dateAvailable, $dateFormatFlag))
             {
                 $this->$fatal('Invalid availability date.', $moduleDirectory);
             }
 
             /* Convert start_date to something MySQL can understand. */
             $dateAvailable = DateUtility::convert(
-                '-', $dateAvailable, DATE_FORMAT_MMDDYY, DATE_FORMAT_YYYYMMDD
+                '-', $dateAvailable, $dateFormatFlag, DATE_FORMAT_YYYYMMDD
             );
         }
 
@@ -3070,8 +3101,11 @@ class CandidatesUI extends UserInterface
         {
             /* Bail out if we received an invalid date. */
             $trimmedDate = $this->getTrimmedInput('dateAdd', $_POST);
+            $dateFormatFlag = $_SESSION['CATS']->isDateDMY()
+                ? DATE_FORMAT_DDMMYY
+                : DATE_FORMAT_MMDDYY;
             if (empty($trimmedDate) ||
-                !DateUtility::validate('-', $trimmedDate, DATE_FORMAT_MMDDYY))
+                !DateUtility::validate('-', $trimmedDate, $dateFormatFlag))
             {
                 CommonErrors::fatalModal(COMMONERROR_MISSINGFIELDS, $this, 'Invalid date.');
             }
@@ -3111,7 +3145,7 @@ class CandidatesUI extends UserInterface
             if ($allDay)
             {
                 $date = DateUtility::convert(
-                    '-', $trimmedDate, DATE_FORMAT_MMDDYY, DATE_FORMAT_YYYYMMDD
+                    '-', $trimmedDate, $dateFormatFlag, DATE_FORMAT_YYYYMMDD
                 );
 
                 $hour = 12;
@@ -3156,7 +3190,7 @@ class CandidatesUI extends UserInterface
                     DateUtility::convert(
                         '-',
                         $trimmedDate,
-                        DATE_FORMAT_MMDDYY,
+                        $dateFormatFlag,
                         DATE_FORMAT_YYYYMMDD
                     ),
                     date('H:i:00', $time)
