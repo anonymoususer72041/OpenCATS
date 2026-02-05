@@ -11,7 +11,7 @@ Feature: Access Level to objects check - sub pages (show, ...)
  
   ####### JOB ORDERS #######  
        
-  @javascript @joborders
+  @javascript @joborders @reset_login_attempts
   Scenario Outline: Job Order Show page visibility
     Given I am logged in with <accessLevel> access level
     And I am on "/index.php?m=joborders"
@@ -50,7 +50,7 @@ Feature: Access Level to objects check - sub pages (show, ...)
   
   ####### CANDIDATES #######
   
-   @javascript @candidates
+   @javascript @candidates @reset_login_attempts
    Scenario Outline: Candidate Show page visibility
      Given I am logged in with <accessLevel> access level
      And I am on "/index.php?m=candidates"
@@ -93,7 +93,7 @@ Feature: Access Level to objects check - sub pages (show, ...)
      
     ####### COMPANIES #######
 
-    @javascript @companies
+    @javascript @companies @reset_login_attempts
     Scenario Outline: Company Show page visibility for disabled level
      Given I am logged in with <accessLevel> access level
      And I am on "/index.php?m=home"
@@ -153,7 +153,7 @@ Feature: Access Level to objects check - sub pages (show, ...)
      
   ####### CONTACTS #######
   
-  @javascript @contacts
+  @javascript @contacts @reset_login_attempts
     Scenario Outline: Contacts Show page visibility
      Given I am logged in with <accessLevel> access level
      And I am on "/index.php?m=contacts"
@@ -187,7 +187,7 @@ Feature: Access Level to objects check - sub pages (show, ...)
      
    ####### LISTS #######
        
-   @javascript @lists
+   @javascript @lists @reset_login_attempts
    Scenario Outline: Lists Show page visibility
      Given I am logged in with <accessLevel> access level
      And I am on "/index.php?m=lists"
