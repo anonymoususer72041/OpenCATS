@@ -5,7 +5,7 @@ Feature: Access Level to objects check - main pages
   
   ######## DASHBOARD(HOME) #######
 
-  @javascript @dashboard
+  @javascript @dashboard @reset_login_attempts
   Scenario Outline: Dashboard module visibility
     Given I am logged in with <accessLevel> access level
     And I am on "/index.php?m=home"
@@ -32,7 +32,7 @@ Feature: Access Level to objects check - main pages
      
   ####### ACTIVITIES #######
     
-  @javascript @activities
+  @javascript @activities @reset_login_attempts
   Scenario Outline: Activities module visibility
     Given I am logged in with <accessLevel> access level
     And I am on "/index.php?m=activity"
@@ -64,7 +64,7 @@ Feature: Access Level to objects check - main pages
      
   ####### JOB ORDERS #######
     
-  @javascript @joborders
+  @javascript @joborders @reset_login_attempts
   Scenario Outline: Job Orders module visibility
     Given I am logged in with <accessLevel> access level
     And I am on "/index.php?m=joborders"
@@ -98,7 +98,7 @@ Feature: Access Level to objects check - main pages
      
   ####### CANDIDATES #######
      
-  @javascript @candidates
+  @javascript @candidates @reset_login_attempts
   Scenario Outline: Candidates module visibility
     Given I am logged in with <accessLevel> access level
     And I am on "/index.php?m=candidates"
@@ -134,7 +134,7 @@ Feature: Access Level to objects check - main pages
 
     ####### COMPANIES #######
     
-    @javascript @companies
+    @javascript @companies @reset_login_attempts
     Scenario Outline: Companies module visibility
      Given I am logged in with <accessLevel> access level
      And I am on "/index.php?m=companies"
@@ -167,7 +167,7 @@ Feature: Access Level to objects check - main pages
      
    ####### CONTACTS #######
      
-   @javascript @contacts
+   @javascript @contacts @reset_login_attempts
    Scenario Outline: Contacts module visibility
      Given I am logged in with <accessLevel> access level
      And I am on "/index.php?m=contacts"
@@ -201,7 +201,7 @@ Feature: Access Level to objects check - main pages
      
      ####### LISTS #######
      
-    @javascript @lists
+    @javascript @lists @reset_login_attempts
     Scenario Outline: Lists module visibility
      Given I am logged in with <accessLevel> access level
      And I am on "/index.php?m=lists"
@@ -227,7 +227,7 @@ Feature: Access Level to objects check - main pages
      
        ####### REPORTS #######
   
-  @javascript @reports
+  @javascript @reports @reset_login_attempts
     Scenario Outline: Reports module visibility
      Given I am logged in with <accessLevel> access level
      And I am on "/index.php?m=reports"
@@ -257,7 +257,7 @@ Feature: Access Level to objects check - main pages
      
 ####### SETTINGS #######  
 
-@javascript @settings
+@javascript @settings @reset_login_attempts
     Scenario Outline: Settings module visibility
      Given I am logged in with <accessLevel> access level
      And I am on "/index.php?m=settings"
@@ -283,7 +283,7 @@ Feature: Access Level to objects check - main pages
      
 ####### CALENDAR #######
 
-  @javascript @calendar
+  @javascript @calendar @reset_login_attempts
     Scenario Outline: Calendar module visibility
      Given I am logged in with <accessLevel> access level
      And I am on "/index.php?m=calendar"

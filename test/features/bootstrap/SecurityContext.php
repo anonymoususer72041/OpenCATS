@@ -34,6 +34,40 @@ class SecurityContext extends MinkContext implements Context, SnippetAcceptingCo
     }
 
     /**
+     * Test-only: Some security scenarios intentionally perform many failed login attempts (e.g. disabled users).
+     * This can accumulate rows in `user_login` and trigger the IP-based brute-force lockout, which then breaks
+     * subsequent login steps within the same CI run. For scenarios tagged with @reset_login_attempts, reset the
+     * login attempt history to keep tests isolated from this side effect.
+     *
+     * @BeforeScenario
+     */
+    public function resetLoginAttemptsForScenario($event)
+    {
+        $scenario = $event->getScenario();
+        if (method_exists($scenario, 'hasTag'))
+        {
+            $hasTag = $scenario->hasTag('reset_login_attempts');
+        }
+        else
+        {
+            $tags = $scenario->getTags();
+            $hasTag = in_array('reset_login_attempts', $tags, true);
+        }
+
+        if (!$hasTag)
+        {
+            return;
+        }
+
+        $db = DatabaseConnection::getInstance();
+        $result = $db->query('TRUNCATE TABLE user_login');
+        if ($result === false)
+        {
+            throw new Exception('Failed to truncate user_login for scenario: ' . $scenario->getTitle());
+        }
+    }
+
+    /**
      * @Given I am logged in with :accessLevel access level
      */
     public function iAmLoggedInWithAccessLevel($accessLevel)
