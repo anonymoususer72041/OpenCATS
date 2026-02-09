@@ -158,9 +158,9 @@ class TemplateUtility
 
             if (!eval(Hooks::get('TEMPLATE_LOGIN_INFO_EXTENDED_SITE_NAME'))) return;
 
-            $fullNameEscaped = htmlspecialchars((string) $fullName, ENT_QUOTES, HTML_ENCODING);
-            $usernameEscaped = htmlspecialchars((string) $username, ENT_QUOTES, HTML_ENCODING);
-            $siteNameEscaped = htmlspecialchars((string) $siteName, ENT_QUOTES, HTML_ENCODING);
+            $fullNameEscaped = htmlspecialchars((string) $fullName, ENT_QUOTES | ENT_SUBSTITUTE, HTML_ENCODING);
+            $usernameEscaped = htmlspecialchars((string) $username, ENT_QUOTES | ENT_SUBSTITUTE, HTML_ENCODING);
+            $siteNameEscaped = htmlspecialchars((string) $siteName, ENT_QUOTES | ENT_SUBSTITUTE, HTML_ENCODING);
             echo '<span>', $fullNameEscaped, '&nbsp;&lt;', $usernameEscaped, '&gt;&nbsp;(', $siteNameEscaped, ')</span>', "\n";
 
             if ($_SESSION['CATS']->getAccessLevel(ACL::SECOBJ_ROOT) >= ACCESS_LEVEL_SA)
@@ -1181,7 +1181,7 @@ class TemplateUtility
         echo '"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">', "\n";
         echo '<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">', "\n";
         echo '<head>', "\n";
-        echo '<title>OpenCATS - ', htmlspecialchars((string) $pageTitle, ENT_QUOTES, HTML_ENCODING), '</title>', "\n";
+        echo '<title>OpenCATS - ', htmlspecialchars((string) $pageTitle, ENT_QUOTES | ENT_SUBSTITUTE, HTML_ENCODING), '</title>', "\n";
         echo '<meta http-equiv="Content-Type" content="text/html; charset=', HTML_ENCODING, '" />', "\n";
         echo '<link rel="icon" href="images/favicon.ico" type="image/x-icon" />', "\n";
         echo '<link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />', "\n";

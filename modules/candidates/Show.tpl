@@ -241,8 +241,8 @@ use OpenCATS\UI\CandidateDuplicateQuickActionMenu;
                                     </tr>
                                     <tr>
                                         <td class="data">
-                                            <a href="<?php echo htmlspecialchars($attachmentsData['retrievalURL'], ENT_QUOTES, HTML_ENCODING, false); ?>">
-                                                <img src="<?php echo htmlspecialchars($attachmentsData['retrievalURL'], ENT_QUOTES, HTML_ENCODING, false); ?>" border="0" alt="" width="125" />
+                                            <a href="<?php echo htmlspecialchars($attachmentsData['retrievalURL'], ENT_QUOTES | ENT_SUBSTITUTE, HTML_ENCODING, false); ?>">
+                                                <img src="<?php echo htmlspecialchars($attachmentsData['retrievalURL'], ENT_QUOTES | ENT_SUBSTITUTE, HTML_ENCODING, false); ?>" border="0" alt="" width="125" />
                                             </a>
                                         </td>
                                     </tr>

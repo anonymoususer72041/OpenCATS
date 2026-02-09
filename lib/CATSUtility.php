@@ -269,13 +269,13 @@ class CATSUtility
         libxml_use_internal_errors($previousUseInternal);
         if ($loaded === false)
         {
-            return htmlspecialchars((string) $html, ENT_QUOTES, HTML_ENCODING);
+            return htmlspecialchars((string) $html, ENT_QUOTES | ENT_SUBSTITUTE, HTML_ENCODING);
         }
 
         $container = $dom->getElementsByTagName('div')->item(0);
         if ($container === null)
         {
-            return htmlspecialchars((string) $html, ENT_QUOTES, HTML_ENCODING);
+            return htmlspecialchars((string) $html, ENT_QUOTES | ENT_SUBSTITUTE, HTML_ENCODING);
         }
 
         $sanitizeNode = function ($node) use (&$sanitizeNode, $allowedTags, $dropTags, $allowedAttrsGlobal, $allowedAttrsByTag)

@@ -189,7 +189,7 @@ class SettingsUI extends UserInterface
         $tags = new Tags($this->_siteID);
         //$tags->update($_POST['tag_id'], $_POST['title'], $_POST['description']);
         $tags->update($_POST['tag_id'], $_POST['tag_title'], "-");
-        echo htmlspecialchars($_POST['tag_title'], ENT_QUOTES, HTML_ENCODING);
+        echo htmlspecialchars($_POST['tag_title'], ENT_QUOTES | ENT_SUBSTITUTE, HTML_ENCODING);
         return;
     }
     

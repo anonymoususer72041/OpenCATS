@@ -293,10 +293,10 @@
                                     </a>
                                 </nobr>
                              <?php else: ?>
-                                <a href="<?php echo htmlspecialchars($this->associatedAttachmentRS['retrievalURL'], ENT_QUOTES, HTML_ENCODING, false); ?>">
+                                <a href="<?php echo htmlspecialchars($this->associatedAttachmentRS['retrievalURL'], ENT_QUOTES | ENT_SUBSTITUTE, HTML_ENCODING, false); ?>">
                                     <img src="<?php $this->_($this->associatedAttachmentRS['attachmentIcon']) ?>" alt="" width="16" height="16" style="border: none;" />
                                 </a>
-                                <a href="<?php echo htmlspecialchars($this->associatedAttachmentRS['retrievalURL'], ENT_QUOTES, HTML_ENCODING, false); ?>">
+                                <a href="<?php echo htmlspecialchars($this->associatedAttachmentRS['retrievalURL'], ENT_QUOTES | ENT_SUBSTITUTE, HTML_ENCODING, false); ?>">
                                     <?php $this->_($this->associatedAttachmentRS['originalFilename']) ?>
                                 </a>
                                 <?php echo($this->associatedAttachmentRS['previewLink']); ?>
