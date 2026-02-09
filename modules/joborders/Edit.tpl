@@ -38,7 +38,7 @@
                         </td>
                         <td class="tdData">
 <?php if (!empty($this->data['startDate'])): ?>
-                                <script type="text/javascript">DateInput('startDate', false, (typeof window.CATSUserDateFormat !== 'undefined' ? window.CATSUserDateFormat : 'MM-DD-YY'), '<?php echo($this->data['startDateUser']); ?>', 9);</script>
+                                <script type="text/javascript">DateInput('startDate', false, (typeof window.CATSUserDateFormat !== 'undefined' ? window.CATSUserDateFormat : 'MM-DD-YY'), <?php echo json_encode((string) $this->data['startDateUser'], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>, 9);</script>
                             <?php else: ?>
                                 <script type="text/javascript">DateInput('startDate', false, (typeof window.CATSUserDateFormat !== 'undefined' ? window.CATSUserDateFormat : 'MM-DD-YY'), '', 9);</script>
                             <?php endif; ?>

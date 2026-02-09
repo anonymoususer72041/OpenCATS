@@ -338,7 +338,7 @@
                         </td>
                         <td class="tdData">
 <?php if (!empty($this->data['dateAvailable'])): ?>
-                                <script type="text/javascript">DateInput('dateAvailable', false, (typeof window.CATSUserDateFormat !== 'undefined' ? window.CATSUserDateFormat : 'MM-DD-YY'), '<?php echo($this->data['dateAvailableUser']); ?>', -1);</script>
+                                <script type="text/javascript">DateInput('dateAvailable', false, (typeof window.CATSUserDateFormat !== 'undefined' ? window.CATSUserDateFormat : 'MM-DD-YY'), <?php echo json_encode((string) $this->data['dateAvailableUser'], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>, -1);</script>
                             <?php else: ?>
                                 <script type="text/javascript">DateInput('dateAvailable', false, (typeof window.CATSUserDateFormat !== 'undefined' ? window.CATSUserDateFormat : 'MM-DD-YY'), '', -1);</script>
                             <?php endif; ?>
