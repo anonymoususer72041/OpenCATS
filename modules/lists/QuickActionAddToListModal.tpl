@@ -23,8 +23,8 @@
                             <input class="inputbox" style="width:220px; padding-left:5px; margin-top:2px;" value="<?php $this->_($data['description']); ?>" id="savedListRowInput<?php echo($data['savedListID']); ?>">
                         </span>
                         <span style="float:right; padding-right:25px;">
-                            <a href="javascript:void(0);" onclick="deleteListRow(<?php echo($data['savedListID']); ?>, '<?php echo($this->sessionCookie); ?>', <?php echo($data['numberEntries']); ?>);" style="text-decoration:none;"><img src="images/actions/delete.gif" border="0">&nbsp;Delete</a>&nbsp;
-                            <a href="javascript:void(0);" onclick="saveListRow(<?php echo($data['savedListID']); ?>, '<?php echo($this->sessionCookie); ?>');" style="text-decoration:none;"><img src="images/actions/screen.gif" border="0">&nbsp;Save</a>
+                            <a href="javascript:void(0);" onclick="deleteListRow(<?php echo($data['savedListID']); ?>, <?php echo json_encode((string) $this->sessionCookie, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>, <?php echo($data['numberEntries']); ?>);" style="text-decoration:none;"><img src="images/actions/delete.gif" border="0">&nbsp;Delete</a>&nbsp;
+                            <a href="javascript:void(0);" onclick="saveListRow(<?php echo($data['savedListID']); ?>, <?php echo json_encode((string) $this->sessionCookie, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>);" style="text-decoration:none;"><img src="images/actions/screen.gif" border="0">&nbsp;Save</a>
                         </span>
                     </div>
                     <div class="<?php TemplateUtility::printAlternatingDivClass($index); ?>" style="display:none;" id="savedListRowAjaxing<?php echo($data['savedListID']); ?>">
@@ -37,7 +37,7 @@
                     </span>
                     <span style="float:right; padding-right:25px;">
                         <a href="javascript:void(0);" onclick="document.getElementById('savedListNew').style.display='none';" style="text-decoration:none;"><img src="images/actions/delete.gif" border="0">&nbsp;Delete</a>&nbsp;
-                        <a href="javascript:void(0);" onclick="commitNewList('<?php echo($this->sessionCookie); ?>', <?php echo($this->dataItemType); ?>);" style="text-decoration:none;"><img src="images/actions/screen.gif" border="0">&nbsp;Save</a>
+                        <a href="javascript:void(0);" onclick="commitNewList(<?php echo json_encode((string) $this->sessionCookie, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>, <?php echo($this->dataItemType); ?>);" style="text-decoration:none;"><img src="images/actions/screen.gif" border="0">&nbsp;Save</a>
                     </span>
                 </div>
                 <div class="<?php TemplateUtility::printAlternatingDivClass(count($this->savedListsRS)); ?>" style="display:none;" id="savedListNewAjaxing">
@@ -47,7 +47,7 @@
             <br />
             <div style="float:right;" id="actionArea">
                 <input type="button" class="button" value="New List" onclick="addListRow();">&nbsp;
-                <input type="button" class="button" value="Add To Lists" onclick="addItemsToList('<?php echo($this->sessionCookie); ?>', <?php echo($this->dataItemType); ?>);">&nbsp;
+                <input type="button" class="button" value="Add To Lists" onclick="addItemsToList(<?php echo json_encode((string) $this->sessionCookie, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>, <?php echo($this->dataItemType); ?>);">&nbsp;
                 <input type="button" class="button" value="Cancel" onclick="parentHidePopWin();">&nbsp;
             </div>
             <div style="display:none; font: normal normal normal 12px/130% Arial, Tahoma, sans-serif;" id="addingToListAjaxing">

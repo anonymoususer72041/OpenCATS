@@ -93,7 +93,7 @@
                                     <label id="emailTemplateLabel" for="emailTemplate">Template</label>
                                 </td>
                                 <td class="tdData">
-                                    <select id="emailTemplate" name="emailTemplate" tabindex="<?php echo($tabIndex++);?>" onchange="showTemplate('<?php echo($this->sessionCookie); ?>');">
+                                    <select id="emailTemplate" name="emailTemplate" tabindex="<?php echo($tabIndex++);?>" onchange="showTemplate(<?php echo json_encode((string) $this->sessionCookie, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>);">
                                         <option selected="selected" value="-1">----</option>
                                         <?php foreach($this->emailTemplatesRS as $data): ?>
                                             <option value="<?php echo($data['emailTemplateID']); ?>"><?php echo($data['emailTemplateTitle']); ?></option>
@@ -101,7 +101,7 @@
                                     </select>
                                 
                                     <label id="emailPreviewLabel" for="candidateName">Preview for:</label>
-                                    <select id="candidateName" tabindex="<?php echo($tabIndex++); ?>" onchange="replaceTemplateTags('<?php echo($this->sessionCookie); ?>')">
+                                    <select id="candidateName" tabindex="<?php echo($tabIndex++); ?>" onchange="replaceTemplateTags(<?php echo json_encode((string) $this->sessionCookie, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>)">
                                         <option selected="selected" value="-1">----</option>
                                         <?php foreach($this->recipients as $data): ?>
                                             <option value="<?php echo($data['candidate_id']); ?>"><?php echo($data['last_name'].", ".$data['first_name']." (".$data['email1']).")"; ?></option>
