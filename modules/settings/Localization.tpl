@@ -56,7 +56,7 @@
                                             type="text"
                                             name="defaultPhoneCountryCodeDigits"
                                             id="defaultPhoneCountryCodeDigits"
-                                            value="<?php echo($this->defaultPhoneCountryCodeDigits); ?>"
+                                            value="<?php echo(htmlspecialchars($this->defaultPhoneCountryCodeDigits, ENT_QUOTES, HTML_ENCODING)); ?>"
                                             size="5"
                                             maxlength="5"
                                             oninput="this.value = this.value.replace(/[^0-9]/g, '');"
