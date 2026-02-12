@@ -77,7 +77,7 @@
                             </td>
 
                             <td align="left" valign="top" >
-                                <?php echo(nl2br($activityData['notes'])); ?>
+                                <?php echo(nl2br(TemplateUtility::highlightStatusChangeActivityNote($activityData['notes']))); ?>
                             </td>
 
                             <td align="left" valign="top">
