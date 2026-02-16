@@ -995,6 +995,7 @@ class CandidatesUI extends UserInterface
                 'phoneCell'       => $this->getSanitisedInput('phoneCell', $_POST),
                 'phoneWork'       => $this->getSanitisedInput('phoneWork', $_POST),
                 'address'         => $this->getSanitisedInput('address', $_POST),
+                'address2'        => $this->getSanitisedInput('address2', $_POST),
                 'city'            => $this->getSanitisedInput('city', $_POST),
                 'state'           => $this->getSanitisedInput('state', $_POST),
                 'zip'             => $this->getSanitisedInput('zip', $_POST),
@@ -1224,16 +1225,7 @@ class CandidatesUI extends UserInterface
         }
 
         /* Date format for DateInput()s. */
-        if ($_SESSION['CATS']->isDateDMY())
-        {
-            $data['dateAvailableMDY'] = DateUtility::convert(
-                '-', $data['dateAvailable'], DATE_FORMAT_DDMMYY, DATE_FORMAT_MMDDYY
-            );
-        }
-        else
-        {
-            $data['dateAvailableMDY'] = $data['dateAvailable'];
-        }
+        $data['dateAvailableUser'] = $data['dateAvailable'];
 
         if (!eval(Hooks::get('CANDIDATE_EDIT'))) return;
 
@@ -1278,16 +1270,19 @@ class CandidatesUI extends UserInterface
          * ahead and convert the date to MySQL format.
          */
         $dateAvailable = $this->getTrimmedInput('dateAvailable', $_POST);
+        $dateFormatFlag = $_SESSION['CATS']->isDateDMY()
+            ? DATE_FORMAT_DDMMYY
+            : DATE_FORMAT_MMDDYY;
         if (!empty($dateAvailable))
         {
-            if (!DateUtility::validate('-', $dateAvailable, DATE_FORMAT_MMDDYY))
+            if (!DateUtility::validate('-', $dateAvailable, $dateFormatFlag))
             {
                 CommonErrors::fatal(COMMONERROR_MISSINGFIELDS, $this, 'Invalid availability date.');
             }
 
             /* Convert start_date to something MySQL can understand. */
             $dateAvailable = DateUtility::convert(
-                '-', $dateAvailable, DATE_FORMAT_MMDDYY, DATE_FORMAT_YYYYMMDD
+                '-', $dateAvailable, $dateFormatFlag, DATE_FORMAT_YYYYMMDD
             );
         }
 
@@ -1403,6 +1398,7 @@ class CandidatesUI extends UserInterface
         $email1          = $this->getSanitisedInput('email1', $_POST);
         $email2          = $this->getSanitisedInput('email2', $_POST);
         $address         = $this->getSanitisedInput('address', $_POST);
+        $address2        = $this->getSanitisedInput('address2', $_POST);
         $city            = $this->getSanitisedInput('city', $_POST);
         $state           = $this->getSanitisedInput('state', $_POST);
         $zip             = $this->getSanitisedInput('zip', $_POST);
@@ -1443,6 +1439,7 @@ class CandidatesUI extends UserInterface
             $phoneCell,
             $phoneWork,
             $address,
+            $address2,
             $city,
             $state,
             $zip,
@@ -2653,16 +2650,19 @@ class CandidatesUI extends UserInterface
          * ahead and convert the date to MySQL format.
          */
         $dateAvailable = $this->getTrimmedInput('dateAvailable', $_POST);
+        $dateFormatFlag = $_SESSION['CATS']->isDateDMY()
+            ? DATE_FORMAT_DDMMYY
+            : DATE_FORMAT_MMDDYY;
         if (!empty($dateAvailable))
         {
-            if (!DateUtility::validate('-', $dateAvailable, DATE_FORMAT_MMDDYY))
+            if (!DateUtility::validate('-', $dateAvailable, $dateFormatFlag))
             {
                 $this->$fatal('Invalid availability date.', $moduleDirectory);
             }
 
             /* Convert start_date to something MySQL can understand. */
             $dateAvailable = DateUtility::convert(
-                '-', $dateAvailable, DATE_FORMAT_MMDDYY, DATE_FORMAT_YYYYMMDD
+                '-', $dateAvailable, $dateFormatFlag, DATE_FORMAT_YYYYMMDD
             );
         }
 
@@ -2711,6 +2711,7 @@ class CandidatesUI extends UserInterface
         $email1          = $this->getTrimmedInput('email1', $_POST);
         $email2          = $this->getTrimmedInput('email2', $_POST);
         $address         = $this->getTrimmedInput('address', $_POST);
+        $address2        = $this->getTrimmedInput('address2', $_POST);
         $city            = $this->getTrimmedInput('city', $_POST);
         $state           = $this->getTrimmedInput('state', $_POST);
         $zip             = $this->getTrimmedInput('zip', $_POST);
@@ -2759,6 +2760,7 @@ class CandidatesUI extends UserInterface
             $phoneCell,
             $phoneWork,
             $address,
+            $address2,
             $city,
             $state,
             $zip,
@@ -3191,8 +3193,11 @@ class CandidatesUI extends UserInterface
         {
             /* Bail out if we received an invalid date. */
             $trimmedDate = $this->getTrimmedInput('dateAdd', $_POST);
+            $dateFormatFlag = $_SESSION['CATS']->isDateDMY()
+                ? DATE_FORMAT_DDMMYY
+                : DATE_FORMAT_MMDDYY;
             if (empty($trimmedDate) ||
-                !DateUtility::validate('-', $trimmedDate, DATE_FORMAT_MMDDYY))
+                !DateUtility::validate('-', $trimmedDate, $dateFormatFlag))
             {
                 CommonErrors::fatalModal(COMMONERROR_MISSINGFIELDS, $this, 'Invalid date.');
             }
@@ -3232,7 +3237,7 @@ class CandidatesUI extends UserInterface
             if ($allDay)
             {
                 $date = DateUtility::convert(
-                    '-', $trimmedDate, DATE_FORMAT_MMDDYY, DATE_FORMAT_YYYYMMDD
+                    '-', $trimmedDate, $dateFormatFlag, DATE_FORMAT_YYYYMMDD
                 );
 
                 $hour = 12;
@@ -3277,7 +3282,7 @@ class CandidatesUI extends UserInterface
                     DateUtility::convert(
                         '-',
                         $trimmedDate,
-                        DATE_FORMAT_MMDDYY,
+                        $dateFormatFlag,
                         DATE_FORMAT_YYYYMMDD
                     ),
                     date('H:i:00', $time)

@@ -757,16 +757,19 @@ class JobOrdersUI extends UserInterface
          * convert the date to MySQL format.
          */
         $startDate = $this->getTrimmedInput('startDate', $_POST);
+        $dateFormatFlag = $_SESSION['CATS']->isDateDMY()
+            ? DATE_FORMAT_DDMMYY
+            : DATE_FORMAT_MMDDYY;
         if (!empty($startDate))
         {
-            if (!DateUtility::validate('-', $startDate, DATE_FORMAT_MMDDYY))
+            if (!DateUtility::validate('-', $startDate, $dateFormatFlag))
             {
                 CommonErrors::fatal(COMMONERROR_MISSINGFIELDS, $this, 'Invalid start date.');
             }
 
             /* Convert start_date to something MySQL can understand. */
             $startDate = DateUtility::convert(
-                '-', $startDate, DATE_FORMAT_MMDDYY, DATE_FORMAT_YYYYMMDD
+                '-', $startDate, $dateFormatFlag, DATE_FORMAT_YYYYMMDD
             );
         }
 
@@ -908,16 +911,7 @@ class JobOrdersUI extends UserInterface
         $departmentsString = ListEditor::getStringFromList($departmentsRS, 'name');
 
         /* Date format for DateInput()s. */
-        if ($_SESSION['CATS']->isDateDMY())
-        {
-            $data['startDateMDY'] = DateUtility::convert(
-                '-', $data['startDate'], DATE_FORMAT_DDMMYY, DATE_FORMAT_MMDDYY
-            );
-        }
-        else
-        {
-            $data['startDateMDY'] = $data['startDate'];
-        }
+        $data['startDateUser'] = $data['startDate'];
 
         /* Get extra fields. */
         $extraFieldRS = $jobOrders->extraFields->getValuesForEdit($jobOrderID);
@@ -1021,9 +1015,12 @@ class JobOrdersUI extends UserInterface
          * convert the date to MySQL format.
          */
         $startDate = $this->getTrimmedInput('startDate', $_POST);
+        $dateFormatFlag = $_SESSION['CATS']->isDateDMY()
+            ? DATE_FORMAT_DDMMYY
+            : DATE_FORMAT_MMDDYY;
         if (!empty($startDate))
         {
-            if (!DateUtility::validate('-', $startDate, DATE_FORMAT_MMDDYY))
+            if (!DateUtility::validate('-', $startDate, $dateFormatFlag))
             {
                 CommonErrors::fatal(COMMONERROR_MISSINGFIELDS, $this, 'Invalid start date.');
                 return;
@@ -1031,7 +1028,7 @@ class JobOrdersUI extends UserInterface
 
             /* Convert start_date to something MySQL can understand. */
             $startDate = DateUtility::convert(
-                '-', $startDate, DATE_FORMAT_MMDDYY, DATE_FORMAT_YYYYMMDD
+                '-', $startDate, $dateFormatFlag, DATE_FORMAT_YYYYMMDD
             );
         }
 
