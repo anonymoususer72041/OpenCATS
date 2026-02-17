@@ -1347,6 +1347,18 @@ class CATSSchema
                     );
                 }
             ',
+            '366' => 'PHP:
+            $defaultCountryCol = $db->getAssoc("SHOW COLUMNS FROM `site` LIKE \'default_country\'");
+
+                if (empty($defaultCountryCol))
+                {
+                    $db->query(
+                        "ALTER TABLE `site`
+                         ADD COLUMN `default_country` VARCHAR(2) NOT NULL DEFAULT \'US\' AFTER `time_zone`",
+                        true
+                    );
+                }
+            ',
 
         );
     }
