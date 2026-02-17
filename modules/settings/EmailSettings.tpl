@@ -46,7 +46,7 @@
                                             &nbsp;<img src="images/indicator2.gif">
                                         </span><br />
                                         <span id="testButtonSpan">
-                                            <input type="button" class="button" name="test" id="test" onclick="testEmailSettings(<?php echo json_encode((string) $this->sessionCookie, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>);" value="Test Configuration" />
+                                            <input type="button" class="button" name="test" id="test" onclick="testEmailSettings('<?php echo($this->sessionCookie); ?>');" value="Test Configuration" />
                                         </span>
                                         <div id="testOutput">
                                         </div>

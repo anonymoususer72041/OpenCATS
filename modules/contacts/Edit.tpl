@@ -50,11 +50,11 @@
 
                                     <td class="tdData">
                                         <input type="hidden" name="companyID" id="companyID" value="<?php $this->_($this->data['companyID']); ?>" />
-                                        <input type="text" name="companyName" id="companyName" value="<?php $this->_($this->data['companyName']); ?>" class="inputbox" style="width: 150px" onFocus="suggestListActivate('getCompanyNames', 'companyName', 'CompanyResults', 'companyID', 'ajaxTextEntryHover', 0, <?php echo json_encode((string) $this->sessionCookie, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>, 'helpShim');" <?php if ($this->defaultCompanyID == $this->data['companyID']) echo('disabled'); ?> />&nbsp;*
+                                        <input type="text" name="companyName" id="companyName" value="<?php $this->_($this->data['companyName']); ?>" class="inputbox" style="width: 150px" onFocus="suggestListActivate('getCompanyNames', 'companyName', 'CompanyResults', 'companyID', 'ajaxTextEntryHover', 0, '<?php echo($this->sessionCookie); ?>', 'helpShim');" <?php if ($this->defaultCompanyID == $this->data['companyID']) echo('disabled'); ?> />&nbsp;*
                                         <?php if ($this->defaultCompanyID !== false): ?>
                                             <input type="checkbox" id="defaultCompany" onchange="if (this.checked) { document.getElementById('companyName').disabled = true; document.getElementById('companyID').value = '<?php echo($this->defaultCompanyID); ?>'; document.getElementById('companyName').value = &quot;<?php $this->_($this->defaultCompanyRS['name']); ?>&quot;; } else { document.getElementById('companyName').disabled = false; }"<?php if ($this->defaultCompanyID == $this->data['companyID']) echo(' checked'); ?> />&nbsp;Internal Contact
                                         <?php endif; ?>
-                                        <script type="text/javascript">watchCompanyIDChange(<?php echo json_encode((string) $this->sessionCookie, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>);</script>
+                                        <script type="text/javascript">watchCompanyIDChange('<?php echo($this->sessionCookie); ?>');</script>
                                         <br />
                                         <iframe id="helpShim" src="javascript:void(0);" scrolling="no" frameborder="0" style="position:absolute; display:none;"></iframe>
                                         <div id="CompanyResults" class="ajaxSearchResults"></div>

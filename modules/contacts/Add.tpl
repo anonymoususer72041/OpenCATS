@@ -47,11 +47,11 @@
                                     </td>
                                     <td class="tdData">
                                         <input type="hidden" name="companyID" id="companyID" value="<?php if ($this->selectedCompanyID === false) { echo(0); } else { echo($this->selectedCompanyID); } ?>" />
-                                        <input type="text" name="companyName" id="companyName" value="<?php if ($this->selectedCompanyID !== false) { $this->_($this->companyRS['name']); } ?>" class="inputbox" style="width: 150px" onFocus="suggestListActivate('getCompanyNames', 'companyName', 'CompanyResults', 'companyID', 'ajaxTextEntryHover', 0, <?php echo json_encode((string) $this->sessionCookie, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>, 'helpShim');" <?php if ($this->selectedCompanyID !== false) { echo('disabled'); } ?>/>&nbsp;*
+                                        <input type="text" name="companyName" id="companyName" value="<?php if ($this->selectedCompanyID !== false) { $this->_($this->companyRS['name']); } ?>" class="inputbox" style="width: 150px" onFocus="suggestListActivate('getCompanyNames', 'companyName', 'CompanyResults', 'companyID', 'ajaxTextEntryHover', 0, '<?php echo($this->sessionCookie); ?>', 'helpShim');" <?php if ($this->selectedCompanyID !== false) { echo('disabled'); } ?>/>&nbsp;*
                                         <?php if ($this->defaultCompanyID !== false && $this->selectedCompanyID === false): ?>
                                             <input type="checkbox" id="defaultCompany" onchange="if (this.checked){ document.getElementById('companyName').disabled = true; document.getElementById('companyID').value = '<?php echo($this->defaultCompanyID); ?>'; document.getElementById('companyName').value = &quot;<?php $this->_($this->defaultCompanyRS['name']); ?>&quot;; } else { document.getElementById('companyName').disabled = false; }">&nbsp;Internal Contact
                                         <?php endif; ?>
-                                        <script type="text/javascript">watchCompanyIDChange(<?php echo json_encode((string) $this->sessionCookie, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>);</script>
+                                        <script type="text/javascript">watchCompanyIDChange('<?php echo($this->sessionCookie); ?>');</script>
                                         <br />
                                         <iframe id="helpShim" src="javascript:void(0);" scrolling="no" frameborder="0" style="position:absolute; display:none;"></iframe>
                                         <div id="CompanyResults" class="ajaxSearchResults"></div>
@@ -240,7 +240,7 @@
             <script type="text/javascript">
                 document.addContactForm.firstName.focus();
                 <?php if ($this->selectedCompanyID !== false): ?>
-                    ContactDepartments_populate(<?php echo($this->selectedCompanyID); ?>, <?php echo json_encode((string) $this->sessionCookie, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>);
+                    ContactDepartments_populate(<?php echo($this->selectedCompanyID); ?>, '<?php echo($this->sessionCookie); ?>');
                 <?php endif; ?>
             </script>
         </div>
