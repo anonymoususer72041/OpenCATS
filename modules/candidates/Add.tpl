@@ -228,8 +228,17 @@
                             <label id="addressLabel" for="address">Address:</label>
                         </td>
                         <td class="tdData">
-                            <textarea tabindex="9" name="address" id="address" rows="2" cols="40" class="inputbox" style="width: 150px"><?php if(isset($this->preassignedFields['address'])) $this->_($this->preassignedFields['address']); if(isset($this->preassignedFields['address2'])) $this->_("\n" . $this->preassignedFields['address2']); ?></textarea>
+                            <input type="text" tabindex="9" name="address" id="address" class="inputbox" style="width: 150px" value="<?php if (isset($this->preassignedFields['address'])) $this->_($this->preassignedFields['address']); ?>" />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="images/indicator2.gif" id="addressParserIndicator" alt="" style="visibility: hidden; margin-left: 10px;" height="16" width="16" />
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="tdVertical">
+                            <label id="address2Label" for="address2">Address 2:</label>
+                        </td>
+                        <td class="tdData">
+                            <input type="text" tabindex="10" name="address2" id="address2" class="inputbox" style="width: 150px" value="<?php if (isset($this->preassignedFields['address2'])) $this->_($this->preassignedFields['address2']); ?>" />
                         </td>
                     </tr>
 

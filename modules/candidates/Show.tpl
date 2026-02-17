@@ -118,7 +118,12 @@ use OpenCATS\UI\CandidateDuplicateQuickActionMenu;
 
                             <tr>
                                 <td class="vertical">Address:</td>
-                                <td class="data"><?php echo(nl2br(htmlspecialchars($this->data['address']))); ?></td>
+                                <td class="data">
+                                    <?php echo(nl2br(htmlspecialchars($this->data['address']))); ?>
+                                    <?php if (!empty($this->data['address2'])): ?>
+                                        <br /><?php $this->_($this->data['address2']); ?>
+                                    <?php endif; ?>
+                                </td>
                             </tr>
 
                             <tr>
@@ -590,7 +595,7 @@ use OpenCATS\UI\CandidateDuplicateQuickActionMenu;
                 <tr>
                     <th align="left" width="125">Date</th>
                     <th align="left" width="90">Type</th>
-                    <th align="left" width="90">Entered</th>
+                    <th align="left" width="90">Entered By</th>
                     <th align="left" width="250">Regarding</th>
                     <th align="left">Notes</th>
 <?php if (!$this->isPopup): ?>

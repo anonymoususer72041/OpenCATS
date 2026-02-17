@@ -120,7 +120,16 @@
                             <label id="addressLabel" for="address1">Address:</label>
                         </td>
                         <td class="tdData">
-                            <textarea class="inputbox" id="address" name="address" style="width: 150px;"><?php $this->_($this->data['address']); ?></textarea>
+                            <input type="text" class="inputbox" id="address" name="address" style="width: 150px;" value="<?php $this->_($this->data['address']); ?>" />
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="tdVertical">
+                            <label id="address2Label" for="address2">Address 2:</label>
+                        </td>
+                        <td class="tdData">
+                            <input type="text" class="inputbox" id="address2" name="address2" style="width: 150px;" value="<?php $this->_($this->data['address2']); ?>" />
                         </td>
                     </tr>
 
