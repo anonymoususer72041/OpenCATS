@@ -154,6 +154,12 @@ class ActivityDataGrid extends DataGrid
      */
     public function getSQL($selectSQL, $joinSQL, $whereSQL, $havingSQL, $orderSQL, $limitSQL, $distinct = '')
     {   
+        $orderSQLWithTieBreaker = $orderSQL;
+        if (stripos($orderSQLWithTieBreaker, 'dateCreatedSort') !== false)
+        {
+            $orderSQLWithTieBreaker .= ', activityID DESC';
+        }
+
         $sql = sprintf(
             "SELECT SQL_CALC_FOUND_ROWS %s
                 activity.activity_id AS activityID,
@@ -266,7 +272,7 @@ class ActivityDataGrid extends DataGrid
             $this->dateCriterion,
             (strlen($whereSQL) > 0) ? ' AND ' . $whereSQL : '',
             (strlen($havingSQL) > 0) ? ' HAVING ' . $havingSQL : '',
-            $orderSQL,
+            $orderSQLWithTieBreaker,
             $limitSQL
         );
 
