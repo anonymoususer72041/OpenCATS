@@ -999,6 +999,7 @@ class CandidatesUI extends UserInterface
                 'city'            => $this->getTrimmedInput('city', $_POST),
                 'state'           => $this->getTrimmedInput('state', $_POST),
                 'zip'             => $this->getTrimmedInput('zip', $_POST),
+                'country'         => $this->getTrimmedInput('country', $_POST),
                 'source'          => $this->getTrimmedInput('source', $_POST),
                 'keySkills'       => $this->getTrimmedInput('keySkills', $_POST),
                 'currentEmployer' => $this->getTrimmedInput('currentEmployer', $_POST),
@@ -1402,6 +1403,7 @@ class CandidatesUI extends UserInterface
         $city            = $this->getTrimmedInput('city', $_POST);
         $state           = $this->getTrimmedInput('state', $_POST);
         $zip             = $this->getTrimmedInput('zip', $_POST);
+        $country         = $this->getTrimmedInput('country', $_POST);
         $source          = $this->getTrimmedInput('source', $_POST);
         $keySkills       = $this->getTrimmedInput('keySkills', $_POST);
         $currentEmployer = $this->getTrimmedInput('currentEmployer', $_POST);
@@ -1460,7 +1462,8 @@ class CandidatesUI extends UserInterface
             $gender,
             $race,
             $veteran,
-            $disability
+            $disability,
+            ($country == '' ? false : $country)
         );
         if (!$updateSuccess)
         {
@@ -2715,6 +2718,7 @@ class CandidatesUI extends UserInterface
         $city            = $this->getTrimmedInput('city', $_POST);
         $state           = $this->getTrimmedInput('state', $_POST);
         $zip             = $this->getTrimmedInput('zip', $_POST);
+        $country         = $this->getTrimmedInput('country', $_POST);
         $source          = $this->getTrimmedInput('source', $_POST);
         $keySkills       = $this->getTrimmedInput('keySkills', $_POST);
         $currentEmployer = $this->getTrimmedInput('currentEmployer', $_POST);
@@ -2779,7 +2783,9 @@ class CandidatesUI extends UserInterface
             $gender,
             $race,
             $veteran,
-            $disability
+            $disability,
+            false,
+            $country
         );
 
         
@@ -3709,6 +3715,7 @@ class CandidatesUI extends UserInterface
         $this->_template->assign('isFinishedMode', true);
         $this->_template->display('./modules/candidates/LinkDuplicity.tpl');
     }
+
 }
 
 ?>
