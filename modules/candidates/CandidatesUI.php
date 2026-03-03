@@ -912,6 +912,7 @@ class CandidatesUI extends UserInterface
                 'city'            => $this->getSanitisedInput('city', $_POST),
                 'state'           => $this->getSanitisedInput('state', $_POST),
                 'zip'             => $this->getSanitisedInput('zip', $_POST),
+                'country'         => $this->getSanitisedInput('country', $_POST),
                 'source'          => $this->getTrimmedInput('source', $_POST),
                 'keySkills'       => $this->getSanitisedInput('keySkills', $_POST),
                 'currentEmployer' => $this->getSanitisedInput('currentEmployer', $_POST),
@@ -1315,6 +1316,7 @@ class CandidatesUI extends UserInterface
         $city            = $this->getSanitisedInput('city', $_POST);
         $state           = $this->getSanitisedInput('state', $_POST);
         $zip             = $this->getSanitisedInput('zip', $_POST);
+        $country         = $this->getNormalisedCountry($this->getTrimmedInput('country', $_POST));
         $source          = $this->getSanitisedInput('source', $_POST);
         $keySkills       = $this->getSanitisedInput('keySkills', $_POST);
         $currentEmployer = $this->getSanitisedInput('currentEmployer', $_POST);
@@ -1373,7 +1375,8 @@ class CandidatesUI extends UserInterface
             $gender,
             $race,
             $veteran,
-            $disability
+            $disability,
+            ($country == '' ? false : $country)
         );
         if (!$updateSuccess)
         {
@@ -2628,6 +2631,7 @@ class CandidatesUI extends UserInterface
         $city            = $this->getTrimmedInput('city', $_POST);
         $state           = $this->getTrimmedInput('state', $_POST);
         $zip             = $this->getTrimmedInput('zip', $_POST);
+        $country         = $this->getNormalisedCountry($this->getTrimmedInput('country', $_POST));
         $source          = $this->getTrimmedInput('source', $_POST);
         $keySkills       = $this->getTrimmedInput('keySkills', $_POST);
         $currentEmployer = $this->getTrimmedInput('currentEmployer', $_POST);
@@ -2692,7 +2696,9 @@ class CandidatesUI extends UserInterface
             $gender,
             $race,
             $veteran,
-            $disability
+            $disability,
+            false,
+            $country
         );
 
         
@@ -3581,6 +3587,18 @@ class CandidatesUI extends UserInterface
         $candidates->addDuplicates($newCandidateID, $oldCandidateID);
         $this->_template->assign('isFinishedMode', true);
         $this->_template->display('./modules/candidates/LinkDuplicity.tpl');
+    }
+
+    private function getNormalisedCountry($country)
+    {
+        $country = strtoupper(trim($country));
+
+        if (strlen($country) != 2 || !isset($GLOBALS['countries'][$country]))
+        {
+            return '';
+        }
+
+        return $country;
     }
 }
 

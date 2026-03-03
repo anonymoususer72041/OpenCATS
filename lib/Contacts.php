@@ -81,7 +81,7 @@ class Contacts
      */
     public function add($companyID, $firstName, $lastName, $title, $department,
         $reportsTo, $email1, $email2, $phoneWork, $phoneCell, $phoneOther, $address, $address2,
-        $city, $state, $zip, $isHot, $notes, $enteredBy, $owner)
+        $city, $state, $zip, $isHot, $notes, $enteredBy, $owner, $country = '')
     {
         /* Get the department ID of the selected department. */
         $departmentID = $this->getDepartmentIDByName(
@@ -106,6 +106,7 @@ class Contacts
                 city,
                 state,
                 zip,
+                country,
                 is_hot,
                 left_company,
                 notes,
@@ -116,6 +117,7 @@ class Contacts
                 date_modified
             )
             VALUES (
+                %s,
                 %s,
                 %s,
                 %s,
@@ -157,6 +159,7 @@ class Contacts
             $this->_db->makeQueryString($city),
             $this->_db->makeQueryString($state),
             $this->_db->makeQueryString($zip),
+            $this->_db->makeQueryStringOrNULL($country),
             ($isHot ? '1' : '0'),
             $this->_db->makeQueryString($notes),
             $this->_db->makeQueryInteger($enteredBy),
@@ -209,12 +212,24 @@ class Contacts
     public function update($contactID, $companyID, $firstName, $lastName,
         $title, $department, $reportsTo, $email1, $email2, $phoneWork, $phoneCell,
         $phoneOther, $address, $address2, $city, $state, $zip, $isHot,
-        $leftCompany, $notes, $owner, $email, $emailAddress)
+        $leftCompany, $notes, $owner, $email, $emailAddress, $country = false)
     {
         /* Get the department ID of the selected department. */
         $departmentID = $this->getDepartmentIDByName(
             $department, $companyID, $this->_db
         );
+
+        if ($country === false)
+        {
+            $countrySQL = ",\n";
+        }
+        else
+        {
+            $countrySQL = sprintf(
+                ",\n                contact.country       = %s,\n",
+                $this->_db->makeQueryStringOrNULL($country)
+            );
+        }
 
         $sql = sprintf(
             "UPDATE
@@ -235,7 +250,7 @@ class Contacts
                 contact.address2      = %s,
                 contact.city          = %s,
                 contact.state         = %s,
-                contact.zip           = %s,
+                contact.zip           = %s%s
                 contact.is_hot        = %s,
                 contact.left_company  = %s,
                 contact.notes         = %s,
@@ -261,6 +276,7 @@ class Contacts
             $this->_db->makeQueryString($city),
             $this->_db->makeQueryString($state),
             $this->_db->makeQueryString($zip),
+            $countrySQL,
             ($isHot ? '1' : '0'),
             ($leftCompany ? '1' : '0'),
             $this->_db->makeQueryString($notes),
@@ -312,8 +328,20 @@ class Contacts
      * @return boolean True if successful; false otherwise.
      */
     public function updateByCompany($companyID, $address, $address2, $city,
-        $state, $zip)
+        $state, $zip, $country = false)
     {
+        if ($country === false)
+        {
+            $countrySQL = ",\n";
+        }
+        else
+        {
+            $countrySQL = sprintf(
+                ",\n                country      = %s,\n",
+                $this->_db->makeQueryStringOrNULL($country)
+            );
+        }
+
         $sql = sprintf(
             "UPDATE
                 contact
@@ -322,7 +350,7 @@ class Contacts
                 address2     = %s,
                 city          = %s,
                 state         = %s,
-                zip           = %s,
+                zip           = %s%s
                 date_modified = NOW()
             WHERE
                 left_company != 1
@@ -335,6 +363,7 @@ class Contacts
             $this->_db->makeQueryString($city),
             $this->_db->makeQueryString($state),
             $this->_db->makeQueryString($zip),
+            $countrySQL,
             $this->_db->makeQueryInteger($companyID),
             $this->_siteID
         );
@@ -451,6 +480,7 @@ class Contacts
                 contact.city AS city,
                 contact.state AS state,
                 contact.zip AS zip,
+                contact.country AS country,
                 contact.notes AS notes,
                 contact.is_hot AS isHotContact,
                 contact.left_company AS leftCompany,
@@ -527,6 +557,7 @@ class Contacts
                 contact.city AS city,
                 contact.state AS state,
                 contact.zip AS zip,
+                contact.country AS country,
                 contact.notes AS notes,
                 contact.is_hot AS isHotContact,
                 contact.left_company AS leftCompany,

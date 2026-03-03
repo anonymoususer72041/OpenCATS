@@ -248,6 +248,42 @@ class TemplateUtility
     }
 
     /**
+     * Prints a country selection dropdown list.
+     *
+     * @param string ID and name attributes of the country select input
+     * @param string selected country code
+     * @param boolean include blank option
+     * @return void
+     */
+    public static function printCountrySelect($selectID, $selectedCode, $includeBlank = true)
+    {
+        $selectedCode = strtoupper(trim($selectedCode));
+        if (strlen($selectedCode) != 2 || !isset($GLOBALS['countries'][$selectedCode]))
+        {
+            $selectedCode = '';
+        }
+
+        echo '<select id="', $selectID, '" name="', $selectID, '" class="inputbox" style="width: 150px;">';
+
+        if ($includeBlank)
+        {
+            echo '<option value=""></option>';
+        }
+
+        foreach ($GLOBALS['countries'] as $countryCode => $countryName)
+        {
+            echo '<option value="', htmlspecialchars($countryCode), '"';
+            if ($countryCode == $selectedCode)
+            {
+                echo ' selected="selected"';
+            }
+            echo '>', htmlspecialchars($countryName), '</option>';
+        }
+
+        echo '</select>';
+    }
+
+    /**
      * Prints the Quick Search box and MRU list.
      *
      * @return void

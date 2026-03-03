@@ -585,6 +585,7 @@ class CompaniesUI extends UserInterface
         $city            = $this->getSanitisedInput('city', $_POST);
         $state           = $this->getSanitisedInput('state', $_POST);
         $zip             = $this->getSanitisedInput('zip', $_POST);
+        $country         = $this->getNormalisedCountry($this->getTrimmedInput('country', $_POST));
         $keyTechnologies = $this->getSanitisedInput('keyTechnologies', $_POST);
         $notes           = $this->getSanitisedInput('notes', $_POST);
 
@@ -604,7 +605,7 @@ class CompaniesUI extends UserInterface
         $companyID = $companies->add(
             $name, $address, $address2, $city, $state, $zip, $phone1,
             $phone2, $faxNumber, $url, $keyTechnologies, $isHot,
-            $notes, $this->_userID, $this->_userID
+            $notes, $this->_userID, $this->_userID, $country
         );
 
         if ($companyID <= 0)
@@ -857,6 +858,7 @@ class CompaniesUI extends UserInterface
         $city            = $this->getSanitisedInput('city', $_POST);
         $state           = $this->getSanitisedInput('state', $_POST);
         $zip             = $this->getSanitisedInput('zip', $_POST);
+        $country         = $this->getNormalisedCountry($this->getTrimmedInput('country', $_POST));
         $keyTechnologies = $this->getSanitisedInput('keyTechnologies', $_POST);
         $notes           = $this->getSanitisedInput('notes', $_POST);
 
@@ -880,7 +882,8 @@ class CompaniesUI extends UserInterface
 
         if (!$companies->update($companyID, $name, $address, $address2, $city, $state,
             $zip, $phone1, $phone2, $faxNumber, $url, $keyTechnologies,
-            $isHot, $notes, $owner, $billingContact, $email, $emailAddress))
+            $isHot, $notes, $owner, $billingContact, $email, $emailAddress,
+            ($country == '' ? false : $country)))
         {
             CommonErrors::fatal(COMMONERROR_RECORDERROR, $this, 'Failed to update company.');
         }
@@ -896,7 +899,15 @@ class CompaniesUI extends UserInterface
             if ($_POST['updateContacts'] == 'yes')
             {
                 $contacts = new Contacts($this->_siteID);
-                $contacts->updateByCompany($companyID, $address, $address2, $city, $state, $zip);
+                $contacts->updateByCompany(
+                    $companyID,
+                    $address,
+                    $address2,
+                    $city,
+                    $state,
+                    $zip,
+                    ($country == '' ? false : $country)
+                );
             }
         }
 
@@ -1261,6 +1272,18 @@ class CompaniesUI extends UserInterface
         }
 
         return $resultSet;
+    }
+
+    private function getNormalisedCountry($country)
+    {
+        $country = strtoupper(trim($country));
+
+        if (strlen($country) != 2 || !isset($GLOBALS['countries'][$country]))
+        {
+            return '';
+        }
+
+        return $country;
     }
 }
 
