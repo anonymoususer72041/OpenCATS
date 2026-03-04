@@ -44,6 +44,7 @@ include_once(LEGACY_ROOT . '/lib/DocumentToText.php');
 include_once(LEGACY_ROOT . '/lib/FileUtility.php');
 include_once(LEGACY_ROOT . '/lib/ParseUtility.php');
 include_once(LEGACY_ROOT . '/lib/TemplateUtility.php');
+include_once(LEGACY_ROOT . '/lib/StringUtility.php');
 
 class CareersUI extends UserInterface
 {
@@ -928,9 +929,7 @@ class CareersUI extends UserInterface
             }
 
             $jobTitleEscaped = htmlspecialchars((string) $jobOrderData['title'], ENT_QUOTES | ENT_SUBSTITUTE, HTML_ENCODING);
-            $jobCityEscaped = htmlspecialchars((string) $jobOrderData['city'], ENT_QUOTES | ENT_SUBSTITUTE, HTML_ENCODING);
             $jobOpeningsEscaped = htmlspecialchars((string) $jobOrderData['openings'], ENT_QUOTES | ENT_SUBSTITUTE, HTML_ENCODING);
-            $jobStateEscaped = htmlspecialchars((string) $jobOrderData['state'], ENT_QUOTES | ENT_SUBSTITUTE, HTML_ENCODING);
             $jobTypeEscaped = htmlspecialchars((string) $jobOrders->typeCodeToString($jobOrderData['type']), ENT_QUOTES | ENT_SUBSTITUTE, HTML_ENCODING);
             $jobCreatedEscaped = htmlspecialchars((string) $jobOrderData['dateCreated'], ENT_QUOTES | ENT_SUBSTITUTE, HTML_ENCODING);
             $jobRecruiterEscaped = htmlspecialchars((string) $jobOrderData['recruiterFullName'], ENT_QUOTES | ENT_SUBSTITUTE, HTML_ENCODING);
@@ -942,11 +941,19 @@ class CareersUI extends UserInterface
             $jobRateEscaped = nl2br(htmlspecialchars((string) $jobOrderData['maxRate'], ENT_QUOTES | ENT_SUBSTITUTE, HTML_ENCODING));
             $jobSalaryEscaped = nl2br(htmlspecialchars((string) $jobOrderData['salary'], ENT_QUOTES | ENT_SUBSTITUTE, HTML_ENCODING));
             $jobDaysOldEscaped = nl2br(htmlspecialchars((string) $jobOrderData['daysOld'], ENT_QUOTES | ENT_SUBSTITUTE, HTML_ENCODING));
+            $jobLocationEscaped = htmlspecialchars(
+                $this->getLocationString(
+                    $jobOrderData['city'],
+                    $jobOrderData['state'],
+                    $jobOrderData['country']
+                ),
+                ENT_QUOTES | ENT_SUBSTITUTE,
+                HTML_ENCODING
+            );
             $template['Content'] = str_replace('<registeredCandidate>', $useCookie && $isRegistrationEnabled ? $this->getRegisteredCandidateBlock($siteID, $template['Content - Candidate Registration']) : '', $template['Content']);
             $template['Content'] = str_replace('<title>',        $jobTitleEscaped, $template['Content']);
-            $template['Content'] = str_replace('<city>',         $jobCityEscaped, $template['Content']);
+            $template['Content'] = str_replace('<location>',     $jobLocationEscaped, $template['Content']);
             $template['Content'] = str_replace('<openings>',     $jobOpeningsEscaped, $template['Content']);
-            $template['Content'] = str_replace('<state>',        $jobStateEscaped, $template['Content']);
             $template['Content'] = str_replace('<type>',         $jobTypeEscaped, $template['Content']);
             $template['Content'] = str_replace('<created>',      $jobCreatedEscaped, $template['Content']);
             $template['Content'] = str_replace('<recruiter>',    $jobRecruiterEscaped, $template['Content']);
@@ -1519,7 +1526,11 @@ class CareersUI extends UserInterface
             $html .= '</td>';
 
             $html .= '<td>';
-            $html .= htmlspecialchars((string) $line['city'], ENT_QUOTES | ENT_SUBSTITUTE, HTML_ENCODING) . ', ' . htmlspecialchars((string) $line['state'], ENT_QUOTES | ENT_SUBSTITUTE, HTML_ENCODING);
+            $html .= htmlspecialchars($this->getLocationString(
+                $line['city'],
+                $line['state'],
+                $line['country']
+            ), ENT_QUOTES | ENT_SUBSTITUTE, HTML_ENCODING);
             $html .= '</td>';
 
             $html .= '</tr>'."\n";
@@ -1527,6 +1538,28 @@ class CareersUI extends UserInterface
         $html .= '</table>';
 
         return $html;
+    }
+
+    private function getLocationString($city, $state, $country)
+    {
+        $city = (string) $city;
+        $state = (string) $state;
+        $country = trim((string) $country);
+
+        $location = StringUtility::makeCityStateString($city, $state);
+
+        if ($country == '')
+        {
+            return $location;
+        }
+
+        $countryName = isset($GLOBALS['countries'][$country]) ? $GLOBALS['countries'][$country] : $country;
+        if ($location == '')
+        {
+            return $countryName;
+        }
+
+        return $location . ', ' . $countryName;
     }
 
     /* Called by Careers Page function to handle the processing of candidate input. */
