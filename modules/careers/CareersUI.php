@@ -43,6 +43,7 @@ include_once(LEGACY_ROOT . '/lib/Questionnaire.php');
 include_once(LEGACY_ROOT . '/lib/DocumentToText.php');
 include_once(LEGACY_ROOT . '/lib/FileUtility.php');
 include_once(LEGACY_ROOT . '/lib/ParseUtility.php');
+include_once(LEGACY_ROOT . '/lib/StringUtility.php');
 
 class CareersUI extends UserInterface
 {
@@ -838,11 +839,16 @@ class CareersUI extends UserInterface
                 die ();
             }
 
+            $location = $this->getLocationString(
+                $jobOrderData['city'],
+                $jobOrderData['state'],
+                $jobOrderData['country']
+            );
+            $template['Content'] = str_replace('<location>', $location, $template['Content']);
+
             $template['Content'] = str_replace('<registeredCandidate>', $useCookie && $isRegistrationEnabled ? $this->getRegisteredCandidateBlock($siteID, $template['Content - Candidate Registration']) : '', $template['Content']);
             $template['Content'] = str_replace('<title>',        $jobOrderData['title'], $template['Content']);
-            $template['Content'] = str_replace('<city>',         $jobOrderData['city'], $template['Content']);
             $template['Content'] = str_replace('<openings>',     $jobOrderData['openings'], $template['Content']);
-            $template['Content'] = str_replace('<state>',        $jobOrderData['state'], $template['Content']);
             $template['Content'] = str_replace('<type>',         $jobOrders->typeCodeToString($jobOrderData['type']), $template['Content']);
             $template['Content'] = str_replace('<created>',      $jobOrderData['dateCreated'], $template['Content']);
             $template['Content'] = str_replace('<recruiter>',    $jobOrderData['recruiterFullName'], $template['Content']);
@@ -1355,7 +1361,11 @@ class CareersUI extends UserInterface
             $html .= '</td>';
 
             $html .= '<td>';
-            $html .= htmlspecialchars($line['city']) . ', ' . htmlspecialchars($line['state']);
+            $html .= htmlspecialchars($this->getLocationString(
+                $line['city'],
+                $line['state'],
+                $line['country']
+            ));
             $html .= '</td>';
 
             $html .= '</tr>'."\n";
@@ -1363,6 +1373,28 @@ class CareersUI extends UserInterface
         $html .= '</table>';
 
         return $html;
+    }
+
+    private function getLocationString($city, $state, $country)
+    {
+        $city = (string) $city;
+        $state = (string) $state;
+        $country = trim((string) $country);
+
+        $location = StringUtility::makeCityStateString($city, $state);
+
+        if ($country == '')
+        {
+            return $location;
+        }
+
+        $countryName = isset($GLOBALS['countries'][$country]) ? $GLOBALS['countries'][$country] : $country;
+        if ($location == '')
+        {
+            return $countryName;
+        }
+
+        return $location . ', ' . $countryName;
     }
 
     /* Called by Careers Page function to handle the processing of candidate input. */
