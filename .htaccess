@@ -2,6 +2,7 @@ IndexIgnore *
 
 Options -Indexes
 
+# Security headers (requires mod_headers; AllowOverride FileInfo or All).
 # Basic security headers.
 # These defaults are intentionally conservative to avoid breaking common customizations.
 <IfModule mod_headers.c>
