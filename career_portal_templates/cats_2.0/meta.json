@@ -1,0 +1,17 @@
+{
+  "career_portal_name": "CATS 2.0",
+  "sections": {
+    "Header": "header.tpl",
+    "Content - Main": "content_main.tpl",
+    "Content - Search Results": "content_search_results.tpl",
+    "Content - Job Details": "content_job_details.tpl",
+    "Content - Candidate Registration": "content_candidate_registration.tpl",
+    "Content - Candidate Profile": "content_candidate_profile.tpl",
+    "Content - Apply for Position": "content_apply_for_position.tpl",
+    "Content - Questionnaire": "content_questionnaire.tpl",
+    "Content - Thanks for your Submission": "content_thanks_for_your_submission.tpl",
+    "Footer": "footer.tpl",
+    "CSS": "css.tpl",
+    "Left": "left.tpl"
+  }
+}
