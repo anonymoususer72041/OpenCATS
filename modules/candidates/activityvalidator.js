@@ -10,11 +10,11 @@
 
 function checkActivityForm(form)
 {
-    var errorMessage = '';
+    var errorMessage = "";
 
     errorMessage += checkEventTitle();
 
-    if (errorMessage != '')
+    if (errorMessage != "")
     {
         alert("Form Error:\n" + errorMessage);
         return false;
@@ -25,25 +25,25 @@ function checkActivityForm(form)
 
 function checkEventTitle()
 {
-    var errorMessage = '';
+    var errorMessage = "";
 
-    scheduleEvent = document.getElementById('scheduleEvent').checked;
+    scheduleEvent = document.getElementById("scheduleEvent").checked;
     if (!scheduleEvent)
     {
-        return '';
+        return "";
     }
 
-    fieldValue = document.getElementById('title').value;
-    fieldLabel = document.getElementById('titleLabel');
-    if (fieldValue == '')
+    fieldValue = document.getElementById("title").value;
+    fieldLabel = document.getElementById("titleLabel");
+    if (fieldValue == "")
     {
         errorMessage = "    - You must enter an event title.\n";
 
-        fieldLabel.style.color = '#ff0000';
+        fieldLabel.style.color = "#ff0000";
     }
     else
     {
-        fieldLabel.style.color = '#000';
+        fieldLabel.style.color = "#000";
     }
 
     return errorMessage;
