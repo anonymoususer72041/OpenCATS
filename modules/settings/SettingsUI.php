@@ -544,26 +544,6 @@ class SettingsUI extends UserInterface
                 $this->careerPortalQuestionnaireUpdate();
                 break;
 
-            case 'careerPortalTemplateEdit':
-                
-                if ($this->isPostBack())
-                {
-                    if ($this->getUserAccessLevel('settings.careerPortalTemplateEdit.POST') < ACCESS_LEVEL_SA && !$_SESSION['CATS']->hasUserCategory('careerportal'))
-                    {
-                        CommonErrors::fatal(COMMONERROR_PERMISSION, $this, 'Invalid user level for action.');
-                    }
-                    $this->onCareerPortalTemplateEdit();
-                }
-                else
-                {
-                    if ($this->getUserAccessLevel('settings.careerPortalTemplateEdit') < ACCESS_LEVEL_DEMO && !$_SESSION['CATS']->hasUserCategory('careerportal'))
-                    {
-                        CommonErrors::fatal(COMMONERROR_PERMISSION, $this, 'Invalid user level for action.');
-                    }
-                    $this->careerPortalTemplateEdit();
-                }
-                break;
-
             case 'careerPortalSettings':
                 if ($this->getUserAccessLevel('settings.careerPortalSettings') < ACCESS_LEVEL_DEMO && !$_SESSION['CATS']->hasUserCategory('careerportal'))
                 {
@@ -1698,132 +1678,6 @@ class SettingsUI extends UserInterface
     }
 
     /*
-     * Called by handleRequest() to show the careers website settings editor.
-     */
-    private function careerPortalTemplateEdit()
-    {
-        $templateName = $this->getTrimmedInput('templateName', $_GET);
-        if (empty($templateName))
-        {
-            CommonErrors::fatal(COMMONERROR_MISSINGFIELDS, $this, 'Required fields are missing.');
-        }
-
-        $careerPortalSettings = new CareerPortalSettings($this->_siteID);
-
-        $templateSource = $careerPortalSettings->getAllFromCustomTemplate($templateName);
-        if (empty($templateSource))
-        {
-            CommonErrors::fatal(COMMONERROR_BADINDEX, $this, 'No custom template with that name exists.');
-        }
-
-        $templateBySetting = array();
-        foreach ($templateSource as $templateLine)
-        {
-            $templateBySetting[$templateLine['setting']] = $templateLine['value'];
-        }
-
-        /* Arrange the array entries in a way that makes sense. */
-        $desiredOrder = $careerPortalSettings->requiredTemplateFields;
-
-        $template = array();
-        foreach ($desiredOrder as $item)
-        {
-            if (isset($templateBySetting[$item]))
-            {
-                $template[$item] = $templateBySetting[$item];
-            }
-            else
-            {
-                $template[$item] = '';
-            }
-        }
-
-        foreach ($templateBySetting as $item => $value)
-        {
-            if (!isset($template[$item]) && $item != '')
-            {
-                $template[$item] = $templateBySetting[$item];
-            }
-        }
-
-        /* Get extra fields. */
-        $jobOrders = new JobOrders($this->_siteID);
-        $extraFieldsForJobOrders = $jobOrders->extraFields->getValuesForAdd();
-
-        $candidates = new Candidates($this->_siteID);
-        $extraFieldsForCandidates = $candidates->extraFields->getValuesForAdd();
-
-        /* Get EEO settings. */
-        $EEOSettings = new EEOSettings($this->_siteID);
-        $EEOSettingsRS = $EEOSettings->getAll();
-
-        $this->_template->assign('active', $this);
-        $this->_template->assign('subActive', 'Administration');
-        $this->_template->assign('template', $template);
-        $this->_template->assign('templateName', $templateName);
-        $this->_template->assign('eeoEnabled', $EEOSettingsRS['enabled']);
-        $this->_template->assign('EEOSettingsRS', $EEOSettingsRS);
-        $this->_template->assign('sessionCookie', $_SESSION['CATS']->getCookie());
-        $this->_template->assign('extraFieldsForJobOrders', $extraFieldsForJobOrders);
-        $this->_template->assign('extraFieldsForCandidates', $extraFieldsForCandidates);
-        $this->_template->display('./modules/settings/CareerPortalTemplateEdit.tpl');
-    }
-
-    //FIXME: Document me.
-    private function onCareerPortalTemplateEdit()
-    {
-        $templateName = $this->getTrimmedInput('templateName', $_POST);
-        if (empty($templateName) || !isset($_POST['continueEdit']))
-        {
-            CommonErrors::fatal(COMMONERROR_MISSINGFIELDS, $this, 'Required fields are missing.');
-        }
-
-        $continueEdit = $_POST['continueEdit'];
-
-        $careerPortalSettings = new CareerPortalSettings($this->_siteID);
-
-        $templateSource = $careerPortalSettings->getAllFromCustomTemplate($templateName);
-
-        // FIXME: Document this md5() stuff.
-        foreach ($templateSource as $templateLine)
-        {
-            if ($templateLine['setting'] != '')
-            {
-                $careerPortalSettings->setForTemplate(
-                    $templateLine['setting'],
-                    $_POST[md5($templateLine['setting'])],
-                    $templateName
-                );
-            }
-        }
-
-        foreach ($careerPortalSettings->requiredTemplateFields as $field)
-        {
-            if ($field != '' && isset($_POST[md5($field)]))
-            {
-                $careerPortalSettings->setForTemplate(
-                    $field,
-                    $_POST[md5($field)],
-                    $templateName
-                );
-            }
-        }
-
-        if ($continueEdit == '1')
-        {
-            CATSUtility::transferRelativeURI(
-                'm=settings&a=careerPortalTemplateEdit&templateName=' . urlencode($templateName)
-            );
-        }
-        else
-        {
-            CATSUtility::transferRelativeURI(
-                'm=settings&a=careerPortalSettings&templateName=' . urlencode($templateName)
-            );
-        }
-    }
-
-    /*
      * Called by handleRequest() to show the careers website settings template.
      */
     private function careerPortalSettings()
@@ -1831,7 +1685,6 @@ class SettingsUI extends UserInterface
         $careerPortalSettings = new CareerPortalSettings($this->_siteID);
         $careerPortalSettingsRS = $careerPortalSettings->getAll();
         $careerPortalTemplateNames = $careerPortalSettings->getDefaultTemplates();
-        $careerPortalTemplateCustomNames = $careerPortalSettings->getCustomTemplates();
 
         $careerPortalURL = CATSUtility::getAbsoluteURI() . 'careers/';
 
@@ -1845,7 +1698,6 @@ class SettingsUI extends UserInterface
         $this->_template->assign('subActive', 'Administration');
         $this->_template->assign('careerPortalSettingsRS', $careerPortalSettingsRS);
         $this->_template->assign('careerPortalTemplateNames', $careerPortalTemplateNames);
-        $this->_template->assign('careerPortalTemplateCustomNames', $careerPortalTemplateCustomNames);
         $this->_template->assign('careerPortalURL', $careerPortalURL);
         $this->_template->assign('sessionCookie', $_SESSION['CATS']->getCookie());
         $this->_template->display('./modules/settings/CareerPortalSettings.tpl');
@@ -1948,72 +1800,34 @@ class SettingsUI extends UserInterface
 
         switch ($page)
         {
-            case 'new':
-                $origName = 'Blank Page';
-                $duplicateName = $this->getTrimmedInput('newName', $_POST);
-                if (empty($duplicateName))
-                {
-                    CommonErrors::fatal(COMMONERROR_MISSINGFIELDS, $this, 'Required fields are missing.');
-                }
-
-                /* Copy default templates or existing customized templates from orig to duplicate. */
-                $templateSource1 = $careerPortalSettings->getAllFromDefaultTemplate($origName);
-                $templateSource2 = $careerPortalSettings->getAllFromCustomTemplate($origName);
-
-                $templateSource = array_merge($templateSource1, $templateSource2);
-
-                foreach ($templateSource as $setting)
-                {
-                    $careerPortalSettings->setForTemplate(
-                        $setting['setting'],
-                        $setting['value'],
-                        $duplicateName
-                    );
-                }
-                break;
-
-            case 'duplicate':
-                $origName      = $this->getTrimmedInput('origName', $_POST);
-                $duplicateName = $this->getTrimmedInput('duplicateName', $_POST);
-
-                if (empty($origName) || empty($duplicateName))
-                {
-                    CommonErrors::fatal(COMMONERROR_MISSINGFIELDS, $this, 'Required fields are missing.');
-                }
-
-                /* Copy default templates or existing customized templates from orig to duplicate. */
-                $templateSource1 = $careerPortalSettings->getAllFromDefaultTemplate($origName);
-                $templateSource2 = $careerPortalSettings->getAllFromCustomTemplate($origName);
-
-                $templateSource = array_merge($templateSource1, $templateSource2);
-
-                foreach ($templateSource as $setting)
-                {
-                    $careerPortalSettings->setForTemplate(
-                        $setting['setting'],
-                        $setting['value'],
-                        $duplicateName
-                    );
-                }
-                break;
-
-            case 'delete':
-                $delName = $this->getTrimmedInput('delName', $_POST);
-                if (empty($delName))
-                {
-                    CommonErrors::fatal(COMMONERROR_MISSINGFIELDS, $this, 'Required fields are missing.');
-                }
-                $careerPortalSettings->deleteCustomTemplate($delName);
-                break;
-
             case 'setAsActive':
                 $activeName = $this->getTrimmedInput('activeName', $_POST);
                 if (empty($activeName))
                 {
                     CommonErrors::fatal(COMMONERROR_MISSINGFIELDS, $this, 'Required fields are missing.');
                 }
+
+                $availableTemplates = $careerPortalSettings->getAllTemplates();
+                $isValidTemplate = false;
+                foreach ($availableTemplates as $templateData)
+                {
+                    if ($templateData['templateID'] == $activeName)
+                    {
+                        $isValidTemplate = true;
+                        break;
+                    }
+                }
+
+                if (!$isValidTemplate)
+                {
+                    CommonErrors::fatal(COMMONERROR_BADINDEX, $this, 'Invalid template.');
+                }
+
                 $careerPortalSettings->set('activeBoard', $activeName);
                 break;
+
+            default:
+                CommonErrors::fatal(COMMONERROR_BADINDEX, $this, 'Invalid page.');
         }
 
         CATSUtility::transferRelativeURI('m=settings&a=careerPortalSettings');

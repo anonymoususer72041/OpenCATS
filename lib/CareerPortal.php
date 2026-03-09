@@ -31,6 +31,231 @@
 
 include_once(LEGACY_ROOT . '/lib/Mailer.php');
 
+class CareerPortalTemplateRepository
+{
+    private $_requiredTemplateFields;
+    private $_templates;
+
+
+    public function __construct($requiredTemplateFields)
+    {
+        $this->_requiredTemplateFields = $requiredTemplateFields;
+        $this->_templates = null;
+    }
+
+
+    public function getTemplates()
+    {
+        if ($this->_templates === null)
+        {
+            $this->_templates = $this->_loadTemplates();
+        }
+
+        return $this->_templates;
+    }
+
+    public function getTemplateList()
+    {
+        return array_values($this->getTemplates());
+    }
+
+    public function resolveTemplateIdentifier($templateIdentifier)
+    {
+        $templateIdentifier = trim((string) $templateIdentifier);
+        if ($templateIdentifier == '')
+        {
+            return '';
+        }
+
+        $templates = $this->getTemplates();
+        if (isset($templates[$templateIdentifier]))
+        {
+            return $templateIdentifier;
+        }
+
+        foreach ($templates as $template)
+        {
+            if (!strcasecmp($template['careerPortalName'], $templateIdentifier))
+            {
+                return $template['templateID'];
+            }
+        }
+
+        return '';
+    }
+
+    public function getTemplateByIdentifier($templateIdentifier)
+    {
+        $templateIdentifier = $this->resolveTemplateIdentifier($templateIdentifier);
+        if ($templateIdentifier == '')
+        {
+            return false;
+        }
+
+        $templates = $this->getTemplates();
+
+        return $templates[$templateIdentifier];
+    }
+
+    public function getDefaultTemplateIdentifier()
+    {
+        if ($this->resolveTemplateIdentifier('cats_2.0') != '')
+        {
+            return 'cats_2.0';
+        }
+
+        $templates = $this->getTemplateList();
+        if (!empty($templates))
+        {
+            return $templates[0]['templateID'];
+        }
+
+        return '';
+    }
+
+    private function _loadTemplates()
+    {
+        $templates = array();
+        $baseDirectory = LEGACY_ROOT . '/career_portal_templates';
+        if (!is_dir($baseDirectory))
+        {
+            return $templates;
+        }
+
+        $directories = scandir($baseDirectory);
+        if ($directories === false)
+        {
+            return $templates;
+        }
+
+        foreach ($directories as $directoryName)
+        {
+            if ($directoryName == '.' || $directoryName == '..')
+            {
+                continue;
+            }
+
+            $templateDirectory = $baseDirectory . '/' . $directoryName;
+            if (!is_dir($templateDirectory))
+            {
+                continue;
+            }
+
+            $template = $this->_loadTemplate($directoryName, $templateDirectory);
+            if ($template === false)
+            {
+                continue;
+            }
+
+            $templates[$directoryName] = $template;
+        }
+
+        uasort($templates, array($this, '_compareTemplates'));
+
+        return $templates;
+    }
+
+    private function _loadTemplate($templateIdentifier, $templateDirectory)
+    {
+        $metaFileName = $templateDirectory . '/meta.json';
+        if (!is_file($metaFileName) || !is_readable($metaFileName))
+        {
+            return false;
+        }
+
+        $metaContents = file_get_contents($metaFileName);
+        if ($metaContents === false)
+        {
+            return false;
+        }
+
+        $meta = json_decode($metaContents, true);
+        if (!is_array($meta))
+        {
+            return false;
+        }
+
+        if (
+            !isset($meta['career_portal_name']) ||
+            !is_string($meta['career_portal_name']) ||
+            trim($meta['career_portal_name']) == '' ||
+            !isset($meta['sections']) ||
+            !is_array($meta['sections'])
+        )
+        {
+            return false;
+        }
+
+        $template = array(
+            'templateID' => $templateIdentifier,
+            'careerPortalName' => trim($meta['career_portal_name'])
+        );
+
+        foreach ($meta['sections'] as $sectionName => $fileName)
+        {
+            if (!is_string($sectionName) || trim($sectionName) == '')
+            {
+                continue;
+            }
+
+            if (!is_string($fileName) || !$this->_isValidTemplateFileName($fileName))
+            {
+                continue;
+            }
+
+            $sectionFileName = $templateDirectory . '/' . $fileName;
+            if (!is_file($sectionFileName) || !is_readable($sectionFileName))
+            {
+                $template[$sectionName] = '';
+                continue;
+            }
+
+            $sectionContents = file_get_contents($sectionFileName);
+            if ($sectionContents === false)
+            {
+                $sectionContents = '';
+            }
+
+            $template[$sectionName] = $sectionContents;
+        }
+
+        foreach ($this->_requiredTemplateFields as $fieldName)
+        {
+            if (!isset($template[$fieldName]))
+            {
+                $template[$fieldName] = '';
+            }
+        }
+
+        if (!isset($template['Left']))
+        {
+            $template['Left'] = '';
+        }
+
+        return $template;
+    }
+
+    private function _isValidTemplateFileName($fileName)
+    {
+        if ($fileName == '' || preg_match('/[\\\\\\/]/', $fileName))
+        {
+            return false;
+        }
+
+        if (substr($fileName, -4) != '.tpl')
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    private function _compareTemplates($templateA, $templateB)
+    {
+        return strcasecmp($templateA['careerPortalName'], $templateB['careerPortalName']);
+    }
+}
+
 /**
  *	Career Portal Settings Library
  *	@package    CATS
@@ -54,12 +279,14 @@ class CareerPortalSettings
     );
     private $_db;
     private $_siteID;
+    private $_templateRepository;
 
 
     public function __construct($siteID)
     {
         $this->_siteID = $siteID;
         $this->_db = DatabaseConnection::getInstance();
+        $this->_templateRepository = new CareerPortalTemplateRepository($this->requiredTemplateFields);
     }
 
 
@@ -79,7 +306,7 @@ class CareerPortalSettings
             'candidateRegistration' => '0', /* false */
             'showDepartment'        => '1', /* true */
             'showCompany'           => '0', /* false */
-            'activeBoard'           => 'CATS 2.0',
+            'activeBoard'           => $this->_templateRepository->getDefaultTemplateIdentifier(),
             'allowXMLSubmit'        => '1', /* true */
             'useCATSTemplate'       => ''
         );
@@ -110,120 +337,58 @@ class CareerPortalSettings
             }
         }
 
-        /**
-         * Retrieve all setting, value pairs for default or custom template
-         * for the activeBoard (if any).
-         */
-        foreach ($rs as $rowIndex => $row)
+        $activeBoard = $this->_templateRepository->resolveTemplateIdentifier($settings['activeBoard']);
+        if ($activeBoard == '')
         {
-            if (!strcmp($row['setting'], 'activeBoard'))
-            {
-                $activeBoard = $row['value'];
+            $activeBoard = $this->_templateRepository->getDefaultTemplateIdentifier();
+        }
 
-                $templateSource1 = $this->getAllFromDefaultTemplate($activeBoard);
-                $templateSource2 = $this->getAllFromCustomTemplate($activeBoard);
+        $settings['activeBoard'] = $activeBoard;
 
-                $templateSource = array_merge($templateSource1, $templateSource2);
-
-                foreach ($templateSource as $templateLine)
-                {
-                    $settings[$templateLine['setting']] = $templateLine['value'];
-                }
-            }
+        $template = $this->getTemplate($activeBoard);
+        foreach ($template as $setting => $value)
+        {
+            $settings[$setting] = $value;
         }
 
         return $settings;
     }
 
     /**
-     * Returns all custom template data for a site-specific template name.
+     * Returns all template data for a filesystem template identifier.
      *
-     * @param string Template name.
-     * @return array Multi-dimensional associative result set array of
-     *               template data, or array() if no records were
-     *               returned.
-     */
-    public function getAllFromCustomTemplate($template)
-    {
-        $sql = sprintf(
-            "SELECT
-                career_portal_template_site.setting AS setting,
-                career_portal_template_site.value AS value
-            FROM
-                career_portal_template_site
-            WHERE
-                career_portal_template_site.career_portal_name = %s
-            AND
-                site_id = %s",
-            $this->_db->makeQueryString($template),
-            $this->_siteID
-        );
-
-        return $this->_db->getAllAssoc($sql);
-    }
-
-    /**
-     * Returns all template data for a default template name.
-     *
-     * @param string Template name.
-     * @return array Multi-dimensional associative result set array of
-     *               template data, or array() if no records were
-     *               returned.
-     */
-    public function getAllFromDefaultTemplate($template)
-    {
-        $sql = sprintf(
-            "SELECT
-                career_portal_template.setting AS setting,
-                career_portal_template.value AS value
-            FROM
-                career_portal_template
-            WHERE
-                career_portal_template.career_portal_name = %s",
-            $this->_db->makeQueryString($template)
-        );
-
-        return $this->_db->getAllAssoc($sql);
-    }
-
-    /**
-     * Returns all template data for a template name (default OR custom).
-     *
-     * @param string Template name.
+     * @param string Template identifier or display name.
      * @return array Multi-dimensional associative result set array of
      *               template data, or array() if no records were
      *               returned.
      */
     public function getAllFromTemplate($template)
     {
-        $sql = sprintf(
-            "SELECT
-                career_portal_template.setting AS setting,
-                career_portal_template.value AS value
-            FROM
-                career_portal_template
-            WHERE
-                career_portal_template.career_portal_name = %s
-            UNION ALL
-            SELECT
-                career_portal_template_site.setting AS setting,
-                career_portal_template_site.value AS value
-            FROM
-                career_portal_template_site
-            WHERE
-                career_portal_template_site.career_portal_name = %s
-            AND
-                site_id = %s",
-            $this->_db->makeQueryString($template),
-            $this->_db->makeQueryString($template),
-            $this->_siteID
-        );
+        $templateData = $this->_templateRepository->getTemplateByIdentifier($template);
+        if ($templateData === false)
+        {
+            return array();
+        }
 
-        return $this->_db->getAllAssoc($sql);
+        $templateRows = array();
+        foreach ($templateData as $setting => $value)
+        {
+            if ($setting == 'templateID' || $setting == 'careerPortalName')
+            {
+                continue;
+            }
+
+            $templateRows[] = array(
+                'setting' => $setting,
+                'value' => $value
+            );
+        }
+
+        return $templateRows;
     }
 
     /**
-     * Returns all default template names from the database.
+     * Returns all filesystem template definitions.
      *
      * @return array Multi-dimensional associative result set array of
      *               template data, or array() if no records were
@@ -231,43 +396,11 @@ class CareerPortalSettings
      */
     public function getDefaultTemplates()
     {
-        $sql = sprintf(
-            "SELECT
-                DISTINCT career_portal_name AS careerPortalName
-            FROM
-                career_portal_template
-            ORDER BY
-                career_portal_name ASC"
-        );
-
-        return $this->_db->getAllAssoc($sql);
+        return $this->_templateRepository->getTemplateList();
     }
 
     /**
-     * Returns all custom template names from the database for this site.
-     *
-     * @return array Multi-dimensional associative result set array of
-     *               template data, or array() if no records were
-     *               returned.
-     */
-    public function getCustomTemplates()
-    {
-        $sql = sprintf(
-            "SELECT
-                DISTINCT career_portal_name AS careerPortalName
-            FROM
-                career_portal_template_site
-            WHERE
-                site_id = %s",
-            $this->_siteID
-        );
-
-        return $this->_db->getAllAssoc($sql);
-    }
-
-    /**
-     * Returns all template names from the database for this site, including
-     * default templates.
+     * Returns all available filesystem templates.
      *
      * @return array Multi-dimensional associative result set array of
      *               template data, or array() if no records were
@@ -275,29 +408,11 @@ class CareerPortalSettings
      */
     public function getAllTemplates()
     {
-        $sql = sprintf(
-            "SELECT
-                DISTINCT career_portal_name AS careerPortalName
-            FROM
-                career_portal_template
-            UNION ALL
-            SELECT
-                DISTINCT career_portal_name AS careerPortalName
-            FROM
-                career_portal_template_site
-            WHERE
-                site_id = %s
-            ORDER BY
-                careerPortalName ASC",
-            $this->_siteID
-        );
-
-        return $this->_db->getAllAssoc($sql);
+        return $this->getDefaultTemplates();
     }
 
     /**
-     * Returns all template settings and values from a template (default OR
-     * custom).
+     * Returns all template settings and values from a filesystem template.
      *
      * @param string Template name.
      * @return array Multi-dimensional associative result set array of
@@ -306,12 +421,26 @@ class CareerPortalSettings
      */
     public function getTemplate($templateName)
     {
-        $rs = $this->getAllFromTemplate($templateName);
+        $templateData = $this->_templateRepository->getTemplateByIdentifier($templateName);
+        if ($templateData === false)
+        {
+            $templateData = $this->_templateRepository->getTemplateByIdentifier(
+                $this->_templateRepository->getDefaultTemplateIdentifier()
+            );
+        }
 
         $template = array();
-        foreach ($rs as $rowIndex => $row)
+        if ($templateData !== false)
         {
-            $template[$row['setting']] = $row['value'];
+            foreach ($templateData as $setting => $value)
+            {
+                if ($setting == 'templateID' || $setting == 'careerPortalName')
+                {
+                    continue;
+                }
+
+                $template[$setting] = $value;
+            }
         }
 
         foreach ($this->requiredTemplateFields as $index => $value)
@@ -323,74 +452,6 @@ class CareerPortalSettings
         }
 
         return $template;
-    }
-
-    /**
-     * Deletes a custom template from the database.
-     *
-     * @param string Template name.
-     * @return boolean Was the query executed successfullu?
-     */
-    public function deleteCustomTemplate($template)
-    {
-        $sql = sprintf(
-            "DELETE FROM
-                career_portal_template_site
-            WHERE
-                site_id = %s
-            AND
-                career_portal_name = %s",
-            $this->_siteID,
-            $this->_db->makeQueryString($template)
-        );
-
-        return (boolean) $this->_db->query($sql);
-    }
-
-    /**
-     * Sets a career portal setting for a custom template.
-     *
-     * @param string Setting name.
-     * @param string Setting value.
-     * @param string Template name.
-     * @return void
-     */
-    public function setForTemplate($setting, $value, $template)
-    {
-        $sql = sprintf(
-            "DELETE FROM
-                career_portal_template_site
-            WHERE
-                career_portal_template_site.setting = %s
-            AND
-                career_portal_template_site.career_portal_name = %s
-            AND
-                site_id = %s",
-            $this->_db->makeQueryString($setting),
-            $this->_db->makeQueryString($template),
-            $this->_siteID
-        );
-        $this->_db->query($sql);
-
-        $sql = sprintf(
-            "INSERT INTO career_portal_template_site (
-                setting,
-                value,
-                site_id,
-                career_portal_name
-            )
-            VALUES (
-                %s,
-                %s,
-                %s,
-                %s
-            )",
-            $this->_db->makeQueryString($setting),
-            $this->_db->makeQueryString($value),
-            $this->_siteID,
-            $this->_db->makeQueryString($template)
-         );
-         $this->_db->query($sql);
     }
 
     /**
