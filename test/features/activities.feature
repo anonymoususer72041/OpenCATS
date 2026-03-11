@@ -23,3 +23,23 @@ Feature: Activities
     And I should see "Yesterday"
     And I should see "Today"
     And I should see "Last week"
+
+  @javascript
+  Scenario: Access activities page for a contact
+    Given I am authenticated as "Administrator"
+    And I am on "/index.php?m=contacts"
+    And I follow "Elizabeth"
+    And I follow "Log an Activity"
+    And I wait for the activity note box to appear
+    And I switch to the iframe "popupInner"
+    And I select "Call" from "activityTypeID"
+    And fill in "activityNote" with "Call Elizabeth"
+    And press "Save"
+    And press "Close"
+    And I switch to the iframe ""
+    And I follow "Activities"
+    Then I should see "Elizabeth"
+    And I should see "Call Elizabeth"
+    And I should see "Yesterday"
+    And I should see "Today"
+    And I should see "Last week"
