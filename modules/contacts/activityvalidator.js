@@ -1,6 +1,6 @@
 /*
  * OpenCATS
- * Candidates Form Validation
+ * Contacts Form Validation
  */
 
 function checkActivityForm(form)
