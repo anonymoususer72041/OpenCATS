@@ -462,6 +462,15 @@ class CompaniesUI extends UserInterface
             $activityMaxResults,
             $activityPage
         );
+        $activityPager->setSortByParameters(
+            sprintf(
+                'm=companies&amp;a=show&amp;companyID=%s&amp;maxResults=%s',
+                $companyID,
+                $activityMaxResults
+            ),
+            'dateCreatedSort',
+            'ASC'
+        );
 
         $activityRS = $activityEntries->getAllByCompany(
             $companyID,

@@ -742,6 +742,15 @@ class CandidatesUI extends UserInterface
             $activityMaxResults,
             $activityPage
         );
+        $activityPager->setSortByParameters(
+            sprintf(
+                'm=candidates&amp;a=show&amp;candidateID=%s&amp;maxResults=%s',
+                $candidateID,
+                $activityMaxResults
+            ),
+            'dateCreatedSort',
+            'ASC'
+        );
 
         $activityRS = $activityEntries->getAllByDataItem(
             $candidateID,

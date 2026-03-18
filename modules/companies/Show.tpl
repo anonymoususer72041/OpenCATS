@@ -461,6 +461,28 @@ use OpenCATS\UI\QuickActionMenu;
                     </tr>
                 <?php endforeach; ?>
             </table>
+            <div style="margin-top: 8px;">
+                <div style="float: left;">
+                    <form name="companyActivityMaxResultsForm" action="<?php echo(CATSUtility::getIndexName()); ?>" method="get">
+                        <input type="hidden" name="m" value="companies" />
+                        <input type="hidden" name="a" value="show" />
+                        <input type="hidden" name="companyID" value="<?php echo($this->companyID); ?>" />
+                        <input type="hidden" name="page" value="1" />
+                        <label for="companyActivityMaxResults">Rows Per Page:</label>
+                        <select name="maxResults" id="companyActivityMaxResults" class="selectBox" onchange="this.form.submit();">
+                            <?php foreach ($this->activityMaxResultsValues as $activityMaxResultsValue): ?>
+                                <option value="<?php echo($activityMaxResultsValue); ?>"<?php if ($this->activityMaxResults == $activityMaxResultsValue): ?> selected="selected"<?php endif; ?>>
+                                    <?php echo($activityMaxResultsValue); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </form>
+                </div>
+                <div style="float: right;">
+                    <?php $this->activityPager->printNavigation(); ?>
+                </div>
+                <br clear="all" />
+            </div>
         </div>
     </div>
 

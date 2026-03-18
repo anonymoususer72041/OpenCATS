@@ -377,6 +377,15 @@ class ContactsUI extends UserInterface
             $activityMaxResults,
             $activityPage
         );
+        $activityPager->setSortByParameters(
+            sprintf(
+                'm=contacts&amp;a=show&amp;contactID=%s&amp;maxResults=%s',
+                $contactID,
+                $activityMaxResults
+            ),
+            'dateCreatedSort',
+            'ASC'
+        );
 
         $activityRS = $activityEntries->getAllByDataItem(
             $contactID,

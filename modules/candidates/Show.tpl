@@ -658,6 +658,31 @@ use OpenCATS\UI\CandidateDuplicateQuickActionMenu;
                     </tr>
                 <?php endforeach; ?>
             </table>
+            <div style="margin-top: 8px;">
+                <div style="float: left;">
+                    <form name="candidateActivityMaxResultsForm" action="<?php echo(CATSUtility::getIndexName()); ?>" method="get">
+                        <input type="hidden" name="m" value="candidates" />
+                        <input type="hidden" name="a" value="show" />
+                        <input type="hidden" name="candidateID" value="<?php echo($this->candidateID); ?>" />
+                        <input type="hidden" name="page" value="1" />
+                        <?php if ($this->isPopup): ?>
+                            <input type="hidden" name="isPopup" value="1" />
+                        <?php endif; ?>
+                        <label for="candidateActivityMaxResults">Rows Per Page:</label>
+                        <select name="maxResults" id="candidateActivityMaxResults" class="selectBox" onchange="this.form.submit();">
+                            <?php foreach ($this->activityMaxResultsValues as $activityMaxResultsValue): ?>
+                                <option value="<?php echo($activityMaxResultsValue); ?>"<?php if ($this->activityMaxResults == $activityMaxResultsValue): ?> selected="selected"<?php endif; ?>>
+                                    <?php echo($activityMaxResultsValue); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </form>
+                </div>
+                <div style="float: right;">
+                    <?php $this->activityPager->printNavigation(); ?>
+                </div>
+                <br clear="all" />
+            </div>
 <?php if (!$this->isPopup): ?>
             <div id="addActivityDiv">
                 <?php if ($this->getUserAccessLevel('pipelines.addActivityChangeStatus') >= ACCESS_LEVEL_EDIT): ?>

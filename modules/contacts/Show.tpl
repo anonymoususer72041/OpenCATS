@@ -305,6 +305,28 @@ use OpenCATS\UI\QuickActionMenu;
                     </tr>
                 <?php endforeach; ?>
             </table>
+            <div style="margin-top: 8px;">
+                <div style="float: left;">
+                    <form name="contactActivityMaxResultsForm" action="<?php echo(CATSUtility::getIndexName()); ?>" method="get">
+                        <input type="hidden" name="m" value="contacts" />
+                        <input type="hidden" name="a" value="show" />
+                        <input type="hidden" name="contactID" value="<?php echo($this->contactID); ?>" />
+                        <input type="hidden" name="page" value="1" />
+                        <label for="contactActivityMaxResults">Rows Per Page:</label>
+                        <select name="maxResults" id="contactActivityMaxResults" class="selectBox" onchange="this.form.submit();">
+                            <?php foreach ($this->activityMaxResultsValues as $activityMaxResultsValue): ?>
+                                <option value="<?php echo($activityMaxResultsValue); ?>"<?php if ($this->activityMaxResults == $activityMaxResultsValue): ?> selected="selected"<?php endif; ?>>
+                                    <?php echo($activityMaxResultsValue); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </form>
+                </div>
+                <div style="float: right;">
+                    <?php $this->activityPager->printNavigation(); ?>
+                </div>
+                <br clear="all" />
+            </div>
             <div id="addActivityDiv">
                 <?php if ($this->getUserAccessLevel('contacts.logActivityScheduleEvent') >= ACCESS_LEVEL_EDIT): ?>
                     <a href="#" id="addActivityLink" title="Log an Activity / Schedule Event" onclick="showPopWin('<?php echo(CATSUtility::getIndexName()); ?>?m=contacts&amp;a=addActivityScheduleEvent&amp;contactID=<?php echo($this->contactID); ?>', 600, 375, null); return false;">
