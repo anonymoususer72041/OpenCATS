@@ -48,7 +48,6 @@ class CompaniesUI extends UserInterface
      */
     const NOTES_MAXLEN = 500;
 
-
     public function __construct()
     {
         parent::__construct();
@@ -432,7 +431,43 @@ class CompaniesUI extends UserInterface
         }
 
         $activityEntries = new ActivityEntries($this->_siteID);
-        $activityRS = $activityEntries->getAllByCompany($companyID);
+
+        if ($this->isRequiredIDValid('page', $_GET))
+        {
+            $activityPage = (int) $_GET['page'];
+        }
+        else
+        {
+            $activityPage = 1;
+        }
+        if ($activityPage < 1)
+        {
+            $activityPage = 1;
+        }
+
+        $activityMaxResultsValues = array(15, 30, 50, 100);
+        $activityMaxResults = 15;
+        if ($this->isRequiredIDValid('maxResults', $_GET))
+        {
+            $activityMaxResults = (int) $_GET['maxResults'];
+        }
+
+        if (!in_array($activityMaxResults, $activityMaxResultsValues))
+        {
+            $activityMaxResults = 15;
+        }
+
+        $activityPager = new Pager(
+            $activityEntries->getCountByCompany($companyID),
+            $activityMaxResults,
+            $activityPage
+        );
+
+        $activityRS = $activityEntries->getAllByCompany(
+            $companyID,
+            $activityPager->getThisPageStartRow(),
+            $activityMaxResults
+        );
         if (!empty($activityRS))
         {
             foreach ($activityRS as $rowIndex => $row)
@@ -496,6 +531,12 @@ class CompaniesUI extends UserInterface
         $this->_template->assign('isShortNotes', $isShortNotes);
         $this->_template->assign('jobOrdersRS', $jobOrdersRS);
         $this->_template->assign('activityRS', $activityRS);
+        $this->_template->assign('activityPager', $activityPager);
+        $this->_template->assign('activityPage', $activityPager->getCurrentPage());
+        $this->_template->assign('activityMaxResults', $activityMaxResults);
+        $this->_template->assign('activityMaxResultsValues', $activityMaxResultsValues);
+        $this->_template->assign('activityTotalPages', $activityPager->getTotalPages());
+        $this->_template->assign('activityTotalRows', $activityPager->getTotalRows());
         $this->_template->assign('contactsRS', $contactsRS);
         $this->_template->assign('contactsRSWC', $contactsRSWC);
         $this->_template->assign('privledgedUser', $privledgedUser);

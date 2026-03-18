@@ -442,7 +442,7 @@ class ActivityEntries
      * @param flag Data Item type flag.
      * @return resultset Activity entries data.
      */
-    public function getAllByDataItem($dataItemID, $dataItemType)
+    public function getAllByDataItem($dataItemID, $dataItemType, $offset, $limit)
     {
         $sql = sprintf(
             "SELECT
@@ -483,13 +483,44 @@ class ActivityEntries
             AND
                 activity.site_id = %s
             ORDER BY
-                dateCreatedSort ASC",
+                dateCreatedSort ASC
+            LIMIT %s, %s",
+            $this->_db->makeQueryInteger($dataItemID),
+            $this->_db->makeQueryInteger($dataItemType),
+            $this->_siteID,
+            $this->_db->makeQueryInteger($offset),
+            $this->_db->makeQueryInteger($limit)
+        );
+
+        return $this->_db->getAllAssoc($sql);
+    }
+
+    /**
+     * Returns activity entry count for a Data Item.
+     *
+     * @param integer Data Item ID.
+     * @param flag Data Item type flag.
+     * @return integer count
+     */
+    public function getCountByDataItem($dataItemID, $dataItemType)
+    {
+        $sql = sprintf(
+            "SELECT
+                COUNT(*) AS count
+            FROM
+                activity
+            WHERE
+                activity.data_item_id = %s
+            AND
+                activity.data_item_type = %s
+            AND
+                activity.site_id = %s",
             $this->_db->makeQueryInteger($dataItemID),
             $this->_db->makeQueryInteger($dataItemType),
             $this->_siteID
         );
 
-        return $this->_db->getAllAssoc($sql);
+        return $this->_db->getColumn($sql, 0, 0);
     }
 
     /**
@@ -498,7 +529,7 @@ class ActivityEntries
      * @param integer Company ID.
      * @return resultset Activity entries data.
      */
-    public function getAllByCompany($companyID)
+    public function getAllByCompany($companyID, $offset, $limit)
     {
         $sql = sprintf(
             "SELECT
@@ -545,14 +576,49 @@ class ActivityEntries
             AND
                 contact.site_id = %s
             ORDER BY
-                dateCreatedSort ASC",
+                dateCreatedSort ASC
+            LIMIT %s, %s",
+            $this->_db->makeQueryInteger($companyID),
+            $this->_db->makeQueryInteger(DATA_ITEM_CONTACT),
+            $this->_db->makeQueryInteger($this->_siteID),
+            $this->_db->makeQueryInteger($this->_siteID),
+            $this->_db->makeQueryInteger($offset),
+            $this->_db->makeQueryInteger($limit)
+        );
+
+        return $this->_db->getAllAssoc($sql);
+    }
+
+    /**
+     * Returns activity entry count for a company activity stream.
+     *
+     * @param integer Company ID.
+     * @return integer count
+     */
+    public function getCountByCompany($companyID)
+    {
+        $sql = sprintf(
+            "SELECT
+                COUNT(*) AS count
+            FROM
+                activity
+            INNER JOIN contact
+                ON activity.data_item_id = contact.contact_id
+            WHERE
+                contact.company_id = %s
+            AND
+                activity.data_item_type = %s
+            AND
+                activity.site_id = %s
+            AND
+                contact.site_id = %s",
             $this->_db->makeQueryInteger($companyID),
             $this->_db->makeQueryInteger(DATA_ITEM_CONTACT),
             $this->_db->makeQueryInteger($this->_siteID),
             $this->_db->makeQueryInteger($this->_siteID)
         );
 
-        return $this->_db->getAllAssoc($sql);
+        return $this->_db->getColumn($sql, 0, 0);
     }
 
     /**

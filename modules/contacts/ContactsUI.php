@@ -57,7 +57,6 @@ class ContactsUI extends UserInterface
      */
     const TRUNCATE_TITLE = 24;
 
-
     public function __construct()
     {
         parent::__construct();
@@ -347,7 +346,44 @@ class ContactsUI extends UserInterface
         }
 
         $activityEntries = new ActivityEntries($this->_siteID);
-        $activityRS = $activityEntries->getAllByDataItem($contactID, DATA_ITEM_CONTACT);
+
+        if ($this->isRequiredIDValid('page', $_GET))
+        {
+            $activityPage = (int) $_GET['page'];
+        }
+        else
+        {
+            $activityPage = 1;
+        }
+        if ($activityPage < 1)
+        {
+            $activityPage = 1;
+        }
+
+        $activityMaxResultsValues = array(15, 30, 50, 100);
+        $activityMaxResults = 15;
+        if ($this->isRequiredIDValid('maxResults', $_GET))
+        {
+            $activityMaxResults = (int) $_GET['maxResults'];
+        }
+
+        if (!in_array($activityMaxResults, $activityMaxResultsValues))
+        {
+            $activityMaxResults = 15;
+        }
+
+        $activityPager = new Pager(
+            $activityEntries->getCountByDataItem($contactID, DATA_ITEM_CONTACT),
+            $activityMaxResults,
+            $activityPage
+        );
+
+        $activityRS = $activityEntries->getAllByDataItem(
+            $contactID,
+            DATA_ITEM_CONTACT,
+            $activityPager->getThisPageStartRow(),
+            $activityMaxResults
+        );
         if (!empty($activityRS))
         {
             foreach ($activityRS as $rowIndex => $row)
@@ -412,6 +448,12 @@ class ContactsUI extends UserInterface
         $this->_template->assign('extraFieldRS', $extraFieldRS);
         $this->_template->assign('calendarRS', $calendarRS);
         $this->_template->assign('activityRS', $activityRS);
+        $this->_template->assign('activityPager', $activityPager);
+        $this->_template->assign('activityPage', $activityPager->getCurrentPage());
+        $this->_template->assign('activityMaxResults', $activityMaxResults);
+        $this->_template->assign('activityMaxResultsValues', $activityMaxResultsValues);
+        $this->_template->assign('activityTotalPages', $activityPager->getTotalPages());
+        $this->_template->assign('activityTotalRows', $activityPager->getTotalRows());
         $this->_template->assign('contactID', $contactID);
         $this->_template->assign('privledgedUser', $privledgedUser);
         $this->_template->assign('sessionCookie', $_SESSION['CATS']->getCookie());

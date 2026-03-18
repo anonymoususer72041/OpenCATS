@@ -62,7 +62,6 @@ class CandidatesUI extends UserInterface
      */
     const TRUNCATE_KEYSKILLS = 30;
 
-
     public function __construct()
     {
         parent::__construct();
@@ -712,7 +711,44 @@ class CandidatesUI extends UserInterface
         }
 
         $activityEntries = new ActivityEntries($this->_siteID);
-        $activityRS = $activityEntries->getAllByDataItem($candidateID, DATA_ITEM_CANDIDATE);
+
+        if ($this->isRequiredIDValid('page', $_GET))
+        {
+            $activityPage = (int) $_GET['page'];
+        }
+        else
+        {
+            $activityPage = 1;
+        }
+        if ($activityPage < 1)
+        {
+            $activityPage = 1;
+        }
+
+        $activityMaxResultsValues = array(15, 30, 50, 100);
+        $activityMaxResults = 15;
+        if ($this->isRequiredIDValid('maxResults', $_GET))
+        {
+            $activityMaxResults = (int) $_GET['maxResults'];
+        }
+
+        if (!in_array($activityMaxResults, $activityMaxResultsValues))
+        {
+            $activityMaxResults = 15;
+        }
+
+        $activityPager = new Pager(
+            $activityEntries->getCountByDataItem($candidateID, DATA_ITEM_CANDIDATE),
+            $activityMaxResults,
+            $activityPage
+        );
+
+        $activityRS = $activityEntries->getAllByDataItem(
+            $candidateID,
+            DATA_ITEM_CANDIDATE,
+            $activityPager->getThisPageStartRow(),
+            $activityMaxResults
+        );
         if (!empty($activityRS))
         {
             foreach ($activityRS as $rowIndex => $row)
@@ -810,6 +846,12 @@ class CandidatesUI extends UserInterface
         $this->_template->assign('attachmentsRS', $attachmentsRS);
         $this->_template->assign('pipelinesRS', $pipelinesRS);
         $this->_template->assign('activityRS', $activityRS);
+        $this->_template->assign('activityPager', $activityPager);
+        $this->_template->assign('activityPage', $activityPager->getCurrentPage());
+        $this->_template->assign('activityMaxResults', $activityMaxResults);
+        $this->_template->assign('activityMaxResultsValues', $activityMaxResultsValues);
+        $this->_template->assign('activityTotalPages', $activityPager->getTotalPages());
+        $this->_template->assign('activityTotalRows', $activityPager->getTotalRows());
         $this->_template->assign('calendarRS', $calendarRS);
         $this->_template->assign('extraFieldRS', $extraFieldRS);
         $this->_template->assign('candidateID', $candidateID);
