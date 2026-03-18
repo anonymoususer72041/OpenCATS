@@ -56,35 +56,69 @@ class ReportsUI extends UserInterface
         switch ($action)
         {
             case 'graphView':
+                if ($this->getUserAccessLevel('reports.graphView') < ACCESS_LEVEL_READ)
+                {
+                    CommonErrors::fatal(COMMONERROR_PERMISSION, $this, 'Invalid user level for action.');
+                }
                 $this->graphView();
                 break;
 
             case 'generateJobOrderReportPDF':
+                if ($this->getUserAccessLevel('reports.generateJobOrderReportPDF') < ACCESS_LEVEL_READ)
+                {
+                    CommonErrors::fatal(COMMONERROR_PERMISSION, $this, 'Invalid user level for action.');
+                }
                 $this->generateJobOrderReportPDF();
                 break;
 
             case 'showSubmissionReport':
+                if ($this->getUserAccessLevel('reports.showSubmissionReport') < ACCESS_LEVEL_READ)
+                {
+                    CommonErrors::fatal(COMMONERROR_PERMISSION, $this, 'Invalid user level for action.');
+                }
                 $this->showSubmissionReport();
                 break;
 
             case 'showPlacementReport':
+                if ($this->getUserAccessLevel('reports.showPlacementReport') < ACCESS_LEVEL_READ)
+                {
+                    CommonErrors::fatal(COMMONERROR_PERMISSION, $this, 'Invalid user level for action.');
+                }
                 $this->showPlacementReport();
                 break;
 
             case 'customizeJobOrderReport':
+                if ($this->getUserAccessLevel('reports.customizeJobOrderReport') < ACCESS_LEVEL_READ)
+                {
+                    CommonErrors::fatal(COMMONERROR_PERMISSION, $this, 'Invalid user level for action.');
+                }
                 $this->customizeJobOrderReport();
                 break;
 
             case 'customizeEEOReport':
+                if ($this->getUserAccessLevel('reports.customizeEEOReport') < ACCESS_LEVEL_READ ||
+                    !$_SESSION['CATS']->canSeeEEOInfo())
+                {
+                    CommonErrors::fatal(COMMONERROR_PERMISSION, $this, 'Invalid user level for action.');
+                }
                 $this->customizeEEOReport();
                 break;
 
             case 'generateEEOReportPreview':
+                if ($this->getUserAccessLevel('reports.generateEEOReportPreview') < ACCESS_LEVEL_READ ||
+                    !$_SESSION['CATS']->canSeeEEOInfo())
+                {
+                    CommonErrors::fatal(COMMONERROR_PERMISSION, $this, 'Invalid user level for action.');
+                }
                 $this->generateEEOReportPreview();
                 break;
 
             case 'reports':
             default:
+                if ($this->getUserAccessLevel('reports.show') < ACCESS_LEVEL_READ)
+                {
+                    CommonErrors::fatal(COMMONERROR_PERMISSION, $this, 'Invalid user level for action.');
+                }
                 $this->reports();
                 break;
         }

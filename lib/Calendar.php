@@ -271,6 +271,32 @@ class Calendar
     }
 
     /**
+     * Returns a calendar event.
+     *
+     * @param integer Calendar Event ID.
+     * @return array Calendar event data array, or empty array if no record
+     *               is present.
+     */
+    public function get($eventID)
+    {
+        $sql = sprintf(
+            "SELECT
+                calendar_event.calendar_event_id AS eventID,
+                calendar_event.entered_by AS enteredBy
+            FROM
+                calendar_event
+            WHERE
+                calendar_event.calendar_event_id = %s
+            AND
+                calendar_event.site_id = %s",
+            $this->_db->makeQueryInteger($eventID),
+            $this->_siteID
+        );
+
+        return $this->_db->getAssoc($sql);
+    }
+
+    /**
      * Adds a calendar event to the database.
      *
      * @param flag Calendar event type flag.

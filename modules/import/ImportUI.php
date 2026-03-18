@@ -154,6 +154,11 @@ class ImportUI extends UserInterface
     */
     private function revert()
     {
+        if ($this->getUserAccessLevel('import.import') < ACCESS_LEVEL_EDIT)
+        {
+            CommonErrors::fatal(COMMONERROR_PERMISSION, $this, 'Invalid user level for action.');
+        }
+
         if (!$this->isRequiredIDValid('importID', $_POST))
         {
             $this->import();
