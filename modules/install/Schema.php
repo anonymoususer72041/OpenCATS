@@ -1396,6 +1396,11 @@ class CATSSchema
             '370' => '
                 DELETE FROM module_schema WHERE name = \'toolbar\';
             ',
+            '371' => '
+                UPDATE activity_type
+                SET short_description = \'Not reached\'
+                WHERE activity_type_id = 100;
+            ',
 
         );
     }
