@@ -1413,6 +1413,11 @@ class CATSSchema
                 WHERE data_item_type = 400
                 AND data_item_id NOT IN (SELECT joborder_id FROM joborder);
             ',
+            '372' => '
+                UPDATE activity_type
+                SET short_description = \'Not reached\'
+                WHERE activity_type_id = 100;
+            ',
 
         );
     }
