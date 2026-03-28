@@ -1447,6 +1447,20 @@ class CATSSchema
                 SET short_description = \'Not reached\'
                 WHERE activity_type_id = 100;
             ',
+            '377' => '
+                INSERT INTO candidate_joborder_status
+                    (candidate_joborder_status_id, short_description, can_be_scheduled, triggers_email, is_enabled)
+                SELECT
+                    675, \'Candidate Declined\', 0, 0, 1
+                FROM
+                    DUAL
+                WHERE
+                    NOT EXISTS (
+                        SELECT 1
+                        FROM candidate_joborder_status
+                        WHERE candidate_joborder_status_id = 675
+                    );
+            ',
 
         );
     }
