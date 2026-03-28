@@ -1396,6 +1396,10 @@ class CATSSchema
             '370' => '
                 DELETE FROM module_schema WHERE name = \'toolbar\';
             ',
+            '371' => 'PHP:
+                include_once(\'modules/install/scripts/371.php\');
+                update_371($db);
+            ',
 
         );
     }
