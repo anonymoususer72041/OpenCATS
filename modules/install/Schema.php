@@ -1420,6 +1420,20 @@ class CATSSchema
             '373' => '
                 INSERT IGNORE INTO `activity_type` (`activity_type_id`, `short_description`) VALUES (800, \'Status Change\');
             ',
+            '374' => '
+                INSERT INTO candidate_joborder_status
+                    (candidate_joborder_status_id, short_description, can_be_scheduled, triggers_email, is_enabled)
+                SELECT
+                    675, \'Candidate Declined\', 0, 0, 1
+                FROM
+                    DUAL
+                WHERE
+                    NOT EXISTS (
+                        SELECT 1
+                        FROM candidate_joborder_status
+                        WHERE candidate_joborder_status_id = 675
+                    );
+            ',
 
         );
     }
