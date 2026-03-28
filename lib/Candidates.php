@@ -411,6 +411,64 @@ class Candidates
         );
         $this->_db->query($sql);
 
+        /* Delete candidate activity entries. */
+        $sql = sprintf(
+            "DELETE FROM
+                activity
+            WHERE
+                data_item_type = %s
+            AND
+                data_item_id = %s
+            AND
+                site_id = %s",
+            DATA_ITEM_CANDIDATE,
+            $this->_db->makeQueryInteger($candidateID),
+            $this->_siteID
+        );
+        $this->_db->query($sql);
+
+        /* Delete candidate calendar events. */
+        $sql = sprintf(
+            "DELETE FROM
+                calendar_event
+            WHERE
+                data_item_type = %s
+            AND
+                data_item_id = %s
+            AND
+                site_id = %s",
+            DATA_ITEM_CANDIDATE,
+            $this->_db->makeQueryInteger($candidateID),
+            $this->_siteID
+        );
+        $this->_db->query($sql);
+
+        /* Delete candidate tags. */
+        $sql = sprintf(
+            "DELETE FROM
+                candidate_tag
+            WHERE
+                candidate_id = %s
+            AND
+                site_id = %s",
+            $this->_db->makeQueryInteger($candidateID),
+            $this->_siteID
+        );
+        $this->_db->query($sql);
+
+        /* Delete candidate questionnaire history. */
+        $sql = sprintf(
+            "DELETE FROM
+                career_portal_questionnaire_history
+            WHERE
+                candidate_id = %s
+            AND
+                site_id = %s",
+            $this->_db->makeQueryInteger($candidateID),
+            $this->_siteID
+        );
+        $this->_db->query($sql);
+
         /* Delete from saved lists. */
         $sql = sprintf(
             "DELETE FROM
