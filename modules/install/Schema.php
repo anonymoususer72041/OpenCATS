@@ -1498,6 +1498,10 @@ class CATSSchema
                 ALTER TABLE `joborder`
                 CHANGE `state` `state` VARCHAR(64) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL;
             ',
+            '379' => 'PHP:
+                include_once(\'modules/install/scripts/379.php\');
+                update_379($db);
+            ',
 
         );
     }
