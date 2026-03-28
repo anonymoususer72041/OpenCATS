@@ -314,6 +314,66 @@ class JobOrders
         );
         $this->_db->query($sql);
 
+        /* Delete job order activity entries. */
+        $sql = sprintf(
+            "DELETE FROM
+                activity
+            WHERE
+                data_item_type = %s
+            AND
+                data_item_id = %s
+            AND
+                site_id = %s",
+            DATA_ITEM_JOBORDER,
+            $this->_db->makeQueryInteger($jobOrderID),
+            $this->_siteID
+        );
+        $this->_db->query($sql);
+
+        /* Delete job order calendar events. */
+        $sql = sprintf(
+            "DELETE FROM
+                calendar_event
+            WHERE
+                data_item_type = %s
+            AND
+                data_item_id = %s
+            AND
+                site_id = %s",
+            DATA_ITEM_JOBORDER,
+            $this->_db->makeQueryInteger($jobOrderID),
+            $this->_siteID
+        );
+        $this->_db->query($sql);
+
+        $sql = sprintf(
+            "UPDATE
+                activity
+            SET
+                joborder_id = -1
+            WHERE
+                joborder_id = %s
+            AND
+                site_id = %s",
+            $this->_db->makeQueryInteger($jobOrderID),
+            $this->_siteID
+        );
+        $this->_db->query($sql);
+
+        $sql = sprintf(
+            "UPDATE
+                calendar_event
+            SET
+                joborder_id = -1
+            WHERE
+                joborder_id = %s
+            AND
+                site_id = %s",
+            $this->_db->makeQueryInteger($jobOrderID),
+            $this->_siteID
+        );
+        $this->_db->query($sql);
+
         /* Delete attachments. */
         $attachments = new Attachments($this->_siteID);
         $attachmentsRS = $attachments->getAll(
