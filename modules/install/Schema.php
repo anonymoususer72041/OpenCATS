@@ -1447,6 +1447,10 @@ class CATSSchema
                 SET short_description = \'Not reached\'
                 WHERE activity_type_id = 100;
             ',
+            '377' => 'PHP:
+                include_once(\'modules/install/scripts/377.php\');
+                update_377($db);
+            ',
 
         );
     }
