@@ -1420,6 +1420,10 @@ class CATSSchema
             '373' => '
                 INSERT IGNORE INTO `activity_type` (`activity_type_id`, `short_description`) VALUES (800, \'Status Change\');
             ',
+            '374' => 'PHP:
+                include_once(\'modules/install/scripts/374.php\');
+                update_374($db);
+            ',
 
         );
     }
