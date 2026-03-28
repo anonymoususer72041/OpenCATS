@@ -1906,9 +1906,16 @@ class CandidatesUI extends UserInterface
         $mailerSettings = new MailerSettings($this->_siteID);
         $mailerSettingsRS = $mailerSettings->getAll();
         $candidateJoborderStatusSendsMessage = unserialize($mailerSettingsRS['candidateJoborderStatusSendsMessage']);
+        if (!is_array($candidateJoborderStatusSendsMessage))
+        {
+            $candidateJoborderStatusSendsMessage = array();
+        }
         foreach ($statusRS as $index => $status)
         {
-            $statusRS[$index]['triggersEmail'] = $candidateJoborderStatusSendsMessage[$status['statusID']];
+            if (isset($candidateJoborderStatusSendsMessage[$status['statusID']]))
+            {
+                $statusRS[$index]['triggersEmail'] = $candidateJoborderStatusSendsMessage[$status['statusID']];
+            }
         }
 
         /* Get the change status email template. */
