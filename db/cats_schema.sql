@@ -275,6 +275,7 @@ insert  into `candidate_joborder_status`(`candidate_joborder_status_id`,`short_d
 insert  into `candidate_joborder_status`(`candidate_joborder_status_id`,`short_description`,`can_be_scheduled`,`triggers_email`,`is_enabled`) values (500,'Interviewing',0,1,1);
 insert  into `candidate_joborder_status`(`candidate_joborder_status_id`,`short_description`,`can_be_scheduled`,`triggers_email`,`is_enabled`) values (600,'Offered',0,1,1);
 insert  into `candidate_joborder_status`(`candidate_joborder_status_id`,`short_description`,`can_be_scheduled`,`triggers_email`,`is_enabled`) values (650,'Not in Consideration',0,0,1);
+insert  into `candidate_joborder_status`(`candidate_joborder_status_id`,`short_description`,`can_be_scheduled`,`triggers_email`,`is_enabled`) values (675,'Candidate Declined',0,0,1);
 insert  into `candidate_joborder_status`(`candidate_joborder_status_id`,`short_description`,`can_be_scheduled`,`triggers_email`,`is_enabled`) values (700,'Client Declined',0,0,1);
 insert  into `candidate_joborder_status`(`candidate_joborder_status_id`,`short_description`,`can_be_scheduled`,`triggers_email`,`is_enabled`) values (800,'Placed',0,1,1);
 
