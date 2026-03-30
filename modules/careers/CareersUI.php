@@ -1590,8 +1590,8 @@ class CareersUI extends UserInterface
                 $candidateID, $candidate['isActive'] ? true : false, $firstName, $middleName,
                 $lastName, $email, $email2, $phoneHome, $phoneCell, $phone, $address, $address2, $city,
                 $state, $zip, $source, $keySkills, '', $employer, '', '', '', $candidate['notes'],
-                '', $bestTimeToCall, $automatedUser['userID'], $automatedUser['userID'], $gender,
-                $race, $veteran, $disability
+                '', $bestTimeToCall, $automatedUser['userID'], $candidate['isHot'] ? true : false,
+                $email, $email, $gender, $race, $veteran, $disability
             );
 
             /* Update extra feilds */
