@@ -182,6 +182,41 @@ class FileUtility
             }
         }
 
+        /* Replace filesystem-problematic characters. */
+        $filename = str_replace(
+            array(':', '*', '?', '"', '<', '>', '|'),
+            '_',
+            $filename
+        );
+
+        /* Replace leading dots / spaces with underscores. */
+        for ($i = 0; $i < strlen($filename); $i++)
+        {
+            if ($filename[$i] != '.' && $filename[$i] != ' ')
+            {
+                break;
+            }
+
+            $filename[$i] = '_';
+        }
+
+        /* Strip trailing dots / spaces. */
+        while (strlen($filename) > 0)
+        {
+            $lastCharacter = substr($filename, -1, 1);
+            if ($lastCharacter != '.' && $lastCharacter != ' ')
+            {
+                break;
+            }
+
+            $filename = substr($filename, 0, -1);
+        }
+
+        if ($filename == '')
+        {
+            $filename = '_';
+        }
+
         /* Is the file extension safe? */
         $fileExtension = self::getFileExtension($filename);
         
