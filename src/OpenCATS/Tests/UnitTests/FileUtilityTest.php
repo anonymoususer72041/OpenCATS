@@ -130,5 +130,27 @@ class FileUtilityTest extends TestCase
             sprintf("'attachments/%s' should not exist", $directoryB)
             );
     }
+
+    function testMakeSafeFilename()
+    {
+        $tests = array(
+            array('resume?.pdf', 'resume_.pdf'),
+            array('my:cv*.docx', 'my_cv_.docx'),
+            array('"quote".txt', '_quote_.txt'),
+            array('test<name>|final.pdf', 'test_name__final.pdf'),
+            array('name with trailing dot. ', 'name with trailing dot.txt'),
+            array('..hidden?.txt', '__hidden_.txt'),
+            array('???', '___.txt')
+        );
+
+        foreach ($tests as $test)
+        {
+            $this->assertSame(
+                $test[1],
+                FileUtility::makeSafeFilename($test[0]),
+                sprintf("'%s' should sanitize to '%s'", $test[0], $test[1])
+            );
+        }
+    }
 }
 ?>
