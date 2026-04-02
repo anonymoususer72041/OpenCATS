@@ -234,6 +234,23 @@ class CandidatesUI extends UserInterface
 
                 break;
 
+            /* Change candidate-joborder status (candidate modal). */
+            case 'changeStatus':
+                if ($this->getUserAccessLevel('pipelines.addActivityChangeStatus') < ACCESS_LEVEL_EDIT)
+                {
+                    CommonErrors::fatal(COMMONERROR_PERMISSION, $this, 'Invalid user level for action.');
+                }
+                if ($this->isPostBack())
+                {
+                    $this->onAddActivityChangeStatus('./modules/candidates/ChangeStatusModal.tpl');
+                }
+                else
+                {
+                    $this->addActivityChangeStatus('./modules/candidates/ChangeStatusModal.tpl');
+                }
+
+                break;
+
             /* Remove a candidate from a pipeline. */
             case 'removeFromPipeline':
                 if ($this->getUserAccessLevel('pipelines.removeFromPipeline') < ACCESS_LEVEL_DELETE)
@@ -1739,7 +1756,7 @@ class CandidatesUI extends UserInterface
         );
     }
 
-    private function addActivityChangeStatus()
+    private function addActivityChangeStatus($displayTemplate = './modules/candidates/AddActivityChangeStatusModal.tpl')
     {
         /* Bail out if we don't have a valid candidate ID. */
         if (!$this->isRequiredIDValid('candidateID', $_GET))
@@ -1851,7 +1868,7 @@ class CandidatesUI extends UserInterface
         $this->_template->assign('isFinishedMode', false);
         $this->_template->assign('isJobOrdersMode', false);
         $this->_template->display(
-            './modules/candidates/AddActivityChangeStatusModal.tpl'
+            $displayTemplate
         );
     }
 
@@ -1922,7 +1939,7 @@ class CandidatesUI extends UserInterface
     }
     
     
-    private function onAddActivityChangeStatus()
+    private function onAddActivityChangeStatus($displayTemplate = './modules/candidates/AddActivityChangeStatusModal.tpl')
     {
         /* Bail out if we don't have a valid regardingjob order ID. */
         if (!$this->isOptionalIDValid('regardingID', $_POST))
@@ -1932,7 +1949,7 @@ class CandidatesUI extends UserInterface
 
         $regardingID = $_POST['regardingID'];
 
-        $this->_addActivityChangeStatus(false, $regardingID);
+        $this->_addActivityChangeStatus(false, $regardingID, '', $displayTemplate);
     }
 
     /*
@@ -2987,7 +3004,7 @@ class CandidatesUI extends UserInterface
      * @return void
      */
     private function _addActivityChangeStatus($isJobOrdersMode, $regardingID,
-        $directoryOverride = '')
+        $directoryOverride = '', $displayTemplate = './modules/candidates/AddActivityChangeStatusModal.tpl')
     {
         $notificationHTML = '';
 
@@ -3392,7 +3409,7 @@ class CandidatesUI extends UserInterface
         $this->_template->assign('isFinishedMode', true);
         $this->_template->assign('isJobOrdersMode', $isJobOrdersMode);
         $this->_template->display(
-            './modules/candidates/AddActivityChangeStatusModal.tpl'
+            $displayTemplate
         );
     }
 
