@@ -216,6 +216,23 @@ class CandidatesUI extends UserInterface
                     $this->addCandidateTags();
                 }
             	break;
+
+            /* Log candidate activity and optionally schedule an event. */
+            case 'addActivity':
+                if ($this->getUserAccessLevel('pipelines.addActivityChangeStatus') < ACCESS_LEVEL_EDIT)
+                {
+                    CommonErrors::fatal(COMMONERROR_PERMISSION, $this, 'Invalid user level for action.');
+                }
+                if ($this->isPostBack())
+                {
+                    $this->onAddActivity();
+                }
+                else
+                {
+                    $this->addActivity();
+                }
+
+                break;
                 
             /* Change candidate-joborder status. */
             case 'addActivityChangeStatus':
@@ -1756,6 +1773,52 @@ class CandidatesUI extends UserInterface
         );
     }
 
+    private function addActivity()
+    {
+        /* Bail out if we don't have a valid candidate ID. */
+        if (!$this->isRequiredIDValid('candidateID', $_GET))
+        {
+            CommonErrors::fatalModal(COMMONERROR_BADINDEX, $this, 'Invalid candidate ID.');
+        }
+
+        $candidateID = $_GET['candidateID'];
+
+        $candidates = new Candidates($this->_siteID);
+        $candidateData = $candidates->get($candidateID);
+
+        /* Bail out if we got an empty result set. */
+        if (empty($candidateData))
+        {
+            CommonErrors::fatalModal(COMMONERROR_BADINDEX, $this);
+            return;
+        }
+
+        $pipelines = new Pipelines($this->_siteID);
+        $pipelineRS = $pipelines->getCandidatePipeline($candidateID);
+
+        $calendar = new Calendar($this->_siteID);
+        $calendarEventTypes = $calendar->getAllEventTypes();
+
+        if (!eval(Hooks::get('CANDIDATE_ADD_ACTIVITY_CHANGE_STATUS'))) return;
+
+        if (SystemUtility::isSchedulerEnabled() && !$_SESSION['CATS']->isDemo())
+        {
+            $allowEventReminders = true;
+        }
+        else
+        {
+            $allowEventReminders = false;
+        }
+
+        $this->_template->assign('candidateID', $candidateID);
+        $this->_template->assign('pipelineRS', $pipelineRS);
+        $this->_template->assign('allowEventReminders', $allowEventReminders);
+        $this->_template->assign('userEmail', $_SESSION['CATS']->getEmail());
+        $this->_template->assign('calendarEventTypes', $calendarEventTypes);
+        $this->_template->assign('isFinishedMode', false);
+        $this->_template->display('./modules/candidates/AddActivityModal.tpl');
+    }
+
     private function addActivityChangeStatus($displayTemplate = './modules/candidates/AddActivityChangeStatusModal.tpl')
     {
         /* Bail out if we don't have a valid candidate ID. */
@@ -1939,6 +2002,27 @@ class CandidatesUI extends UserInterface
     }
     
     
+    private function onAddActivity()
+    {
+        /* Bail out if we don't have a valid regarding job order ID. */
+        if (!$this->isOptionalIDValid('regardingID', $_POST))
+        {
+            CommonErrors::fatalModal(COMMONERROR_BADINDEX, $this, 'Invalid job order ID.');
+        }
+
+        $regardingID = $_POST['regardingID'];
+
+        /* Status changes are handled by the dedicated changeStatus action. */
+        unset($_POST['statusID'], $_POST['triggerEmail'], $_POST['customMessage'], $_POST['changeStatus']);
+
+        $this->_addActivityChangeStatus(
+            false,
+            $regardingID,
+            '',
+            './modules/candidates/AddActivityModal.tpl'
+        );
+    }
+
     private function onAddActivityChangeStatus($displayTemplate = './modules/candidates/AddActivityChangeStatusModal.tpl',
         $isChangeStatusMode = false)
     {
