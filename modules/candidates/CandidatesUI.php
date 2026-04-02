@@ -242,7 +242,7 @@ class CandidatesUI extends UserInterface
                 }
                 if ($this->isPostBack())
                 {
-                    $this->onAddActivityChangeStatus('./modules/candidates/ChangeStatusModal.tpl');
+                    $this->onAddActivityChangeStatus('./modules/candidates/ChangeStatusModal.tpl', true);
                 }
                 else
                 {
@@ -1939,7 +1939,8 @@ class CandidatesUI extends UserInterface
     }
     
     
-    private function onAddActivityChangeStatus($displayTemplate = './modules/candidates/AddActivityChangeStatusModal.tpl')
+    private function onAddActivityChangeStatus($displayTemplate = './modules/candidates/AddActivityChangeStatusModal.tpl',
+        $isChangeStatusMode = false)
     {
         /* Bail out if we don't have a valid regardingjob order ID. */
         if (!$this->isOptionalIDValid('regardingID', $_POST))
@@ -1949,7 +1950,13 @@ class CandidatesUI extends UserInterface
 
         $regardingID = $_POST['regardingID'];
 
-        $this->_addActivityChangeStatus(false, $regardingID, '', $displayTemplate);
+        $this->_addActivityChangeStatus(
+            false,
+            $regardingID,
+            '',
+            $displayTemplate,
+            $isChangeStatusMode
+        );
     }
 
     /*
@@ -3004,7 +3011,8 @@ class CandidatesUI extends UserInterface
      * @return void
      */
     private function _addActivityChangeStatus($isJobOrdersMode, $regardingID,
-        $directoryOverride = '', $displayTemplate = './modules/candidates/AddActivityChangeStatusModal.tpl')
+        $directoryOverride = '', $displayTemplate = './modules/candidates/AddActivityChangeStatusModal.tpl',
+        $isChangeStatusMode = false)
     {
         $notificationHTML = '';
 
@@ -3052,7 +3060,7 @@ class CandidatesUI extends UserInterface
 
         if (!eval(Hooks::get('CANDIDATE_ON_ADD_ACTIVITY_CHANGE_STATUS_PRE'))) return;
 
-        if ($this->isChecked('addActivity', $_POST))
+        if ($this->isChecked('addActivity', $_POST) && !$isChangeStatusMode)
         {
             if (!$this->isRequiredIDValid('activityTypeID', $_POST))
             {
@@ -3208,6 +3216,38 @@ class CandidatesUI extends UserInterface
             {
                 $jobOrders = new JobOrders($this->_siteID);
                 $jobOrders->updateOpeningsAvailable($regardingID, $data['openingsAvailable'] + 1);
+            }
+
+            if ($isChangeStatusMode &&
+                $statusChanged &&
+                $this->isChecked('addActivity', $_POST))
+            {
+                $activityEntries = new ActivityEntries($this->_siteID);
+
+                $activityNote = 'Status change: ' . $newStatusDescription;
+                $activityNote = htmlspecialchars($activityNote);
+
+                // FIXME: Move this to a highlighter-method?
+                foreach ($statusRS as $statusData)
+                {
+                    $activityNote = StringUtility::replaceOnce(
+                        $statusData['status'],
+                        '<span style="color: #ff6c00;">' . $statusData['status'] . '</span>',
+                        $activityNote
+                    );
+                }
+
+                $activityEntries->add(
+                    $candidateID,
+                    DATA_ITEM_CANDIDATE,
+                    ACTIVITY_STATUS_CHANGE,
+                    $activityNote,
+                    $this->_userID,
+                    $regardingID
+                );
+
+                $activityTypeDescription = 'Status Change';
+                $activityAdded = true;
             }
         }
 

@@ -652,8 +652,11 @@ function AS_onStatusChange(statusesArray, jobOrdersArray, regardingSelectID,
 {
     var regardingSelectList = document.getElementById(regardingSelectID);
     var statusSelectList = document.getElementById(statusSelectID);
-    var activityEntry = document.getElementById(activityEntryID);
-    var activityType = document.getElementById(activityTypeID);
+    var activityEntry = null;
+    if (activityEntryID)
+    {
+        activityEntry = document.getElementById(activityEntryID);
+    }
     var sendEmailSpan = document.getElementById(sendEmailSpanID);
     var emailText = document.getElementById(emailTextID);
     var emailTextOrigional = document.getElementById(emailTextOrigionalID);
@@ -715,7 +718,8 @@ function AS_onStatusChange(statusesArray, jobOrdersArray, regardingSelectID,
                 jobOrdersArrayStringTitle[statusIndex],
                 jobOrdersArrayStringCompany[statusIndex]
             );
-            if (activityEntry.value == "" || activityEntry.value.indexOf("Status change: ") != -1)
+            if (activityEntry && (activityEntry.value == "" ||
+                activityEntry.value.indexOf("Status change: ") != -1))
             {
                 activityEntry.value = "Status change: " +
                     statusSelectList[statusSelectList.selectedIndex].text;
