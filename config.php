@@ -104,9 +104,7 @@ define('SPHINX_INDEX', 'cats catsdelta');
 
 
 /* Pager settings. These are the number of results per page. */
-define('CONTACTS_PER_PAGE',      15);
 define('CANDIDATES_PER_PAGE',    15);
-define('CLIENTS_PER_PAGE',       15);
 define('LOGIN_ENTRIES_PER_PAGE', 15);
 
 /* Maximum number of characters of the owner/recruiter users' last names
@@ -164,14 +162,6 @@ define('CAREERS_OWNERAPPLY_SUBJECT', 'CATS - A Candidate Has Applied to Your Job
  * job order.
  */
 define('CANDIDATE_STATUSCHANGE_SUBJECT', 'Job Application Status Change');
-
-/* Password request settings.
- *
- * In FORGOT_PASSWORD_FROM, %s is the placeholder for the password.
- */
-define('FORGOT_PASSWORD_FROM_NAME', 'CATS');
-define('FORGOT_PASSWORD_SUBJECT',   'CATS - Password Retrieval Request');
-define('FORGOT_PASSWORD_BODY',      'You recently requested that your OpenCATS: Applicant Tracking System password be sent to you. Your current password is %s.');
 
 /* Is this a demo site? */
 define('ENABLE_DEMO_MODE', false);
