@@ -233,6 +233,13 @@ Feature: Job Orders
     Then I should see "PHP developer"
     And I should see "Job Order Details"
     And I should see "Test Company BigJump"
+
+  @javascript
+  Scenario: Job order details page shows related candidates
+    Given I am authenticated as "Administrator"
+    And I am on "/index.php?m=joborders&a=show&jobOrderID=40001"
+    Then I should see "Job Order Details"
+    And I should see "Pipin Tuk"
     
   @javascript
   Scenario: Open job order from search result and delete it 
