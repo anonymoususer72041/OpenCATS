@@ -20,6 +20,7 @@ class CompanyRepositoryTests extends TestCase
     const CITY = "Colonia";
     const STATE = "Maldonado";
     const ZIP_CODE = "31337";
+    const COUNTRY = "US";
     const PHONE_NUMBER_ONE = "+53 123 45678";
     const PHONE_NUMBER_TWO = "+53 987 65432";
     const FAX_NUMBER = '+53 123 65432';
@@ -49,6 +50,11 @@ class CompanyRepositoryTests extends TestCase
                 [$this->equalTo(self::URL)],
                 [$this->equalTo(self::KEY_TECHNOLOGIES)],
                 [$this->equalTo(self::NOTES)]
+            );
+        $databaseConnectionMock->expects($this->exactly(1))
+            ->method('makeQueryStringOrNULL')
+            ->withConsecutive(
+                [$this->equalTo(self::COUNTRY)]
             );
         $databaseConnectionMock->expects($this->exactly(2))
             ->method('makeQueryInteger')
@@ -114,7 +120,7 @@ class CompanyRepositoryTests extends TestCase
     private function getDatabaseConnectionMock()
     {
         return $this->getMockBuilder('\DatabaseConnection')
-            ->setMethods(['makeQueryString', 'makeQueryInteger', 'query', 'getLastInsertID'])
+            ->setMethods(['makeQueryString', 'makeQueryStringOrNULL', 'makeQueryInteger', 'query', 'getLastInsertID'])
             ->getMock();
     }
     
@@ -128,6 +134,7 @@ class CompanyRepositoryTests extends TestCase
             self::CITY,
             self::STATE,
             self::ZIP_CODE,
+            self::COUNTRY,
             self::PHONE_NUMBER_ONE, 
             self::PHONE_NUMBER_TWO,
             self::FAX_NUMBER, 
