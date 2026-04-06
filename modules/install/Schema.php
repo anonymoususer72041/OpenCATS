@@ -1425,6 +1425,12 @@ class CATSSchema
                 SET `joborder_id` = NULL
                 WHERE `joborder_id` IN (0, -1);
             ',
+            '375' => '
+                ALTER TABLE `candidate` ADD COLUMN `country` VARCHAR(2) DEFAULT NULL AFTER `zip`;
+                ALTER TABLE `company` ADD COLUMN `country` VARCHAR(2) DEFAULT NULL AFTER `zip`;
+                ALTER TABLE `contact` ADD COLUMN `country` VARCHAR(2) DEFAULT NULL AFTER `zip`;
+                ALTER TABLE `joborder` ADD COLUMN `country` VARCHAR(2) DEFAULT NULL AFTER `state`;
+            ',
 
         );
     }
