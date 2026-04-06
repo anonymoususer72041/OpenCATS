@@ -808,7 +808,7 @@ class JobOrdersUI extends UserInterface
         $notes       = $this->getTrimmedInput('notes', $_POST);
 
         /* Bail out if any of the required fields are empty. */
-        if (empty($title) || empty($type) || empty($city) || empty($state))
+        if (empty($title) || empty($type) || empty($city))
         {
             CommonErrors::fatal(COMMONERROR_MISSINGFIELDS, $this, 'Required fields are missing.');
         }
@@ -1146,7 +1146,7 @@ class JobOrdersUI extends UserInterface
         $notes       = $this->getTrimmedInput('notes', $_POST);
 
         /* Bail out if any of the required fields are empty. */
-        if (empty($title) || empty($type) || empty($city) || empty($state))
+        if (empty($title) || empty($type) || empty($city))
         {
             CommonErrors::fatal(COMMONERROR_MISSINGFIELDS, $this, 'Required fields are missing.');
         }

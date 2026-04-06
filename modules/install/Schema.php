@@ -1447,6 +1447,10 @@ class CATSSchema
                 SET short_description = \'Not reached\'
                 WHERE activity_type_id = 100;
             ',
+            '377' => '
+                ALTER TABLE `joborder`
+                CHANGE `state` `state` VARCHAR(64) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL;
+            ',
 
         );
     }
