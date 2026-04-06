@@ -1527,6 +1527,12 @@ class CATSSchema
                 CREATE INDEX `IDX_site_occurred` ON `activity` (`site_id`,`date_occurred`);
                 CREATE INDEX `IDX_activity_site_type_occurred_job` ON `activity` (`site_id`,`data_item_type`,`date_occurred`,`entered_by`,`joborder_id`);
             ',
+            '381' => '
+                ALTER TABLE `candidate` ADD COLUMN `country` VARCHAR(2) DEFAULT NULL AFTER `zip`;
+                ALTER TABLE `company` ADD COLUMN `country` VARCHAR(2) DEFAULT NULL AFTER `zip`;
+                ALTER TABLE `contact` ADD COLUMN `country` VARCHAR(2) DEFAULT NULL AFTER `zip`;
+                ALTER TABLE `joborder` ADD COLUMN `country` VARCHAR(2) DEFAULT NULL AFTER `state`;
+            ',
 
         );
     }
