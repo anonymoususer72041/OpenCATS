@@ -1447,6 +1447,12 @@ class CATSSchema
                 SET short_description = \'Not reached\'
                 WHERE activity_type_id = 100;
             ',
+            '377' => '
+                ALTER TABLE `candidate` ADD COLUMN `country` VARCHAR(2) DEFAULT NULL AFTER `zip`;
+                ALTER TABLE `company` ADD COLUMN `country` VARCHAR(2) DEFAULT NULL AFTER `zip`;
+                ALTER TABLE `contact` ADD COLUMN `country` VARCHAR(2) DEFAULT NULL AFTER `zip`;
+                ALTER TABLE `joborder` ADD COLUMN `country` VARCHAR(2) DEFAULT NULL AFTER `state`;
+            ',
 
         );
     }
