@@ -1328,12 +1328,6 @@ class CATSSchema
             '364' => '
                 UPDATE user SET password = md5(password) WHERE can_change_password=1;
             ',
-            '365' => '
-                ALTER IGNORE TABLE `site`
-                ADD COLUMN `default_phone_country_code` varchar(8)
-                COLLATE utf8_unicode_ci NOT NULL DEFAULT \'+1\'
-                AFTER `date_format_ddmmyy`;
-            ',
             '366' => '
                 ALTER IGNORE TABLE `candidate` ADD COLUMN `address2` TEXT COLLATE utf8_unicode_ci AFTER `address`;
                 ALTER IGNORE TABLE `contact` ADD COLUMN `address2` TEXT COLLATE utf8_unicode_ci AFTER `address`;
@@ -1369,29 +1363,6 @@ class CATSSchema
                     address  = TRIM(SUBSTRING_INDEX(address, \'\\n\', 1))
                 WHERE address IS NOT NULL
                   AND INSTR(address, \'\\n\') > 0;
-            ',
-            '368' => '
-                ALTER TABLE `user`
-                    MODIFY `password` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT \'\';
-            ',
-            '369' => 'PHP:
-                $col = $db->getAssoc("SHOW COLUMNS FROM `site` LIKE \'last_viewed_day\'");
-
-                if (!empty($col))
-                {
-                    $db->query(
-                        "UPDATE `site`
-                         SET `last_viewed_day` = \'1000-01-01\'
-                         WHERE `last_viewed_day` IS NULL OR `last_viewed_day` = \'0000-00-00\'",
-                        true
-                    );
-
-                    $db->query(
-                        "ALTER TABLE `site`
-                         MODIFY `last_viewed_day` DATE NOT NULL DEFAULT \'1000-01-01\'",
-                        true
-                    );
-                }
             ',
             '370' => '
                 DELETE FROM module_schema WHERE name = \'toolbar\';
