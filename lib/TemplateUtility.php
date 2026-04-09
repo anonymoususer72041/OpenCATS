@@ -1171,6 +1171,76 @@ class TemplateUtility
     }
 
     /**
+     * Returns an asset URL with a file-based version query parameter.
+     *
+     * @param string Relative asset path
+     * @return string
+     */
+    public static function getVersionedAssetURL($assetPath)
+    {
+        $assetPath = (string) $assetPath;
+        if ($assetPath == '')
+        {
+            return $assetPath;
+        }
+
+        $parsedURL = parse_url($assetPath);
+        if ($parsedURL === false || isset($parsedURL['scheme']) || isset($parsedURL['host']))
+        {
+            return $assetPath;
+        }
+
+        $path = isset($parsedURL['path']) ? $parsedURL['path'] : '';
+        if ($path == '')
+        {
+            return $assetPath;
+        }
+
+        $legacyRootPath = realpath(LEGACY_ROOT);
+        if ($legacyRootPath === false)
+        {
+            return $assetPath;
+        }
+
+        $normalizedPath = ltrim(str_replace('\\', '/', $path), '/');
+        if ($normalizedPath == '')
+        {
+            return $assetPath;
+        }
+
+        $assetFilePath = realpath(
+            $legacyRootPath . DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_SEPARATOR, $normalizedPath)
+        );
+        if ($assetFilePath === false)
+        {
+            return $assetPath;
+        }
+
+        $legacyRootPrefix = rtrim($legacyRootPath, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+        if ($assetFilePath !== $legacyRootPath && strpos($assetFilePath, $legacyRootPrefix) !== 0)
+        {
+            return $assetPath;
+        }
+
+        $fileMTime = @filemtime($assetFilePath);
+        if ($fileMTime === false)
+        {
+            return $assetPath;
+        }
+
+        $queryString = isset($parsedURL['query']) ? $parsedURL['query'] . '&' : '';
+        $queryString .= 'v=' . (int) $fileMTime;
+
+        $versionedAssetURL = $path . '?' . $queryString;
+        if (isset($parsedURL['fragment']))
+        {
+            $versionedAssetURL .= '#' . $parsedURL['fragment'];
+        }
+
+        return $versionedAssetURL;
+    }
+
+    /**
      * Prints template header HTML.
      *
      * @param string page title
