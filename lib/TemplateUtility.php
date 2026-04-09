@@ -1256,16 +1256,6 @@ class TemplateUtility
 
         $siteID = $_SESSION['CATS']->getSiteID();
 
-        /* This prevents caching problems when SVN updates are preformed. */
-        if ($_SESSION['CATS']->getCachedBuild() > 0)
-        {
-            $javascriptAntiCache = '?b=' . $_SESSION['CATS']->getCachedBuild();
-        }
-        else
-        {
-            $javascriptAntiCache = '?v=' . CATSUtility::getVersionAsInteger();
-        }
-
         echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"', "\n";
         echo '"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">', "\n";
         echo '<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">', "\n";
@@ -1288,10 +1278,6 @@ class TemplateUtility
         foreach ($coreJavaScriptFiles as $coreJavaScriptFile)
         {
             $versionedFilename = self::getVersionedAssetURL($coreJavaScriptFile);
-            if ($versionedFilename === $coreJavaScriptFile)
-            {
-                $versionedFilename .= $javascriptAntiCache;
-            }
             echo '<script type="text/javascript" src="', $versionedFilename, '"></script>', "\n";
         }
         echo '<script type="text/javascript">CATSIndexName = ', json_encode((string) CATSUtility::getIndexName(), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT), ';</script>', "\n";
@@ -1373,10 +1359,6 @@ class TemplateUtility
             $extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
 
             $versionedFilename = self::getVersionedAssetURL($filename);
-            if ($versionedFilename === $filename)
-            {
-                $versionedFilename .= $javascriptAntiCache;
-            }
 
             if ($extension == 'js')
             {
