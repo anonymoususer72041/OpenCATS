@@ -37,6 +37,20 @@ ACTIVITY_CALL_TALKED = 500;
 ACTIVITY_CALL_LVM    = 600;
 ACTIVITY_CALL_MISSED = 700;
 
+function Activity_htmlToPlainText(html)
+{
+    if (!html)
+    {
+        return '';
+    }
+
+    var text = html.replace(/<br\s*\/?>/ig, "\n");
+    text = text.replace(/&nbsp;/ig, ' ');
+    text = text.replace(/(<([^>]+)>)/ig, "");
+
+    return unEscapeHTML(text);
+}
+
 function Activity_fillTypeSelect(selectList, selectedText)
 {
     var optionElements = new Array();
@@ -255,7 +269,7 @@ function Activity_editEntry(activityID, dataItemID, dataItemType, sessionCookie)
         {
             notesTextArea.appendChild(
                 document.createTextNode(
-                    unEscapeHTML(notesTD.innerHTML.replace(/(<([^>]+)>)/ig,""))
+                    Activity_htmlToPlainText(notesTD.innerHTML)
                 )
             );
         }
