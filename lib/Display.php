@@ -108,7 +108,10 @@ class Display
         $sheet = $this->_profileLib->getProfileStylesheet();
         if ($profileStylesheet === false || strcmp($profileStylesheet, $sheet))
         {
-            echo sprintf('<link rel="stylesheet" type="text/css" href="%s" />', $sheet);
+            echo sprintf(
+                '<link rel="stylesheet" type="text/css" href="%s" />',
+                TemplateUtility::getVersionedAssetURL($sheet)
+            );
             $profileStylesheet = $sheet;
         }
 
