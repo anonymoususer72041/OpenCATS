@@ -77,7 +77,7 @@
                             </td>
 
                             <td align="left" valign="top" >
-                                <?php echo(nl2br($activityData['notes'])); ?>
+                                <?php echo(nl2br(htmlspecialchars($activityData['notes'], ENT_QUOTES | ENT_SUBSTITUTE, HTML_ENCODING))); ?>
                             </td>
 
                             <td align="left" valign="top">
