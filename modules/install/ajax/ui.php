@@ -124,22 +124,22 @@ switch ($action)
         {
             if (isset($_REQUEST['user']) && !empty($_REQUEST['user']))
             {
-                CATSUtility::changeConfigSetting('DATABASE_USER', "'" . $_REQUEST['user'] . "'");
+                CATSUtility::changeConfigSetting('DATABASE_USER', var_export($_REQUEST['user'], true));
             }
 
             if (isset($_REQUEST['pass']) && $_REQUEST['pass'] !== '')
             {
-                CATSUtility::changeConfigSetting('DATABASE_PASS', "'" . $_REQUEST['pass'] . "'");
+                CATSUtility::changeConfigSetting('DATABASE_PASS', var_export($_REQUEST['pass'], true));
             }
 
             if (isset($_REQUEST['host']) && !empty($_REQUEST['host']))
             {
-                CATSUtility::changeConfigSetting('DATABASE_HOST', "'" . $_REQUEST['host'] . "'");
+                CATSUtility::changeConfigSetting('DATABASE_HOST', var_export($_REQUEST['host'], true));
             }
 
             if (isset($_REQUEST['name']) && !empty($_REQUEST['name']))
             {
-                CATSUtility::changeConfigSetting('DATABASE_NAME', "'" . $_REQUEST['name'] . "'");
+                CATSUtility::changeConfigSetting('DATABASE_NAME', var_export($_REQUEST['name'], true));
             }
 
             echo '
@@ -244,11 +244,11 @@ switch ($action)
                 CATSUtility::changeConfigSetting('MAIL_SMTP_AUTH', 'false');
             }
 
-            CATSUtility::changeConfigSetting('MAIL_SENDMAIL_PATH', '"' . $mailSendmailPath . '"');
-            CATSUtility::changeConfigSetting('MAIL_SMTP_HOST', '"' . $mailSmtpHost . '"');
+            CATSUtility::changeConfigSetting('MAIL_SENDMAIL_PATH', var_export($mailSendmailPath, true));
+            CATSUtility::changeConfigSetting('MAIL_SMTP_HOST', var_export($mailSmtpHost, true));
             CATSUtility::changeConfigSetting('MAIL_SMTP_PORT', sprintf('%d', $mailSmtpPort));
-            CATSUtility::changeConfigSetting('MAIL_SMTP_USER', '"' . $mailSmtpUsername . '"');
-            CATSUtility::changeConfigSetting('MAIL_SMTP_PASS', '"' . $mailSmtpPassword . '"');
+            CATSUtility::changeConfigSetting('MAIL_SMTP_USER', var_export($mailSmtpUsername, true));
+            CATSUtility::changeConfigSetting('MAIL_SMTP_PASS', var_export($mailSmtpPassword, true));
 
             @session_name(CATS_SESSION_NAME);
             session_start();
@@ -420,20 +420,16 @@ switch ($action)
             </script>';
 
         $antiwordPath = $_REQUEST['docExecutable'];
-        $antiwordWithSlashes = str_replace('\\', '\\\\', $antiwordPath);
-        CATSUtility::changeConfigSetting('ANTIWORD_PATH', '"' . $antiwordWithSlashes . '"');
+        CATSUtility::changeConfigSetting('ANTIWORD_PATH', var_export($antiwordPath, true));
 
         $pdftotextPath = $_REQUEST['pdfExecutable'];
-        $pdftotextWithSlashes = str_replace('\\', '\\\\', $pdftotextPath);
-        CATSUtility::changeConfigSetting('PDFTOTEXT_PATH', '"' . $pdftotextWithSlashes . '"');
+        CATSUtility::changeConfigSetting('PDFTOTEXT_PATH', var_export($pdftotextPath, true));
 
         $html2textPath = $_REQUEST['htmlExecutable'];
-        $html2textWithSlashes = str_replace('\\', '\\\\', $html2textPath);
-        CATSUtility::changeConfigSetting('HTML2TEXT_PATH', '"' . $html2textWithSlashes . '"');
+        CATSUtility::changeConfigSetting('HTML2TEXT_PATH', var_export($html2textPath, true));
 
         $unrtfPath = $_REQUEST['rtfExecutable'];
-        $unrtfWithSlashes = str_replace('\\', '\\\\', $unrtfPath);
-        CATSUtility::changeConfigSetting('UNRTF_PATH', '"' . $unrtfWithSlashes . '"');
+        CATSUtility::changeConfigSetting('UNRTF_PATH', var_export($unrtfPath, true));
 
         break;
 
