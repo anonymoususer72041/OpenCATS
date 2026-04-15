@@ -1171,6 +1171,76 @@ class TemplateUtility
     }
 
     /**
+     * Returns an asset URL with a file-based version query parameter.
+     *
+     * @param string Relative asset path
+     * @return string
+     */
+    public static function getVersionedAssetURL($assetPath)
+    {
+        $assetPath = (string) $assetPath;
+        if ($assetPath == '')
+        {
+            return $assetPath;
+        }
+
+        $parsedURL = parse_url($assetPath);
+        if ($parsedURL === false || isset($parsedURL['scheme']) || isset($parsedURL['host']))
+        {
+            return $assetPath;
+        }
+
+        $path = isset($parsedURL['path']) ? $parsedURL['path'] : '';
+        if ($path == '')
+        {
+            return $assetPath;
+        }
+
+        $legacyRootPath = realpath(LEGACY_ROOT);
+        if ($legacyRootPath === false)
+        {
+            return $assetPath;
+        }
+
+        $normalizedPath = ltrim(str_replace('\\', '/', $path), '/');
+        if ($normalizedPath == '')
+        {
+            return $assetPath;
+        }
+
+        $assetFilePath = realpath(
+            $legacyRootPath . DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_SEPARATOR, $normalizedPath)
+        );
+        if ($assetFilePath === false)
+        {
+            return $assetPath;
+        }
+
+        $legacyRootPrefix = rtrim($legacyRootPath, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+        if ($assetFilePath !== $legacyRootPath && strpos($assetFilePath, $legacyRootPrefix) !== 0)
+        {
+            return $assetPath;
+        }
+
+        $fileMTime = @filemtime($assetFilePath);
+        if ($fileMTime === false)
+        {
+            return $assetPath;
+        }
+
+        $queryString = isset($parsedURL['query']) ? $parsedURL['query'] . '&' : '';
+        $queryString .= 'v=' . (int) $fileMTime;
+
+        $versionedAssetURL = $path . '?' . $queryString;
+        if (isset($parsedURL['fragment']))
+        {
+            $versionedAssetURL .= '#' . $parsedURL['fragment'];
+        }
+
+        return $versionedAssetURL;
+    }
+
+    /**
      * Prints template header HTML.
      *
      * @param string page title
@@ -1186,16 +1256,6 @@ class TemplateUtility
 
         $siteID = $_SESSION['CATS']->getSiteID();
 
-        /* This prevents caching problems when SVN updates are preformed. */
-        if ($_SESSION['CATS']->getCachedBuild() > 0)
-        {
-            $javascriptAntiCache = '?b=' . $_SESSION['CATS']->getCachedBuild();
-        }
-        else
-        {
-            $javascriptAntiCache = '?v=' . CATSUtility::getVersionAsInteger();
-        }
-
         echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"', "\n";
         echo '"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">', "\n";
         echo '<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">', "\n";
@@ -1208,11 +1268,18 @@ class TemplateUtility
              CATSUtility::getIndexName(), '?m=rss" />', "\n";
 
         /* Core JS files */
-        echo '<script type="text/javascript" src="js/lib.js'.$javascriptAntiCache.'"></script>', "\n";
-        echo '<script type="text/javascript" src="js/quickAction.js'.$javascriptAntiCache.'"></script>', "\n";
-        echo '<script type="text/javascript" src="js/calendarDateInput.js'.$javascriptAntiCache.'"></script>', "\n";
-        echo '<script type="text/javascript" src="js/submodal/subModal.js'.$javascriptAntiCache.'"></script>', "\n";
-        echo '<script type="text/javascript" src="js/jquery-1.3.2.min.js'.$javascriptAntiCache.'"></script>', "\n";
+        $coreJavaScriptFiles = array(
+            'js/lib.js',
+            'js/quickAction.js',
+            'js/calendarDateInput.js',
+            'js/submodal/subModal.js',
+            'js/jquery-1.3.2.min.js'
+        );
+        foreach ($coreJavaScriptFiles as $coreJavaScriptFile)
+        {
+            $versionedFilename = self::getVersionedAssetURL($coreJavaScriptFile);
+            echo '<script type="text/javascript" src="', $versionedFilename, '"></script>', "\n";
+        }
         echo '<script type="text/javascript">CATSIndexName = ', json_encode((string) CATSUtility::getIndexName(), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT), ';</script>', "\n";
         if (isset($_SESSION['CATS']) && $_SESSION['CATS']->isLoggedIn())
         {
@@ -1284,22 +1351,31 @@ class TemplateUtility
 
         foreach ($headIncludes as $key => $filename)
         {
-            $extension = substr($filename, strrpos($filename, '.') + 1);
+            $path = parse_url($filename, PHP_URL_PATH);
+            if ($path === false || $path === null)
+            {
+                $path = $filename;
+            }
+            $extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
 
-            $filename .= $javascriptAntiCache;
+            $versionedFilename = self::getVersionedAssetURL($filename);
 
             if ($extension == 'js')
             {
-                echo '<script type="text/javascript" src="', $filename, '"></script>', "\n";
+                echo '<script type="text/javascript" src="', $versionedFilename, '"></script>', "\n";
             }
             else if ($extension == 'css')
             {
-                echo '<style type="text/css" media="all">@import "', $filename, '";</style>', "\n";
+                echo '<style type="text/css" media="all">@import "', $versionedFilename, '";</style>', "\n";
             }
         }
 
-        echo '<!--[if IE]><link rel="stylesheet" type="text/css" href="ie.css" /><![endif]-->', "\n";
-        echo '<![if !IE]><link rel="stylesheet" type="text/css" href="not-ie.css" /><![endif]>', "\n";
+        echo '<!--[if IE]><link rel="stylesheet" type="text/css" href="',
+             self::getVersionedAssetURL('ie.css'),
+             '" /><![endif]-->', "\n";
+        echo '<![if !IE]><link rel="stylesheet" type="text/css" href="',
+             self::getVersionedAssetURL('not-ie.css'),
+             '" /><![endif]>', "\n";
         echo '</head>', "\n\n";
     }
 
