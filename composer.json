@@ -4,8 +4,8 @@
     "type": "project",
     "require": {
         "php": ">=7.2",
-        "ckeditor/ckeditor": "^4.16.0",
-        "phpmailer/phpmailer": "^6.5.0"
+        "ckeditor/ckeditor": "*",
+        "phpmailer/phpmailer": "*"
     },
     "require-dev": {
         "behat/behat": "^3.15",
@@ -13,8 +13,8 @@
         "friends-of-behat/mink-extension": "~2.3.1",
         "behat/mink-browserkit-driver": "^2.3",
         "behat/mink-selenium2-driver": "^1.7",
-        "codacy/coverage": "^1.4.2",
-        "phpunit/phpunit": "^7.5.7"
+        "codacy/coverage": "*",
+        "phpunit/phpunit": "*"
     },
     "autoload": {
         "psr-4": {
