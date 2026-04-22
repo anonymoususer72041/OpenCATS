@@ -4,12 +4,8 @@ use PHPUnit\Framework\TestCase;
 use OpenCATS\Entity\CompanyRepository;
 use OpenCATS\Entity\Company;
 
-if( !defined('LEGACY_ROOT') )
-{
-    define('LEGACY_ROOT', '.');
-}
-
 include_once(LEGACY_ROOT . '/lib/History.php');
+include_once(LEGACY_ROOT . '/lib/DatabaseConnection.php');
 
 class CompanyRepositoryTests extends TestCase
 {
@@ -123,6 +119,7 @@ class CompanyRepositoryTests extends TestCase
     private function getDatabaseConnectionMock()
     {
         return $this->getMockBuilder('\DatabaseConnection')
+            ->disableOriginalConstructor()
             ->onlyMethods(['makeQueryString', 'makeQueryInteger', 'query', 'getLastInsertID'])
             ->getMock();
     }
