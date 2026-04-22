@@ -345,7 +345,7 @@ class Candidates
             return false;
         }
 
-        if (!empty($emailAddress))
+        if (!empty($emailAddress) && !empty($email))
         {
             /* Send e-mail notification. */
             //FIXME: Make subject configurable.
