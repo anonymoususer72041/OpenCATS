@@ -87,10 +87,6 @@ define('ENABLE_HOSTNAME_LOOKUP', false);
  * Install Sphinx and set ENABLE_SPHINX (below) to true to enable Sphinx.
  */
 define('ENABLE_SPHINX', true);
-define('SPHINX_API', '/var/www/cats/lib/sphinx_latest/sphinxapi.php');
-#define('SPHINX_API', '/usr/share/sphinxsearch/api/ruby/spec/fixtures/sphinxapi.php');
-#define('SPHINX_API', '/usr/share/sphinxsearch/api/sphinxapi.php');
-#define('SPHINX_API', '/var/www/cats/sphinx/etc/sphinxapi.php');
 define('SPHINX_HOST', 'localhost');
 define('SPHINX_PORT', 9312);
 define('SPHINX_INDEX', 'cats catsdelta');

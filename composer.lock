@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "74f53321d6b67269c02e230ffd682c0a",
+    "content-hash": "74b71e62d63a46a6e0ae814882295c57",
     "packages": [
         {
             "name": "ckeditor/ckeditor",
@@ -53,6 +53,52 @@
                 "wiki": "https://ckeditor.com/docs/ckeditor4/latest/"
             },
             "time": "2025-02-05T12:32:07+00:00"
+        },
+        {
+            "name": "neutron/sphinxsearch-api",
+            "version": "2.0.8.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/romainneutron/Sphinx-Search-API-PHP-Client.git",
+                "reference": "a18fd84951ea1fb006387e2d099d025235b14d34"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/romainneutron/Sphinx-Search-API-PHP-Client/zipball/a18fd84951ea1fb006387e2d099d025235b14d34",
+                "reference": "a18fd84951ea1fb006387e2d099d025235b14d34",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=4"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "sphinxapi.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL"
+            ],
+            "authors": [
+                {
+                    "name": "Andrew Aksyonoff",
+                    "homepage": "http://sphinxsearch.com/"
+                }
+            ],
+            "description": "SphinxSearch PHP API",
+            "homepage": "http://sphinxsearch.com/",
+            "keywords": [
+                "Sphinx Search",
+                "api",
+                "search-engine"
+            ],
+            "support": {
+                "issues": "https://github.com/romainneutron/Sphinx-Search-API-PHP-Client/issues",
+                "source": "https://github.com/romainneutron/Sphinx-Search-API-PHP-Client/tree/master"
+            },
+            "time": "2018-07-09T14:18:54+00:00"
         },
         {
             "name": "phpmailer/phpmailer",
