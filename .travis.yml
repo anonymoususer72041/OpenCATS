@@ -15,7 +15,7 @@ before_install:
 - sudo lsof -t -i:80 | sudo xargs kill -9
 language: php
 php:
-- 7.2
+- 7.4
 - 8.0
 - 8.2
 script:
