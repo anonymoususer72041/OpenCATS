@@ -203,11 +203,15 @@ class CATSTestReporter extends SimpleReporter
         echo '    <head>', "\n";
         echo '        <title>CATS - Tests</title>', "\n";
         echo '        <meta http-equiv="Content-Type" content="text/html; charset=', HTML_ENCODING, '">', "\n";
-        echo '        <style type="text/css" media="all">@import "modules/tests/tests.css";</style>', "\n";
+        echo '        <style type="text/css" media="all">@import "',
+             TemplateUtility::getVersionedAssetURL('modules/tests/tests.css'),
+             '";</style>', "\n";
 
         foreach ($headIncludes as $key => $value)
         {
-            echo '        <script type="text/javascript" src="', $value, '"></script>', "\n";
+            echo '        <script type="text/javascript" src="',
+                 TemplateUtility::getVersionedAssetURL($value),
+                 '"></script>', "\n";
         }
 
         echo '    </head>', "\n";
