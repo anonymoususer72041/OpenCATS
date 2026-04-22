@@ -343,9 +343,9 @@ class CATSWebTestCase extends WebTestCase
     public function addPipelineActivity($candidateID, $jobOrderID,
         $activityTypeID, $activityNote)
     {
-        /* Add the candidate. */
+        /* Add the activity entry. */
         $this->assertPOST(
-            $this->_indexURL . '?m=candidates&a=addActivityChangeStatus',
+            $this->_indexURL . '?m=candidates&a=addActivity',
             array(
                 'postback'       => 'postback',
                 'addActivity'    => 'on',
@@ -364,6 +364,45 @@ class CATSWebTestCase extends WebTestCase
         $this->assertPattern(
             '/An activity entry of type <span class="bold">[^<]+<\/span> has been added/'
         );
+
+        return true;
+    }
+
+    public function changePipelineStatus($moduleName, $candidateID, $jobOrderID,
+        $statusID, $addActivityProvided = false, $addActivity = true)
+    {
+        $postData = array(
+            'postback'    => 'postback',
+            'candidateID' => $candidateID,
+            'regardingID' => $jobOrderID,
+            'statusID'    => $statusID
+        );
+
+        if ($addActivityProvided)
+        {
+            $postData['addActivityProvided'] = '1';
+            $postData['addActivity'] = ($addActivity ? 'on' : 'off');
+        }
+
+        /* Change candidate-job order pipeline status through the dedicated modal flow. */
+        $this->assertPOST(
+            $this->_indexURL . '?m=' . $moduleName . '&a=changeStatus',
+            $postData,
+            'Changing pipeline status should succeed'
+        );
+        if (!$this->runPageLoadAssertions(false))
+        {
+            return false;
+        }
+
+        if ($moduleName == 'joborders')
+        {
+            $this->assertPattern('/The pipeline status has been changed from/');
+        }
+        else
+        {
+            $this->assertPattern('/The candidate\'s status has been changed from/');
+        }
 
         return true;
     }

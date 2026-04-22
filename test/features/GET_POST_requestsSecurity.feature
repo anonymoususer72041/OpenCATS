@@ -22,7 +22,8 @@ Scenario Outline: Candidate module actions
   | DISABLED    | GET     | index.php?m=candidates&a=considerForJobSearch    | not     |
   | DISABLED    | GET     | index.php?m=candidates&a=addToPipeline           | not     |
   | DISABLED    | GET     | index.php?m=candidates&a=addCandidateTags        | not     |
-  | DISABLED    | GET     | index.php?m=candidates&a=addActivityChangeStatus | not     |
+  | DISABLED    | GET     | index.php?m=candidates&a=addActivity | not     |
+  | DISABLED    | GET     | index.php?m=candidates&a=changeStatus | not     |
   | DISABLED    | GET     | index.php?m=candidates&a=removeFromPipeline      | not     |
   | DISABLED    | GET     | index.php?m=candidates&a=addEditImage            | not     |
   | DISABLED    | GET     | index.php?m=candidates&a=createAttachment        | not     |
@@ -35,7 +36,8 @@ Scenario Outline: Candidate module actions
   | DISABLED    | POST    | index.php?m=candidates&a=add                     | not     |
   | DISABLED    | POST    | index.php?m=candidates&a=edit                    | not     |
   | DISABLED    | POST    | index.php?m=candidates&a=addCandidateTags        | not     |
-  | DISABLED    | POST    | index.php?m=candidates&a=addActivityChangeStatus | not     |
+  | DISABLED    | POST    | index.php?m=candidates&a=addActivity | not     |
+  | DISABLED    | POST    | index.php?m=candidates&a=changeStatus | not     |
   | DISABLED    | POST    | index.php?m=candidates&a=addEditImage            | not     |
   | DISABLED    | POST    | index.php?m=candidates&a=createAttachment        | not     |
   | DISABLED    | POST    | index.php?m=candidates&a=delete                  | not     |
@@ -50,7 +52,8 @@ Scenario Outline: Candidate module actions
   | READONLY    | GET     | index.php?m=candidates&a=considerForJobSearch    | not     |
   | READONLY    | GET     | index.php?m=candidates&a=addToPipeline           | not     |
   | READONLY    | GET     | index.php?m=candidates&a=addCandidateTags        | not     |
-  | READONLY    | GET     | index.php?m=candidates&a=addActivityChangeStatus | not     |
+  | READONLY    | GET     | index.php?m=candidates&a=addActivity | not     |
+  | READONLY    | GET     | index.php?m=candidates&a=changeStatus | not     |
   | READONLY    | GET     | index.php?m=candidates&a=removeFromPipeline      | not     |
   | READONLY    | GET     | index.php?m=candidates&a=addEditImage            | not     |
   | READONLY    | GET     | index.php?m=candidates&a=createAttachment        | not     |
@@ -63,7 +66,8 @@ Scenario Outline: Candidate module actions
   | READONLY    | POST    | index.php?m=candidates&a=add                     | not     |
   | READONLY    | POST    | index.php?m=candidates&a=edit                    | not     |
   | READONLY    | POST    | index.php?m=candidates&a=addCandidateTags        | not     |
-  | READONLY    | POST    | index.php?m=candidates&a=addActivityChangeStatus | not     |
+  | READONLY    | POST    | index.php?m=candidates&a=addActivity | not     |
+  | READONLY    | POST    | index.php?m=candidates&a=changeStatus | not     |
   | READONLY    | POST    | index.php?m=candidates&a=addEditImage            | not     |
   | READONLY    | POST    | index.php?m=candidates&a=createAttachment        | not     |
   | READONLY    | POST    | index.php?m=candidates&a=delete                  | not     |
@@ -78,7 +82,8 @@ Scenario Outline: Candidate module actions
   | EDIT        | GET     | index.php?m=candidates&a=considerForJobSearch    |         |
   | EDIT        | GET     | index.php?m=candidates&a=addToPipeline           |         |
   | EDIT        | GET     | index.php?m=candidates&a=addCandidateTags        |         |
-  | EDIT        | GET     | index.php?m=candidates&a=addActivityChangeStatus |         |
+  | EDIT        | GET     | index.php?m=candidates&a=addActivity |         |
+  | EDIT        | GET     | index.php?m=candidates&a=changeStatus |         |
   | EDIT        | GET     | index.php?m=candidates&a=removeFromPipeline      | not     |
   | EDIT        | GET     | index.php?m=candidates&a=addEditImage            |         |
   | EDIT        | GET     | index.php?m=candidates&a=createAttachment        |         |
@@ -91,7 +96,8 @@ Scenario Outline: Candidate module actions
   | EDIT        | POST    | index.php?m=candidates&a=add                     |         |
   | EDIT        | POST    | index.php?m=candidates&a=edit                    |         |
   | EDIT        | POST    | index.php?m=candidates&a=addCandidateTags        |         |
-  | EDIT        | POST    | index.php?m=candidates&a=addActivityChangeStatus |         |
+  | EDIT        | POST    | index.php?m=candidates&a=addActivity |         |
+  | EDIT        | POST    | index.php?m=candidates&a=changeStatus |         |
   | EDIT        | POST    | index.php?m=candidates&a=addEditImage            |         |
   | EDIT        | POST    | index.php?m=candidates&a=createAttachment        |         |
   | EDIT        | POST    | index.php?m=candidates&a=delete                  | not     |
@@ -106,7 +112,8 @@ Scenario Outline: Candidate module actions
   | DELETE      | GET     | index.php?m=candidates&a=considerForJobSearch    |         |
   | DELETE      | GET     | index.php?m=candidates&a=addToPipeline           |         |
   | DELETE      | GET     | index.php?m=candidates&a=addCandidateTags        |         |
-  | DELETE      | GET     | index.php?m=candidates&a=addActivityChangeStatus |         |
+  | DELETE      | GET     | index.php?m=candidates&a=addActivity |         |
+  | DELETE      | GET     | index.php?m=candidates&a=changeStatus |         |
   | DELETE      | GET     | index.php?m=candidates&a=removeFromPipeline      |         |
   | DELETE      | GET     | index.php?m=candidates&a=addEditImage            |         |
   | DELETE      | GET     | index.php?m=candidates&a=createAttachment        |         |
@@ -119,7 +126,8 @@ Scenario Outline: Candidate module actions
   | DELETE      | POST    | index.php?m=candidates&a=add                     |         |
   | DELETE      | POST    | index.php?m=candidates&a=edit                    |         |
   | DELETE      | POST    | index.php?m=candidates&a=addCandidateTags        |         |
-  | DELETE      | POST    | index.php?m=candidates&a=addActivityChangeStatus |         |
+  | DELETE      | POST    | index.php?m=candidates&a=addActivity |         |
+  | DELETE      | POST    | index.php?m=candidates&a=changeStatus |         |
   | DELETE      | POST    | index.php?m=candidates&a=addEditImage            |         |
   | DELETE      | POST    | index.php?m=candidates&a=createAttachment        |         |
   | DELETE      | POST    | index.php?m=candidates&a=delete                  |         |
@@ -134,7 +142,8 @@ Scenario Outline: Candidate module actions
   | DEMO        | GET     | index.php?m=candidates&a=considerForJobSearch    |         |
   | DEMO        | GET     | index.php?m=candidates&a=addToPipeline           |         |
   | DEMO        | GET     | index.php?m=candidates&a=addCandidateTags        |         |
-  | DEMO        | GET     | index.php?m=candidates&a=addActivityChangeStatus |         |
+  | DEMO        | GET     | index.php?m=candidates&a=addActivity |         |
+  | DEMO        | GET     | index.php?m=candidates&a=changeStatus |         |
   | DEMO        | GET     | index.php?m=candidates&a=removeFromPipeline      |         |
   | DEMO        | GET     | index.php?m=candidates&a=addEditImage            |         |
   | DEMO        | GET     | index.php?m=candidates&a=createAttachment        |         |
@@ -147,7 +156,8 @@ Scenario Outline: Candidate module actions
   | DEMO        | POST    | index.php?m=candidates&a=add                     |         |
   | DEMO        | POST    | index.php?m=candidates&a=edit                    |         |
   | DEMO        | POST    | index.php?m=candidates&a=addCandidateTags        |         |
-  | DEMO        | POST    | index.php?m=candidates&a=addActivityChangeStatus |         |
+  | DEMO        | POST    | index.php?m=candidates&a=addActivity |         |
+  | DEMO        | POST    | index.php?m=candidates&a=changeStatus |         |
   | DEMO        | POST    | index.php?m=candidates&a=addEditImage            |         |
   | DEMO        | POST    | index.php?m=candidates&a=createAttachment        |         |
   | DEMO        | POST    | index.php?m=candidates&a=delete                  |         |
@@ -162,7 +172,8 @@ Scenario Outline: Candidate module actions
   | ADMIN       | GET     | index.php?m=candidates&a=considerForJobSearch    |         |
   | ADMIN       | GET     | index.php?m=candidates&a=addToPipeline           |         |
   | ADMIN       | GET     | index.php?m=candidates&a=addCandidateTags        |         |
-  | ADMIN       | GET     | index.php?m=candidates&a=addActivityChangeStatus |         |
+  | ADMIN       | GET     | index.php?m=candidates&a=addActivity |         |
+  | ADMIN       | GET     | index.php?m=candidates&a=changeStatus |         |
   | ADMIN       | GET     | index.php?m=candidates&a=removeFromPipeline      |         |
   | ADMIN       | GET     | index.php?m=candidates&a=addEditImage            |         |
   | ADMIN       | GET     | index.php?m=candidates&a=createAttachment        |         |
@@ -175,7 +186,8 @@ Scenario Outline: Candidate module actions
   | ADMIN       | POST    | index.php?m=candidates&a=add                     |         |
   | ADMIN       | POST    | index.php?m=candidates&a=edit                    |         |
   | ADMIN       | POST    | index.php?m=candidates&a=addCandidateTags        |         |
-  | ADMIN       | POST    | index.php?m=candidates&a=addActivityChangeStatus |         |
+  | ADMIN       | POST    | index.php?m=candidates&a=addActivity |         |
+  | ADMIN       | POST    | index.php?m=candidates&a=changeStatus |         |
   | ADMIN       | POST    | index.php?m=candidates&a=addEditImage            |         |
   | ADMIN       | POST    | index.php?m=candidates&a=createAttachment        |         |
   | ADMIN       | POST    | index.php?m=candidates&a=delete                  |         |
@@ -190,7 +202,8 @@ Scenario Outline: Candidate module actions
   | MULTI_ADMIN | GET     | index.php?m=candidates&a=considerForJobSearch    |         |
   | MULTI_ADMIN | GET     | index.php?m=candidates&a=addToPipeline           |         |
   | MULTI_ADMIN | GET     | index.php?m=candidates&a=addCandidateTags        |         |
-  | MULTI_ADMIN | GET     | index.php?m=candidates&a=addActivityChangeStatus |         |
+  | MULTI_ADMIN | GET     | index.php?m=candidates&a=addActivity |         |
+  | MULTI_ADMIN | GET     | index.php?m=candidates&a=changeStatus |         |
   | MULTI_ADMIN | GET     | index.php?m=candidates&a=removeFromPipeline      |         |
   | MULTI_ADMIN | GET     | index.php?m=candidates&a=addEditImage            |         |
   | MULTI_ADMIN | GET     | index.php?m=candidates&a=createAttachment        |         |
@@ -203,7 +216,8 @@ Scenario Outline: Candidate module actions
   | MULTI_ADMIN | POST    | index.php?m=candidates&a=add                     |         |
   | MULTI_ADMIN | POST    | index.php?m=candidates&a=edit                    |         |
   | MULTI_ADMIN | POST    | index.php?m=candidates&a=addCandidateTags        |         |
-  | MULTI_ADMIN | POST    | index.php?m=candidates&a=addActivityChangeStatus |         |
+  | MULTI_ADMIN | POST    | index.php?m=candidates&a=addActivity |         |
+  | MULTI_ADMIN | POST    | index.php?m=candidates&a=changeStatus |         |
   | MULTI_ADMIN | POST    | index.php?m=candidates&a=addEditImage            |         |
   | MULTI_ADMIN | POST    | index.php?m=candidates&a=createAttachment        |         |
   | MULTI_ADMIN | POST    | index.php?m=candidates&a=delete                  |         |
@@ -218,7 +232,8 @@ Scenario Outline: Candidate module actions
   | ROOT        | GET     | index.php?m=candidates&a=considerForJobSearch    |         |
   | ROOT        | GET     | index.php?m=candidates&a=addToPipeline           |         |
   | ROOT        | GET     | index.php?m=candidates&a=addCandidateTags        |         |
-  | ROOT        | GET     | index.php?m=candidates&a=addActivityChangeStatus |         |
+  | ROOT        | GET     | index.php?m=candidates&a=addActivity |         |
+  | ROOT        | GET     | index.php?m=candidates&a=changeStatus |         |
   | ROOT        | GET     | index.php?m=candidates&a=removeFromPipeline      |         |
   | ROOT        | GET     | index.php?m=candidates&a=addEditImage            |         |
   | ROOT        | GET     | index.php?m=candidates&a=createAttachment        |         |
@@ -231,7 +246,8 @@ Scenario Outline: Candidate module actions
   | ROOT        | POST    | index.php?m=candidates&a=add                     |         |
   | ROOT        | POST    | index.php?m=candidates&a=edit                    |         |
   | ROOT        | POST    | index.php?m=candidates&a=addCandidateTags        |         |
-  | ROOT        | POST    | index.php?m=candidates&a=addActivityChangeStatus |         |
+  | ROOT        | POST    | index.php?m=candidates&a=addActivity |         |
+  | ROOT        | POST    | index.php?m=candidates&a=changeStatus |         |
   | ROOT        | POST    | index.php?m=candidates&a=addEditImage            |         |
   | ROOT        | POST    | index.php?m=candidates&a=createAttachment        |         |
   | ROOT        | POST    | index.php?m=candidates&a=delete                  |         |
@@ -256,7 +272,8 @@ Scenario Outline: Job Order module actions
   | DISABLED    | GET     | index.php?m=joborders&a=delete                  | not  |
   | DISABLED    | GET     | index.php?m=joborders&a=search                  | not  |
   | DISABLED    | GET     | index.php?m=joborders&a=search&getback=getback  | not  |
-  | DISABLED    | GET     | index.php?m=joborders&a=addActivityChangeStatus | not  |
+  | DISABLED    | GET     | index.php?m=joborders&a=addActivity | not  |
+  | DISABLED    | GET     | index.php?m=joborders&a=changeStatus | not  |
   | DISABLED    | GET     | index.php?m=joborders&a=administrativeHideShow  | not  |
   | DISABLED    | GET     | index.php?m=joborders&a=listByView              | not  |
   | DISABLED    | GET     | index.php?m=joborders&a=considerCandidateSearch | not  |
@@ -267,7 +284,8 @@ Scenario Outline: Job Order module actions
   | DISABLED    | POST    | index.php?m=joborders&a=add                     | not  |
   | DISABLED    | POST    | index.php?m=joborders&a=addCandidateModal       | not  |
   | DISABLED    | POST    | index.php?m=joborders&a=edit                    | not  |
-  | DISABLED    | POST    | index.php?m=joborders&a=addActivityChangeStatus | not  |
+  | DISABLED    | POST    | index.php?m=joborders&a=addActivity | not  |
+  | DISABLED    | POST    | index.php?m=joborders&a=changeStatus | not  |
   | DISABLED    | POST    | index.php?m=joborders&a=considerCandidateSearch | not  |
   | DISABLED    | POST    | index.php?m=joborders&a=createAttachment        | not  |
   | DISABLED    | POST    | index.php?m=joborders&a=delete                  | not  |
@@ -280,7 +298,8 @@ Scenario Outline: Job Order module actions
   | READONLY    | GET     | index.php?m=joborders&a=delete                  | not  |
   | READONLY    | GET     | index.php?m=joborders&a=search                  |      |
   | READONLY    | GET     | index.php?m=joborders&a=search&getback=getback  |      |
-  | READONLY    | GET     | index.php?m=joborders&a=addActivityChangeStatus | not  |
+  | READONLY    | GET     | index.php?m=joborders&a=addActivity | not  |
+  | READONLY    | GET     | index.php?m=joborders&a=changeStatus | not  |
   | READONLY    | GET     | index.php?m=joborders&a=administrativeHideShow  | not  |
   | READONLY    | GET     | index.php?m=joborders&a=listByView              |      |
   | READONLY    | GET     | index.php?m=joborders&a=considerCandidateSearch | not  |
@@ -291,7 +310,8 @@ Scenario Outline: Job Order module actions
   | READONLY    | POST    | index.php?m=joborders&a=add                     | not  | 
   | READONLY    | POST    | index.php?m=joborders&a=addCandidateModal       | not  | 
   | READONLY    | POST    | index.php?m=joborders&a=edit                    | not  | 
-  | READONLY    | POST    | index.php?m=joborders&a=addActivityChangeStatus | not  | 
+  | READONLY    | POST    | index.php?m=joborders&a=addActivity | not  | 
+  | READONLY    | POST    | index.php?m=joborders&a=changeStatus | not  | 
   | READONLY    | POST    | index.php?m=joborders&a=considerCandidateSearch | not  | 
   | READONLY    | POST    | index.php?m=joborders&a=createAttachment        | not  | 
   | READONLY    | POST    | index.php?m=joborders&a=delete                  | not  |
@@ -304,7 +324,8 @@ Scenario Outline: Job Order module actions
   | EDIT        | GET     | index.php?m=joborders&a=delete                  | not  |
   | EDIT        | GET     | index.php?m=joborders&a=search                  |      |
   | EDIT        | GET     | index.php?m=joborders&a=search&getback=getback  |      |
-  | EDIT        | GET     | index.php?m=joborders&a=addActivityChangeStatus |      |
+  | EDIT        | GET     | index.php?m=joborders&a=addActivity |      |
+  | EDIT        | GET     | index.php?m=joborders&a=changeStatus |      |
   | EDIT        | GET     | index.php?m=joborders&a=administrativeHideShow  | not  |
   | EDIT        | GET     | index.php?m=joborders&a=listByView              |      |
   | EDIT        | GET     | index.php?m=joborders&a=considerCandidateSearch |      |
@@ -315,7 +336,8 @@ Scenario Outline: Job Order module actions
   | EDIT        | POST    | index.php?m=joborders&a=add                     |      |
   | EDIT        | POST    | index.php?m=joborders&a=addCandidateModal       |      |
   | EDIT        | POST    | index.php?m=joborders&a=edit                    |      |
-  | EDIT        | POST    | index.php?m=joborders&a=addActivityChangeStatus |      |
+  | EDIT        | POST    | index.php?m=joborders&a=addActivity |      |
+  | EDIT        | POST    | index.php?m=joborders&a=changeStatus |      |
   | EDIT        | POST    | index.php?m=joborders&a=considerCandidateSearch |      |
   | EDIT        | POST    | index.php?m=joborders&a=createAttachment        |      |
   | EDIT        | POST    | index.php?m=joborders&a=delete                  | not  |
@@ -328,7 +350,8 @@ Scenario Outline: Job Order module actions
   | DELETE      | GET     | index.php?m=joborders&a=delete                  | not  |
   | DELETE      | GET     | index.php?m=joborders&a=search                  |      |
   | DELETE      | GET     | index.php?m=joborders&a=search&getback=getback  |      |
-  | DELETE      | GET     | index.php?m=joborders&a=addActivityChangeStatus |      |
+  | DELETE      | GET     | index.php?m=joborders&a=addActivity |      |
+  | DELETE      | GET     | index.php?m=joborders&a=changeStatus |      |
   | DELETE      | GET     | index.php?m=joborders&a=administrativeHideShow  | not  |
   | DELETE      | GET     | index.php?m=joborders&a=listByView              |      |
   | DELETE      | GET     | index.php?m=joborders&a=considerCandidateSearch |      |
@@ -339,7 +362,8 @@ Scenario Outline: Job Order module actions
   | DELETE      | POST    | index.php?m=joborders&a=add                     |      |
   | DELETE      | POST    | index.php?m=joborders&a=addCandidateModal       |      |
   | DELETE      | POST    | index.php?m=joborders&a=edit                    |      |
-  | DELETE      | POST    | index.php?m=joborders&a=addActivityChangeStatus |      |
+  | DELETE      | POST    | index.php?m=joborders&a=addActivity |      |
+  | DELETE      | POST    | index.php?m=joborders&a=changeStatus |      |
   | DELETE      | POST    | index.php?m=joborders&a=considerCandidateSearch |      |
   | DELETE      | POST    | index.php?m=joborders&a=createAttachment        |      |
   | DELETE      | POST    | index.php?m=joborders&a=delete                  |      |
@@ -352,7 +376,8 @@ Scenario Outline: Job Order module actions
   | DEMO        | GET     | index.php?m=joborders&a=delete                  | not  |
   | DEMO        | GET     | index.php?m=joborders&a=search                  |      |
   | DEMO        | GET     | index.php?m=joborders&a=search&getback=getback  |      |
-  | DEMO        | GET     | index.php?m=joborders&a=addActivityChangeStatus |      |
+  | DEMO        | GET     | index.php?m=joborders&a=addActivity |      |
+  | DEMO        | GET     | index.php?m=joborders&a=changeStatus |      |
   | DEMO        | GET     | index.php?m=joborders&a=administrativeHideShow  | not  |
   | DEMO        | GET     | index.php?m=joborders&a=listByView              |      |
   | DEMO        | GET     | index.php?m=joborders&a=considerCandidateSearch |      |
@@ -363,7 +388,8 @@ Scenario Outline: Job Order module actions
   | DEMO        | POST    | index.php?m=joborders&a=add                     |      |
   | DEMO        | POST    | index.php?m=joborders&a=addCandidateModal       |      |
   | DEMO        | POST    | index.php?m=joborders&a=edit                    |      |
-  | DEMO        | POST    | index.php?m=joborders&a=addActivityChangeStatus |      |
+  | DEMO        | POST    | index.php?m=joborders&a=addActivity |      |
+  | DEMO        | POST    | index.php?m=joborders&a=changeStatus |      |
   | DEMO        | POST    | index.php?m=joborders&a=considerCandidateSearch |      |
   | DEMO        | POST    | index.php?m=joborders&a=createAttachment        |      |
   | DEMO        | POST    | index.php?m=joborders&a=delete                  |      |
@@ -376,7 +402,8 @@ Scenario Outline: Job Order module actions
   | ADMIN       | GET     | index.php?m=joborders&a=delete                  | not  |
   | ADMIN       | GET     | index.php?m=joborders&a=search                  |      |
   | ADMIN       | GET     | index.php?m=joborders&a=search&getback=getback  |      |
-  | ADMIN       | GET     | index.php?m=joborders&a=addActivityChangeStatus |      |
+  | ADMIN       | GET     | index.php?m=joborders&a=addActivity |      |
+  | ADMIN       | GET     | index.php?m=joborders&a=changeStatus |      |
   | ADMIN       | GET     | index.php?m=joborders&a=administrativeHideShow  |      |
   | ADMIN       | GET     | index.php?m=joborders&a=listByView              |      |
   | ADMIN       | GET     | index.php?m=joborders&a=considerCandidateSearch |      |
@@ -387,7 +414,8 @@ Scenario Outline: Job Order module actions
   | ADMIN       | POST    | index.php?m=joborders&a=add                     |      |
   | ADMIN       | POST    | index.php?m=joborders&a=addCandidateModal       |      |
   | ADMIN       | POST    | index.php?m=joborders&a=edit                    |      |
-  | ADMIN       | POST    | index.php?m=joborders&a=addActivityChangeStatus |      |
+  | ADMIN       | POST    | index.php?m=joborders&a=addActivity |      |
+  | ADMIN       | POST    | index.php?m=joborders&a=changeStatus |      |
   | ADMIN       | POST    | index.php?m=joborders&a=considerCandidateSearch |      |
   | ADMIN       | POST    | index.php?m=joborders&a=createAttachment        |      |
   | ADMIN       | POST    | index.php?m=joborders&a=delete                  |      |
@@ -400,7 +428,8 @@ Scenario Outline: Job Order module actions
   | MULTI_ADMIN | GET     | index.php?m=joborders&a=delete                  | not  |
   | MULTI_ADMIN | GET     | index.php?m=joborders&a=search                  |      |
   | MULTI_ADMIN | GET     | index.php?m=joborders&a=search&getback=getback  |      |
-  | MULTI_ADMIN | GET     | index.php?m=joborders&a=addActivityChangeStatus |      |
+  | MULTI_ADMIN | GET     | index.php?m=joborders&a=addActivity |      |
+  | MULTI_ADMIN | GET     | index.php?m=joborders&a=changeStatus |      |
   | MULTI_ADMIN | GET     | index.php?m=joborders&a=administrativeHideShow  |      |
   | MULTI_ADMIN | GET     | index.php?m=joborders&a=listByView              |      |
   | MULTI_ADMIN | GET     | index.php?m=joborders&a=considerCandidateSearch |      |
@@ -411,7 +440,8 @@ Scenario Outline: Job Order module actions
   | MULTI_ADMIN | POST    | index.php?m=joborders&a=add                     |      |
   | MULTI_ADMIN | POST    | index.php?m=joborders&a=addCandidateModal       |      |
   | MULTI_ADMIN | POST    | index.php?m=joborders&a=edit                    |      |
-  | MULTI_ADMIN | POST    | index.php?m=joborders&a=addActivityChangeStatus |      |
+  | MULTI_ADMIN | POST    | index.php?m=joborders&a=addActivity |      |
+  | MULTI_ADMIN | POST    | index.php?m=joborders&a=changeStatus |      |
   | MULTI_ADMIN | POST    | index.php?m=joborders&a=considerCandidateSearch |      |
   | MULTI_ADMIN | POST    | index.php?m=joborders&a=createAttachment        |      |
   | MULTI_ADMIN | POST    | index.php?m=joborders&a=delete                  |      |
@@ -424,7 +454,8 @@ Scenario Outline: Job Order module actions
   | ROOT        | GET     | index.php?m=joborders&a=delete                  | not  |
   | ROOT        | GET     | index.php?m=joborders&a=search                  |      |
   | ROOT        | GET     | index.php?m=joborders&a=search&getback=getback  |      |
-  | ROOT        | GET     | index.php?m=joborders&a=addActivityChangeStatus |      |
+  | ROOT        | GET     | index.php?m=joborders&a=addActivity |      |
+  | ROOT        | GET     | index.php?m=joborders&a=changeStatus |      |
   | ROOT        | GET     | index.php?m=joborders&a=administrativeHideShow  |      |
   | ROOT        | GET     | index.php?m=joborders&a=listByView              |      |
   | ROOT        | GET     | index.php?m=joborders&a=considerCandidateSearch |      |
@@ -435,7 +466,8 @@ Scenario Outline: Job Order module actions
   | ROOT        | POST    | index.php?m=joborders&a=add                     |      |
   | ROOT        | POST    | index.php?m=joborders&a=addCandidateModal       |      |
   | ROOT        | POST    | index.php?m=joborders&a=edit                    |      |
-  | ROOT        | POST    | index.php?m=joborders&a=addActivityChangeStatus |      |
+  | ROOT        | POST    | index.php?m=joborders&a=addActivity |      |
+  | ROOT        | POST    | index.php?m=joborders&a=changeStatus |      |
   | ROOT        | POST    | index.php?m=joborders&a=considerCandidateSearch |      |
   | ROOT        | POST    | index.php?m=joborders&a=createAttachment        |      |
   | ROOT        | POST    | index.php?m=joborders&a=delete                  |      |
