@@ -1147,6 +1147,12 @@ class DataGrid
                     continue;
                 }
 
+                /* Do not process server-side filters for non-filterable columns. */
+                if (isset($this->_classColumns[$columnName]['filterable']) && $this->_classColumns[$columnName]['filterable'] == false)
+                {
+                    continue;
+                }
+
                 if ($argument == '')
                 {
                     continue;
