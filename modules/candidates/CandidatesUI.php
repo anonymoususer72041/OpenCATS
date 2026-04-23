@@ -3152,6 +3152,45 @@ class CandidatesUI extends UserInterface
             $activityNote = $this->getTrimmedInput('activityNote', $_POST);
             $activityNote = htmlspecialchars($activityNote);
 
+            $activityDateCreated = false;
+            $dateFormatFlag = $_SESSION['CATS']->isDateDMY()
+                ? DATE_FORMAT_DDMMYY
+                : DATE_FORMAT_MMDDYY;
+            $activityDate = $this->getTrimmedInput('activityDate', $_POST);
+            if (!empty($activityDate) &&
+                DateUtility::validate('-', $activityDate, $dateFormatFlag) &&
+                isset($_POST['activityHour']) && isset($_POST['activityMinute']) &&
+                isset($_POST['activityMeridiem']) &&
+                ctype_digit((string) $_POST['activityHour']) &&
+                ctype_digit((string) $_POST['activityMinute']) &&
+                ($_POST['activityMeridiem'] == 'AM' || $_POST['activityMeridiem'] == 'PM'))
+            {
+                $activityHour = (int) $_POST['activityHour'];
+                $activityMinute = (int) $_POST['activityMinute'];
+
+                if ($activityHour >= 1 && $activityHour <= 12 &&
+                    $activityMinute >= 0 && $activityMinute <= 59)
+                {
+                    $activityHour = $activityHour % 12;
+                    if ($_POST['activityMeridiem'] == 'PM')
+                    {
+                        $activityHour += 12;
+                    }
+
+                    $activityDateCreated = sprintf(
+                        '%s %02d:%02d:00',
+                        DateUtility::convert(
+                            '-',
+                            $activityDate,
+                            $dateFormatFlag,
+                            DATE_FORMAT_YYYYMMDD
+                        ),
+                        $activityHour,
+                        $activityMinute
+                    );
+                }
+            }
+
             /* Add the activity entry. */
             $activityEntries->add(
                 $candidateID,
@@ -3159,7 +3198,8 @@ class CandidatesUI extends UserInterface
                 $activityTypeID,
                 $activityNote,
                 $this->_userID,
-                $regardingID
+                $regardingID,
+                $activityDateCreated
             );
             $activityTypeDescription = ResultSetUtility::getColumnValueByIDValue(
                 $activityTypes, 'typeID', $activityTypeID, 'type'
