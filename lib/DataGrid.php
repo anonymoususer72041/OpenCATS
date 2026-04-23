@@ -457,7 +457,6 @@ class DataGrid
          if (!isset($this->_parameters['sortBy']))
          {
              $this->_parameters['sortBy'] = $this->defaultSortBy;
-             $this->_parameters['sortDirection'] = $this->defaultSortDirection;
          }
 
          $found = false;
@@ -471,6 +470,31 @@ class DataGrid
          if (!$found)
          {
              die ('Parameter sortBy is not a valid sortable column.');
+         }
+
+         /* sortDirection - only ASC or DESC is allowed. */
+         $defaultSortDirection = 'ASC';
+         if (isset($this->defaultSortDirection))
+         {
+             $candidateSortDirection = strtoupper(trim((string) $this->defaultSortDirection));
+             if ($candidateSortDirection === 'ASC' || $candidateSortDirection === 'DESC')
+             {
+                 $defaultSortDirection = $candidateSortDirection;
+             }
+         }
+
+         if (!isset($this->_parameters['sortDirection']))
+         {
+             $this->_parameters['sortDirection'] = $defaultSortDirection;
+         }
+         else
+         {
+             $candidateSortDirection = strtoupper(trim((string) $this->_parameters['sortDirection']));
+             if ($candidateSortDirection !== 'ASC' && $candidateSortDirection !== 'DESC')
+             {
+                 $candidateSortDirection = $defaultSortDirection;
+             }
+             $this->_parameters['sortDirection'] = $candidateSortDirection;
          }
 
          //rangeStart - should be an integer or a character between A and Z.  If not set, set to 0.
