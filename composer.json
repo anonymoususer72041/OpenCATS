@@ -20,5 +20,10 @@
         "psr-4": {
             "OpenCATS\\": "src/OpenCATS/"
         }
+    },
+    "config": {
+        "platform": {
+            "php": "7.4.0"
+        }
     }
 }
