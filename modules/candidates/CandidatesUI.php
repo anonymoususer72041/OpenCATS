@@ -3150,7 +3150,6 @@ class CandidatesUI extends UserInterface
             }
 
             $activityNote = $this->getTrimmedInput('activityNote', $_POST);
-            $activityNote = htmlspecialchars($activityNote);
 
             /* Add the activity entry. */
             $activityEntries->add(
@@ -3356,7 +3355,7 @@ class CandidatesUI extends UserInterface
         $this->_template->assign('candidateID', $candidateID);
         $this->_template->assign('regardingID', $regardingID);
         $this->_template->assign('activityAdded', $activityAdded);
-        $this->_template->assign('activityDescription', $activityNote);
+        $this->_template->assign('activityDescription', htmlspecialchars($activityNote, ENT_QUOTES | ENT_SUBSTITUTE, HTML_ENCODING));
         $this->_template->assign('activityType', $activityTypeDescription);
         $this->_template->assign('eventScheduled', $eventScheduled);
         $this->_template->assign('eventHTML', $eventHTML);
