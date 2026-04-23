@@ -943,32 +943,32 @@ Scenario Outline: Reports module actions
   | READONLY    | GET  | index.php?m=reports&a=showSubmissionReport         |      |
   | READONLY    | GET  | index.php?m=reports&a=showPlacementReport          |      |
   | READONLY    | GET  | index.php?m=reports&a=customizeJobOrderReport      |      |
-  | READONLY    | GET  | index.php?m=reports&a=customizeEEOReport           |      |
-  | READONLY    | GET  | index.php?m=reports&a=generateEEOReportPreview     |      |
+  | READONLY    | GET  | index.php?m=reports&a=customizeEEOReport           | not  |
+  | READONLY    | GET  | index.php?m=reports&a=generateEEOReportPreview     | not  |
   | READONLY    | GET  | index.php?m=reports&a=reports                      |      |
   | EDIT        | GET  | index.php?m=reports&a=graphView                    |      |
   | EDIT        | GET  | index.php?m=reports&a=generateJobOrderReportPDF    |      |
   | EDIT        | GET  | index.php?m=reports&a=showSubmissionReport         |      |
   | EDIT        | GET  | index.php?m=reports&a=showPlacementReport          |      |
   | EDIT        | GET  | index.php?m=reports&a=customizeJobOrderReport      |      |
-  | EDIT        | GET  | index.php?m=reports&a=customizeEEOReport           |      |
-  | EDIT        | GET  | index.php?m=reports&a=generateEEOReportPreview     |      |
+  | EDIT        | GET  | index.php?m=reports&a=customizeEEOReport           | not  |
+  | EDIT        | GET  | index.php?m=reports&a=generateEEOReportPreview     | not  |
   | EDIT        | GET  | index.php?m=reports&a=reports                      |      |
   | DELETE      | GET  | index.php?m=reports&a=graphView                    |      |
   | DELETE      | GET  | index.php?m=reports&a=generateJobOrderReportPDF    |      |
   | DELETE      | GET  | index.php?m=reports&a=showSubmissionReport         |      |
   | DELETE      | GET  | index.php?m=reports&a=showPlacementReport          |      |
   | DELETE      | GET  | index.php?m=reports&a=customizeJobOrderReport      |      |
-  | DELETE      | GET  | index.php?m=reports&a=customizeEEOReport           |      |
-  | DELETE      | GET  | index.php?m=reports&a=generateEEOReportPreview     |      |
+  | DELETE      | GET  | index.php?m=reports&a=customizeEEOReport           | not  |
+  | DELETE      | GET  | index.php?m=reports&a=generateEEOReportPreview     | not  |
   | DELETE      | GET  | index.php?m=reports&a=reports                      |      |
   | DEMO        | GET  | index.php?m=reports&a=graphView                    |      |
   | DEMO        | GET  | index.php?m=reports&a=generateJobOrderReportPDF    |      |
   | DEMO        | GET  | index.php?m=reports&a=showSubmissionReport         |      |
   | DEMO        | GET  | index.php?m=reports&a=showPlacementReport          |      |
   | DEMO        | GET  | index.php?m=reports&a=customizeJobOrderReport      |      |
-  | DEMO        | GET  | index.php?m=reports&a=customizeEEOReport           |      |
-  | DEMO        | GET  | index.php?m=reports&a=generateEEOReportPreview     |      |
+  | DEMO        | GET  | index.php?m=reports&a=customizeEEOReport           | not  |
+  | DEMO        | GET  | index.php?m=reports&a=generateEEOReportPreview     | not  |
   | DEMO        | GET  | index.php?m=reports&a=reports                      |      |
   | ADMIN       | GET  | index.php?m=reports&a=graphView                    |      |
   | ADMIN       | GET  | index.php?m=reports&a=generateJobOrderReportPDF    |      |
