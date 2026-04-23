@@ -3529,17 +3529,7 @@ class CandidatesUI extends UserInterface
             {
                 /* Log status changes as activities in the dedicated status flow. */
                 $activityEntries = new ActivityEntries($this->_siteID);
-                $activityNote = htmlspecialchars(
-                    sprintf('Status change: %s', $newStatusDescription)
-                );
-                foreach ($statusRS as $statusData)
-                {
-                    $activityNote = StringUtility::replaceOnce(
-                        $statusData['status'],
-                        '<span style="color: #ff6c00;">' . $statusData['status'] . '</span>',
-                        $activityNote
-                    );
-                }
+                $activityNote = sprintf('Status change: %s', $newStatusDescription);
                 $activityEntries->add(
                     $candidateID,
                     DATA_ITEM_CANDIDATE,
