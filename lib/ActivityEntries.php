@@ -82,14 +82,25 @@ class ActivityEntries
      * @param string Activity notes.
      * @param integer Entered-by user ID.
      * @param integer Job Order ID; -1 for general (stored as NULL).
+     * @param string Date created timestamp (YYYY-MM-DD HH:MM:SS); false for NOW().
      * @return integer New Activity ID; -1 on failure.
      */
     public function add($dataItemID, $dataItemType, $activityType,
-        $activityNotes, $enteredBy, $jobOrderID = -1)
+        $activityNotes, $enteredBy, $jobOrderID = -1, $dateCreated = false)
     {
         if (!ctype_digit((string) $jobOrderID) || (int) $jobOrderID <= 0)
         {
             $jobOrderID = -1;
+        }
+
+        if (is_string($dateCreated) &&
+            preg_match('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/', $dateCreated))
+        {
+            $dateCreatedSQL = $this->_db->makeQueryString($dateCreated);
+        }
+        else
+        {
+            $dateCreatedSQL = 'NOW()';
         }
 
         $sql = sprintf(
@@ -112,8 +123,8 @@ class ActivityEntries
                 %s,
                 %s,
                 %s,
-                NOW(),
-                NOW()
+                %s,
+                %s
             )",
             $this->_db->makeQueryInteger($dataItemID),
             $this->_db->makeQueryInteger($dataItemType),
@@ -121,7 +132,9 @@ class ActivityEntries
             $this->_db->makeQueryInteger($enteredBy),
             $this->_db->makeQueryInteger($activityType),
             $this->_db->makeQueryString($activityNotes),
-            $this->_siteID
+            $this->_siteID,
+            $dateCreatedSQL,
+            $dateCreatedSQL
         );
 
         $queryResult = $this->_db->query($sql);
