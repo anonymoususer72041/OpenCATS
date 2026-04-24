@@ -173,7 +173,7 @@ class StringUtilityTest extends TestCase
         }
 
         /* Some sample text to test with. */
-        $fairyTale = implode('', file('./modules/tests/SampleText.txt'));
+        $fairyTale = implode('', file('./src/OpenCATS/Tests/Fixtures/SampleText.txt'));
 
         /* I can assure you that none of Grimm's fairy tales contain phone numbers. */
         $this->assertFalse(StringUtility::containsPhoneNumber($fairyTale));
@@ -304,7 +304,7 @@ class StringUtilityTest extends TestCase
         }
 
         /* Some sample text to test with. */
-        $fairyTale = implode('', file('./modules/tests/SampleText.txt'));
+        $fairyTale = implode('', file('./src/OpenCATS/Tests/Fixtures/SampleText.txt'));
 
         /* I can assure you that none of Grimm's fairy tales contain e-mail addresses. */
         $this->assertFalse(StringUtility::containsEmailAddress($fairyTale));
