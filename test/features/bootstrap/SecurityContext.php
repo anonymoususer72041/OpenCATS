@@ -290,11 +290,67 @@ class SecurityContext extends MinkContext implements Context, SnippetAcceptingCo
     }
 
     /**
+     * @Given /^I set "(?P<field>[^"]+)" on "(?P<table>[^"]+)" where "(?P<idField>[^"]+)" is "(?P<idValue>[^"]*)" to:$/
+     */
+    public function iSetFieldOnTableWhereIdFieldIsTo($field, $table, $idField, $idValue, PyStringNode $valueNode)
+    {
+        $db = DatabaseConnection::getInstance();
+        $table = $this->validateIdentifier($table);
+        $field = $this->validateIdentifier($field);
+        $idField = $this->validateIdentifier($idField);
+        $value = $valueNode->getRaw();
+
+        $query = sprintf(
+            'UPDATE %s SET %s = %s WHERE %s = %s',
+            $table,
+            $field,
+            $db->makeQueryString($value),
+            $idField,
+            ctype_digit($idValue) ? (string)((int)$idValue) : $db->makeQueryString($idValue)
+        );
+
+        $db->query($query);
+    }
+
+    /**
+     * @Then /^the response should not render raw html payload:$/
+     */
+    public function theResponseShouldNotRenderRawHtmlPayload(PyStringNode $payload)
+    {
+        $this->theResponseShouldNotContain($payload->getRaw());
+    }
+
+    /**
+     * @Then /^the response should contain escaped html payload:$/
+     */
+    public function theResponseShouldContainEscapedHtmlPayload(PyStringNode $payload)
+    {
+        $escaped = htmlspecialchars(
+            $payload->getRaw(),
+            ENT_QUOTES | ENT_SUBSTITUTE,
+            HTML_ENCODING
+        );
+        $this->theResponseShouldContain($escaped);
+    }
+
+    /**
      * @Then I will log out
      */
     public function iWillLogOut()
     {
         $this->clickLink('Logout');
+    }
+
+    private function validateIdentifier($identifier)
+    {
+        if (!preg_match('/^[a-zA-Z0-9_]+$/', $identifier))
+        {
+            throw new \InvalidArgumentException(
+                sprintf('Invalid SQL identifier "%s".', $identifier)
+            );
+        }
+
+        return $identifier;
     }
 
 }
