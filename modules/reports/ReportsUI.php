@@ -408,12 +408,6 @@ class ReportsUI extends UserInterface
 
     private function generateJobOrderReportPDF()
     {
-        /* E_STRICT doesn't like FPDF. */
-        $errorReporting = error_reporting();
-        error_reporting($errorReporting & ~ E_STRICT);
-        include_once(LEGACY_ROOT . '/lib/fpdf/fpdf.php');
-        error_reporting($errorReporting);
-
         // FIXME: Hook?
         $isASP = $_SESSION['CATS']->isASP();
 
@@ -489,8 +483,8 @@ class ReportsUI extends UserInterface
          */
         // FIXME: Pass session cookie in URL? Use cURL and send a cookie? I
         //        really don't like this... There has to be a way.
-        // FIXME: "could not make seekable" - http://demo.catsone.net/index.php?m=graphs&a=jobOrderReportGraph&data=%2C%2C%2C
-        //        in /usr/local/www/catsone.net/data/lib/fpdf/fpdf.php on line 1500
+        // FIXME: In some environments this graph URL can trigger an FPDF
+        //        "could not make seekable" warning.
         $URI = CATSUtility::getAbsoluteURI(
             CATSUtility::getIndexName()
             . '?m=graphs&a=jobOrderReportGraph&data='
