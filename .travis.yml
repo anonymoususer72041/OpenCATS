@@ -21,7 +21,7 @@ php:
 script:
 - composer self-update --2
 - composer install
-- "./vendor/bin/phpunit src/OpenCATS/Tests/UnitTests"
+- "./vendor/bin/phpunit --testsuite UnitTests"
 - cd docker/; docker-compose --compatibility -f docker-compose-test.yml up -d
 - docker-compose --compatibility -f docker-compose-test.yml exec php /var/www/public/test/runAllTests.sh
 - cd ..; ./ci/package-code.sh
