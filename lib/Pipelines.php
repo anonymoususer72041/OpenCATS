@@ -30,6 +30,8 @@
  * @version    $Id: Pipelines.php 3593 2007-11-13 17:36:57Z andrew $
  */
 
+namespace OpenCATS\Legacy;
+
 include_once(LEGACY_ROOT . '/lib/History.php');
 
 /**

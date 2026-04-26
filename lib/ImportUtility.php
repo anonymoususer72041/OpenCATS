@@ -35,6 +35,8 @@
  *	@package    CATS
  *	@subpackage Library
  */
+namespace OpenCATS\Legacy;
+
 class ImportUtility
 {
     // FIXME: Document me.

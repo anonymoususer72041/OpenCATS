@@ -45,6 +45,8 @@
  *	@package    CATS
  *	@subpackage Library
  */
+namespace OpenCATS\Legacy;
+
 class VCard
 {
     private $_properties = array();

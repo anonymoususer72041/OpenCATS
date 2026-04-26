@@ -5,6 +5,8 @@
  * author: libregeek@gmail.com
  */
 
+namespace OpenCATS\Legacy;
+
 class LDAP
 {
 	static private $_instance;

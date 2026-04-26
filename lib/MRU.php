@@ -38,6 +38,8 @@
  *	@package    CATS
  *	@subpackage Library
  */
+namespace OpenCATS\Legacy;
+
 class MRU
 {
     protected $_userID = -1;

@@ -29,6 +29,8 @@
  * @version    $Id: Contacts.php 3690 2007-11-26 18:07:17Z brian $
  */
 
+namespace OpenCATS\Legacy;
+
 include_once(LEGACY_ROOT . '/lib/Pager.php');
 include_once(LEGACY_ROOT . '/lib/EmailTemplates.php');
 include_once(LEGACY_ROOT . '/lib/ExtraFields.php');

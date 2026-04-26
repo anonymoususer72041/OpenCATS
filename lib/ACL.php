@@ -7,6 +7,8 @@
  * @copyright (C) OpenCats
  */
 
+namespace OpenCATS\Legacy;
+
 include_once("./config.php");
 
 class ACL

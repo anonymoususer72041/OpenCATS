@@ -1,4 +1,6 @@
 <?php
+namespace OpenCATS\Legacy;
+
 
 abstract class ImportableEntity
 {

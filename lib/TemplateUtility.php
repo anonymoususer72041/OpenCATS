@@ -35,6 +35,8 @@
  * @version    $Id: TemplateUtility.php 3835 2007-12-12 19:08:38Z brian $
  */
 
+namespace OpenCATS\Legacy;
+
 include_once('./vendor/autoload.php');
 include_once(LEGACY_ROOT . '/lib/Candidates.php');
 include_once(LEGACY_ROOT . '/lib/DateUtility.php');

@@ -32,6 +32,8 @@
 
 // FIXME: Document me! Explain how external parsers can integrate.
 
+namespace OpenCATS\Legacy;
+
 define('PARSE_CODE_SUCCESS', 'ok');
 define('PARSE_CODE_FAILED',  'failed');
 define('PARSE_CODE_ERROR',   'error');

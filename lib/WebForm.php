@@ -30,6 +30,8 @@
  * @version    $Id: WebForm.php 3705 2007-11-26 23:34:51Z will $
  */
 
+namespace OpenCATS\Legacy;
+
 include_once(LEGACY_ROOT . '/lib/Graphs.php');
 
 define('WFT_TEXT',                  1);

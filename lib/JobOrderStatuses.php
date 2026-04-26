@@ -37,6 +37,8 @@ const JOB_ORDER_STATUS_DEFAULT = 'Active';
 */
 
 
+namespace OpenCATS\Legacy;
+
 class JobOrderStatuses
 {
     private static $_defaultStatusGroups = array(

@@ -30,6 +30,8 @@
  * @version    $Id: DataGrid.php 3829 2007-12-11 21:17:46Z brian $
  */
 
+namespace OpenCATS\Legacy;
+
 include_once(LEGACY_ROOT . '/lib/StringUtility.php');
 include_once(LEGACY_ROOT . '/lib/Width.php');
 

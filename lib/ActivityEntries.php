@@ -30,6 +30,8 @@
  * @version    $Id: ActivityEntries.php 3592 2007-11-13 17:30:46Z brian $
  */
 
+namespace OpenCATS\Legacy;
+
 define('ACTIVITY_CALL',        100);
 define('ACTIVITY_EMAIL',       200);
 define('ACTIVITY_MEETING',     300);

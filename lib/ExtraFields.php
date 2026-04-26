@@ -27,6 +27,8 @@
  * $Id: ExtraFields.php 3767 2007-11-29 16:49:10Z brian $
  */
  
+namespace OpenCATS\Legacy;
+
 include_once(LEGACY_ROOT . '/lib/Site.php');
 include_once(LEGACY_ROOT . '/lib/DateUtility.php');
  

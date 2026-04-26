@@ -30,6 +30,8 @@
  * @version    $Id: Session.php 3676 2007-11-21 21:02:15Z brian $
  */
 
+namespace OpenCATS\Legacy;
+
 include(LEGACY_ROOT . '/lib/ACL.php');
 
 /**

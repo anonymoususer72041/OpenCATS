@@ -31,6 +31,8 @@
  */
 
 /* Calendar event type flags. */
+namespace OpenCATS\Legacy;
+
 define('CALENDAR_EVENT_CALL',      100);
 define('CALENDAR_EVENT_EMAIL',     200);
 define('CALENDAR_EVENT_MEETING',   300);

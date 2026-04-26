@@ -30,6 +30,8 @@
  * @version    $Id: ListEditor.php 3596 2007-11-13 17:43:03Z brian $
  */
 
+namespace OpenCATS\Legacy;
+
 define('LIST_EDITOR_UNKNOWN', -1);
 define('LIST_EDITOR_UNCHANGED', 0);
 define('LIST_EDITOR_ADD', 1);

@@ -2,6 +2,8 @@
 /**
 * Google API Zip Code Lookup library
 */
+namespace OpenCATS\Legacy;
+
 class ZipLookup
 {
 

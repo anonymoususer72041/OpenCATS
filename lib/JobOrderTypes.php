@@ -7,6 +7,8 @@
 * @copyright (C) OpenCats
 */
 
+namespace OpenCATS\Legacy;
+
 class JobOrderTypes
 {
     private $_defaultTypes;

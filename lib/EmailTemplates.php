@@ -30,6 +30,8 @@
  * @version    $Id: EmailTemplates.php 3694 2007-11-26 21:11:00Z brian $
  */
 
+namespace OpenCATS\Legacy;
+
 include_once(LEGACY_ROOT . '/lib/Mailer.php');
 include_once(LEGACY_ROOT . '/lib/Site.php');
 

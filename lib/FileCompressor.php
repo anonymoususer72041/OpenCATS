@@ -39,6 +39,8 @@
  *	@subpackage Library
  */
  
+namespace OpenCATS\Legacy;
+
 include_once(LEGACY_ROOT . '/lib/HashUtility.php');
 
 define('START_FILE_RECORD',             0x04034b50);

@@ -1,4 +1,6 @@
 <?php
+namespace OpenCATS\Legacy;
+
 
 include_once(LEGACY_ROOT . '/lib/ImportableEntity.php');
 

@@ -1,4 +1,6 @@
 <?php
+namespace OpenCATS\Legacy;
+
 include_once('./vendor/autoload.php');
 
 use OpenCATS\Entity\JobOrder;

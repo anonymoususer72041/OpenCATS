@@ -30,6 +30,8 @@
  * @version    $Id: License.php 3678 2007-11-21 23:10:42Z andrew $
  */
 
+namespace OpenCATS\Legacy;
+
 include_once(LEGACY_ROOT . '/lib/CATSUtility.php');
 include_once(LEGACY_ROOT . '/lib/ParseUtility.php');
 

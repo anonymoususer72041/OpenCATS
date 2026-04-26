@@ -30,6 +30,8 @@
  * @version    $Id: DocumentToText.php 3587 2007-11-13 03:55:57Z will $
  */
 
+namespace OpenCATS\Legacy;
+
 include_once(LEGACY_ROOT . '/lib/SystemUtility.php');
 include_once(LEGACY_ROOT . '/lib/FileUtility.php');
 

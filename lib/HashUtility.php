@@ -35,6 +35,8 @@
  *	@package    CATS
  *	@subpackage Library
  */
+namespace OpenCATS\Legacy;
+
 class HashUtility
 {
     const CRC32_CRCPOLY = 0xEDB88320;

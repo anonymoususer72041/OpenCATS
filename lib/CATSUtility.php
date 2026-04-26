@@ -31,6 +31,8 @@
  */
 
 // FIXME: Why is this being reincluded here?
+namespace OpenCATS\Legacy;
+
 include_once('./config.php');
 include_once(LEGACY_ROOT . '/lib/FileUtility.php');
 

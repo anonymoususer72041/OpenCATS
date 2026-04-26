@@ -31,6 +31,8 @@
  */
 
 // FIXME: This is globally included...
+namespace OpenCATS\Legacy;
+
 include_once(LEGACY_ROOT . '/lib/CATSUtility.php');
 
 /**

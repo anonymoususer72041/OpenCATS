@@ -32,6 +32,8 @@
 
 // FIXME: Clean me up!
  
+namespace OpenCATS\Legacy;
+
 include_once(LEGACY_ROOT . '/lib/WebForm.php');
 
 define('CP_LISTVIEW',       1 << 1); // Predefined section for list view

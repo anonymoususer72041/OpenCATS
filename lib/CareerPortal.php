@@ -29,6 +29,8 @@
  * @version    $Id: CareerPortal.php 3811 2007-12-05 19:32:16Z andrew $
  */
 
+namespace OpenCATS\Legacy;
+
 include_once(LEGACY_ROOT . '/lib/Mailer.php');
 
 /**
