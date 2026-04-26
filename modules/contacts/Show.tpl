@@ -277,9 +277,9 @@ use OpenCATS\UI\QuickActionMenu;
                 <tr>
                     <th align="left" width="125">Date</th>
                     <th align="left" width="90">Type</th>
-                    <th align="left" width="90">Entered By</th>
                     <th align="left" width="250">Regarding</th>
                     <th align="left">Notes</th>
+                    <th align="left" width="90">Entered By</th>
                     <th align="left" width="40">Action</th>
                 </tr>
 
@@ -287,9 +287,9 @@ use OpenCATS\UI\QuickActionMenu;
                     <tr class="<?php TemplateUtility::printAlternatingRowClass($rowNumber); ?>">
                         <td align="left" valign="top" id="activityDate<?php echo($activityData['activityID']); ?>"><?php $this->_($activityData['dateCreated']) ?></td>
                         <td align="left" valign="top" id="activityType<?php echo($activityData['activityID']); ?>"><?php $this->_($activityData['typeDescription']) ?></td>
-                        <td align="left" valign="top"><?php $this->_($activityData['enteredByAbbrName']) ?></td>
                         <td align="left" valign="top" id="activityRegarding<?php echo($activityData['activityID']); ?>" data-joborder-id="<?php echo(isset($activityData['jobOrderID']) ? $activityData['jobOrderID'] : ''); ?>"><?php $this->_($activityData['regarding']) ?></td>
                         <td align="left" valign="top" id="activityNotes<?php echo($activityData['activityID']); ?>"><?php echo(nl2br(htmlspecialchars($activityData['notes'], ENT_QUOTES | ENT_SUBSTITUTE, HTML_ENCODING))); ?></td>
+                        <td align="left" valign="top"><?php $this->_($activityData['enteredByAbbrName']) ?></td>
                         <td align="center" >
                             <?php if ($this->getUserAccessLevel('contacts.editActivity') >= ACCESS_LEVEL_EDIT): ?>
                                 <a href="#" id="editActivity<?php echo($activityData['activityID']); ?>" onclick="Activity_editEntry(<?php echo($activityData['activityID']); ?>, <?php echo($this->contactID); ?>, <?php echo(DATA_ITEM_CONTACT); ?>, '<?php echo($this->sessionCookie); ?>'); return false;">
