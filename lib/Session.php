@@ -47,7 +47,6 @@ class CATSSession
     private $_realAccessLevel = -1;
     private $_isLoggedIn = false;
     private $_isDemo = false;
-    private $_isASP = false;
     private $_isFree = false;
     private $_isHrMode = false;
     private $_accountActive = true;
@@ -265,12 +264,6 @@ class CATSSession
     public function isDemo()
     {
         return $this->_isDemo;
-    }
-
-    // FIXME: Document me!
-    public function isASP()
-    {
-        return $this->_isASP;
     }
 
     // FIXME: Document me!
@@ -821,7 +814,6 @@ class CATSSession
                 $this->_accessLevel            = $rs['accessLevel'];
                 $this->_realAccessLevel        = $rs['accessLevel'];
                 $this->_categories             = explode(',', $rs['categories']);
-                $this->_isASP                  = ($rs['companyID'] != 0 ? true : false);
                 $this->_isHrMode               = ($rs['isHrMode'] != 0 ? true : false);
                 $this->_siteCompanyID          = ($rs['companyID'] != 0 ? $rs['companyID'] : -1);
                 $this->_isFree                 = ($rs['isFree'] == 0 ? false : true);
@@ -965,105 +957,6 @@ class CATSSession
 
                 break;
         }
-    }
-
-    /**
-     * Forces the session to make the current user "transparently" login to
-     * another site. This is used only to support the CATS administrative
-     * console, but must remain part of Session.
-     *
-     * @param integer New Site ID to login to.
-     * @param integer User ID with which to login to the new site.
-     * @param integer Site ID associated with $asUserID
-     * @return void
-     */
-    public function transparentLogin($toSiteID, $asUserID, $asSiteID)
-    {
-         $db = DatabaseConnection::getInstance();
-
-         $sql = sprintf(
-            "SELECT
-                user.user_id AS userID,
-                user.user_name AS username,
-                user.first_name AS firstName,
-                user.last_name AS lastName,
-                user.access_level AS accessLevel,
-                user.site_id AS userSiteID,
-                user.is_demo AS isDemoUser,
-                user.email AS email,
-                user.categories AS categories,
-                site.name AS siteName,
-                site.unix_name AS unixName,
-                site.company_id AS companyID,
-                site.is_demo AS isDemo,
-                site.account_active AS accountActive,
-                site.account_deleted AS accountDeleted,
-                site.time_zone AS timeZone,
-                site.default_phone_country_code AS defaultPhoneCountryCode,
-                site.date_format_ddmmyy AS dateFormatDMY,
-                site.is_free AS isFree,
-                site.is_hr_mode AS isHrMode
-            FROM
-                user
-            LEFT JOIN site
-                ON site.site_id = %s
-            WHERE
-                user.user_id = %s
-                AND user.site_id = %s",
-            $toSiteID,
-            $asUserID,
-            $asSiteID
-        );
-        $rs = $db->getAssoc($sql);
-
-        $this->_username        = $rs['username'];
-        $this->_userID          = $rs['userID'];
-        $this->_siteID          = $toSiteID;
-        $this->_firstName       = $rs['firstName'];
-        $this->_lastName        = $rs['lastName'];
-        $this->_siteName        = $rs['siteName'];
-        $this->_unixName        = $rs['unixName'];
-        $this->_accessLevel     = $rs['accessLevel'];
-        $this->_realAccessLevel = $rs['accessLevel'];
-        $this->_categories      = array();
-        $this->_isASP           = ($rs['companyID'] != 0 ? true : false);
-        $this->_siteCompanyID   = ($rs['companyID'] != 0 ? $rs['companyID'] : -1);
-        $this->_isFree          = ($rs['isFree'] == 0 ? false : true);
-        $this->_isHrMode        = ($rs['isHrMode'] != 0 ? true : false);
-        $this->_accountActive   = ($rs['accountActive'] == 0 ? false : true);
-        $this->_accountDeleted  = ($rs['accountDeleted'] == 0 ? false : true);
-        $this->_email           = $rs['email'];
-        $this->_timeZone        = $rs['timeZone'];
-        $this->_defaultPhoneCountryCode = $rs['defaultPhoneCountryCode'];
-        $this->_dateDMY         = ($rs['dateFormatDMY'] == 0 ? false : true);
-        $this->_isFirstTimeSetup = true;
-        $this->_isAgreedToLicense = true;
-        $this->_isLocalizationConfigured = true;
-
-
-        /* Mark session as logged in. */
-        $this->_isLoggedIn = true;
-
-        /* Force a new MRU object to be created. */
-        $this->_MRU = null;
-
-        if (!eval(Hooks::get('TRANSPARENT_LOGIN_POST'))) return;
-
-        $cookie = $this->getCookie();
-        $sql = sprintf(
-            "UPDATE
-                user
-             SET
-                session_cookie = %s
-             WHERE
-                user_id = %s
-             AND
-                site_id = %s",
-            $db->makeQueryString($cookie),
-            $asUserID,
-            $asSiteID
-        );
-       $db->query($sql);
     }
 
     /**

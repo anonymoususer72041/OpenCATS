@@ -414,11 +414,6 @@ class ReportsUI extends UserInterface
         include_once(LEGACY_ROOT . '/lib/fpdf/fpdf.php');
         error_reporting($errorReporting);
 
-        // FIXME: Hook?
-        $isASP = $_SESSION['CATS']->isASP();
-
-        $unixName = $_SESSION['CATS']->getUnixName();
-
         $siteName       = $this->getTrimmedInput('siteName', $_GET);
         $companyName    = $this->getTrimmedInput('companyName', $_GET);
         $jobOrderName   = $this->getTrimmedInput('jobOrderName', $_GET);
@@ -446,15 +441,6 @@ class ReportsUI extends UserInterface
         $pdf->AddPage();
 
         if (!eval(Hooks::get('REPORTS_CUSTOMIZE_JO_REPORT_PRE'))) return;
-
-        if ($isASP && $unixName == 'cognizo')
-        {
-            /* TODO: MAKE THIS CUSTOMIZABLE FOR EVERYONE. */
-            $pdf->SetFont($fontFace, 'B', 10);
-            $pdf->Image('images/cognizo-logo.jpg', 130, 10, 59, 20);
-            $pdf->SetXY(129,27);
-            $pdf->Write(5, 'Information Technology Consulting');
-        }
 
         $pdf->SetXY(25, 35);
         $pdf->SetFont($fontFace, 'BU', 14);

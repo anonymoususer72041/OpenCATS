@@ -137,12 +137,6 @@ function makeBackup($siteID, $backupType = BACKUP_TAR, $logFile = null)
             exec('tar -cjf scripts/backup/'.$random.'/'.$siteID.'.tar.bz2 scripts/backup/'.$random.'/'.$siteID.'/*');
             exec('rm -rf scripts/backup/'.$random.'/'.$siteID.'/');
 
-            $rsSites = $db->getAllAssoc('SELECT * FROM site WHERE parent_site_id = '.$siteID);
-
-            foreach($rsSites as $index => $data)
-            {
-                array_push($siteIDStack, $data['site_id']);
-            }
         }
         else if ($backupType == BACKUP_ZIP)
         {
@@ -159,12 +153,6 @@ function makeBackup($siteID, $backupType = BACKUP_TAR, $logFile = null)
             }
             exec('rm -rf scripts/backup/'.$random.'/'.$siteID.'/');
 
-            $rsSites = $db->getAllAssoc('SELECT * FROM site WHERE parent_site_id = '.$siteID);
-
-            foreach($rsSites as $index => $data)
-            {
-                array_push($siteIDStack, $data['site_id']);
-            }
         }
         else
         {

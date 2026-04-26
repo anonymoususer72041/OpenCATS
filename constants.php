@@ -143,7 +143,7 @@ define('DATE_FORMAT_DDMMYY',   0x2);
 define('DATE_FORMAT_YYYYMMDD', 0x4);
 define('DATE_FORMAT_SECONDS',  0x8);
 
-/* Automated backup types (ASP). */
+/* Automated backup types. */
 define('BACKUP_TAR', 1);
 define('BACKUP_ZIP', 2);
 define('BACKUP_CATS', 3);
