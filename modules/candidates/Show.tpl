@@ -343,7 +343,7 @@ use OpenCATS\UI\CandidateDuplicateQuickActionMenu;
                                     </div>
                                 <?php endforeach; ?>
                                 <?php if ($this->getUserAccessLevel('pipelines.addActivity') >= ACCESS_LEVEL_EDIT): ?>
-                                    <a href="#" onclick="showPopWin('<?php echo(CATSUtility::getIndexName()); ?>?m=candidates&amp;a=addActivity&amp;candidateID=<?php echo($this->candidateID); ?>&amp;jobOrderID=-1&amp;onlyScheduleEvent=true', 600, 350, null); return false;">
+                                    <a href="#" onclick="showPopWin(<?php echo Template::escapeJsAttr(CATSUtility::getIndexName() . '?m=candidates&a=addActivity&candidateID=' . $this->candidateID . '&jobOrderID=-1&onlyScheduleEvent=true'); ?>, 600, 350, null); return false;">
                                         <img src="images/calendar_add.gif" width="16" height="16" border="0" alt="Schedule Event" class="absmiddle" />&nbsp;Schedule Event
                                     </a>
                                 <?php endif; ?>
@@ -636,20 +636,20 @@ use OpenCATS\UI\CandidateDuplicateQuickActionMenu;
 
                 <?php foreach ($this->activityRS as $rowNumber => $activityData): ?>
                     <tr class="<?php TemplateUtility::printAlternatingRowClass($rowNumber); ?>">
-                        <td align="left" valign="top" id="activityDate<?php echo($activityData['activityID']); ?>"><?php $this->_($activityData['dateCreated']) ?></td>
-                        <td align="left" valign="top" id="activityType<?php echo($activityData['activityID']); ?>"><?php $this->_($activityData['typeDescription']) ?></td>
+                        <td align="left" valign="top" id="activityDate<?php echo Template::escapeAttr($activityData['activityID']); ?>"><?php $this->_($activityData['dateCreated']) ?></td>
+                        <td align="left" valign="top" id="activityType<?php echo Template::escapeAttr($activityData['activityID']); ?>"><?php $this->_($activityData['typeDescription']) ?></td>
                         <td align="left" valign="top"><?php $this->_($activityData['enteredByAbbrName']) ?></td>
-                        <td align="left" valign="top" id="activityRegarding<?php echo($activityData['activityID']); ?>" data-joborder-id="<?php echo(isset($activityData['jobOrderID']) ? $activityData['jobOrderID'] : ''); ?>"><?php $this->_($activityData['regarding']) ?></td>
-                        <td align="left" valign="top" id="activityNotes<?php echo($activityData['activityID']); ?>"><?php echo(nl2br(htmlspecialchars($activityData['notes'], ENT_QUOTES | ENT_SUBSTITUTE, HTML_ENCODING))); ?></td>
+                        <td align="left" valign="top" id="activityRegarding<?php echo Template::escapeAttr($activityData['activityID']); ?>" data-joborder-id="<?php echo Template::escapeAttr(isset($activityData['jobOrderID']) ? $activityData['jobOrderID'] : ''); ?>"><?php $this->_($activityData['regarding']) ?></td>
+                        <td align="left" valign="top" id="activityNotes<?php echo Template::escapeAttr($activityData['activityID']); ?>"><?php echo nl2br(Template::escapeHtml($activityData['notes'])); ?></td>
 <?php if (!$this->isPopup): ?>
                         <td align="center" >
                             <?php if ($this->getUserAccessLevel('candidates.edit') >= ACCESS_LEVEL_EDIT): ?>
-                                <a href="#" id="editActivity<?php echo($activityData['activityID']); ?>" onclick="Activity_editEntry(<?php echo($activityData['activityID']); ?>, <?php echo($this->candidateID); ?>, <?php echo(DATA_ITEM_CANDIDATE); ?>, '<?php echo($this->sessionCookie); ?>'); return false;">
+                                <a href="#" id="editActivity<?php echo Template::escapeAttr($activityData['activityID']); ?>" onclick="Activity_editEntry(<?php echo (int) $activityData['activityID']; ?>, <?php echo (int) $this->candidateID; ?>, <?php echo (int) DATA_ITEM_CANDIDATE; ?>, <?php echo Template::escapeJsAttr($this->sessionCookie); ?>); return false;">
                                     <img src="images/actions/edit.gif" width="16" height="16" class="absmiddle" alt="" border="0" title="Edit" />
                                 </a>
                             <?php endif; ?>
                             <?php if ($this->getUserAccessLevel('candidates.delete') >= ACCESS_LEVEL_DELETE): ?>
-                                <a href="#" id="deleteActivity<?php echo($activityData['activityID']); ?>" onclick="Activity_deleteEntry(<?php echo($activityData['activityID']); ?>, '<?php echo($this->sessionCookie); ?>'); return false;">
+                                <a href="#" id="deleteActivity<?php echo Template::escapeAttr($activityData['activityID']); ?>" onclick="Activity_deleteEntry(<?php echo (int) $activityData['activityID']; ?>, <?php echo Template::escapeJsAttr($this->sessionCookie); ?>); return false;">
                                     <img src="images/actions/delete.gif" width="16" height="16" class="absmiddle" alt="" border="0" title="Delete" />
                                 </a>
                             <?php endif; ?>
@@ -661,7 +661,7 @@ use OpenCATS\UI\CandidateDuplicateQuickActionMenu;
 <?php if (!$this->isPopup): ?>
             <div id="addActivityDiv">
                 <?php if ($this->getUserAccessLevel('pipelines.addActivity') >= ACCESS_LEVEL_EDIT): ?>
-                    <a href="#" id="addActivityLink" onclick="showPopWin('<?php echo(CATSUtility::getIndexName()); ?>?m=candidates&amp;a=addActivity&amp;candidateID=<?php echo($this->candidateID); ?>&amp;jobOrderID=-1', 600, 480, null); return false;">
+                    <a href="#" id="addActivityLink" onclick="showPopWin(<?php echo Template::escapeJsAttr(CATSUtility::getIndexName() . '?m=candidates&a=addActivity&candidateID=' . $this->candidateID . '&jobOrderID=-1'); ?>, 600, 480, null); return false;">
                         <img src="images/new_activity_inline.gif" width="16" height="16" class="absmiddle" title="Log an Activity" alt="Log an Activity" border="0" />&nbsp;Log an Activity
                     </a>
                 <?php endif; ?>

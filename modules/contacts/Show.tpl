@@ -197,7 +197,7 @@ use OpenCATS\UI\QuickActionMenu;
                                     </div>
                                 <?php endforeach; ?>
                                 <?php if ($this->getUserAccessLevel('contacts.addActivityScheduleEvent') >= ACCESS_LEVEL_EDIT): ?>
-                                    <a href="#" onclick="showPopWin('<?php echo(CATSUtility::getIndexName()); ?>?m=contacts&amp;a=addActivityScheduleEvent&amp;contactID=<?php echo($this->contactID); ?>&amp;onlyScheduleEvent=true', 600, 200, null); return false;">
+                                    <a href="#" onclick="showPopWin(<?php echo Template::escapeJsAttr(CATSUtility::getIndexName() . '?m=contacts&a=addActivityScheduleEvent&contactID=' . $this->contactID . '&onlyScheduleEvent=true'); ?>, 600, 200, null); return false;">
                                         <img src="images/calendar_add.gif" width="16" height="16" border="0" alt="Schedule Event" class="absmiddle" />&nbsp;Schedule Event
                                     </a>
                                 <?php endif; ?>
@@ -285,19 +285,19 @@ use OpenCATS\UI\QuickActionMenu;
 
                 <?php foreach ($this->activityRS as $rowNumber => $activityData): ?>
                     <tr class="<?php TemplateUtility::printAlternatingRowClass($rowNumber); ?>">
-                        <td align="left" valign="top" id="activityDate<?php echo($activityData['activityID']); ?>"><?php $this->_($activityData['dateCreated']) ?></td>
-                        <td align="left" valign="top" id="activityType<?php echo($activityData['activityID']); ?>"><?php $this->_($activityData['typeDescription']) ?></td>
+                        <td align="left" valign="top" id="activityDate<?php echo Template::escapeAttr($activityData['activityID']); ?>"><?php $this->_($activityData['dateCreated']) ?></td>
+                        <td align="left" valign="top" id="activityType<?php echo Template::escapeAttr($activityData['activityID']); ?>"><?php $this->_($activityData['typeDescription']) ?></td>
                         <td align="left" valign="top"><?php $this->_($activityData['enteredByAbbrName']) ?></td>
-                        <td align="left" valign="top" id="activityRegarding<?php echo($activityData['activityID']); ?>" data-joborder-id="<?php echo(isset($activityData['jobOrderID']) ? $activityData['jobOrderID'] : ''); ?>"><?php $this->_($activityData['regarding']) ?></td>
-                        <td align="left" valign="top" id="activityNotes<?php echo($activityData['activityID']); ?>"><?php echo(nl2br(htmlspecialchars($activityData['notes'], ENT_QUOTES | ENT_SUBSTITUTE, HTML_ENCODING))); ?></td>
+                        <td align="left" valign="top" id="activityRegarding<?php echo Template::escapeAttr($activityData['activityID']); ?>" data-joborder-id="<?php echo Template::escapeAttr(isset($activityData['jobOrderID']) ? $activityData['jobOrderID'] : ''); ?>"><?php $this->_($activityData['regarding']) ?></td>
+                        <td align="left" valign="top" id="activityNotes<?php echo Template::escapeAttr($activityData['activityID']); ?>"><?php echo nl2br(Template::escapeHtml($activityData['notes'])); ?></td>
                         <td align="center" >
                             <?php if ($this->getUserAccessLevel('contacts.editActivity') >= ACCESS_LEVEL_EDIT): ?>
-                                <a href="#" id="editActivity<?php echo($activityData['activityID']); ?>" onclick="Activity_editEntry(<?php echo($activityData['activityID']); ?>, <?php echo($this->contactID); ?>, <?php echo(DATA_ITEM_CONTACT); ?>, '<?php echo($this->sessionCookie); ?>'); return false;">
+                                <a href="#" id="editActivity<?php echo Template::escapeAttr($activityData['activityID']); ?>" onclick="Activity_editEntry(<?php echo (int) $activityData['activityID']; ?>, <?php echo (int) $this->contactID; ?>, <?php echo (int) DATA_ITEM_CONTACT; ?>, <?php echo Template::escapeJsAttr($this->sessionCookie); ?>); return false;">
                                     <img src="images/actions/edit.gif" width="16" height="16" alt="" class="absmiddle" border="0" title="Edit"/>
                                 </a>
                             <?php endif; ?>
                             <?php if ($this->getUserAccessLevel('contacts.deleteActivity') >= ACCESS_LEVEL_EDIT): ?>
-                                <a href="#" id="deleteActivity<?php echo($activityData['activityID']); ?>" onclick="Activity_deleteEntry(<?php echo($activityData['activityID']); ?>, '<?php echo($this->sessionCookie); ?>'); return false;">
+                                <a href="#" id="deleteActivity<?php echo Template::escapeAttr($activityData['activityID']); ?>" onclick="Activity_deleteEntry(<?php echo (int) $activityData['activityID']; ?>, <?php echo Template::escapeJsAttr($this->sessionCookie); ?>); return false;">
                                     <img src="images/actions/delete.gif" width="16" height="16" alt="" class="absmiddle" border="0" title="Delete"/>
                                 </a>
                             <?php endif; ?>
@@ -307,7 +307,7 @@ use OpenCATS\UI\QuickActionMenu;
             </table>
             <div id="addActivityDiv">
                 <?php if ($this->getUserAccessLevel('contacts.logActivityScheduleEvent') >= ACCESS_LEVEL_EDIT): ?>
-                    <a href="#" id="addActivityLink" title="Log an Activity / Schedule Event" onclick="showPopWin('<?php echo(CATSUtility::getIndexName()); ?>?m=contacts&amp;a=addActivityScheduleEvent&amp;contactID=<?php echo($this->contactID); ?>', 600, 375, null); return false;">
+                    <a href="#" id="addActivityLink" title="Log an Activity / Schedule Event" onclick="showPopWin(<?php echo Template::escapeJsAttr(CATSUtility::getIndexName() . '?m=contacts&a=addActivityScheduleEvent&contactID=' . $this->contactID); ?>, 600, 375, null); return false;">
                         <img src="images/new_activity_inline.gif" width="16" height="16" class="absmiddle" title="Log an Activity / Schedule Event" alt="Log an Activity / Schedule Event" border="0" />&nbsp;Log an Activity / Schedule Event
                     </a>
                 <?php endif; ?>
