@@ -4,9 +4,9 @@ use OpenCATS\UI\CandidateQuickActionMenu;
 use OpenCATS\UI\CandidateDuplicateQuickActionMenu;
 ?>
 <?php if ($this->isPopup): ?>
-    <?php TemplateUtility::printHeader('Candidate - ' . htmlspecialchars($this->data['firstName'], ENT_QUOTES, HTML_ENCODING) . ' ' . htmlspecialchars($this->data['lastName'], ENT_QUOTES, HTML_ENCODING), array( 'js/activity.js', 'js/sorttable.js', 'js/match.js', 'js/lib.js', 'js/pipeline.js', 'js/attachment.js', 'modules/candidates/quickAction-candidates.js')); ?>
+    <?php TemplateUtility::printHeader('Candidate - ' . $this->data['firstName'] . ' ' . $this->data['lastName'], array( 'js/activity.js', 'js/sorttable.js', 'js/match.js', 'js/lib.js', 'js/pipeline.js', 'js/attachment.js', 'modules/candidates/quickAction-candidates.js')); ?>
 <?php else: ?>
-    <?php TemplateUtility::printHeader('Candidate - ' . htmlspecialchars($this->data['firstName'], ENT_QUOTES, HTML_ENCODING) . ' ' . htmlspecialchars($this->data['lastName'], ENT_QUOTES, HTML_ENCODING), array( 'js/activity.js', 'js/sorttable.js', 'js/match.js', 'js/lib.js', 'js/pipeline.js', 'js/attachment.js', 'modules/candidates/quickAction-candidates.js', 'modules/candidates/quickAction-duplicates.js')); ?>
+    <?php TemplateUtility::printHeader('Candidate - ' . $this->data['firstName'] . ' ' . $this->data['lastName'], array( 'js/activity.js', 'js/sorttable.js', 'js/match.js', 'js/lib.js', 'js/pipeline.js', 'js/attachment.js', 'modules/candidates/quickAction-candidates.js', 'modules/candidates/quickAction-duplicates.js')); ?>
     
     <?php TemplateUtility::printHeaderBlock(); ?>
     <?php TemplateUtility::printTabs($this->active); ?>
@@ -15,7 +15,7 @@ use OpenCATS\UI\CandidateDuplicateQuickActionMenu;
 <?php endif; ?>
 
         <script type="text/javascript">
-            window.CATSUserDateFormat = '<?php echo($_SESSION['CATS']->isDateDMY() ? 'DD-MM-YY' : 'MM-DD-YY'); ?>';
+            window.CATSUserDateFormat = <?php echo Template::escapeJs($_SESSION['CATS']->isDateDMY() ? 'DD-MM-YY' : 'MM-DD-YY'); ?>;
         </script>
 
         <div id="contents">
@@ -29,7 +29,7 @@ use OpenCATS\UI\CandidateDuplicateQuickActionMenu;
                             <?php if(!empty($this->data['isDuplicate'])): ?>
                                 <img src="images/wf_error.gif" alt="duplicate_warning" width="20" height="20" border="0" title="Possible duplicate" />
                                 <?php foreach($this->data['isDuplicate'] as $item): ?>
-                                    <?php echo '<a href='.CATSUtility::getIndexName().'?m=candidates&amp;a=show&amp;candidateID='.$item['duplicateTo'].' target=_blank>Duplicate</a>' ?>
+                                    <a href="<?php echo Template::escapeUrl(CATSUtility::getIndexName() . '?m=candidates&a=show&candidateID=' . $item['duplicateTo']); ?>" target="_blank">Duplicate</a>
                                     <?php TemplateUtility::printSingleQuickActionMenu(new CandidateDuplicateQuickActionMenu(
                                         DATA_ITEM_DUPLICATE,
                                         $this->data['candidateID'],
@@ -51,7 +51,7 @@ use OpenCATS\UI\CandidateDuplicateQuickActionMenu;
                     This Candidate is hidden.  Only Site Administrators can view it or search for it.  To make it visible by the site users, click
                     <form method="post" action="<?php echo(CATSUtility::getIndexName()); ?>?m=candidates&amp;a=administrativeHideShow" style="display:inline;">
                         <input type="hidden" name="postback" value="postback" />
-                        <input type="hidden" name="candidateID" value="<?php echo($this->candidateID); ?>" />
+                        <input type="hidden" name="candidateID" value="<?php echo Template::escapeAttr($this->candidateID); ?>" />
                         <input type="hidden" name="state" value="0" />
                         <button type="submit" class="linkButton">Here.</button>
                     </form>
@@ -75,7 +75,7 @@ use OpenCATS\UI\CandidateDuplicateQuickActionMenu;
                             <tr>
                                 <td class="vertical">Name:</td>
                                 <td class="data">
-                                    <span style="font-weight: bold;" class="<?php echo($this->data['titleClass']); ?>">
+                                    <span style="font-weight: bold;" class="<?php echo Template::escapeAttr($this->data['titleClass']); ?>">
                                         <?php $this->_($this->data['firstName']); ?>
                                         <?php $this->_($this->data['middleName']); ?>
                                         <?php $this->_($this->data['lastName']); ?>
@@ -90,7 +90,7 @@ use OpenCATS\UI\CandidateDuplicateQuickActionMenu;
                             <tr>
                                 <td class="vertical">E-Mail:</td>
                                 <td class="data">
-                                    <a href="mailto:<?php $this->_($this->data['email1']); ?>">
+                                    <a href="<?php echo Template::escapeUrl('mailto:' . $this->data['email1']); ?>">
                                         <?php $this->_($this->data['email1']); ?>
                                     </a>
                                 </td>
@@ -98,7 +98,7 @@ use OpenCATS\UI\CandidateDuplicateQuickActionMenu;
                             <tr>
                                 <td class="vertical">2nd E-Mail:</td>
                                 <td class="data">
-                                    <a href="mailto:<?php $this->_($this->data['email2']); ?>">
+                                    <a href="<?php echo Template::escapeUrl('mailto:' . $this->data['email2']); ?>">
                                         <?php $this->_($this->data['email2']); ?>
                                     </a>
                                 </td>
@@ -127,7 +127,7 @@ use OpenCATS\UI\CandidateDuplicateQuickActionMenu;
                             <tr>
                                 <td class="vertical">Address:</td>
                                 <td class="data">
-                                    <?php echo(nl2br(htmlspecialchars($this->data['address']))); ?>
+                                    <?php echo nl2br(Template::escapeHtml($this->data['address'])); ?>
                                     <?php if (!empty($this->data['address2'])): ?>
                                         <br /><?php $this->_($this->data['address2']); ?>
                                     <?php endif; ?>
@@ -146,7 +146,7 @@ use OpenCATS\UI\CandidateDuplicateQuickActionMenu;
                                 <td class="vertical">Web Site:</td>
                                 <td class="data">
                                     <?php if (!empty($this->data['webSite'])): ?>
-                                        <a href="<?php $this->_($this->data['webSite']); ?>" target="_blank"><?php $this->_($this->data['webSite']); ?></a>
+                                        <a href="<?php echo Template::escapeUrl($this->data['webSite']); ?>" target="_blank"><?php $this->_($this->data['webSite']); ?></a>
                                     <?php endif; ?>
                                 </td>
                             </tr>
@@ -244,7 +244,7 @@ use OpenCATS\UI\CandidateDuplicateQuickActionMenu;
                                                 <?php if ($this->getUserAccessLevel('candidates.deleteAttachment') >= ACCESS_LEVEL_DELETE): ?>
                                                     <form method="post" action="<?php echo(CATSUtility::getIndexName()); ?>?m=candidates&amp;a=deleteAttachment" style="display:inline;" onsubmit="return confirm('Delete this attachment?');">
                                                         <input type="hidden" name="postback" value="postback" />
-                                                        <input type="hidden" name="candidateID" value="<?php echo($this->candidateID); ?>" />
+                                                        <input type="hidden" name="candidateID" value="<?php echo Template::escapeAttr($this->candidateID); ?>" />
                                                         <input type="hidden" name="attachmentID" value="<?php $this->_($attachmentsData['attachmentID']) ?>" />
                                                         <input type="image" src="images/actions/delete.gif" alt="" width="16" height="16" border="0" title="Delete" />
                                                     </form>
@@ -257,8 +257,8 @@ use OpenCATS\UI\CandidateDuplicateQuickActionMenu;
                                     </tr>
                                     <tr>
                                         <td class="data">
-                                            <a href="<?php echo htmlspecialchars($attachmentsData['retrievalURL'], ENT_QUOTES | ENT_SUBSTITUTE, HTML_ENCODING, false); ?>">
-                                                <img src="<?php echo htmlspecialchars($attachmentsData['retrievalURL'], ENT_QUOTES | ENT_SUBSTITUTE, HTML_ENCODING, false); ?>" border="0" alt="" width="125" />
+                                            <a href="<?php echo Template::escapeUrl($attachmentsData['retrievalURL']); ?>">
+                                                <img src="<?php echo Template::escapeUrl($attachmentsData['retrievalURL']); ?>" border="0" alt="" width="125" />
                                             </a>
                                         </td>
                                     </tr>
@@ -362,15 +362,15 @@ use OpenCATS\UI\CandidateDuplicateQuickActionMenu;
                                     </tr>
                                     <?php foreach ($this->questionnaires as $questionnaire): ?>
                                     <tr>
-                                        <td style="padding-right: 10px;" nowrap="nowrap"><a href="<?php echo(CATSUtility::getIndexName()); ?>?m=candidates&amp;a=show_questionnaire&amp;candidateID=<?php echo($this->candidateID); ?>&amp;questionnaireTitle=<?php echo urlencode($questionnaire['questionnaireTitle']); ?>&print=no"><?php echo $questionnaire['questionnaireTitle']; ?></a></td>
+                                        <td style="padding-right: 10px;" nowrap="nowrap"><a href="<?php echo Template::escapeUrl(CATSUtility::getIndexName() . '?m=candidates&a=show_questionnaire&candidateID=' . $this->candidateID . '&questionnaireTitle=' . urlencode($questionnaire['questionnaireTitle']) . '&print=no'); ?>"><?php echo Template::escapeHtml($questionnaire['questionnaireTitle']); ?></a></td>
                                         <td style="padding-right: 10px;" nowrap="nowrap"><?php echo date('F j. Y', strtotime($questionnaire['questionnaireDate'])); ?></td>
-                                        <td style="padding-right: 10px;" nowrap="nowrap"><?php echo $questionnaire['questionnaireDescription']; ?></td>
+                                        <td style="padding-right: 10px;" nowrap="nowrap"><?php echo Template::escapeHtml($questionnaire['questionnaireDescription']); ?></td>
                                         <td style="padding-right: 10px;" nowrap="nowrap">
-                                            <a id="edit_link" href="<?php echo(CATSUtility::getIndexName()); ?>?m=candidates&amp;a=show_questionnaire&amp;candidateID=<?php echo($this->candidateID); ?>&amp;questionnaireTitle=<?php echo urlencode($questionnaire['questionnaireTitle']); ?>&print=no">
+                                            <a id="edit_link" href="<?php echo Template::escapeUrl(CATSUtility::getIndexName() . '?m=candidates&a=show_questionnaire&candidateID=' . $this->candidateID . '&questionnaireTitle=' . urlencode($questionnaire['questionnaireTitle']) . '&print=no'); ?>">
                                                 <img src="images/actions/view.gif" width="16" height="16" class="absmiddle" alt="view" border="0" />&nbsp;View
                                             </a>
                                             &nbsp;
-                                            <a id="edit_link" href="<?php echo(CATSUtility::getIndexName()); ?>?m=candidates&amp;a=show_questionnaire&amp;candidateID=<?php echo($this->candidateID); ?>&amp;questionnaireTitle=<?php echo urlencode($questionnaire['questionnaireTitle']); ?>&print=yes">
+                                            <a id="edit_link" href="<?php echo Template::escapeUrl(CATSUtility::getIndexName() . '?m=candidates&a=show_questionnaire&candidateID=' . $this->candidateID . '&questionnaireTitle=' . urlencode($questionnaire['questionnaireTitle']) . '&print=yes'); ?>">
                                                 <img src="images/actions/print.gif" width="16" height="16" class="absmiddle" alt="print" border="0" />&nbsp;Print
                                             </a>
                                         </td>
@@ -402,7 +402,7 @@ use OpenCATS\UI\CandidateDuplicateQuickActionMenu;
                                                             <?php if ($this->getUserAccessLevel('candidates.deleteAttachment') >= ACCESS_LEVEL_DELETE): ?>
                                                                 <form method="post" action="<?php echo(CATSUtility::getIndexName()); ?>?m=candidates&amp;a=deleteAttachment" style="display:inline;" onsubmit="return confirm('Delete this attachment?');">
                                                                     <input type="hidden" name="postback" value="postback" />
-                                                                    <input type="hidden" name="candidateID" value="<?php echo($this->candidateID); ?>" />
+                                                                    <input type="hidden" name="candidateID" value="<?php echo Template::escapeAttr($this->candidateID); ?>" />
                                                                     <input type="hidden" name="attachmentID" value="<?php $this->_($attachmentsData['attachmentID']) ?>" />
                                                                     <input type="image" src="images/actions/delete.gif" alt="" width="16" height="16" border="0" title="Delete" />
                                                                 </form>
@@ -418,7 +418,7 @@ use OpenCATS\UI\CandidateDuplicateQuickActionMenu;
                                             <?php if (isset($this->attachmentLinkHTML)): ?>
                                                 <?php echo($this->attachmentLinkHTML); ?>
                                             <?php else: ?>
-                                                <a href="#" onclick="showPopWin('<?php echo(CATSUtility::getIndexName()); ?>?m=candidates&amp;a=createAttachment&amp;candidateID=<?php echo($this->candidateID); ?>', 400, 125, null); return false;">
+                                                <a href="#" onclick="showPopWin(<?php echo Template::escapeJsAttr(CATSUtility::getIndexName() . '?m=candidates&a=createAttachment&candidateID=' . $this->candidateID); ?>, 400, 125, null); return false;">
                                             <?php endif; ?>
                                                 <img src="images/paperclip_add.gif" width="16" height="16" border="0" alt="Add Attachment" class="absmiddle" />&nbsp;Add Attachment
                                             </a>
@@ -430,23 +430,23 @@ use OpenCATS\UI\CandidateDuplicateQuickActionMenu;
                                 <td valign="top" class="vertical">Tags:
                                     <?php if (!$this->isPopup){ ?>
                                         <?php if ($this->getUserAccessLevel('candidates.addCandidateTags') >= ACCESS_LEVEL_EDIT){ ?>
-                                                <a href="#" onclick="showPopWin('<?php echo(CATSUtility::getIndexName()); ?>?m=candidates&amp;a=addCandidateTags&amp;candidateID=<?php echo($this->candidateID); ?>', 400, 125, null); return false;">
+                                                <a href="#" onclick="showPopWin(<?php echo Template::escapeJsAttr(CATSUtility::getIndexName() . '?m=candidates&a=addCandidateTags&candidateID=' . $this->candidateID); ?>, 400, 125, null); return false;">
                                                 Add/Remove
                                             </a>
                                         <?php } ?>
                                     <?php } ?>
 
                                 </td>
-                                <td valign="top" class="data"><?= implode(', ',$this->assignedTags) ?>
+                                <td valign="top" class="data"><?php echo implode(', ', array_map(array('Template', 'escapeHtml'), $this->assignedTags)); ?>
                                 </td>
                             </tr>
                         </table>
                     </td>
                 </tr>
             </table>
-            <?php if (!$this->isPopup): ?>
+<?php if (!$this->isPopup): ?>
             <?php if ($this->getUserAccessLevel('candidates.edit') >= ACCESS_LEVEL_EDIT): ?>
-                <a id="edit_link" href="<?php echo(CATSUtility::getIndexName()); ?>?m=candidates&amp;a=edit&amp;candidateID=<?php echo($this->candidateID); ?>">
+                <a id="edit_link" href="<?php echo Template::escapeUrl(CATSUtility::getIndexName() . '?m=candidates&a=edit&candidateID=' . $this->candidateID); ?>">
                     <img src="images/actions/edit.gif" width="16" height="16" class="absmiddle" alt="edit" border="0" />&nbsp;Edit
                 </a>
                 &nbsp;&nbsp;&nbsp;&nbsp;
@@ -454,7 +454,7 @@ use OpenCATS\UI\CandidateDuplicateQuickActionMenu;
             <?php if ($this->getUserAccessLevel('candidates.delete') >= ACCESS_LEVEL_DELETE): ?>
                 <form id="delete_link" method="post" action="<?php echo(CATSUtility::getIndexName()); ?>?m=candidates&amp;a=delete" style="display:inline;" onsubmit="return confirm('Delete this candidate?');">
                     <input type="hidden" name="postback" value="postback" />
-                    <input type="hidden" name="candidateID" value="<?php echo($this->candidateID); ?>" />
+                    <input type="hidden" name="candidateID" value="<?php echo Template::escapeAttr($this->candidateID); ?>" />
                     <button type="submit" class="linkButton">
                         <img src="images/actions/delete.gif" width="16" height="16" class="absmiddle" alt="delete" border="0" />&nbsp;Delete
                     </button>
@@ -462,7 +462,7 @@ use OpenCATS\UI\CandidateDuplicateQuickActionMenu;
                 &nbsp;&nbsp;&nbsp;&nbsp;
             <?php endif; ?>
             <?php if ($this->privledgedUser): ?>
-                <a id="history_link" href="<?php echo(CATSUtility::getIndexName()); ?>?m=settings&amp;a=viewItemHistory&amp;dataItemType=100&amp;dataItemID=<?php echo($this->candidateID); ?>">
+                <a id="history_link" href="<?php echo Template::escapeUrl(CATSUtility::getIndexName() . '?m=settings&a=viewItemHistory&dataItemType=100&dataItemID=' . $this->candidateID); ?>">
                     <img src="images/icon_clock.gif" width="16" height="16" class="absmiddle"  border="0" />&nbsp;View History
                 </a>
                 &nbsp;&nbsp;&nbsp;&nbsp;
@@ -471,7 +471,7 @@ use OpenCATS\UI\CandidateDuplicateQuickActionMenu;
                 <?php if ($this->data['isAdminHidden'] == 1): ?>
                     <form method="post" action="<?php echo(CATSUtility::getIndexName()); ?>?m=candidates&amp;a=administrativeHideShow" style="display:inline;">
                         <input type="hidden" name="postback" value="postback" />
-                        <input type="hidden" name="candidateID" value="<?php echo($this->candidateID); ?>" />
+                        <input type="hidden" name="candidateID" value="<?php echo Template::escapeAttr($this->candidateID); ?>" />
                         <input type="hidden" name="state" value="0" />
                         <button type="submit" class="linkButton">
                             <img src="images/resume_preview_inline.gif" width="16" height="16" class="absmiddle" alt="delete" border="0" />&nbsp;Administrative Show
@@ -480,7 +480,7 @@ use OpenCATS\UI\CandidateDuplicateQuickActionMenu;
                     <?php else: ?>
                     <form method="post" action="<?php echo(CATSUtility::getIndexName()); ?>?m=candidates&amp;a=administrativeHideShow" style="display:inline;">
                         <input type="hidden" name="postback" value="postback" />
-                        <input type="hidden" name="candidateID" value="<?php echo($this->candidateID); ?>" />
+                        <input type="hidden" name="candidateID" value="<?php echo Template::escapeAttr($this->candidateID); ?>" />
                         <input type="hidden" name="state" value="1" />
                         <button type="submit" class="linkButton">
                             <img src="images/resume_preview_inline.gif" width="16" height="16" class="absmiddle" alt="delete" border="0" />&nbsp;Administrative Hide
@@ -490,7 +490,7 @@ use OpenCATS\UI\CandidateDuplicateQuickActionMenu;
                 &nbsp;&nbsp;&nbsp;&nbsp;
             <?php endif; ?>
             <?php if ($this->getUserAccessLevel('candidates.duplicates') >= ACCESS_LEVEL_SA): ?>
-                <a href="#" onclick="showPopWin('<?php echo(CATSUtility::getIndexName()); ?>?m=candidates&amp;a=linkDuplicate&amp;candidateID=<?php echo($this->candidateID); ?>', 750, 390, null); return false;">
+                <a href="#" onclick="showPopWin(<?php echo Template::escapeJsAttr(CATSUtility::getIndexName() . '?m=candidates&a=linkDuplicate&candidateID=' . $this->candidateID); ?>, 750, 390, null); return false;">
                     <img src="images/actions/duplicates.png" width="16" height="16" class="absmiddle" alt="add duplicate" border="0" />&nbsp;Link duplicate
                 </a>
                 &nbsp;&nbsp;&nbsp;&nbsp;
@@ -520,7 +520,7 @@ use OpenCATS\UI\CandidateDuplicateQuickActionMenu;
                     <tr class="<?php TemplateUtility::printAlternatingRowClass($rowNumber); ?>" id="pipelineRow<?php echo($rowNumber); ?>">
                         <td valign="top">
                             <span id="pipelineOpen<?php echo($rowNumber); ?>">
-                                <a href="javascript:void(0);" onclick="document.getElementById('pipelineDetails<?php echo($rowNumber); ?>').style.display=''; document.getElementById('pipelineClose<?php echo($rowNumber); ?>').style.display = ''; document.getElementById('pipelineOpen<?php echo($rowNumber); ?>').style.display = 'none'; PipelineDetails_populate(<?php echo($pipelinesData['candidateJobOrderID']); ?>, 'pipelineInner<?php echo($rowNumber); ?>', '<?php echo($this->sessionCookie); ?>');">
+                                <a href="javascript:void(0);" onclick="document.getElementById('pipelineDetails<?php echo($rowNumber); ?>').style.display=''; document.getElementById('pipelineClose<?php echo($rowNumber); ?>').style.display = ''; document.getElementById('pipelineOpen<?php echo($rowNumber); ?>').style.display = 'none'; PipelineDetails_populate(<?php echo($pipelinesData['candidateJobOrderID']); ?>, 'pipelineInner<?php echo($rowNumber); ?>', <?php echo Template::escapeJsAttr($this->sessionCookie); ?>);">
                                     <img src="images/arrow_next.png" alt="" border="0" title="Show History" />
                                 </a>
                             </span>
@@ -537,12 +537,12 @@ use OpenCATS\UI\CandidateDuplicateQuickActionMenu;
                             <?php $this->_($pipelinesData['clientJobID']) ?>
                         </td>
                         <td valign="top">
-                            <a href="<?php echo(CATSUtility::getIndexName()); ?>?m=joborders&amp;a=show&amp;jobOrderID=<?php echo($pipelinesData['jobOrderID']); ?>" class="<?php $this->_($pipelinesData['linkClass']) ?>">
+                            <a href="<?php echo Template::escapeUrl(CATSUtility::getIndexName() . '?m=joborders&a=show&jobOrderID=' . $pipelinesData['jobOrderID']); ?>" class="<?php echo Template::escapeAttr($pipelinesData['linkClass']); ?>">
                                 <?php $this->_($pipelinesData['title']) ?>
                             </a>
                         </td>
                         <td valign="top">
-                            <a href="<?php echo(CATSUtility::getIndexName()); ?>?m=companies&amp;companyID=<?php echo($pipelinesData['companyID']); ?>&amp;a=show">
+                            <a href="<?php echo Template::escapeUrl(CATSUtility::getIndexName() . '?m=companies&companyID=' . $pipelinesData['companyID'] . '&a=show'); ?>">
                                 <?php $this->_($pipelinesData['companyName']) ?>
                             </a>
                         </td>
@@ -555,22 +555,22 @@ use OpenCATS\UI\CandidateDuplicateQuickActionMenu;
                             <?php eval(Hooks::get('CANDIDATE_TEMPLATE_SHOW_PIPELINE_ACTION')); ?>
                             <?php if ($this->getUserAccessLevel('pipelines.screening') >= ACCESS_LEVEL_EDIT && !$_SESSION['CATS']->hasUserCategory('sourcer')): ?>
                                 <?php if ($pipelinesData['ratingValue'] < 0): ?>
-                                    <a href="#" id="screenLink<?php echo($pipelinesData['candidateJobOrderID']); ?>" onclick="moImageValue<?php echo($pipelinesData['candidateJobOrderID']); ?> = 0; setRating(<?php echo($pipelinesData['candidateJobOrderID']); ?>, 0, 'moImage<?php echo($pipelinesData['candidateJobOrderID']); ?>', '<?php echo($_SESSION['CATS']->getCookie()); ?> '); return false;">
-                                        <img id="screenImage<?php echo($pipelinesData['candidateJobOrderID']); ?>" src="images/actions/screen.gif" width="16" height="16" class="absmiddle" alt="" border="0" title="Mark as Screened" />
-                                    </a>
+                                <a href="#" id="screenLink<?php echo($pipelinesData['candidateJobOrderID']); ?>" onclick="moImageValue<?php echo($pipelinesData['candidateJobOrderID']); ?> = 0; setRating(<?php echo($pipelinesData['candidateJobOrderID']); ?>, 0, 'moImage<?php echo($pipelinesData['candidateJobOrderID']); ?>', <?php echo Template::escapeJsAttr($_SESSION['CATS']->getCookie() . ' '); ?>); return false;">
+                                    <img id="screenImage<?php echo($pipelinesData['candidateJobOrderID']); ?>" src="images/actions/screen.gif" width="16" height="16" class="absmiddle" alt="" border="0" title="Mark as Screened" />
+                                </a>
                                 <?php else: ?>
                                     <img src="images/actions/blank.gif" width="16" height="16" class="absmiddle" alt="" border="0" />
                                 <?php endif; ?>
                             <?php endif; ?>
                             <?php if ($this->getUserAccessLevel('pipelines.changeStatus') >= ACCESS_LEVEL_EDIT): ?>
-                                <a href="#" onclick="showPopWin('<?php echo(CATSUtility::getIndexName()); ?>?m=candidates&amp;a=changeStatus&amp;candidateID=<?php echo($this->candidateID); ?>&amp;jobOrderID=<?php echo($pipelinesData['jobOrderID']); ?>', 600, 430, null); return false;" >
+                                <a href="#" onclick="showPopWin(<?php echo Template::escapeJsAttr(CATSUtility::getIndexName() . '?m=candidates&a=changeStatus&candidateID=' . $this->candidateID . '&jobOrderID=' . $pipelinesData['jobOrderID']); ?>, 600, 430, null); return false;" >
                                     <img src="images/actions/edit.gif" width="16" height="16" class="absmiddle" alt="" border="0" title="Change Status"/>
                                 </a>
                             <?php endif; ?>
                             <?php if ($this->getUserAccessLevel('pipelines.removeFromPipeline') >= ACCESS_LEVEL_DELETE): ?>
-                                <form method="post" action="<?php echo(CATSUtility::getIndexName()); ?>?m=candidates&amp;a=removeFromPipeline" style="display:inline;" onsubmit="return confirm('Delete from <?php $this->_(str_replace('\'', '\\\'', $pipelinesData['title'])); ?> (<?php $this->_(str_replace('\'', '\\\'', $pipelinesData['companyName'])); ?>) pipeline?')">
+                                <form method="post" action="<?php echo(CATSUtility::getIndexName()); ?>?m=candidates&amp;a=removeFromPipeline" style="display:inline;" onsubmit="return confirm('Delete from ' + <?php echo Template::escapeJsAttr($pipelinesData['title']); ?> + ' (' + <?php echo Template::escapeJsAttr($pipelinesData['companyName']); ?> + ') pipeline?')">
                                     <input type="hidden" name="postback" value="postback" />
-                                    <input type="hidden" name="candidateID" value="<?php echo($this->candidateID); ?>" />
+                                    <input type="hidden" name="candidateID" value="<?php echo Template::escapeAttr($this->candidateID); ?>" />
                                     <input type="hidden" name="jobOrderID" value="<?php echo($pipelinesData['jobOrderID']); ?>" />
                                     <input type="image" src="images/actions/delete.gif" width="16" height="16" class="absmiddle" alt="" border="0" title="Remove from Job Order"/>
                                 </form>
@@ -597,7 +597,7 @@ use OpenCATS\UI\CandidateDuplicateQuickActionMenu;
 
 <?php if (!$this->isPopup): ?>
             <?php if ($this->getUserAccessLevel('candidates.considerForJobSearch') >= ACCESS_LEVEL_EDIT): ?>
-                <a href="#" onclick="showPopWin('<?php echo(CATSUtility::getIndexName()); ?>?m=candidates&amp;a=considerForJobSearch&amp;candidateID=<?php echo($this->candidateID); ?>', 750, 390, null); return false;">
+                <a href="#" onclick="showPopWin(<?php echo Template::escapeJsAttr(CATSUtility::getIndexName() . '?m=candidates&a=considerForJobSearch&candidateID=' . $this->candidateID); ?>, 750, 390, null); return false;">
                     <img src="images/consider.gif" width="16" height="16" class="absmiddle" alt="Add to Job Order" border="0" />&nbsp;Add This Candidate to Job Order
                 </a>
             <?php endif; ?>
@@ -614,7 +614,7 @@ use OpenCATS\UI\CandidateDuplicateQuickActionMenu;
                 <?php foreach($this->lists as $rowNumber => $list): ?>
                     <tr class="<?php TemplateUtility::printAlternatingRowClass($rowNumber); ?>">
                         <td>
-                            <a href="index.php?m=lists&a=showList&savedListID=<?php echo $list['listID']; ?>"><?php $this->_($list['name']); ?></a>
+                            <a href="<?php echo Template::escapeUrl('index.php?m=lists&a=showList&savedListID=' . $list['listID']); ?>"><?php $this->_($list['name']); ?></a>
                         </td>
                     </tr>
                 <?php endforeach; ?>
