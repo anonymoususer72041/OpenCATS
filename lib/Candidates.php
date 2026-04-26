@@ -30,7 +30,9 @@
  * @version    $Id: Candidates.php 3813 2007-12-05 23:16:22Z brian $
  */
 
-namespace OpenCATS\Legacy;
+namespace OpenCATS\Module\Candidates;
+
+use OpenCATS\Rendering\DataGrid;
 
 include_once(LEGACY_ROOT . '/lib/Attachments.php');
 include_once(LEGACY_ROOT . '/lib/Pipelines.php');

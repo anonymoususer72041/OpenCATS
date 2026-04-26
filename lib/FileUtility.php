@@ -30,7 +30,7 @@
  * @version    $Id: FileUtility.php 3752 2007-11-28 23:39:06Z andrew $
  */
 
-namespace OpenCATS\Legacy;
+namespace OpenCATS\Utility;
 
 define('DOCUMENT_TYPE_UNKNOWN', 0);
 define('DOCUMENT_TYPE_PDF',     100);

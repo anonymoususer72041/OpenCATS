@@ -39,7 +39,7 @@
  *	@subpackage Library
  */
  
-namespace OpenCATS\Legacy;
+namespace OpenCATS\Utility;
 
 include_once(LEGACY_ROOT . '/lib/HashUtility.php');
 

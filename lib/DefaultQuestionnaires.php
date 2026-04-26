@@ -27,7 +27,7 @@
  * $Id: DefaultQuestionnaires.php 3713 2007-11-27 18:52:42Z andrew $
  */
 
-namespace OpenCATS\Legacy;
+namespace OpenCATS\Module\Questionnaires;
 
 include_once(LEGACY_ROOT . '/lib/Questionnaire.php');
 

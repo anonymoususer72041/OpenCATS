@@ -30,7 +30,7 @@
  * @version    $Id: Dashboard.php 3784 2007-12-03 21:57:10Z brian $
  */
 
-namespace OpenCATS\Legacy;
+namespace OpenCATS\Module\Dashboard;
 
 include_once(LEGACY_ROOT . '/lib/Calendar.php');
 

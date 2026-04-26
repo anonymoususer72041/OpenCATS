@@ -1,5 +1,5 @@
 <?php
-namespace OpenCATS\Legacy;
+namespace OpenCATS\Utility;
 
 
 class Width 

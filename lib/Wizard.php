@@ -31,7 +31,7 @@
  */
 
 // FIXME: This is globally included...
-namespace OpenCATS\Legacy;
+namespace OpenCATS\Module\Wizard;
 
 include_once(LEGACY_ROOT . '/lib/CATSUtility.php');
 

@@ -7,7 +7,7 @@
 * @copyright (C) OpenCats
 */
 
-namespace OpenCATS\Legacy;
+namespace OpenCATS\Module\JobOrders;
 
 class JobOrderTypes
 {

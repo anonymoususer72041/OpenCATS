@@ -30,7 +30,7 @@
  * @version    $Id: WebForm.php 3705 2007-11-26 23:34:51Z will $
  */
 
-namespace OpenCATS\Legacy;
+namespace OpenCATS\Rendering;
 
 include_once(LEGACY_ROOT . '/lib/Graphs.php');
 

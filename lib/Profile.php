@@ -30,7 +30,7 @@
  * @version    $Id: Profile.php 3831 2007-12-11 23:14:32Z brian $
  */
 
-namespace OpenCATS\Legacy;
+namespace OpenCATS\Module\Profile;
 
 include_once(LEGACY_ROOT . '/lib/DatabaseConnection.php');
 include_once(LEGACY_ROOT . '/lib/Site.php');

@@ -1,7 +1,8 @@
 <?php
-namespace OpenCATS\Legacy;
+namespace OpenCATS\Module\Companies;
 
 include_once('./vendor/autoload.php');
+use OpenCATS\Rendering\DataGrid;
 use OpenCATS\Entity\Company;
 use OpenCATS\Entity\CompanyRepository;
 

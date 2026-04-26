@@ -30,7 +30,7 @@
  * @version    $Id: Statistics.php 3587 2007-11-13 03:55:57Z will $
  */
 
-namespace OpenCATS\Legacy;
+namespace OpenCATS\Module\Reports;
 
 include_once(LEGACY_ROOT . '/lib/Pipelines.php');
 include_once(LEGACY_ROOT . '/lib/JobOrderStatuses.php');

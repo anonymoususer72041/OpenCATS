@@ -35,7 +35,7 @@
  *	@package    CATS
  *	@subpackage Library
  */
-namespace OpenCATS\Legacy;
+namespace OpenCATS\Security;
 
 class Encryption
 {

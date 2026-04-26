@@ -32,7 +32,7 @@
 
 //FIXME: Test for zlib!
 
-namespace OpenCATS\Legacy;
+namespace OpenCATS\Utility;
 
 include_once(LEGACY_ROOT . '/lib/FileUtility.php');
 

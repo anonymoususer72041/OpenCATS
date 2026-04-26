@@ -30,7 +30,7 @@
  * @version    $Id: Export.php 3813 2007-12-05 23:16:22Z brian $
  */
  
-namespace OpenCATS\Legacy;
+namespace OpenCATS\Module\Export;
 
 include_once(LEGACY_ROOT . '/lib/Candidates.php');
 include_once(LEGACY_ROOT . '/lib/Contacts.php');

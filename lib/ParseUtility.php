@@ -32,7 +32,7 @@
 
 // FIXME: Document me! Explain how external parsers can integrate.
 
-namespace OpenCATS\Legacy;
+namespace OpenCATS\Utility;
 
 define('PARSE_CODE_SUCCESS', 'ok');
 define('PARSE_CODE_FAILED',  'failed');
@@ -59,7 +59,7 @@ class ParseUtility
 
     public function startClient()
     {
-        $this->_client = new SoapClient($this->_wsdl);
+        $this->_client = new \SoapClient($this->_wsdl);
     }
 
     /**
@@ -134,7 +134,7 @@ class ParseUtility
     public function status($key)
     {
         if (!CATSUtility::isSOAPEnabled()) return false;
-        $client = new SoapClient('wsdl/status.wsdl');
+        $client = new \SoapClient('wsdl/status.wsdl');
         if (!defined('CATS_TEST_MODE') || !CATS_TEST_MODE)
         {
             try

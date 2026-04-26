@@ -31,7 +31,7 @@
  */
 
 // FIXME: Why is this being reincluded here?
-namespace OpenCATS\Legacy;
+namespace OpenCATS\Utility;
 
 include_once('./config.php');
 include_once(LEGACY_ROOT . '/lib/FileUtility.php');
@@ -247,7 +247,7 @@ class CATSUtility
             'a' => array('href' => true, 'title' => true, 'target' => true, 'rel' => true)
         );
 
-        $dom = new DOMDocument();
+        $dom = new \DOMDocument();
         $previousUseInternal = libxml_use_internal_errors(true);
         $wrappedHtml = '<div>' . $html . '</div>';
         $flags = 0;

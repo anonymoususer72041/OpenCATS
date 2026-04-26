@@ -30,7 +30,7 @@
  * @version    $Id: DocumentToText.php 3587 2007-11-13 03:55:57Z will $
  */
 
-namespace OpenCATS\Legacy;
+namespace OpenCATS\Import;
 
 include_once(LEGACY_ROOT . '/lib/SystemUtility.php');
 include_once(LEGACY_ROOT . '/lib/FileUtility.php');
@@ -400,7 +400,7 @@ class DocumentToText
     private function readZippedXML($archiveFile, $dataFile)
     {
         // Create new ZIP archive
-        $zip = new ZipArchive;
+        $zip = new \ZipArchive;
 
         // Open received archive file
         if (true === $zip->open($archiveFile))
@@ -415,7 +415,7 @@ class DocumentToText
                 // Load XML from a string
                 // Skip errors and warnings
                 libxml_disable_entity_loader(true);
-                $xml = new DOMDocument();
+                $xml = new \DOMDocument();
                 $xml->loadXML($data, LIBXML_NOENT | LIBXML_XINCLUDE | LIBXML_NOERROR | LIBXML_NOWARNING);
                 $raw_text = $xml->saveXML();
                 // We need to add a space where end-of-line and end-of-paragraphs present 

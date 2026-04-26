@@ -30,7 +30,7 @@
  * @version    $Id: NewVersionCheck.php 3634 2007-11-16 16:41:47Z brian $
  */
 
-namespace OpenCATS\Legacy;
+namespace OpenCATS\Utility;
 
 include_once(LEGACY_ROOT . '/lib/SystemInfo.php');
 include_once(LEGACY_ROOT . '/lib/Users.php');

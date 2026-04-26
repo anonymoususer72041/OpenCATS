@@ -31,7 +31,7 @@
  */
 
 /* Flags for default phone number. */
-namespace OpenCATS\Legacy;
+namespace OpenCATS\Import;
 
 define('ADDRESSPARSER_MODE_PERSON', 1);
 define('ADDRESSPARSER_MODE_CONTACT', 2);

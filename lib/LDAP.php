@@ -5,7 +5,7 @@
  * author: libregeek@gmail.com
  */
 
-namespace OpenCATS\Legacy;
+namespace OpenCATS\Security;
 
 class LDAP
 {

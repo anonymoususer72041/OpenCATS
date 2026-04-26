@@ -7,7 +7,7 @@
  * @copyright (C) OpenCats
  */
 
-namespace OpenCATS\Legacy;
+namespace OpenCATS\Security;
 
 include_once("./config.php");
 

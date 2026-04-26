@@ -1,11 +1,12 @@
 <?php
-namespace OpenCATS\Legacy;
+namespace OpenCATS\Module\JobOrders;
 
 include_once('./vendor/autoload.php');
 
 use OpenCATS\Entity\JobOrder;
 use OpenCATS\Entity\JobOrderRepository;
 use OpenCATS\Entity\JobOrderRepositoryException;
+use OpenCATS\Rendering\DataGrid;
 
 
 /**

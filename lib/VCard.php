@@ -45,7 +45,7 @@
  *	@package    CATS
  *	@subpackage Library
  */
-namespace OpenCATS\Legacy;
+namespace OpenCATS\Rendering;
 
 class VCard
 {

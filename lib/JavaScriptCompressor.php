@@ -30,7 +30,7 @@
  * @version    $Id: JavaScriptCompressor.php 3587 2007-11-13 03:55:57Z will $
  */
  
-namespace OpenCATS\Legacy;
+namespace OpenCATS\Utility;
 
 include_once(LEGACY_ROOT . '/lib/StringUtility.php');
 

@@ -29,7 +29,9 @@
  * @version    $Id: Contacts.php 3690 2007-11-26 18:07:17Z brian $
  */
 
-namespace OpenCATS\Legacy;
+namespace OpenCATS\Module\Contacts;
+
+use OpenCATS\Rendering\DataGrid;
 
 include_once(LEGACY_ROOT . '/lib/Pager.php');
 include_once(LEGACY_ROOT . '/lib/EmailTemplates.php');

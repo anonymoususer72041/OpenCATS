@@ -31,7 +31,7 @@
  */
 
 
-namespace OpenCATS\Legacy;
+namespace OpenCATS\Module\Attachments;
 
 include_once(LEGACY_ROOT . '/lib/FileUtility.php');
 include_once(LEGACY_ROOT . '/lib/DocumentToText.php');

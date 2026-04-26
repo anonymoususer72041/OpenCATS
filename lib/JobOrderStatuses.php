@@ -37,7 +37,7 @@ const JOB_ORDER_STATUS_DEFAULT = 'Active';
 */
 
 
-namespace OpenCATS\Legacy;
+namespace OpenCATS\Module\JobOrders;
 
 class JobOrderStatuses
 {

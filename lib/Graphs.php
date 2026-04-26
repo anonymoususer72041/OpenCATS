@@ -33,7 +33,7 @@
 /**
  * Statistics library.
  */
-namespace OpenCATS\Legacy;
+namespace OpenCATS\Rendering;
 
 include_once(LEGACY_ROOT . '/lib/Statistics.php');
 

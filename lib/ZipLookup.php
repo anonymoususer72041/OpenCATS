@@ -2,7 +2,7 @@
 /**
 * Google API Zip Code Lookup library
 */
-namespace OpenCATS\Legacy;
+namespace OpenCATS\Utility;
 
 class ZipLookup
 {

@@ -32,7 +32,7 @@
 
 // FIXME: Clean me up!
  
-namespace OpenCATS\Legacy;
+namespace OpenCATS\Module\Settings;
 
 include_once(LEGACY_ROOT . '/lib/WebForm.php');
 

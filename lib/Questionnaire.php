@@ -30,7 +30,7 @@
  * @version    $Id: Questionnaire.php 3745 2007-11-28 18:37:56Z andrew $
  */
 
-namespace OpenCATS\Legacy;
+namespace OpenCATS\Module\Questionnaires;
 
 include_once(LEGACY_ROOT . '/lib/DatabaseConnection.php');
 include_once(LEGACY_ROOT . '/lib/Candidates.php');
