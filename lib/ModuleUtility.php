@@ -200,7 +200,6 @@ class ModuleUtility
          *     ...
          *     'calendar' => array('CalendarUI', 'Calendar'),
          *     'settings' => array('SettingsUI', 'Settings'),
-         *     'tests'    => array('TestsUI',    '')
          * );
          */
 
