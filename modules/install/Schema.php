@@ -1447,6 +1447,11 @@ class CATSSchema
                 SET short_description = \'Not reached\'
                 WHERE activity_type_id = 100;
             ',
+            '377' => '
+                ALTER IGNORE TABLE `candidate`
+                    ADD COLUMN `title` varchar(128) COLLATE utf8_unicode_ci DEFAULT NULL AFTER `middle_name`,
+                    ADD KEY `IDX_title` (`title`);
+            ',
 
         );
     }
