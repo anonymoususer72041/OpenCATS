@@ -98,9 +98,7 @@ class RssUI extends UserInterface
 
     private function displayPublicJobOrders()
     {
-        $site = new Site(-1);
-
-        $careerPortalSiteID = $site->getFirstSiteID();
+        $careerPortalSiteID = CATS_INSTALLATION_SITE;
 
         if (!eval(Hooks::get('RSS_SITEID'))) return;
 

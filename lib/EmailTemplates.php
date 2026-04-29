@@ -292,7 +292,7 @@ class EmailTemplates
 
             $site = new Site(-1);
 
-            $siteID = $site->getFirstSiteID();
+            $siteID = CATS_INSTALLATION_SITE;
 
             if (!eval(Hooks::get('CAREERS_SITEID'))) return;
 

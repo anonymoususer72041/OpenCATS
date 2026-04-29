@@ -183,8 +183,8 @@ define('MODULE_SETTINGS_ENTRIES', 3);
 define('MODULE_SETTINGS_ENTRIES_USER_LEVEL', 2);
 define('MODULE_SETTINGS_USER_CATEGORIES', 4);
 
-/* Site ID under which to store CATS system administrative data, etc. */
-define('CATS_ADMIN_SITE', 180);
+/* Site ID for this installation. */
+define('CATS_INSTALLATION_SITE', 1);
 
 /* Location of the XML export templates directory */
 define('XML_EXPORT_TEMPLATES_DIR', './modules/xml/xml_templates');

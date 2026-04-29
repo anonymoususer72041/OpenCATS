@@ -146,35 +146,6 @@ class Site
        return $this->_db->getAssoc($sql);
     }
 
-    /**
-     * Get site information by site ID.
-     *
-     * @param integer site ID
-     * @return array site data
-     */
-    public function getFirstSiteID()
-    {
-        $sql = sprintf("
-            SELECT
-                site_id AS siteID
-            FROM
-                site
-            WHERE
-                account_deleted = 0
-            AND
-                site_id != %s
-            ORDER BY
-                site_id ASC
-            LIMIT 1
-        ",
-            CATS_ADMIN_SITE
-       );
-
-       $rs = $this->_db->getAssoc($sql);
-
-       return $rs['siteID'];
-    }
-
     public function setAgreedToLicense()
     {
         $sql = sprintf(

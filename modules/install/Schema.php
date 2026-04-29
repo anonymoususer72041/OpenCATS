@@ -1447,6 +1447,56 @@ class CATSSchema
                 SET short_description = \'Not reached\'
                 WHERE activity_type_id = 100;
             ',
+            '377' => 'PHP:
+                $db->query(
+                    "DELETE FROM extra_field_settings
+                     WHERE site_id = 180
+                     AND field_name IN (\'AdminUser\', \'UnixName\', \'BillingNotes\', \'IPAddress\')"
+                );
+
+                $db->query(
+                    "DELETE FROM settings
+                     WHERE site_id = 180
+                     AND setting IN (\'fromAddress\', \'configured\')"
+                );
+
+                $db->query(
+                    "DELETE FROM user
+                     WHERE site_id = 180
+                     AND user_name = \'cats@rootadmin\'"
+                );
+
+                $db->query(
+                    "DELETE FROM site
+                     WHERE site_id = 180
+                     AND (unix_name = \'catsadmin\' OR name = \'CATS_ADMIN\')"
+                );
+
+                $autoIncrementTargets = array(
+                    array(\'table\' => \'extra_field_settings\', \'primaryKey\' => \'extra_field_settings_id\'),
+                    array(\'table\' => \'settings\', \'primaryKey\' => \'settings_id\'),
+                    array(\'table\' => \'user\', \'primaryKey\' => \'user_id\'),
+                    array(\'table\' => \'site\', \'primaryKey\' => \'site_id\')
+                );
+
+                foreach ($autoIncrementTargets as $target)
+                {
+                    $rs = $db->getAssoc(
+                        "SELECT
+                            COALESCE(MAX(`".$target[\'primaryKey\']."`), 0) + 1 AS next_id
+                         FROM
+                            `".$target[\'table\']."`"
+                    );
+
+                    $nextID = (int) $rs[\'next_id\'];
+                    if ($nextID < 1)
+                    {
+                        $nextID = 1;
+                    }
+
+                    $db->query("ALTER TABLE `".$target[\'table\']."` AUTO_INCREMENT = ".$nextID);
+                }
+            ',
 
         );
     }

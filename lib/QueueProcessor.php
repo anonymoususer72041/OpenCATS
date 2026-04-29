@@ -153,8 +153,8 @@ class QueueProcessor
             return;
         }
 
-        $taskID = self::addAsynchronousTask(CATS_ADMIN_SITE, $taskName, 0, 5);
-        self::startTask(CATS_ADMIN_SITE, $taskPath, 0, 5, $taskID);
+        $taskID = self::addAsynchronousTask(CATS_INSTALLATION_SITE, $taskName, 0, 5);
+        self::startTask(CATS_INSTALLATION_SITE, $taskPath, 0, 5, $taskID);
     }
 
     /**

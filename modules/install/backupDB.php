@@ -159,22 +159,7 @@ function dumpDB($db, $file, $useStatus = false, $splitFiles = true, $siteID = -1
             {
                 if ($recordSet['site_id'] != $siteID)
                 {
-                    if ($table == 'site' && $recordSet['site_id'] == CATS_ADMIN_SITE)
-                    {
-                        $continue = true;
-                    }
-                    /* Password cantlogin is the password for the automated user.  Automated
-                     * user has user level 0 (disabled) preventing a client from logging into
-                     * the user. */
-                    else if ($table == 'user' && $recordSet['password'] == 'cantlogin' &&
-                             $recordSet['site_id'] == CATS_ADMIN_SITE)
-                    {
-                        $continue = true;
-                    }
-                    else
-                    {
-                        $continue = false;
-                    }
+                    $continue = false;
                 }
                 if ($table == 'user' && $recordSet['user_name'] == 'brian' &&
                     $recordSet['email'] == 'brian@catsone.com')

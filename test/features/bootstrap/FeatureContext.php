@@ -330,8 +330,7 @@ class FeatureContext extends MinkContext implements Context, SnippetAcceptingCon
     
     private function getSiteId()
     {
-        $site = new Site(-1);
-        return $site->getFirstSiteID();
+        return CATS_INSTALLATION_SITE;
     }
     
     /**

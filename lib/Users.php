@@ -1214,7 +1214,7 @@ class Users
                 user.site_id = %s
                 AND
                 user.user_name = 'cats@rootadmin'",
-                CATS_ADMIN_SITE
+                CATS_INSTALLATION_SITE
                 );
         $rs = $this->_db->getAssoc($sql);
 
@@ -1243,7 +1243,7 @@ class Users
                         'Automated',
                         %s
                         )",
-                CATS_ADMIN_SITE
+                CATS_INSTALLATION_SITE
                     );
             $this->_db->query($sql);
 

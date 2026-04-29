@@ -76,7 +76,7 @@ class CareersUI extends UserInterface
 
         $site = new Site(-1);
 
-        $siteID = $site->getFirstSiteID();
+        $siteID = CATS_INSTALLATION_SITE;
 
         if (!eval(Hooks::get('CAREERS_SITEID'))) return;
 
@@ -1557,7 +1557,7 @@ class CareersUI extends UserInterface
             $source = 'Online Careers Website';
         }
 
-        $users = new Users(CATS_ADMIN_SITE);
+        $users = new Users(CATS_INSTALLATION_SITE);
         $automatedUser = $users->getAutomatedUser();
 
         /* Find if another user with same e-mail exists. If so, update the user

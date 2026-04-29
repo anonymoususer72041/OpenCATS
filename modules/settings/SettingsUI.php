@@ -2215,7 +2215,7 @@ class SettingsUI extends UserInterface
     private function createBackup()
     {
         /* Attachments */
-        $attachments = new Attachments(CATS_ADMIN_SITE);
+        $attachments = new Attachments(CATS_INSTALLATION_SITE);
         $attachmentsRS = $attachments->getAll(
             DATA_ITEM_COMPANY, $_SESSION['CATS']->getSiteCompanyID()
         );
@@ -2235,7 +2235,7 @@ class SettingsUI extends UserInterface
 
     private function deleteBackup()
     {
-        $attachments = new Attachments(CATS_ADMIN_SITE);
+        $attachments = new Attachments(CATS_INSTALLATION_SITE);
         $attachments->deleteAll(
             DATA_ITEM_COMPANY,
             $_SESSION['CATS']->getSiteCompanyID(),
