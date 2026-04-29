@@ -1791,6 +1791,7 @@ class ImportUI extends UserInterface
                         );
 
                         $candidateID = $candidates->add(
+                            '',
                             $doc['firstName'],
                             '',
                             $doc['lastName'],

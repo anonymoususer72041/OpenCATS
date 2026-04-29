@@ -37,6 +37,20 @@
                     
                     <tr>
                         <td class="tdVertical">
+                            <label id="titleLabel" for="title">Title:</label>
+                        </td>
+                        <td class="tdData">
+                            <select class="inputbox" id="title" name="title" style="width: 150px;">
+                                <option value=""></option>
+                                <?php foreach ($this->titleValues as $titleValue): ?>
+                                    <option value="<?php $this->_($titleValue); ?>" <?php if ($titleValue == $this->data['title']): ?>selected<?php endif; ?>><?php $this->_($titleValue); ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="tdVertical">
                             <label id="firstNameLabel" for="firstName">First Name:</label>
                         </td>
                         <td class="tdData">

@@ -52,6 +52,8 @@ include_once(LEGACY_ROOT . '/lib/Search.php');
 
 class CandidatesUI extends UserInterface
 {
+    const TITLE_VALUES = array('Dr.', 'Prof.', 'Prof. Dr.');
+
     /* Maximum number of characters of the candidate notes to show without the
      * user clicking "[More]"
      */
@@ -61,6 +63,21 @@ class CandidatesUI extends UserInterface
      * contacts listing.
      */
     const TRUNCATE_KEYSKILLS = 30;
+
+    private function getValidatedTitle($title)
+    {
+        if ($title === '')
+        {
+            return '';
+        }
+
+        if (in_array($title, self::TITLE_VALUES, true))
+        {
+            return $title;
+        }
+
+        CommonErrors::fatal(COMMONERROR_MISSINGFIELDS, $this, 'Invalid title value.');
+    }
 
 
     public function __construct()
@@ -994,6 +1011,7 @@ class CandidatesUI extends UserInterface
         $this->_template->assign('subActive', 'Add Candidate');
         $this->_template->assign('sourcesRS', $sourcesRS);
         $this->_template->assign('sourcesString', $sourcesString);
+        $this->_template->assign('titleValues', self::TITLE_VALUES);
         $this->_template->assign('preassignedFields', $preassignedFields);
         $this->_template->assign('associatedAttachment', $associatedAttachment);
         $this->_template->assign('associatedAttachmentRS', $associatedAttachmentRS);
@@ -1019,6 +1037,7 @@ class CandidatesUI extends UserInterface
             $fields = array(
                 'firstName'       => $this->getTrimmedInput('firstName', $_POST),
                 'middleName'      => $this->getTrimmedInput('middleName', $_POST),
+                'title'           => $this->getTrimmedInput('title', $_POST),
                 'lastName'        => $this->getTrimmedInput('lastName', $_POST),
                 'email1'          => $this->getTrimmedInput('email1', $_POST),
                 'email2'          => $this->getTrimmedInput('email2', $_POST),
@@ -1269,6 +1288,7 @@ class CandidatesUI extends UserInterface
         $this->_template->assign('extraFieldRS', $extraFieldRS);
         $this->_template->assign('sourcesRS', $sourcesRS);
         $this->_template->assign('sourcesString', $sourcesString);
+        $this->_template->assign('titleValues', self::TITLE_VALUES);
         $this->_template->assign('sourceInRS', $sourceInRS);
         $this->_template->assign('candidateID', $candidateID);
         $this->_template->assign('canEmail', $canEmail);
@@ -1423,6 +1443,7 @@ class CandidatesUI extends UserInterface
         }
 
         $isActive        = $this->isChecked('isActive', $_POST);
+        $title           = $this->getValidatedTitle($this->getTrimmedInput('title', $_POST));
         $firstName       = $this->getTrimmedInput('firstName', $_POST);
         $middleName      = $this->getTrimmedInput('middleName', $_POST);
         $lastName        = $this->getTrimmedInput('lastName', $_POST);
@@ -1461,6 +1482,7 @@ class CandidatesUI extends UserInterface
         $updateSuccess = $candidates->update(
             $candidateID,
             $isActive,
+            $title,
             $firstName,
             $middleName,
             $lastName,
@@ -2829,9 +2851,10 @@ class CandidatesUI extends UserInterface
         /* Can Relocate */
         $canRelocate = $this->isChecked('canRelocate', $_POST);
 
-        $lastName        = $this->getTrimmedInput('lastName', $_POST);
-        $middleName      = $this->getTrimmedInput('middleName', $_POST);
+        $title           = $this->getValidatedTitle($this->getTrimmedInput('title', $_POST));
         $firstName       = $this->getTrimmedInput('firstName', $_POST);
+        $middleName      = $this->getTrimmedInput('middleName', $_POST);
+        $lastName        = $this->getTrimmedInput('lastName', $_POST);
         $email1          = $this->getTrimmedInput('email1', $_POST);
         $email2          = $this->getTrimmedInput('email2', $_POST);
         $address         = $this->getTrimmedInput('address', $_POST);
@@ -2875,6 +2898,7 @@ class CandidatesUI extends UserInterface
         $duplicatesID = $candidates->checkDuplicity($firstName, $middleName, $lastName, $email1, $email2, $phoneHome, $phoneCell, $phoneWork, $address, $city);
         
         $candidateID = $candidates->add(
+            $title,
             $firstName,
             $middleName,
             $lastName,

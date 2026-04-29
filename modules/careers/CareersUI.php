@@ -338,6 +338,7 @@ class CareersUI extends UserInterface
             $candidatesLib->update(
                 $candidate['candidateID'],
                 $candidate['isActive'] ? true : false,
+                $candidate['title'],
                 $firstName,
                 $candidate['middleName'],
                 $lastName,
@@ -1588,7 +1589,7 @@ class CareersUI extends UserInterface
 
             // Candidate exists and registered. Update their profile with new values (if provided)
             $candidates->update(
-                $candidateID, $candidate['isActive'] ? true : false, $firstName, $middleName,
+                $candidateID, $candidate['isActive'] ? true : false, '', $firstName, $middleName,
                 $lastName, $email, $email2, $phoneHome, $phoneCell, $phone, $address, $address2, $city,
                 $state, $zip, $source, $keySkills, '', $employer, '', '', '', $candidate['notes'],
                 '', $bestTimeToCall, $automatedUser['userID'], false,
@@ -1608,6 +1609,7 @@ class CareersUI extends UserInterface
         {
             /* New candidate. */
             $candidateID = $candidates->add(
+                '',
                 $firstName,
                 $middleName,
                 $lastName,

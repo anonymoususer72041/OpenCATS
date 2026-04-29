@@ -31,6 +31,7 @@ include_once(LEGACY_ROOT . '/lib/StringUtility.php');
 include_once(LEGACY_ROOT . '/lib/ResultSetUtility.php');
 include_once(LEGACY_ROOT . '/lib/DateUtility.php'); /* Depends on StringUtility. */
 include_once(LEGACY_ROOT . '/lib/JobOrders.php');
+include_once(LEGACY_ROOT . '/modules/candidates/CandidatesUI.php');
 include_once(LEGACY_ROOT . '/lib/Pipelines.php');
 include_once(LEGACY_ROOT . '/lib/Attachments.php');
 include_once(LEGACY_ROOT . '/lib/Companies.php');
@@ -1417,6 +1418,7 @@ class JobOrdersUI extends UserInterface
         $this->_template->assign('jobOrderID', $jobOrderID);
         $this->_template->assign('sourcesString', $sourcesString);
         $this->_template->assign('preassignedFields', $fields);
+        $this->_template->assign('titleValues', CandidatesUI::TITLE_VALUES);
         $this->_template->assign('associatedAttachment', $associatedAttachment);
         $this->_template->assign('associatedAttachmentRS', $associatedAttachmentRS);
         $this->_template->assign('associatedTextResume', false);

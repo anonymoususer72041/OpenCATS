@@ -73,10 +73,15 @@
                     <?php endif; ?>
                     <tr>
                         <td class="tdVertical">
-                            <label id="firstNameLabel" for="firstName">First Name:</label>
+                            <label id="titleLabel" for="title">Title:</label>
                         </td>
                         <td class="tdData">
-                            <input type="text" tabindex="1" name="firstName" id="firstName" class="inputbox" style="width: 150px" value="<?php if(isset($this->preassignedFields['firstName'])) $this->_($this->preassignedFields['firstName']); ?>" />&nbsp;*
+                            <select tabindex="1" name="title" id="title" class="inputbox" style="width: 150px">
+                                <option value=""></option>
+                                <?php foreach ($this->titleValues as $titleValue): ?>
+                                    <option value="<?php $this->_($titleValue); ?>" <?php if (isset($this->preassignedFields['title']) && $this->preassignedFields['title'] == $titleValue): ?>selected<?php endif; ?>><?php $this->_($titleValue); ?></option>
+                                <?php endforeach; ?>
+                            </select>
                         </td>
 
                         <td rowspan="12" align="center" valign="top">
@@ -138,6 +143,15 @@
                                 <?php eval(Hooks::get('CANDIDATE_TEMPLATE_BELOW_FREEFORM')); ?>
                                 <?php echo($freeformBottom); ?>
                             <?php endif; ?>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="tdVertical">
+                            <label id="firstNameLabel" for="firstName">First Name:</label>
+                        </td>
+                        <td class="tdData">
+                            <input type="text" tabindex="2" name="firstName" id="firstName" class="inputbox" style="width: 150px" value="<?php if(isset($this->preassignedFields['firstName'])) $this->_($this->preassignedFields['firstName']); ?>" />&nbsp;*
                         </td>
                     </tr>
 

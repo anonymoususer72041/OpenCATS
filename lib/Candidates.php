@@ -61,6 +61,7 @@ class Candidates
     /**
      * Adds a candidate to the database and returns its candidate ID.
      *
+     * @param string Candidate title.
      * @param string First name.
      * @param string Middle name / initial.
      * @param string Last name.
@@ -92,7 +93,7 @@ class Candidates
      * @param boolean Skip creating a history entry?
      * @return integer Candidate ID of new candidate, or -1 on failure.
      */
-    public function add($firstName, $middleName, $lastName, $email1, $email2,
+    public function add($title, $firstName, $middleName, $lastName, $email1, $email2,
         $phoneHome, $phoneCell, $phoneWork, $address, $address2, $city, $state, $zip,
         $source, $keySkills, $dateAvailable, $currentEmployer, $canRelocate,
         $currentPay, $desiredPay, $notes, $webSite, $bestTimeToCall, $enteredBy, $owner,
@@ -103,6 +104,7 @@ class Candidates
             "INSERT INTO candidate (
                 first_name,
                 middle_name,
+                title,
                 last_name,
                 email1,
                 email2,
@@ -172,6 +174,7 @@ class Candidates
             )",
             $this->_db->makeQueryString($firstName),
             $this->_db->makeQueryString($middleName),
+            $this->_db->makeQueryStringOrNULL($title),
             $this->_db->makeQueryString($lastName),
             $this->_db->makeQueryString($email1),
             $this->_db->makeQueryString($email2),
@@ -222,6 +225,7 @@ class Candidates
      * Updates a candidate.
      *
      * @param integer Candidate ID to update.
+     * @param string Candidate title.
      * @param string First name.
      * @param string Middle name / initial.
      * @param string Last name.
@@ -251,7 +255,7 @@ class Candidates
      * @param string EEO disability status, or '' to not specify.
      * @return boolean True if successful; false otherwise.
      */
-    public function update($candidateID, $isActive, $firstName, $middleName, $lastName,
+    public function update($candidateID, $isActive, $title, $firstName, $middleName, $lastName,
         $email1, $email2, $phoneHome, $phoneCell, $phoneWork, $address, $address2,
         $city, $state, $zip, $source, $keySkills, $dateAvailable,
         $currentEmployer, $canRelocate, $currentPay, $desiredPay,
@@ -265,6 +269,7 @@ class Candidates
                 is_active             = %s,
                 first_name            = %s,
                 middle_name           = %s,
+                title                 = %s,
                 last_name             = %s,
                 email1                = %s,
                 email2                = %s,
@@ -300,6 +305,7 @@ class Candidates
             ($isActive ? '1' : '0'),
             $this->_db->makeQueryString($firstName),
             $this->_db->makeQueryString($middleName),
+            $this->_db->makeQueryStringOrNULL($title),
             $this->_db->makeQueryString($lastName),
             $this->_db->makeQueryString($email1),
             $this->_db->makeQueryString($email2),
@@ -470,6 +476,7 @@ class Candidates
                 candidate.is_active AS isActive,
                 candidate.first_name AS firstName,
                 candidate.middle_name AS middleName,
+                candidate.title AS title,
                 candidate.last_name AS lastName,
                 candidate.email1 AS email1,
                 candidate.email2 AS email2,
@@ -607,6 +614,7 @@ class Candidates
                 candidate.is_active AS isActive,
                 candidate.first_name AS firstName,
                 candidate.middle_name AS middleName,
+                candidate.title AS title,
                 candidate.last_name AS lastName,
                 candidate.email1 AS email1,
                 candidate.email2 AS email2,
