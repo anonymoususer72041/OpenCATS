@@ -118,34 +118,6 @@ class Site
     }
 
     /**
-     * Get site information by unix name.
-     *
-     * @param integer site ID
-     * @return array site data
-     */
-    public function getSiteByUnixName($unixName)
-    {
-        $sql = sprintf(
-            "SELECT
-                site_id AS siteID,
-                name AS name,
-                is_demo AS isDemo,
-                user_licenses AS userLicenses,
-                entered_by AS enteredBy,
-                unix_name AS unixName
-            FROM
-                site
-            WHERE
-                unix_name = %s
-            AND
-                account_deleted = 0",
-           $this->_db->makeQueryStringOrNULL($unixName)
-       );
-
-       return $this->_db->getAssoc($sql);
-    }
-
-    /**
      * Get site information by site ID.
      *
      * @param integer site ID

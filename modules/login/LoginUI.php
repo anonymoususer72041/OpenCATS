@@ -29,7 +29,6 @@
 
 include_once(LEGACY_ROOT . '/lib/SystemInfo.php');
 include_once(LEGACY_ROOT . '/lib/Mailer.php');
-include_once(LEGACY_ROOT . '/lib/Site.php');
 include_once(LEGACY_ROOT . '/lib/NewVersionCheck.php');
 include_once(LEGACY_ROOT . '/lib/Wizard.php');
 include_once(LEGACY_ROOT . '/lib/License.php');
@@ -108,48 +107,7 @@ class LoginUI extends UserInterface
             $this->_template->assign('messageSuccess', false);
         }
 
-        /* A site name can be specified in the URL via "&s=Name". */
-        if (isset($_GET['s']))
-        {
-            $siteName = $_GET['s'];
-        }
-        else
-        {
-            $siteName = '';
-        }
-
-        /* Only allow one user to be logged into a single account at the same
-         * time.
-         */
-        if ($_SESSION['CATS']->isLoggedIn() &&
-            $_SESSION['CATS']->checkForceLogout())
-        {
-            $siteName = $_SESSION['CATS']->getUnixName();
-        }
-
         if (!eval(Hooks::get('SHOW_LOGIN_FORM_PRE'))) return;
-
-        /* If a site was specified, get the site's full name from its
-         * unixname.
-         */
-        if ($siteName != '')
-        {
-            $site = new Site(-1);
-            $rs = $site->getSiteByUnixName($siteName);
-
-            if (!empty($rs))
-            {
-                $siteNameFull = $rs['name'];
-            }
-            else
-            {
-                $siteNameFull = 'error';
-            }
-        }
-        else
-        {
-            $siteNameFull = '';
-        }
 
         if (!eval(Hooks::get('SHOW_LOGIN_FORM_POST'))) return;
 
@@ -157,8 +115,6 @@ class LoginUI extends UserInterface
         $this->_template->assign('message', $message);
         $this->_template->assign('username', $username);
         $this->_template->assign('reloginVars', $reloginVars);
-        $this->_template->assign('siteName', $siteName);
-        $this->_template->assign('siteNameFull', $siteNameFull);
         $this->_template->assign('dateString', date('l, F jS, Y'));
 
         if (!eval(Hooks::get('SHOW_LOGIN_FORM_POST_2'))) return;
@@ -178,16 +134,6 @@ class LoginUI extends UserInterface
      */
     private function attemptLogin()
     {
-        //FIXME: getTrimmedInput()!
-        if (isset($_POST['siteName']))
-        {
-            $siteName = $_POST['siteName'];
-        }
-        else
-        {
-            $siteName = '';
-        }
-
         if (!isset($_POST['username']) || !isset($_POST['password']))
         {
             $message = 'Invalid username or password.';
@@ -201,23 +147,10 @@ class LoginUI extends UserInterface
                 $this->_template->assign('reloginVars', '');
             }
 
-            $site = new Site(-1);
-            $rs = $site->getSiteByUnixName($siteName);
-            if (isset($rs['name']))
-            {
-                $siteNameFull = $rs['name'];
-            }
-            else
-            {
-                $siteNameFull = $siteName;
-            }
-
             if (!eval(Hooks::get('LOGIN_NO_CREDENTIALS'))) return;
 
             $this->_template->assign('message', $message);
             $this->_template->assign('messageSuccess', false);
-            $this->_template->assign('siteName', $siteName);
-            $this->_template->assign('siteNameFull', $siteNameFull);
             $this->_template->assign('dateString', date('l, F jS, Y'));
 
             $this->_template->display('./modules/login/Login.tpl');
@@ -227,21 +160,6 @@ class LoginUI extends UserInterface
 
         $username = $this->getTrimmedInput('username', $_POST);
         $password = $this->getTrimmedInput('password', $_POST);
-
-        if (strpos($username, '@') !== false)
-        {
-            $siteName = '';
-        }
-
-        if ($siteName != '')
-        {
-            $site = new Site(-1);
-            $rs = $site->getSiteByUnixName($siteName);
-            if (isset($rs['siteID']))
-            {
-                $username .= '@' . $rs['siteID'];
-            }
-        }
 
         /* Make a blind attempt at logging the user in. */
         $_SESSION['CATS']->processLogin($username, $password);
@@ -260,23 +178,10 @@ class LoginUI extends UserInterface
                 $this->_template->assign('reloginVars', '');
             }
 
-            $site = new Site(-1);
-            $rs = $site->getSiteByUnixName($siteName);
-            if (isset($rs['name']))
-            {
-                $siteNameFull = $rs['name'];
-            }
-            else
-            {
-                $siteNameFull = $siteName;
-            }
-
             if (!eval(Hooks::get('LOGIN_UNSUCCESSFUL'))) return;
 
             $this->_template->assign('message', $message);
             $this->_template->assign('messageSuccess', false);
-            $this->_template->assign('siteName', $siteName);
-            $this->_template->assign('siteNameFull', $siteNameFull);
             $this->_template->assign('dateString', date('l, F jS, Y'));
             $this->_template->display('./modules/login/Login.tpl');
 
@@ -349,8 +254,8 @@ class LoginUI extends UserInterface
             $wizard->addPage('Site', './modules/login/wizard/SiteName.tpl', '', false, true);
         }
 
-        // CATS Hosted Wizard Pages
-        if (!eval(Hooks::get('ASP_WIZARD_PAGES'))) return;
+        // Additional wizard pages
+        if (!eval(Hooks::get('WIZARD_PAGES'))) return;
 
         if ($_SESSION['CATS']->isFirstTimeSetup())
         {
@@ -365,7 +270,7 @@ class LoginUI extends UserInterface
                 $this->_template->assign(\'accessLevels\', $users->getAccessLevels());
             ');
 
-            if (!eval(Hooks::get('ASP_WIZARD_IMPORT'))) return;
+            if (!eval(Hooks::get('WIZARD_IMPORT'))) return;
         }
 
         // The wizard will not display if no pages have been added.
