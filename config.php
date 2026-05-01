@@ -95,7 +95,6 @@ define('ENABLE_HOSTNAME_LOOKUP', false);
  * Install Sphinx and set ENABLE_SPHINX (below) to true to enable Sphinx.
  */
 define('ENABLE_SPHINX', false);
-define('SPHINX_API', './lib/sphinx/sphinxapi.php');
 define('SPHINX_HOST', 'localhost');
 define('SPHINX_PORT', 3312);
 define('SPHINX_INDEX', 'cats catsdelta');

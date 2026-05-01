@@ -35,7 +35,7 @@ include_once(LEGACY_ROOT . '/lib/DatabaseSearch.php');
 
 if (ENABLE_SPHINX)
 {
-    include_once(SPHINX_API);
+    include_once(LEGACY_ROOT . '/vendor/autoload.php');
 }
 
 /**
