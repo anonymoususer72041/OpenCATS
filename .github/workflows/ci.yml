@@ -29,6 +29,7 @@ jobs:
         with:
           php-version: ${{ matrix.php-version }}
           tools: composer:v2
+          extensions: gd, zlib
 
       - name: Cache Composer packages
         uses: actions/cache@v4
