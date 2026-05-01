@@ -285,6 +285,34 @@ class FeatureContext extends MinkContext implements Context, SnippetAcceptingCon
         $this->getSession()->evaluateScript($script);
     }
     
+
+    /**
+     * @Given I set hidden field :field to :value
+     */
+    public function iSetHiddenFieldTo($field, $value)
+    {
+        $page = $this->getSession()->getPage();
+        $inputField = $page->find('css', sprintf('input[type="hidden"][name="%s"]', $field));
+
+        if (null === $inputField)
+        {
+            $inputField = $page->find('css', sprintf('input[type="hidden"]#%s', $field));
+        }
+
+        if (null === $inputField)
+        {
+            throw new \InvalidArgumentException(sprintf('Could not find hidden field: "%s"', $field));
+        }
+
+        $script = sprintf(
+            '(function(){ var f = document.getElementsByName(%s)[0] || document.getElementById(%s); if (f) { f.value = %s; } })();',
+            json_encode($field),
+            json_encode($field),
+            json_encode($value)
+        );
+
+        $this->getSession()->executeScript($script);
+    }
     /** Click on the element with the provided xpath query
      *
      * @When I click on the element :locator
