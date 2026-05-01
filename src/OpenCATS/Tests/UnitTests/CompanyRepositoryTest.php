@@ -4,12 +4,8 @@ use PHPUnit\Framework\TestCase;
 use OpenCATS\Entity\CompanyRepository;
 use OpenCATS\Entity\Company;
 
-if( !defined('LEGACY_ROOT') )
-{
-    define('LEGACY_ROOT', '.');
-}
-
 include_once(LEGACY_ROOT . '/lib/History.php');
+include_once(LEGACY_ROOT . '/lib/DatabaseConnection.php');
 
 class CompanyRepositoryTests extends TestCase
 {
@@ -34,28 +30,38 @@ class CompanyRepositoryTests extends TestCase
     function test_persist_CreatesNewCompany_InputValuesAreEscaped()
     {
         $databaseConnectionMock = $this->getDatabaseConnectionMock();
+        $expectedStringValues = [
+            self::COMPANY_NAME,
+            self::ADDRESS,
+            self::ADDRESS2,
+            self::CITY,
+            self::STATE,
+            self::ZIP_CODE,
+            self::PHONE_NUMBER_ONE,
+            self::PHONE_NUMBER_TWO,
+            self::FAX_NUMBER,
+            self::URL,
+            self::KEY_TECHNOLOGIES,
+            self::NOTES
+        ];
+        $stringCallIndex = 0;
         $databaseConnectionMock->expects($this->exactly(12))
             ->method('makeQueryString')
-            ->withConsecutive(
-                [$this->equalTo(self::COMPANY_NAME)],
-                [$this->equalTo(self::ADDRESS)],
-                [$this->equalTo(self::ADDRESS2)],
-                [$this->equalTo(self::CITY)],
-                [$this->equalTo(self::STATE)],
-                [$this->equalTo(self::ZIP_CODE)],
-                [$this->equalTo(self::PHONE_NUMBER_ONE)],
-                [$this->equalTo(self::PHONE_NUMBER_TWO)],
-                [$this->equalTo(self::FAX_NUMBER)],
-                [$this->equalTo(self::URL)],
-                [$this->equalTo(self::KEY_TECHNOLOGIES)],
-                [$this->equalTo(self::NOTES)]
-            );
+            ->willReturnCallback(function($value) use ($expectedStringValues, &$stringCallIndex) {
+                $this->assertSame($expectedStringValues[$stringCallIndex], $value);
+                $stringCallIndex++;
+            });
+        $expectedIntegerValues = [
+            self::ENTERED_BY,
+            self::OWNER
+        ];
+        $integerCallIndex = 0;
         $databaseConnectionMock->expects($this->exactly(2))
             ->method('makeQueryInteger')
-            ->withConsecutive(
-                [$this->equalTo(self::ENTERED_BY)],
-                [$this->equalTo(self::OWNER)]
-            );
+            ->willReturnCallback(function($value) use ($expectedIntegerValues, &$integerCallIndex) {
+                $this->assertSame($expectedIntegerValues[$integerCallIndex], $value);
+                $integerCallIndex++;
+            });
         $databaseConnectionMock->method('query')
             ->willReturn(true);
         $databaseConnectionMock->method('getLastInsertID')
@@ -86,16 +92,14 @@ class CompanyRepositoryTests extends TestCase
         $historyMock = $this->getHistoryMock();
         $historyMock->expects($this->exactly(1))
             ->method('storeHistoryNew')
-            ->withConsecutive(
-                [DATA_ITEM_COMPANY, self::COMPANY_ID]
+            ->with(
+                $this->equalTo(DATA_ITEM_COMPANY),
+                $this->equalTo(self::COMPANY_ID)
             );
         $CompanyRepository = new CompanyRepository($databaseConnectionMock);
         $CompanyRepository->persist($this->createCompany(), $historyMock);
     }
     
-    /**
-     * @expectedException OpenCATS\Entity\CompanyRepositoryException
-     */
     function test_persist_FailToCreateNewCompany_ThrowsException()
     {
         $databaseConnectionMock = $this->getDatabaseConnectionMock();
@@ -103,6 +107,7 @@ class CompanyRepositoryTests extends TestCase
             ->willReturn(false);
         $historyMock = $this->getHistoryMock();
         $CompanyRepository = new CompanyRepository($databaseConnectionMock);
+        $this->expectException(\OpenCATS\Entity\CompanyRepositoryException::class);
         $CompanyRepository->persist($this->createCompany(), $historyMock);
     }
     
@@ -114,7 +119,8 @@ class CompanyRepositoryTests extends TestCase
     private function getDatabaseConnectionMock()
     {
         return $this->getMockBuilder('\DatabaseConnection')
-            ->setMethods(['makeQueryString', 'makeQueryInteger', 'query', 'getLastInsertID'])
+            ->disableOriginalConstructor()
+            ->onlyMethods(['makeQueryString', 'makeQueryInteger', 'query', 'getLastInsertID'])
             ->getMock();
     }
     
