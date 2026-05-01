@@ -178,9 +178,9 @@
         </table>
         <input type="submit" class="button" name="submit" id="submit" value="Save" />&nbsp;
 <?php if ($this->isJobOrdersMode): ?>
-        <input type="button" class="button" name="close" value="Cancel" onclick="parentGoToURL('<?php echo(CATSUtility::getIndexName()); ?>?m=joborders&amp;a=show&amp;jobOrderID=<?php echo($this->selectedJobOrderID); ?>');" />
+        <input type="button" class="button" name="close" value="Cancel" onclick="parentGoToURL(<?php echo Template::escapeJsAttr(CATSUtility::getIndexName() . '?m=joborders&a=show&jobOrderID=' . $this->selectedJobOrderID); ?>);" />
 <?php else: ?>
-        <input type="button" class="button" name="close" value="Cancel" onclick="parentGoToURL('<?php echo(CATSUtility::getIndexName()); ?>?m=candidates&amp;a=show&amp;candidateID=<?php echo($this->candidateID); ?>');" />
+        <input type="button" class="button" name="close" value="Cancel" onclick="parentGoToURL(<?php echo Template::escapeJsAttr(CATSUtility::getIndexName() . '?m=candidates&a=show&candidateID=' . $this->candidateID); ?>);" />
 <?php endif; ?>
     </form>
 
@@ -212,9 +212,9 @@
 
     <form>
 <?php if ($this->isJobOrdersMode): ?>
-        <input type="button" name="close" class="button" value="Close" onclick="parentGoToURL('<?php echo(CATSUtility::getIndexName()); ?>?m=joborders&amp;a=show&amp;jobOrderID=<?php echo($this->regardingID); ?>');" />
+        <input type="button" name="close" class="button" value="Close" onclick="parentGoToURL(<?php echo Template::escapeJsAttr(CATSUtility::getIndexName() . '?m=joborders&a=show&jobOrderID=' . $this->regardingID); ?>);" />
 <?php else: ?>
-        <input type="button" name="close" class="button" value="Close" onclick="parentGoToURL('<?php echo(CATSUtility::getIndexName()); ?>?m=candidates&amp;a=show&amp;candidateID=<?php echo($this->candidateID); ?>');" />
+        <input type="button" name="close" class="button" value="Close" onclick="parentGoToURL(<?php echo Template::escapeJsAttr(CATSUtility::getIndexName() . '?m=candidates&a=show&candidateID=' . $this->candidateID); ?>);" />
 <?php endif; ?>
     </form>
 <?php endif; ?>

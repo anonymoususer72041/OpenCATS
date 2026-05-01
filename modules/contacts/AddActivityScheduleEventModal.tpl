@@ -147,7 +147,7 @@
 
         </table>
         <input type="submit" class="button" name="submit" id="submit" value="Save" />&nbsp;
-        <input type="button" class="button" name="close" value="Cancel" onclick="parentGoToURL('<?php echo(CATSUtility::getIndexName()); ?>?m=contacts&amp;a=show&amp;contactID=<?php echo($this->contactID); ?>');" />
+        <input type="button" class="button" name="close" value="Cancel" onclick="parentGoToURL(<?php echo Template::escapeJsAttr(CATSUtility::getIndexName() . '?m=contacts&a=show&contactID=' . $this->contactID); ?>);" />
     </form>
 
     <script type="text/javascript">
@@ -174,7 +174,7 @@
     <?php echo($this->eventHTML); ?>
     
     <form>
-        <input type="button" name="close" class="button" value="Close" onclick="parentGoToURL('<?php echo(CATSUtility::getIndexName()); ?>?m=contacts&amp;a=show&amp;contactID=<?php echo($this->contactID); ?>');" />
+        <input type="button" name="close" class="button" value="Close" onclick="parentGoToURL(<?php echo Template::escapeJsAttr(CATSUtility::getIndexName() . '?m=contacts&a=show&contactID=' . $this->contactID); ?>);" />
     </form>
 <?php endif; ?>
 

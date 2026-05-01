@@ -82,7 +82,7 @@ class TemplateUtility
         echo '<body style="background: #eee;">', "\n";
         if ($title != '')
         {
-            echo '<script type="text/javascript">parentSetPopTitle(', json_encode((string) $title, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT), ');</script>';
+            echo '<script type="text/javascript">parentSetPopTitle(', Template::escapeJs($title), ');</script>';
         }
         self::_printQuickActionMenuHolder();
     }
@@ -154,7 +154,7 @@ class TemplateUtility
                 . 'style="display: inline; padding: 0; margin: 0; border: 0;">';
             if (isset($_SESSION['CATS']) && $_SESSION['CATS']->isLoggedIn())
             {
-                $csrfToken = htmlspecialchars($_SESSION['CATS']->getCSRFToken(), ENT_QUOTES, 'UTF-8');
+                $csrfToken = Template::escapeAttr($_SESSION['CATS']->getCSRFToken());
                 echo '<input type="hidden" name="csrfToken" value="', $csrfToken, '" />';
             }
             echo '<button type="submit" class="linkButton">';
@@ -166,9 +166,9 @@ class TemplateUtility
 
             if (!eval(Hooks::get('TEMPLATE_LOGIN_INFO_EXTENDED_SITE_NAME'))) return;
 
-            $fullNameEscaped = htmlspecialchars((string) $fullName, ENT_QUOTES | ENT_SUBSTITUTE, HTML_ENCODING);
-            $usernameEscaped = htmlspecialchars((string) $username, ENT_QUOTES | ENT_SUBSTITUTE, HTML_ENCODING);
-            $siteNameEscaped = htmlspecialchars((string) $siteName, ENT_QUOTES | ENT_SUBSTITUTE, HTML_ENCODING);
+            $fullNameEscaped = Template::escapeHtml($fullName);
+            $usernameEscaped = Template::escapeHtml($username);
+            $siteNameEscaped = Template::escapeHtml($siteName);
             echo '<span>', $fullNameEscaped, '&nbsp;&lt;', $usernameEscaped, '&gt;&nbsp;(', $siteNameEscaped, ')</span>', "\n";
 
             if ($_SESSION['CATS']->getAccessLevel(ACL::SECOBJ_ROOT) >= ACCESS_LEVEL_SA)
@@ -1260,7 +1260,7 @@ class TemplateUtility
         echo '"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">', "\n";
         echo '<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">', "\n";
         echo '<head>', "\n";
-        echo '<title>OpenCATS - ', htmlspecialchars((string) $pageTitle, ENT_QUOTES | ENT_SUBSTITUTE, HTML_ENCODING), '</title>', "\n";
+        echo '<title>OpenCATS - ', Template::escapeHtml($pageTitle), '</title>', "\n";
         echo '<meta http-equiv="Content-Type" content="text/html; charset=', HTML_ENCODING, '" />', "\n";
         echo '<link rel="icon" href="images/favicon.ico" type="image/x-icon" />', "\n";
         echo '<link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />', "\n";
@@ -1280,12 +1280,12 @@ class TemplateUtility
             $versionedFilename = self::getVersionedAssetURL($coreJavaScriptFile);
             echo '<script type="text/javascript" src="', $versionedFilename, '"></script>', "\n";
         }
-        echo '<script type="text/javascript">CATSIndexName = ', json_encode((string) CATSUtility::getIndexName(), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT), ';</script>', "\n";
+        echo '<script type="text/javascript">CATSIndexName = ', Template::escapeJs(CATSUtility::getIndexName()), ';</script>', "\n";
         if (isset($_SESSION['CATS']) && $_SESSION['CATS']->isLoggedIn())
         {
             $csrfToken = $_SESSION['CATS']->getCSRFToken();
             echo '<script type="text/javascript">CATSCsrfToken = ',
-                 json_encode($csrfToken), ';</script>', "\n";
+                 Template::escapeJs($csrfToken), ';</script>', "\n";
             echo '<script type="text/javascript">', "\n";
             echo 'function catsInjectCSRFToken()', "\n";
             echo '{', "\n";
