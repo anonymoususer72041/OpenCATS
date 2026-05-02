@@ -1805,7 +1805,7 @@ class CandidatesUI extends UserInterface
         }
 
         $pipelines = new Pipelines($this->_siteID);
-        $pipelineRS = $pipelines->getCandidatePipeline($candidateID);
+        $pipelineRS = $pipelines->getNonClosedCandidatePipeline($candidateID);
 
         /* Are we in "Only Schedule Event" mode? */
         $onlyScheduleEvent = $this->isChecked('onlyScheduleEvent', $_GET);
