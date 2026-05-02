@@ -182,9 +182,11 @@ switch ($action)
         $mailFromAddress = '';
         if (isset($tables['settings']))
         {
-            $rs = MySQLQuery('SELECT value FROM settings WHERE setting = "fromAddress" LIMIT 1');
-            if (mysqli_num_rows($rs) > 0)
-                $mailFromAddress = mysqli_fetch_row($rs);
+            $recordSet = MySQLGetAssoc('SELECT value FROM settings WHERE setting = "fromAddress" LIMIT 1');
+            if (!empty($recordSet))
+            {
+                $mailFromAddress = array($recordSet['value']);
+            }
         }
 
         echo '
@@ -473,15 +475,7 @@ switch ($action)
         echo '<script type="text/javascript">';
 
         /* Detect date format preferences. */
-        $rs = MySQLQuery('SELECT date_format_ddmmyy FROM site', true);
-        if ($rs)
-        {
-            $record = mysqli_fetch_assoc($rs);
-        }
-        else
-        {
-            $record = array();
-        }
+        $record = MySQLGetAssoc('SELECT date_format_ddmmyy FROM site LIMIT 1', true);
 
         if (!isset($record['date_format_ddmmyy']) || $record['date_format_ddmmyy'] == 0)
         {
@@ -610,15 +604,7 @@ switch ($action)
             die();
         }
 
-        $rs = MySQLQuery('SELECT * FROM candidate', true);
-        $fields = array();
-        while ($meta = @mysqli_fetch_field($rs))
-        {
-            if ($meta)
-            {
-                $fields[$meta->name] = true;
-            }
-        }
+        $fields = getInstalledTableFields('candidate');
 
         $catsVersion = '';
 
@@ -798,10 +784,11 @@ switch ($action)
 
         //Check if we need to update from 0.6.0 to 0.7.0
         $tables = array();
-        $result = MySQLQuery(sprintf("SHOW TABLES FROM `%s`", DATABASE_NAME));
-        while ($row = mysqli_fetch_array($result, MYSQLI_NUM))
+        $resultSet = MySQLGetAllAssoc(sprintf("SHOW TABLES FROM `%s`", DATABASE_NAME));
+        foreach ($resultSet as $row)
         {
-            $tables[$row[0]] = true;
+            $tableName = reset($row);
+            $tables[$tableName] = true;
         }
 
         if (!isset($tables['history']))
@@ -890,12 +877,7 @@ switch ($action)
         }
 
         $revision = 0;
-        $rs = MySQLQuery('SELECT * FROM candidate', true);
-        $fields = array();
-        while ($meta = mysqli_fetch_field($rs))
-        {
-            $fields[$meta->name] = true;
-        }
+        $fields = getInstalledTableFields('candidate');
 
         /* Look for more versions here. */
         if (!isset($fields['date_available']))
@@ -1019,18 +1001,18 @@ switch ($action)
         $fromAddress = $_SESSION['fromAddressInstaller'];
 
         // If this is an existing database, just set all the fromAddress settings to new
-        MySQLQuery(sprintf('UPDATE settings SET value = "%s" WHERE setting = "fromAddress"', $fromAddress));
+        $db->query(sprintf('UPDATE settings SET value = %s WHERE setting = "fromAddress"', $db->makeQueryString($fromAddress)));
         // This is a new install, insert a settings value for each site in the database
-        if(mysqli_affected_rows($mySQLConnection) == 0)
+        if ($db->getAffectedRows() == 0)
         {
             // Insert a "fromAddress" = $fromAddress for each site
-            MySQLQuery(sprintf(
+            $db->query(sprintf(
                 'INSERT INTO settings (setting, value, site_id, settings_type) '
-                . 'SELECT "fromAddress", "%s", site_id, 1 FROM site',
-                $fromAddress
+                . 'SELECT "fromAddress", %s, site_id, 1 FROM site',
+                $db->makeQueryString($fromAddress)
             ));
             // Insert a "configured" = 1 setting for each site
-            MySQLQuery(
+            $db->query(
                 'INSERT INTO settings (setting, value, site_id, settings_type) '
                 . 'SELECT "configured", "1", site_id, 1 FROM site'
             );
@@ -1093,8 +1075,10 @@ switch ($action)
         MySQLConnect();
 
         /* Determine if a default user is set. */
-        $rs = MySQLQuery("SELECT * FROM user WHERE user_name = 'admin' AND password = md5('cats')");
-        if ($rs && mysqli_fetch_row($rs))
+        $record = MySQLGetAssoc(
+            "SELECT user_id FROM user WHERE user_name = 'admin' AND password = md5('cats') LIMIT 1"
+        );
+        if (!empty($record))
         {
             //Default user set
             echo '<script type="text/javascript">document.location.href="index.php?defaultlogin=true";</script>';
@@ -1112,7 +1096,7 @@ switch ($action)
 
 function MySQLConnect()
 {
-    global $tables, $mySQLConnection;
+    global $tables, $mySQLConnection, $db;
 
     $mySQLConnection = @mysqli_connect(
         DATABASE_HOST, DATABASE_USER, DATABASE_PASS
@@ -1132,12 +1116,16 @@ function MySQLConnect()
     }
 
 
+    include_once(LEGACY_ROOT . '/lib/DatabaseConnection.php');
+    $db = getInstallerDatabaseConnection();
+
     /* Create an array of all tables in the database. */
     $tables = array();
-    $result = MySQLQuery(sprintf("SHOW TABLES FROM `%s`", DATABASE_NAME));
-    while ($row = mysqli_fetch_row($result))
+    $resultSet = MySQLGetAllAssoc(sprintf("SHOW TABLES FROM `%s`", DATABASE_NAME));
+    foreach ($resultSet as $row)
     {
-        $tables[$row[0]] = true;
+        $tableName = reset($row);
+        $tables[$tableName] = true;
     }
 
     /* Select CATS database. */
@@ -1154,6 +1142,18 @@ function MySQLConnect()
         );
         return false;
     }
+}
+
+function getInstallerDatabaseConnection()
+{
+    global $db;
+
+    if (is_object($db) && method_exists($db, 'query'))
+    {
+        return $db;
+    }
+
+    return DatabaseConnection::getInstance();
 }
 
 function MySQLQuery($query, $ignoreErrors = false)
@@ -1177,6 +1177,44 @@ function MySQLQuery($query, $ignoreErrors = false)
     }
 
     return $queryResult;
+}
+
+function getInstalledTableFields($table)
+{
+    $fields = array();
+    $fieldMeta = MySQLGetAllAssoc(sprintf('SHOW COLUMNS FROM %s', $table), true);
+    foreach ($fieldMeta as $meta)
+    {
+        if (isset($meta['Field']))
+        {
+            $fields[$meta['Field']] = true;
+        }
+    }
+    return $fields;
+}
+
+function MySQLGetAssoc($query, $ignoreErrors = false)
+{
+    global $db;
+
+    if (!$db->query($query, $ignoreErrors))
+    {
+        return array();
+    }
+
+    return $db->getAssoc();
+}
+
+function MySQLGetAllAssoc($query, $ignoreErrors = false)
+{
+    global $db;
+
+    if (!$db->query($query, $ignoreErrors))
+    {
+        return array();
+    }
+
+    return $db->getAllAssoc();
 }
 
 function MySQLQueryMultiple($SQLData, $delimiter = ';')
