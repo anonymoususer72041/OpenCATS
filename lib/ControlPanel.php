@@ -145,9 +145,9 @@ class ControlPanel
         $uIDName = $this->getPostValue('uIDName');
         $sql = $this->getTablesSQL(sprintf('%s = %d', addslashes($uIDName), addslashes($uID)));
         $rs = $this->_db->query($sql);
-        if ($rs && mysqli_num_rows($rs) > 0)
+        if ($rs && $this->_db->getNumRows() > 0)
         {
-            $row = mysqli_fetch_array($rs, MYSQLI_ASSOC);
+            $row = $this->_db->getAssoc();
             if (!$row)
             {
                 return $this->getException('Bad or expired identifier', 'The operation you attempted cannot complete '
@@ -206,7 +206,7 @@ class ControlPanel
                     . 'because the unique identifier no longer exists. Did you perhaps use your browser\'s <b>back</b> '
                     . 'button?');
             }
-            $row = mysqli_fetch_array($rs, MYSQLI_ASSOC);
+            $row = $this->_db->getAssoc();
             if (!$row)
             {
                 return $this->getListView();
@@ -415,9 +415,9 @@ class ControlPanel
                         }
                         else
                         {
-                            $updatedRows += mysqli_affected_rows($this->_db->getConnection());
+                            $updatedRows += $this->_db->getAffectedRows();
                             if ($addRecord && $callBackPrimaryKey)
-                                $row[$callBackPrimaryKey] = mysqli_insert_id($this->_db->getConnection());
+                                $row[$callBackPrimaryKey] = $this->_db->getLastInsertID();
                             if ($callBack)
                                 $callBack($row);
                         }
@@ -814,7 +814,7 @@ class ControlPanel
             if ($currencySql != '')
             {
                 $rs = $this->_db->query($sql = $this->getTablesSQL($searchSql, '', $currencySql));
-                $currencySums = mysqli_fetch_array($rs, MYSQLI_ASSOC);
+                $currencySums = $this->_db->getAssoc();
             }
         }
 
@@ -833,8 +833,9 @@ class ControlPanel
             $pager_CurrentPage = intval($pager_CurrentPage) - 1;
 
         // get the records count
-        $rs = $this->_db->query($sql = $this->getTablesSQL($searchSql, '', 'COUNT(*)'));
-        $rsCount = intval(mysqli_fetch_row($rs));
+        $rs = $this->_db->query($sql = $this->getTablesSQL($searchSql, '', 'COUNT(*) AS cpRecordCount'));
+        $countRow = $this->_db->getAssoc();
+        $rsCount = intval($countRow['cpRecordCount'] ?? 0);
         $numPages = ceil($rsCount / $pager_ResultsPerPage);
         if ($pager_CurrentPage >= $numPages) $pager_CurrentPage = $numPages - 1;
         if ($pager_CurrentPage < 0) $pager_CurrentPage = 0;
@@ -859,7 +860,7 @@ class ControlPanel
         $fieldOffset = true;
 
         $rowNum = 0;
-        while ($row = mysqli_fetch_array($rs, MYSQLI_ASSOC))
+        while (($row = $this->_db->getAssoc()))
         {
             $numColumns = 0;
             $infoHtml .= "<tr>\n";
@@ -1443,7 +1444,7 @@ class ControlPanel
         $this->_tables[$name]['fields'] = array();
         // Fetch the fields from the table
         $rs = $this->_db->query('SHOW FIELDS FROM ' . $name);
-        while ($row = mysqli_fetch_array($rs, MYSQLI_ASSOC))
+        while (($row = $this->_db->getAssoc()))
         {
             $this->_tables[$name]['fields'][$row['Field']] = array(
                 'type' => $row['Type'],
