@@ -33,6 +33,7 @@ include_once(LEGACY_ROOT . '/lib/Pager.php');
 include_once(LEGACY_ROOT . '/lib/EmailTemplates.php');
 include_once(LEGACY_ROOT . '/lib/ExtraFields.php');
 include_once(LEGACY_ROOT . '/lib/Calendar.php');
+include_once(LEGACY_ROOT . '/lib/JobOrderStatuses.php');
 
 /**
  *	Contacts Library
@@ -697,6 +698,45 @@ class Contacts
             $this->_db->makeQueryInteger($contactID),
             $this->_db->makeQueryInteger($contactID),
             $this->_siteID
+        );
+
+        return $this->_db->getAllAssoc($sql);
+     }
+
+    /**
+     * Returns an array of non-closed job orders data (jobOrderID, title, companyName)
+     * for the specified contact ID.
+     *
+     * @param integer contact ID
+     * @return array job orders data
+     */
+    public function getNonClosedJobOrdersArray($contactID)
+    {
+        $sql = sprintf(
+            "SELECT
+                joborder.joborder_id AS jobOrderID,
+                joborder.title AS title,
+                company.name AS companyName,
+                IF(joborder.contact_id = %s, 1, 0) AS isAssigned
+            FROM
+                joborder
+            LEFT JOIN company
+                ON joborder.company_id = company.company_id
+            LEFT JOIN contact
+                ON company.company_id = contact.company_id
+            WHERE
+                contact.contact_id = %s
+            AND
+                joborder.site_id = %s
+            AND
+                joborder.status NOT IN %s
+            ORDER BY
+                isAssigned DESC,
+                title ASC",
+            $this->_db->makeQueryInteger($contactID),
+            $this->_db->makeQueryInteger($contactID),
+            $this->_siteID,
+            JobOrderStatuses::getClosedStatusSQL()
         );
 
         return $this->_db->getAllAssoc($sql);

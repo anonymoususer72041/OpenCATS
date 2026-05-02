@@ -1106,7 +1106,7 @@ class ContactsUI extends UserInterface
         $contacts = new Contacts($this->_siteID);
         $contactData = $contacts->get($contactID);
 
-        $regardingRS = $contacts->getJobOrdersArray($contactID);
+        $regardingRS = $contacts->getNonClosedJobOrdersArray($contactID);
 
         $calendar = new Calendar($this->_siteID);
         $calendarEventTypes = $calendar->getAllEventTypes();
