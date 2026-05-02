@@ -287,7 +287,7 @@ class DatabaseConnection
     /**
      * Returns one row from a query's result set in an associative array,
      * starting at the current row pointer. After the call, the row pointer
-     * will be incemented by 1 (this is how the mysql_fetch_*() functions
+     * will be incremented by 1 (this matches mysqli_fetch_*() behavior
      * work). If a query is not specified, this method will operate on the
      * last executed query for this instance. Specifing a query always resets
      * the row pointer to 0.
@@ -575,7 +575,7 @@ class DatabaseConnection
     }
 
     /**
-     * Returns the last error message (value of mysql_error()) for the current
+     * Returns the last connection error message for the current
      * MySQL connection.
      *
      * @return string Error message, or '' if no error occurred.
