@@ -182,9 +182,11 @@ switch ($action)
         $mailFromAddress = '';
         if (isset($tables['settings']))
         {
-            $rs = MySQLQuery('SELECT value FROM settings WHERE setting = "fromAddress" LIMIT 1');
-            if (mysqli_num_rows($rs) > 0)
-                $mailFromAddress = mysqli_fetch_row($rs);
+            $recordSet = MySQLGetAssoc('SELECT value FROM settings WHERE setting = "fromAddress" LIMIT 1');
+            if (!empty($recordSet))
+            {
+                $mailFromAddress = array($recordSet['value']);
+            }
         }
 
         echo '
@@ -473,15 +475,7 @@ switch ($action)
         echo '<script type="text/javascript">';
 
         /* Detect date format preferences. */
-        $rs = MySQLQuery('SELECT date_format_ddmmyy FROM site', true);
-        if ($rs)
-        {
-            $record = mysqli_fetch_assoc($rs);
-        }
-        else
-        {
-            $record = array();
-        }
+        $record = MySQLGetAssoc('SELECT date_format_ddmmyy FROM site LIMIT 1', true);
 
         if (!isset($record['date_format_ddmmyy']) || $record['date_format_ddmmyy'] == 0)
         {
@@ -798,10 +792,11 @@ switch ($action)
 
         //Check if we need to update from 0.6.0 to 0.7.0
         $tables = array();
-        $result = MySQLQuery(sprintf("SHOW TABLES FROM `%s`", DATABASE_NAME));
-        while ($row = mysqli_fetch_array($result, MYSQLI_NUM))
+        $resultSet = MySQLGetAllAssoc(sprintf("SHOW TABLES FROM `%s`", DATABASE_NAME));
+        foreach ($resultSet as $row)
         {
-            $tables[$row[0]] = true;
+            $tableName = reset($row);
+            $tables[$tableName] = true;
         }
 
         if (!isset($tables['history']))
@@ -1093,8 +1088,10 @@ switch ($action)
         MySQLConnect();
 
         /* Determine if a default user is set. */
-        $rs = MySQLQuery("SELECT * FROM user WHERE user_name = 'admin' AND password = md5('cats')");
-        if ($rs && mysqli_fetch_row($rs))
+        $record = MySQLGetAssoc(
+            "SELECT user_id FROM user WHERE user_name = 'admin' AND password = md5('cats') LIMIT 1"
+        );
+        if (!empty($record))
         {
             //Default user set
             echo '<script type="text/javascript">document.location.href="index.php?defaultlogin=true";</script>';
@@ -1112,7 +1109,7 @@ switch ($action)
 
 function MySQLConnect()
 {
-    global $tables, $mySQLConnection;
+    global $tables, $mySQLConnection, $db;
 
     $mySQLConnection = @mysqli_connect(
         DATABASE_HOST, DATABASE_USER, DATABASE_PASS
@@ -1132,12 +1129,16 @@ function MySQLConnect()
     }
 
 
+    include_once(LEGACY_ROOT . '/lib/DatabaseConnection.php');
+    $db = DatabaseConnection::getInstance();
+
     /* Create an array of all tables in the database. */
     $tables = array();
-    $result = MySQLQuery(sprintf("SHOW TABLES FROM `%s`", DATABASE_NAME));
-    while ($row = mysqli_fetch_row($result))
+    $resultSet = MySQLGetAllAssoc(sprintf("SHOW TABLES FROM `%s`", DATABASE_NAME));
+    foreach ($resultSet as $row)
     {
-        $tables[$row[0]] = true;
+        $tableName = reset($row);
+        $tables[$tableName] = true;
     }
 
     /* Select CATS database. */
@@ -1177,6 +1178,30 @@ function MySQLQuery($query, $ignoreErrors = false)
     }
 
     return $queryResult;
+}
+
+function MySQLGetAssoc($query, $ignoreErrors = false)
+{
+    global $db;
+
+    if (!$db->query($query, $ignoreErrors))
+    {
+        return array();
+    }
+
+    return $db->getAssoc();
+}
+
+function MySQLGetAllAssoc($query, $ignoreErrors = false)
+{
+    global $db;
+
+    if (!$db->query($query, $ignoreErrors))
+    {
+        return array();
+    }
+
+    return $db->getAllAssoc();
 }
 
 function MySQLQueryMultiple($SQLData, $delimiter = ';')
