@@ -402,12 +402,12 @@ class CATSSchema
              ',
              /* This update needs hand holding.
              '124' => 'PHP:
-                include_once(\'modules/install/scripts/114.php\');
+                include_once(__DIR__ . \'/scripts/114.php\');
                 update_114($db);
              ',*/
              '150' => 'PHP:
                 $badFileExtensions = array(\'shtml\', \'php\', \'php5\', \'php4\', \'cgi\', \'pl\', \'py\', \'phps\');
-                include_once(\'modules/install/scripts/150.php\');
+                include_once(__DIR__ . \'/scripts/150.php\');
                 update_150($db);
              ',
              '153' => '
@@ -1322,7 +1322,7 @@ class CATSSchema
                 }
             ',
             '363' => 'PHP:
-                $schemaNewCareerPortal = @file_get_contents(\'modules/install/scripts/359.sql\');
+                $schemaNewCareerPortal = @file_get_contents(__DIR__ . \'/scripts/359.sql\');
                 $db->queryMultiple($schemaNewCareerPortal, ";\n");
             ',
             '364' => '
@@ -1414,7 +1414,7 @@ class CATSSchema
                 AND data_item_id NOT IN (SELECT joborder_id FROM joborder);
             ',
             '372' => 'PHP:
-                include_once(\'modules/install/scripts/372.php\');
+                include_once(__DIR__ . \'/scripts/372.php\');
                 update_372($db);
             ',
             '373' => '

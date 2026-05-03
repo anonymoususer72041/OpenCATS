@@ -25,7 +25,7 @@
  * $Id: CATSUI.php 1479 2007-01-17 00:22:21Z will $
  */
 
-include_once(LEGACY_ROOT . '/modules/install/Schema.php');
+include_once(LEGACY_ROOT . '/legacy-migrations/LegacyMigrations.php');
 
 class CATSUI extends UserInterface
 {
