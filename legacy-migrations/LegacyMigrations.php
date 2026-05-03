@@ -1447,6 +1447,21 @@ class CATSSchema
                 SET short_description = \'Not reached\'
                 WHERE activity_type_id = 100;
             ',
+            '377' => '
+                CREATE TABLE IF NOT EXISTS `phinxlog` (
+                  `version` bigint(20) NOT NULL,
+                  `migration_name` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+                  `start_time` timestamp NULL DEFAULT NULL,
+                  `end_time` timestamp NULL DEFAULT NULL,
+                  `breakpoint` tinyint(1) NOT NULL DEFAULT \'0\',
+                  PRIMARY KEY (`version`)
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+                INSERT IGNORE INTO `phinxlog`
+                    (`version`, `migration_name`, `start_time`, `end_time`, `breakpoint`)
+                VALUES
+                    (20260503000000, \'CreateInitialSchema\', NOW(), NOW(), 0);
+            ',
 
         );
     }
