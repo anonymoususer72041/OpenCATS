@@ -7,6 +7,7 @@
         "ckeditor/ckeditor": "^4.25.1",
         "neutron/sphinxsearch-api": "^2.0.8",
         "phpmailer/phpmailer": "^7.0.2",
+        "robmorgan/phinx": "^0.13.4",
         "setasign/fpdf": "^1.9.0"
     },
     "require-dev": {
