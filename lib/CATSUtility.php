@@ -48,7 +48,7 @@ class CATSUtility
      *
      * @return string CATS version information.
      */
-    public static function getVersion()
+    public function getVersion()
     {
         return CATS_VERSION;
     }
@@ -61,7 +61,7 @@ class CATSUtility
      *
      * @return integer CATS version number.
      */
-    public static function getVersionAsInteger()
+    public function getVersionAsInteger()
     {
         $versionString = CATS_VERSION;
 
@@ -91,7 +91,7 @@ class CATSUtility
      *
      * @return integer CATS SVN revision or 0 if no metadata exists.
      */
-    public static function getBuild()
+    public function getBuild()
     {
         if (!file_exists('.svn/entries'))
         {
@@ -135,7 +135,7 @@ class CATSUtility
      * @param string New value to assign to setting.
      * @return boolean Was the setting changed successfully?
      */
-    public static function changeConfigSetting($name, $value)
+    public function changeConfigSetting($name, $value)
     {
         /* Make sure we can read and write to config.php. */
         if (!is_readable('config.php') || !is_writeable('config.php'))
@@ -183,7 +183,7 @@ class CATSUtility
      * @param array GET variable separator.
      * @return string Filtered GET query string.
      */
-    public static function getFilteredGET($remove = array(), $separator = '&')
+    public function getFilteredGET($remove = array(), $separator = '&')
     {
         $getVars = $_GET;
 
@@ -210,7 +210,7 @@ class CATSUtility
      * @param string $html HTML fragment to sanitize.
      * @return string Sanitized HTML fragment.
      */
-    public static function sanitizeHtmlAllowlist($html)
+    public function sanitizeHtmlAllowlist($html)
     {
         if ($html === null)
         {
@@ -405,7 +405,7 @@ class CATSUtility
      * @param string Relative URI.
      * @return string Absolute URI.
      */
-    public static function getAbsoluteURI($relativePath = '')
+    public function getAbsoluteURI($relativePath = '')
     {
         //FIXME: This causes problems on IIS. Check forums for reporters. bradoyler and one more...
         if (!isset($_SERVER['HTTPS']) || empty($_SERVER['HTTPS']) ||
@@ -441,13 +441,13 @@ class CATSUtility
      * @param string Relative URI.
      * @return void
      */
-    public static function transferRelativeURI($relativePath)
+    public function transferRelativeURI($relativePath)
     {
-        $newLocation = self::getAbsoluteURI(
+        $newLocation = $this->getAbsoluteURI(
             (new CATSUtility())->getIndexName() . '?' . $relativePath
         );
 
-        self::transferURL($newLocation);
+        $this->transferURL($newLocation);
     }
 
     /**
@@ -456,7 +456,7 @@ class CATSUtility
      * @param string URL.
      * @return void
      */
-    public static function transferURL($URL)
+    public function transferURL($URL)
     {
         session_write_close();
 
@@ -470,7 +470,7 @@ class CATSUtility
      *
      * @return string URL.
      */
-    public static function getNonSSLDirectoryURL()
+    public function getNonSSLDirectoryURL()
     {
         // FIXME: Make this work with ajax.php
 
@@ -489,7 +489,7 @@ class CATSUtility
      *
      * @return string Filename of index.php.
      */
-    public static function getIndexName()
+    public function getIndexName()
     {
         /* This shouldn't happen, but try to recover gracefully if it does. */
         if (!isset($_SERVER['PHP_SELF']))
@@ -533,7 +533,7 @@ class CATSUtility
      *
      * @return string directory containing index.php.
      */
-    public static function getDirectoryName()
+    public function getDirectoryName()
     {
         $parts = explode('/', $_SERVER['PHP_SELF']);
         unset ($parts[count($parts)-1]);
@@ -551,12 +551,12 @@ class CATSUtility
      *
      * @return string Full URL of index.php.
      */
-    public static function getNonSSLIndexURL()
+    public function getNonSSLIndexURL()
     {
         $parts = explode('/', $_SERVER['PHP_SELF']);
         unset($parts[count($parts) - 1]);
 
-        $parts[] = self::getIndexName();
+        $parts[] = $this->getIndexName();
         $path = implode('/', $parts);
 
         $url = sprintf('http://%s%s', $_SERVER['HTTP_HOST'], $path);
@@ -576,11 +576,11 @@ class CATSUtility
      * @param FIXME DOCUMENT ME
      * @return string Full URL of index.php.
      */
-    public static function getSSLIndexURL($cutTopDir = false)
+    public function getSSLIndexURL($cutTopDir = false)
     {
         if (!SSL_ENABLED || !isset($_SERVER['HTTP_HOST']))
         {
-            return self::getIndexName();
+            return $this->getIndexName();
         }
 
         // FIXME: Document / clean up cut top dir stuff.
@@ -608,7 +608,7 @@ class CATSUtility
      *
      * @return void
      */
-    public static function printSSLSeals()
+    public function printSSLSeals()
     {
         // FIXME: Maybe I go in TemplateUtility?
 
@@ -625,7 +625,7 @@ class CATSUtility
      *
      * @return boolean Is SSL enabled?
      */
-    public static function isSSL()
+    public function isSSL()
     {
         if (isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on')
         {
@@ -640,7 +640,7 @@ class CATSUtility
      *
      * @return boolean Is the SOAP extension installed?
      */
-    public static function isSOAPEnabled()
+    public function isSOAPEnabled()
     {
         if (extension_loaded('soap') && class_exists('SoapClient'))
         {
