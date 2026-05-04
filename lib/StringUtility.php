@@ -79,7 +79,7 @@ class StringUtility
      * @param string to test
      * @return boolean is most likely a phone number
      */
-    public static function isPhoneNumber($string)
+    public function isPhoneNumber($string)
     {
         if (preg_match('/^'
             . self::matchPHCountryCode . self::matchPHSeparator . self::matchPHAreaCode
@@ -99,7 +99,7 @@ class StringUtility
      * @param string to test
      * @return boolean most likely contains a phone number
      */
-    public static function containsPhoneNumber($string)
+    public function containsPhoneNumber($string)
     {
         if (preg_match('/'
             . self::matchPHCountryCode . self::matchPHSeparator . self::matchPHAreaCode
@@ -120,7 +120,7 @@ class StringUtility
      * @param string $string String to test.
      * @return string Normalized E.164 phone number or '' if not found.
      */
-	public static function extractPhoneNumber($string)
+	public function extractPhoneNumber($string)
 	{
 		/* 1) Trim leading / trailing whitespace. */
         $string = trim((string) $string);
@@ -161,7 +161,7 @@ class StringUtility
          *    - strip leading trunk zeros
          *    - build the E.164 representation
          */
-        $countryCode = self::getDefaultPhoneCountryCode();
+        $countryCode = $this->getDefaultPhoneCountryCode();
 
         if ($countryCode === '')
         {
@@ -194,7 +194,7 @@ class StringUtility
      *
      * @return string E.164 country calling code (for example "+49").
      */
-    private static function getDefaultPhoneCountryCode()
+    private function getDefaultPhoneCountryCode()
     {
         /*
          * Try to read the default phone country code from the current
@@ -245,7 +245,7 @@ class StringUtility
      * @param string to test
      * @return array matches or empty array if not found
      */
-    public static function extractAllPhoneNumbers($string)
+    public function extractAllPhoneNumbers($string)
     {
         $formattedPhoneNumbers = array();
 
@@ -285,7 +285,7 @@ class StringUtility
      * @param string to test
      * @return boolean is most likely a phone number
      */
-    public static function isEmailAddress($string)
+    public function isEmailAddress($string)
     {
         if (preg_match('/^' . self::matchEmailUser . self::matchEmailAt
             . self::matchEmailHost . self::matchEmailDot
@@ -304,7 +304,7 @@ class StringUtility
      * @param string to test
      * @return boolean is most likely a phone number
      */
-    public static function containsEmailAddress($string)
+    public function containsEmailAddress($string)
     {
         if (preg_match('/' . self::matchEmailUser . self::matchEmailAt
             . self::matchEmailHost . self::matchEmailDot
@@ -322,7 +322,7 @@ class StringUtility
      * @param string to test
      * @return string e-mail address or '' if none found
      */
-    public static function extractEmailAddress($string)
+    public function extractEmailAddress($string)
     {
         if (preg_match('/' . self::matchEmailEUser . self::matchEmailAt
             . self::matchEmailEHost . self::matchEmailDot
@@ -353,7 +353,7 @@ class StringUtility
      * @param boolean trim the string after extraction?
      * @return string without e-mail addresses
      */
-    public static function removeEmailAddress($string, $trim = false)
+    public function removeEmailAddress($string, $trim = false)
     {
         $string = preg_replace('/' . self::matchEmailUser . self::matchEmailAt
                 . self::matchEmailHost . self::matchEmailDot
@@ -373,7 +373,7 @@ class StringUtility
      * @param string to test
      * @return boolean is most likely a URL
      */
-    public static function isURL($string)
+    public function isURL($string)
     {
         if (preg_match('/^' . self::matchURLProtocol .
             self::matchURLUserPassword . self::matchURLDomain .
@@ -392,7 +392,7 @@ class StringUtility
      * @param string to test
      * @return string URL or '' if none found
      */
-    public static function extractURL($string)
+    public function extractURL($string)
     {
         if (preg_match('/^(|.*\s+)' . self::matchEURLProtocol .
             self::matchEURLUserPassword . self::matchEURLDomain .
@@ -465,7 +465,7 @@ class StringUtility
      * @param string string to test
      * @return boolean is valid IP address
      */
-     public static function isIPAddress($string)
+     public function isIPAddress($string)
      {
          $octet = '(?:\d{1,2}|1\d\d|2[0-4]\d|25[0-5])';
 
@@ -482,7 +482,7 @@ class StringUtility
      *
      * @return string cleaned string
      */
-    public static function removeEmptyLines($string)
+    public function removeEmptyLines($string)
     {
         $string = preg_replace("/[\r\n]+[\s\t]*[\r\n]+/", "\n", $string);
         $string = preg_replace("/^[\s\t]*[\r\n]+/", "", $string);
@@ -497,7 +497,7 @@ class StringUtility
      *
      * @return int tokens in string
      */
-    public static function countTokens($splitCharacters, $string)
+    public function countTokens($splitCharacters, $string)
     {
         if (!strtok($string, $splitCharacters))
         {
@@ -521,7 +521,7 @@ class StringUtility
      * @param string string to split into tokens
      * @return array tokens or an empty array if no tokens are found
      */
-    public static function tokenize($splitCharacters, $string)
+    public function tokenize($splitCharacters, $string)
     {
         $tokenIndex = 0;
 
@@ -557,7 +557,7 @@ class StringUtility
      *
      * @return formatted first initial and last name.
      */
-    public static function makeInitialName($firstName, $lastName,
+    public function makeInitialName($firstName, $lastName,
         $lastCommaFirst = false, $maxLength = 1000)
     {
         if (empty($firstName) && empty($lastName))
@@ -597,7 +597,7 @@ class StringUtility
      *
      * @return formatted city and state
      */
-    public static function makeCityStateString($city, $state)
+    public function makeCityStateString($city, $state)
     {
         $city  = trim($city);
         $state = trim($state);
@@ -626,7 +626,7 @@ class StringUtility
      *
      * @return string encoded string
      */
-    public static function quotedPrintableEncode($string)
+    public function quotedPrintableEncode($string)
     {
         $string = preg_replace_callback(
             '/[^\x21-\x3C\x3E-\x7E\x09\x20]/',
@@ -649,7 +649,7 @@ class StringUtility
      * @param string unescaped string
      * @return string escaped string
      */
-    public static function escapeSingleQuotes($string)
+    public function escapeSingleQuotes($string)
     {
         return str_replace("'", "\'", $string);
     }
@@ -658,7 +658,7 @@ class StringUtility
      * escaped double-quotes inside double quotes (FIXME).
      */
     //FIXME: Document me.
-    public static function CSVLineToArray($string)
+    public function CSVLineToArray($string)
     {
         $string .= '';
         $string = trim($string);
@@ -677,7 +677,7 @@ class StringUtility
     }
 
     /* Implemented like JS substring function. */
-    public static function JSSubString($string, $start, $end)
+    public function JSSubString($string, $start, $end)
     {
         return substr($string, $start, ($end - $start));
     }
@@ -691,7 +691,7 @@ class StringUtility
      * @param string haystack
      * @return string replaced string
      */
-    public static function replaceOnce($needle, $replace, $haystack)
+    public function replaceOnce($needle, $replace, $haystack)
     {
         $potision = strpos($haystack, $needle);
 
@@ -703,7 +703,7 @@ class StringUtility
         return substr_replace($haystack, $replace, $potision, strlen($needle));
     }
 
-    public static function cardinal($x)
+    public function cardinal($x)
     {
         if ($x <= 0) return 'zero';
         $y = ($x % 20);
@@ -714,59 +714,59 @@ class StringUtility
         {
             $val = '';
             $z = $x - ($y*1000000);
-            if ($z > 0) $val = ' ' . (new StringUtility())->cardinal($z);
-            return (new StringUtility())->cardinal($y) . ' million' . $val;
+            if ($z > 0) $val = ' ' . $this->cardinal($z);
+            return $this->cardinal($y) . ' million' . $val;
         }
 
         if (($y=floor($x/1000)) > 0 && $y <= 999)
         {
             $val = '';
             $z = $x - ($y*1000);
-            if ($z > 0) $val = ' ' . (new StringUtility())->cardinal($z);
-            return (new StringUtility())->cardinal($y) . ' thousand' . $val;
+            if ($z > 0) $val = ' ' . $this->cardinal($z);
+            return $this->cardinal($y) . ' thousand' . $val;
         }
 
         if (($y=floor($x/100)) > 0 && $y <= 9)
         {
             $val = '';
             $z = $x - ($y*100);
-            if ($z > 0) $val = ' and ' . (new StringUtility())->cardinal($z);
-            return (new StringUtility())->cardinal($y) . ' hundred' . $val;
+            if ($z > 0) $val = ' and ' . $this->cardinal($z);
+            return $this->cardinal($y) . ' hundred' . $val;
         }
 
         switch($y=floor($x/10))
         {
             case 2:
                 $val = 'twenty';
-                if (($z = $x % ($y*10)) > 0 && $z <= 9) $val .= ' ' . (new StringUtility())->cardinal($z);
+                if (($z = $x % ($y*10)) > 0 && $z <= 9) $val .= ' ' . $this->cardinal($z);
                 return $val;
             case 3:
                 $val = 'thirty';
-                if (($z = $x % ($y*10)) > 0 && $z <= 9) $val .= ' ' . (new StringUtility())->cardinal($z);
+                if (($z = $x % ($y*10)) > 0 && $z <= 9) $val .= ' ' . $this->cardinal($z);
                 return $val;
             case 4:
                 $val = 'fourty';
-                if (($z = $x % ($y*10)) > 0 && $z <= 9) $val .= ' ' . (new StringUtility())->cardinal($z);
+                if (($z = $x % ($y*10)) > 0 && $z <= 9) $val .= ' ' . $this->cardinal($z);
                 return $val;
             case 5:
                 $val = 'fifty';
-                if (($z = $x % ($y*10)) > 0 && $z <= 9) $val .= ' ' . (new StringUtility())->cardinal($z);
+                if (($z = $x % ($y*10)) > 0 && $z <= 9) $val .= ' ' . $this->cardinal($z);
                 return $val;
             case 6:
                 $val = 'sixty';
-                if (($z = $x % ($y*10)) > 0 && $z <= 9) $val .= ' ' . (new StringUtility())->cardinal($z);
+                if (($z = $x % ($y*10)) > 0 && $z <= 9) $val .= ' ' . $this->cardinal($z);
                 return $val;
             case 7:
                 $val = 'seventy';
-                if (($z = $x % ($y*10)) > 0 && $z <= 9) $val .= ' ' . (new StringUtility())->cardinal($z);
+                if (($z = $x % ($y*10)) > 0 && $z <= 9) $val .= ' ' . $this->cardinal($z);
                 return $val;
             case 8:
                 $val = 'eighty';
-                if (($z = $x % ($y*10)) > 0 && $z <= 9) $val .= ' ' . (new StringUtility())->cardinal($z);
+                if (($z = $x % ($y*10)) > 0 && $z <= 9) $val .= ' ' . $this->cardinal($z);
                 return $val;
             case 9:
                 $val = 'ninety';
-                if (($z = $x % ($y*10)) > 0 && $z <= 9) $val .= ' ' . (new StringUtility())->cardinal($z);
+                if (($z = $x % ($y*10)) > 0 && $z <= 9) $val .= ' ' . $this->cardinal($z);
                 return $val;
         }
 
