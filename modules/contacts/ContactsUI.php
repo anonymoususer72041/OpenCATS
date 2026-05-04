@@ -313,7 +313,7 @@ class ContactsUI extends UserInterface
             foreach ($jobOrdersRS as $rowIndex => $row)
             {
                 /* Convert '00-00-00' dates to empty strings. */
-                $jobOrdersRS[$rowIndex]['startDate'] = DateUtility::fixZeroDate(
+                $jobOrdersRS[$rowIndex]['startDate'] = (new DateUtility())->fixZeroDate(
                     $jobOrdersRS[$rowIndex]['startDate']
                 );
 
@@ -1393,7 +1393,7 @@ class ContactsUI extends UserInterface
                 ? DATE_FORMAT_DDMMYY
                 : DATE_FORMAT_MMDDYY;
             if (empty($trimmedDate) ||
-                !DateUtility::validate('-', $trimmedDate, $dateFormatFlag))
+                !(new DateUtility())->validate('-', $trimmedDate, $dateFormatFlag))
             {
                 CommonErrors::fatalModal(COMMONERROR_MISSINGFIELDS, $this, 'Invalid date.');
             }
@@ -1433,7 +1433,7 @@ class ContactsUI extends UserInterface
             /* Is this a scheduled event or an all day event? */
             if ($allDay)
             {
-                $date = DateUtility::convert(
+                $date = (new DateUtility())->convert(
                     '-', $trimmedDate, $dateFormatFlag, DATE_FORMAT_YYYYMMDD
                 );
 
@@ -1474,7 +1474,7 @@ class ContactsUI extends UserInterface
                 /* Create MySQL date string w/ 24hr time (YYYY-MM-DD HH:MM:SS). */
                 $date = sprintf(
                     '%s %s',
-                    DateUtility::convert(
+                    (new DateUtility())->convert(
                         '-',
                         $trimmedDate,
                         $dateFormatFlag,

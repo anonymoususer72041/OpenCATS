@@ -869,7 +869,7 @@ class ExtraFields
                     $userDateValue = $data['value'];
                     if (!empty($userDateValue) && $userDateFormat == 'DD-MM-YY')
                     {
-                        $userDateValue = DateUtility::convert(
+                        $userDateValue = (new DateUtility())->convert(
                             '-', $userDateValue, DATE_FORMAT_MMDDYY, DATE_FORMAT_DDMMYY
                         );
                     }
@@ -917,14 +917,14 @@ class ExtraFields
                 $newValue = trim($newValue);
 
                 if (!empty($newValue) &&
-                    !DateUtility::validate('-', $newValue, $dateFormatFlag))
+                    !(new DateUtility())->validate('-', $newValue, $dateFormatFlag))
                 {
                     continue;
                 }
 
                 if (!empty($newValue))
                 {
-                    $newValue = DateUtility::convert(
+                    $newValue = (new DateUtility())->convert(
                         '-', $newValue, $dateFormatFlag, DATE_FORMAT_MMDDYY
                     );
                 }

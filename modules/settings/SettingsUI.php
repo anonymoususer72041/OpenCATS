@@ -1045,11 +1045,11 @@ class SettingsUI extends UserInterface
             CommonErrors::fatal(COMMONERROR_BADINDEX, $this, 'No user found with selected ID.');
         }
 
-        $data['successfulDate'] = DateUtility::fixZeroDate(
+        $data['successfulDate'] = (new DateUtility())->fixZeroDate(
             $data['successfulDate'], 'Never'
         );
 
-        $data['unsuccessfulDate'] = DateUtility::fixZeroDate(
+        $data['unsuccessfulDate'] = (new DateUtility())->fixZeroDate(
             $data['unsuccessfulDate'], 'Never'
         );
 
@@ -2743,11 +2743,11 @@ class SettingsUI extends UserInterface
 
         foreach ($rs as $rowIndex => $row)
         {
-            $rs[$rowIndex]['successfulDate'] = DateUtility::fixZeroDate(
+            $rs[$rowIndex]['successfulDate'] = (new DateUtility())->fixZeroDate(
                 $rs[$rowIndex]['successfulDate'], 'Never'
             );
 
-            $rs[$rowIndex]['unsuccessfulDate'] = DateUtility::fixZeroDate(
+            $rs[$rowIndex]['unsuccessfulDate'] = (new DateUtility())->fixZeroDate(
                 $rs[$rowIndex]['unsuccessfulDate'], 'Never'
             );
 

@@ -1306,13 +1306,13 @@ class CandidatesUI extends UserInterface
             : DATE_FORMAT_MMDDYY;
         if (!empty($dateAvailable))
         {
-            if (!DateUtility::validate('-', $dateAvailable, $dateFormatFlag))
+            if (!(new DateUtility())->validate('-', $dateAvailable, $dateFormatFlag))
             {
                 CommonErrors::fatal(COMMONERROR_MISSINGFIELDS, $this, 'Invalid availability date.');
             }
 
             /* Convert start_date to something MySQL can understand. */
-            $dateAvailable = DateUtility::convert(
+            $dateAvailable = (new DateUtility())->convert(
                 '-', $dateAvailable, $dateFormatFlag, DATE_FORMAT_YYYYMMDD
             );
         }
@@ -1631,7 +1631,7 @@ class CandidatesUI extends UserInterface
             }
 
             /* Convert '00-00-00' dates to empty strings. */
-            $rs[$rowIndex]['startDate'] = DateUtility::fixZeroDate(
+            $rs[$rowIndex]['startDate'] = (new DateUtility())->fixZeroDate(
                 $row['startDate']
             );
 
@@ -2779,13 +2779,13 @@ class CandidatesUI extends UserInterface
             : DATE_FORMAT_MMDDYY;
         if (!empty($dateAvailable))
         {
-            if (!DateUtility::validate('-', $dateAvailable, $dateFormatFlag))
+            if (!(new DateUtility())->validate('-', $dateAvailable, $dateFormatFlag))
             {
                 $this->$fatal('Invalid availability date.', $moduleDirectory);
             }
 
             /* Convert start_date to something MySQL can understand. */
-            $dateAvailable = DateUtility::convert(
+            $dateAvailable = (new DateUtility())->convert(
                 '-', $dateAvailable, $dateFormatFlag, DATE_FORMAT_YYYYMMDD
             );
         }
@@ -3181,7 +3181,7 @@ class CandidatesUI extends UserInterface
                 ? DATE_FORMAT_DDMMYY
                 : DATE_FORMAT_MMDDYY;
             if (empty($trimmedDate) ||
-                !DateUtility::validate('-', $trimmedDate, $dateFormatFlag))
+                !(new DateUtility())->validate('-', $trimmedDate, $dateFormatFlag))
             {
                 CommonErrors::fatalModal(COMMONERROR_MISSINGFIELDS, $this, 'Invalid date.');
             }
@@ -3220,7 +3220,7 @@ class CandidatesUI extends UserInterface
             /* Is this a scheduled event or an all day event? */
             if ($allDay)
             {
-                $date = DateUtility::convert(
+                $date = (new DateUtility())->convert(
                     '-', $trimmedDate, $dateFormatFlag, DATE_FORMAT_YYYYMMDD
                 );
 
@@ -3263,7 +3263,7 @@ class CandidatesUI extends UserInterface
                 /* Create MySQL date string w/ 24hr time (YYYY-MM-DD HH:MM:SS). */
                 $date = sprintf(
                     '%s %s',
-                    DateUtility::convert(
+                    (new DateUtility())->convert(
                         '-',
                         $trimmedDate,
                         $dateFormatFlag,

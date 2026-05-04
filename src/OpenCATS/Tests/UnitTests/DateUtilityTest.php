@@ -53,16 +53,16 @@ class DateUtilityTest extends TestCase
     function testGetStartingWeekday()
     {
         $this->assertSame(
-            DateUtility::getStartingWeekday(CALENDAR_MONTH_MARCH, 2006),
+            (new DateUtility())->getStartingWeekday(CALENDAR_MONTH_MARCH, 2006),
             CALENDAR_DAY_WEDNSDAY
             );
 
         $this->assertSame(
-            DateUtility::getStartingWeekday(CALENDAR_MONTH_MARCH, 1987),
+            (new DateUtility())->getStartingWeekday(CALENDAR_MONTH_MARCH, 1987),
             CALENDAR_DAY_SUNDAY
             );
         $this->assertSame(
-            DateUtility::getStartingWeekday(CALENDAR_MONTH_APRIL, 1987),
+            (new DateUtility())->getStartingWeekday(CALENDAR_MONTH_APRIL, 1987),
             CALENDAR_DAY_WEDNSDAY
             );
     }
@@ -71,27 +71,27 @@ class DateUtilityTest extends TestCase
     function testGetDaysInMonth()
     {
         $this->assertSame(
-            DateUtility::getDaysInMonth(CALENDAR_MONTH_MARCH, 2006),
+            (new DateUtility())->getDaysInMonth(CALENDAR_MONTH_MARCH, 2006),
             31
             );
 
         $this->assertSame(
-            DateUtility::getDaysInMonth(CALENDAR_MONTH_MARCH, 1987),
-            DateUtility::getDaysInMonth(CALENDAR_MONTH_MARCH, 2006)
+            (new DateUtility())->getDaysInMonth(CALENDAR_MONTH_MARCH, 1987),
+            (new DateUtility())->getDaysInMonth(CALENDAR_MONTH_MARCH, 2006)
             );
 
         $this->assertSame(
-            DateUtility::getDaysInMonth(CALENDAR_MONTH_APRIL, 1987),
+            (new DateUtility())->getDaysInMonth(CALENDAR_MONTH_APRIL, 1987),
             30
             );
 
         /* Leap years... */
         $this->assertSame(
-            DateUtility::getDaysInMonth(CALENDAR_MONTH_FEBRUARY, 2008),
+            (new DateUtility())->getDaysInMonth(CALENDAR_MONTH_FEBRUARY, 2008),
             29
             );
         $this->assertSame(
-            DateUtility::getDaysInMonth(CALENDAR_MONTH_FEBRUARY, 2006),
+            (new DateUtility())->getDaysInMonth(CALENDAR_MONTH_FEBRUARY, 2006),
             28
             );
     }
@@ -100,51 +100,51 @@ class DateUtilityTest extends TestCase
     function testGetMonthName()
     {
         $this->assertSame(
-            DateUtility::getMonthName(CALENDAR_MONTH_JANUARY),
+            (new DateUtility())->getMonthName(CALENDAR_MONTH_JANUARY),
             'January'
             );
         $this->assertSame(
-            DateUtility::getMonthName(CALENDAR_MONTH_FEBRUARY),
+            (new DateUtility())->getMonthName(CALENDAR_MONTH_FEBRUARY),
             'February'
             );
         $this->assertSame(
-            DateUtility::getMonthName(CALENDAR_MONTH_MARCH),
+            (new DateUtility())->getMonthName(CALENDAR_MONTH_MARCH),
             'March'
             );
         $this->assertSame(
-            DateUtility::getMonthName(CALENDAR_MONTH_APRIL),
+            (new DateUtility())->getMonthName(CALENDAR_MONTH_APRIL),
             'April'
             );
         $this->assertSame(
-            DateUtility::getMonthName(CALENDAR_MONTH_MAY),
+            (new DateUtility())->getMonthName(CALENDAR_MONTH_MAY),
             'May'
             );
         $this->assertSame(
-            DateUtility::getMonthName(CALENDAR_MONTH_JUNE),
+            (new DateUtility())->getMonthName(CALENDAR_MONTH_JUNE),
             'June'
             );
         $this->assertSame(
-            DateUtility::getMonthName(CALENDAR_MONTH_JULY),
+            (new DateUtility())->getMonthName(CALENDAR_MONTH_JULY),
             'July'
             );
         $this->assertSame(
-            DateUtility::getMonthName(CALENDAR_MONTH_AUGUST),
+            (new DateUtility())->getMonthName(CALENDAR_MONTH_AUGUST),
             'August'
             );
         $this->assertSame(
-            DateUtility::getMonthName(CALENDAR_MONTH_SEPTEMBER),
+            (new DateUtility())->getMonthName(CALENDAR_MONTH_SEPTEMBER),
             'September'
             );
         $this->assertSame(
-            DateUtility::getMonthName(CALENDAR_MONTH_OCTOBER),
+            (new DateUtility())->getMonthName(CALENDAR_MONTH_OCTOBER),
             'October'
             );
         $this->assertSame(
-            DateUtility::getMonthName(CALENDAR_MONTH_NOVEMBER),
+            (new DateUtility())->getMonthName(CALENDAR_MONTH_NOVEMBER),
             'November'
             );
         $this->assertSame(
-            DateUtility::getMonthName(CALENDAR_MONTH_DECEMBER),
+            (new DateUtility())->getMonthName(CALENDAR_MONTH_DECEMBER),
             'December'
             );
     }
@@ -190,7 +190,7 @@ class DateUtilityTest extends TestCase
         foreach ($validDates as $key => $value)
         {
             $this->assertTrue(
-                DateUtility::validate($value[0], $value[1], $value[2]),
+                (new DateUtility())->validate($value[0], $value[1], $value[2]),
                 $value[1] . ' (Separator: ' . $value[0] . ')'
                 );
         }
@@ -198,7 +198,7 @@ class DateUtilityTest extends TestCase
         foreach ($invalidDates as $key => $value)
         {
             $this->assertFalse(
-                DateUtility::validate($value[0], $value[1], $value[2]),
+                (new DateUtility())->validate($value[0], $value[1], $value[2]),
                 $value[1] . ' (Separator: ' . $value[0] . ')'
                 );
         }
@@ -225,7 +225,7 @@ class DateUtilityTest extends TestCase
         foreach ($dates as $key => $value)
         {
             $this->assertSame(
-                DateUtility::convert($value[0], $value[1], $value[2], $value[3]),
+                (new DateUtility())->convert($value[0], $value[1], $value[2], $value[3]),
                 $value[4]
                 );
         }

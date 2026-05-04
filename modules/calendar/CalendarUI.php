@@ -99,14 +99,14 @@ class CalendarUI extends UserInterface
      */
     private function showCalendar()
     {
-        $currentHour     = DateUtility::getAdjustedDate('H');
-        $currentDay      = DateUtility::getAdjustedDate('j');
-        $currentMonth    = DateUtility::getAdjustedDate('n');
-        $currentYear     = DateUtility::getAdjustedDate('Y');
-        $currentUnixTime = DateUtility::getAdjustedDate();
-        $currentDateMDY  = DateUtility::getAdjustedDate('m-d-y');
+        $currentHour     = (new DateUtility())->getAdjustedDate('H');
+        $currentDay      = (new DateUtility())->getAdjustedDate('j');
+        $currentMonth    = (new DateUtility())->getAdjustedDate('n');
+        $currentYear     = (new DateUtility())->getAdjustedDate('Y');
+        $currentUnixTime = (new DateUtility())->getAdjustedDate();
+        $currentDateMDY  = (new DateUtility())->getAdjustedDate('m-d-y');
 
-        $currentWeek  = DateUtility::getWeekNumber($currentUnixTime) - DateUtility::getWeekNumber(
+        $currentWeek  = (new DateUtility())->getWeekNumber($currentUnixTime) - (new DateUtility())->getWeekNumber(
             mktime(0, 0, 0, $currentMonth, 1, $currentYear)
         );
 
@@ -187,8 +187,8 @@ class CalendarUI extends UserInterface
             $superUserActive = false;
         }
 
-        $startingWeekday = DateUtility::getStartingWeekday($month, $year);
-        $daysInMonth     = DateUtility::getDaysInMonth($month, $year);
+        $startingWeekday = (new DateUtility())->getStartingWeekday($month, $year);
+        $daysInMonth     = (new DateUtility())->getDaysInMonth($month, $year);
 
         $calendar = new Calendar($this->_siteID);
 
@@ -360,7 +360,7 @@ class CalendarUI extends UserInterface
             ? DATE_FORMAT_DDMMYY
             : DATE_FORMAT_MMDDYY;
         if (empty($trimmedDate) ||
-            !DateUtility::validate('-', $trimmedDate, $dateFormatFlag))
+            !(new DateUtility())->validate('-', $trimmedDate, $dateFormatFlag))
         {
             CommonErrors::fatal(COMMONERROR_BADFIELDS, $this, 'Invalid date.');
         }
@@ -418,7 +418,7 @@ class CalendarUI extends UserInterface
         /* Is this a scheduled event or an all day event? */
         if ($allDay)
         {
-            $date = DateUtility::convert(
+            $date = (new DateUtility())->convert(
                 '-', $trimmedDate, $dateFormatFlag, DATE_FORMAT_YYYYMMDD
             );
 
@@ -459,7 +459,7 @@ class CalendarUI extends UserInterface
             /* Create MySQL date string w/ 24hr time (YYYY-MM-DD HH:MM:SS). */
             $date = sprintf(
                 '%s %s',
-                DateUtility::convert(
+                (new DateUtility())->convert(
                     '-', $trimmedDate, $dateFormatFlag, DATE_FORMAT_YYYYMMDD
                 ),
                 date('H:i:00', $time)
@@ -568,7 +568,7 @@ class CalendarUI extends UserInterface
             ? DATE_FORMAT_DDMMYY
             : DATE_FORMAT_MMDDYY;
         if (empty($trimmedDate) ||
-            !DateUtility::validate('-', $trimmedDate, $dateFormatFlag))
+            !(new DateUtility())->validate('-', $trimmedDate, $dateFormatFlag))
         {
             CommonErrors::fatal(COMMONERROR_BADFIELDS, $this, 'Invalid date.');
         }
@@ -611,7 +611,7 @@ class CalendarUI extends UserInterface
         /* Is this a scheduled event or an all day event? */
         if ($allDay)
         {
-            $date = DateUtility::convert(
+            $date = (new DateUtility())->convert(
                 '-', $trimmedDate, $dateFormatFlag, DATE_FORMAT_YYYYMMDD
             );
 
@@ -652,7 +652,7 @@ class CalendarUI extends UserInterface
             /* Create MySQL date string w/ 24hr time (YYYY-MM-DD HH:MM:SS). */
             $date = sprintf(
                 '%s %s',
-                DateUtility::convert(
+                (new DateUtility())->convert(
                     '-', $trimmedDate, $dateFormatFlag, DATE_FORMAT_YYYYMMDD
                 ),
                 date('H:i:00', $time)

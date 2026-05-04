@@ -376,7 +376,7 @@ class ReportsUI extends UserInterface
         $reportParameters['periodLine'] = sprintf(
             '%s - %s',
             strtok($data['dateCreated'], ' '),
-            DateUtility::getAdjustedDate('m-d-y')
+            (new DateUtility())->getAdjustedDate('m-d-y')
         );
 
         $reportParameters['dataSet1'] = $data['pipeline'];
@@ -462,7 +462,7 @@ class ReportsUI extends UserInterface
 
         $pdf->SetFont($fontFace, '', 10);
         $pdf->SetX(25);
-        $pdf->Write(5, DateUtility::getAdjustedDate('l, F d, Y') . "\n\n\n");
+        $pdf->Write(5, (new DateUtility())->getAdjustedDate('l, F d, Y') . "\n\n\n");
 
         $pdf->SetFont($fontFace, 'B', 10);
         $pdf->SetX(25);

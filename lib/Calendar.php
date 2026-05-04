@@ -152,7 +152,7 @@ class Calendar
         /* Build an array of result set arrays for each day of the month.
          * Days without any events scheduled will have an empty array.
          */
-        $daysInMonth = DateUtility::getDaysInMonth($month, $year);
+        $daysInMonth = (new DateUtility())->getDaysInMonth($month, $year);
         for ($i = 1; $i <= $daysInMonth; ++$i)
         {
             /* See if we can find a row in the result set that has 'day' set

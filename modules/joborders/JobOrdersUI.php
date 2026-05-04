@@ -451,7 +451,7 @@ class JobOrdersUI extends UserInterface
         $data['typeDescription'] = $jobOrders->typeCodeToString($data['type']);
 
         /* Convert '00-00-00' dates to empty strings. */
-        $data['startDate'] = DateUtility::fixZeroDate(
+        $data['startDate'] = (new DateUtility())->fixZeroDate(
             $data['startDate']
         );
 
@@ -779,13 +779,13 @@ class JobOrdersUI extends UserInterface
             : DATE_FORMAT_MMDDYY;
         if (!empty($startDate))
         {
-            if (!DateUtility::validate('-', $startDate, $dateFormatFlag))
+            if (!(new DateUtility())->validate('-', $startDate, $dateFormatFlag))
             {
                 CommonErrors::fatal(COMMONERROR_MISSINGFIELDS, $this, 'Invalid start date.');
             }
 
             /* Convert start_date to something MySQL can understand. */
-            $startDate = DateUtility::convert(
+            $startDate = (new DateUtility())->convert(
                 '-', $startDate, $dateFormatFlag, DATE_FORMAT_YYYYMMDD
             );
         }
@@ -1037,14 +1037,14 @@ class JobOrdersUI extends UserInterface
             : DATE_FORMAT_MMDDYY;
         if (!empty($startDate))
         {
-            if (!DateUtility::validate('-', $startDate, $dateFormatFlag))
+            if (!(new DateUtility())->validate('-', $startDate, $dateFormatFlag))
             {
                 CommonErrors::fatal(COMMONERROR_MISSINGFIELDS, $this, 'Invalid start date.');
                 return;
             }
 
             /* Convert start_date to something MySQL can understand. */
-            $startDate = DateUtility::convert(
+            $startDate = (new DateUtility())->convert(
                 '-', $startDate, $dateFormatFlag, DATE_FORMAT_YYYYMMDD
             );
         }
@@ -1808,7 +1808,7 @@ class JobOrdersUI extends UserInterface
         foreach ($rs as $rowIndex => $row)
         {
             /* Convert '00-00-00' dates to empty strings. */
-            $rs[$rowIndex]['startDate'] = DateUtility::fixZeroDate(
+            $rs[$rowIndex]['startDate'] = (new DateUtility())->fixZeroDate(
                 $row['startDate']
             );
 
@@ -2039,7 +2039,7 @@ class JobOrdersUI extends UserInterface
             }
 
             /* Convert '00-00-00' dates to empty strings. */
-            $resultSet[$rowIndex]['startDate'] = DateUtility::fixZeroDate(
+            $resultSet[$rowIndex]['startDate'] = (new DateUtility())->fixZeroDate(
                 $resultSet[$rowIndex]['startDate']
             );
 

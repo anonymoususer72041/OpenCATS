@@ -281,7 +281,7 @@ class EmailTemplates
         if ($isLoggedIn)
         {
             $replacementStrings = array(
-                DateUtility::getAdjustedDate($dateFormat . ' g:i A'),
+                (new DateUtility())->getAdjustedDate($dateFormat . ' g:i A'),
                 $siteName,
                 $fullName,
                 '<a href="mailto:'. $email .'">'. $email .'</a>'
@@ -306,7 +306,7 @@ class EmailTemplates
             $siteName = $siteRS['name'];
 
             $replacementStrings = array(
-                DateUtility::getAdjustedDate($dateFormat . ' g:i A'),
+                (new DateUtility())->getAdjustedDate($dateFormat . ' g:i A'),
                 $siteName,
                 '',
                 '<a href="mailto:' . $email . '">' . $email . '</a>'

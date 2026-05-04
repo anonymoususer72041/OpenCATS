@@ -90,7 +90,7 @@ class RssUI extends UserInterface
             . "</rss>\n",
             $title,
             $link,
-            DateUtility::getRSSDate(),
+            (new DateUtility())->getRSSDate(),
             $errorMessage,
             $link
         );
@@ -121,7 +121,7 @@ class RssUI extends UserInterface
             . "<link>%s</link>\n"
             . "<pubDate>%s</pubDate>\n",
             CATSUtility::getAbsoluteURI(),
-            DateUtility::getRSSDate()
+            (new DateUtility())->getRSSDate()
         );
 
         foreach ($rs as $rowIndex => $row)

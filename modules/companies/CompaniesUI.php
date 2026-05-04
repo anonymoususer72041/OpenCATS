@@ -354,7 +354,7 @@ class CompaniesUI extends UserInterface
             foreach ($jobOrdersRS as $rowIndex => $row)
             {
                 /* Convert '00-00-00' dates to empty strings. */
-                $jobOrdersRS[$rowIndex]['startDate'] = DateUtility::fixZeroDate(
+                $jobOrdersRS[$rowIndex]['startDate'] = (new DateUtility())->fixZeroDate(
                     $jobOrdersRS[$rowIndex]['startDate']
                 );
 

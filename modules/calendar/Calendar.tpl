@@ -87,7 +87,7 @@
                                                     <label id="dateLabel" for="date">Date:</label>
                                                 </td>
                                                 <td nowrap="nowrap" class="tdData">
-                                                    <script type="text/javascript">DateInput('dateAdd', true, (typeof window.CATSUserDateFormat !== 'undefined' ? window.CATSUserDateFormat : 'MM-DD-YY'), '<?php echo($_SESSION['CATS']->isDateDMY() ? DateUtility::getAdjustedDate('d-m-y') : $this->currentDateMDY); ?>', -1);</script>
+                                                    <script type="text/javascript">DateInput('dateAdd', true, (typeof window.CATSUserDateFormat !== 'undefined' ? window.CATSUserDateFormat : 'MM-DD-YY'), '<?php echo($_SESSION['CATS']->isDateDMY() ? (new DateUtility())->getAdjustedDate('d-m-y') : $this->currentDateMDY); ?>', -1);</script>
                                                 </td>
                                             </tr>
 
@@ -237,7 +237,7 @@
                                                     <label id="dateLabel" for="date">Date:</label>
                                                 </td>
                                                 <td nowrap="nowrap" class="tdData">
-                                                    <script type="text/javascript">DateInput('dateEdit', true, (typeof window.CATSUserDateFormat !== 'undefined' ? window.CATSUserDateFormat : 'MM-DD-YY'), '<?php echo($_SESSION['CATS']->isDateDMY() ? DateUtility::getAdjustedDate('d-m-y') : $this->currentDateMDY); ?>', -1);</script>
+                                                    <script type="text/javascript">DateInput('dateEdit', true, (typeof window.CATSUserDateFormat !== 'undefined' ? window.CATSUserDateFormat : 'MM-DD-YY'), '<?php echo($_SESSION['CATS']->isDateDMY() ? (new DateUtility())->getAdjustedDate('d-m-y') : $this->currentDateMDY); ?>', -1);</script>
                                                 </td>
                                             </tr>
 

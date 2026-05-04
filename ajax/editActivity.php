@@ -82,7 +82,7 @@ $dateFormatFlag = $_SESSION['CATS']->isDateDMY()
     ? DATE_FORMAT_DDMMYY
     : DATE_FORMAT_MMDDYY;
 
-if (!DateUtility::validate('-', $activityDate, $dateFormatFlag))
+if (!(new DateUtility())->validate('-', $activityDate, $dateFormatFlag))
 {
     die('Invalid availability date.');
     return;
@@ -103,7 +103,7 @@ $time = strtotime(
 /* Create MySQL date string w/ 24hr time (YYYY-MM-DD HH:MM:SS). */
 $date = sprintf(
     '%s %s',
-    DateUtility::convert(
+    (new DateUtility())->convert(
         '-', $activityDate, $dateFormatFlag, DATE_FORMAT_YYYYMMDD
     ),
     date('H:i:00', $time)

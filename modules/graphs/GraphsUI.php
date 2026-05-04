@@ -199,9 +199,9 @@ class GraphsUI extends UserInterface
             0,
             0,
             0,
-            DateUtility::getAdjustedDate('m'),
-            DateUtility::getAdjustedDate('d') - DateUtility::getAdjustedDate('w') - 7,
-            DateUtility::getAdjustedDate('Y')
+            (new DateUtility())->getAdjustedDate('m'),
+            (new DateUtility())->getAdjustedDate('d') - (new DateUtility())->getAdjustedDate('w') - 7,
+            (new DateUtility())->getAdjustedDate('Y')
         );
 
         /* Get Labels. */
@@ -227,7 +227,7 @@ class GraphsUI extends UserInterface
         {
             $thisDay = mktime(0, 0, 0, $lineRS['month'], $lineRS['day'], $lineRS['year']);
             $dayOfWeek = (int) date('w', $thisDay);
-            if (DateUtility::getWeekNumber($thisDay) != DateUtility::getWeekNumber())
+            if ((new DateUtility())->getWeekNumber($thisDay) != (new DateUtility())->getWeekNumber())
             {
                 $x[$dayOfWeek]++;
             }
@@ -256,9 +256,9 @@ class GraphsUI extends UserInterface
             0,
             0,
             0,
-            DateUtility::getAdjustedDate('m'),
-            DateUtility::getAdjustedDate('d') - DateUtility::getAdjustedDate('w') - 7,
-            DateUtility::getAdjustedDate('Y')
+            (new DateUtility())->getAdjustedDate('m'),
+            (new DateUtility())->getAdjustedDate('d') - (new DateUtility())->getAdjustedDate('w') - 7,
+            (new DateUtility())->getAdjustedDate('Y')
         );
 
         /* Get labels. */
@@ -282,7 +282,7 @@ class GraphsUI extends UserInterface
         {
             $thisDay = mktime(0, 0, 0, $lineRS['month'], $lineRS['day'], $lineRS['year']);
             $dayOfWeek = (int) date('w', $thisDay);
-            if (DateUtility::getWeekNumber($thisDay) != DateUtility::getWeekNumber())
+            if ((new DateUtility())->getWeekNumber($thisDay) != (new DateUtility())->getWeekNumber())
             {
                 $x[$dayOfWeek]++;
             }
@@ -311,9 +311,9 @@ class GraphsUI extends UserInterface
             0,
             0,
             0,
-            DateUtility::getAdjustedDate('m'),
-            DateUtility::getAdjustedDate('d') - DateUtility::getAdjustedDate('w') - 7,
-            DateUtility::getAdjustedDate('Y')
+            (new DateUtility())->getAdjustedDate('m'),
+            (new DateUtility())->getAdjustedDate('d') - (new DateUtility())->getAdjustedDate('w') - 7,
+            (new DateUtility())->getAdjustedDate('Y')
         );
 
         $y = array();
@@ -336,7 +336,7 @@ class GraphsUI extends UserInterface
         {
             $thisDay = mktime(0, 0, 0, $lineRS['month'], $lineRS['day'], $lineRS['year']);
             $dayOfWeek = (int) date('w', $thisDay);
-            if (DateUtility::getWeekNumber($thisDay) != DateUtility::getWeekNumber())
+            if ((new DateUtility())->getWeekNumber($thisDay) != (new DateUtility())->getWeekNumber())
             {
                 $x[$dayOfWeek]++;
             }
@@ -545,9 +545,9 @@ class GraphsUI extends UserInterface
             0,
             0,
             0,
-            DateUtility::getAdjustedDate('m'),
-            DateUtility::getAdjustedDate('d') - DateUtility::getAdjustedDate('w') - 7,
-            DateUtility::getAdjustedDate('Y')
+            (new DateUtility())->getAdjustedDate('m'),
+            (new DateUtility())->getAdjustedDate('d') - (new DateUtility())->getAdjustedDate('w') - 7,
+            (new DateUtility())->getAdjustedDate('Y')
         );
 
         $y = array();
@@ -570,7 +570,7 @@ class GraphsUI extends UserInterface
         {
             $thisDay = mktime(0, 0, 0, $lineRS['month'], $lineRS['day'], $lineRS['year']);
             $dayOfWeek = (int) date('w', $thisDay);
-            if (DateUtility::getWeekNumber($thisDay) != DateUtility::getWeekNumber())
+            if ((new DateUtility())->getWeekNumber($thisDay) != (new DateUtility())->getWeekNumber())
             {
                 $x[$dayOfWeek]++;
             }

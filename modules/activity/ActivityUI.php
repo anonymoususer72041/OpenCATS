@@ -203,10 +203,10 @@ class ActivityUI extends UserInterface
             }
 
             /* formats start and end date for searching */
-            $startDate = DateUtility::formatSearchDate(
+            $startDate = (new DateUtility())->formatSearchDate(
                 $_GET['startMonth'], $_GET['startDay'], $_GET['startYear']
             );
-            $endDate = DateUtility::formatSearchDate(
+            $endDate = (new DateUtility())->formatSearchDate(
                 $_GET['endMonth'], $_GET['endDay']+1, $_GET['endYear']
             );
 
@@ -280,7 +280,7 @@ class ActivityUI extends UserInterface
             'year'  => date('Y')
         );
 
-        $yesterdayTimeStamp = DateUtility::subtractDaysFromDate(time(), 1);
+        $yesterdayTimeStamp = (new DateUtility())->subtractDaysFromDate(time(), 1);
         $yesterday = array(
             'month' => date('n', $yesterdayTimeStamp),
             'day'   => date('j', $yesterdayTimeStamp),

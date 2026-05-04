@@ -94,7 +94,7 @@ class XmlUI extends UserInterface
             . "</rss>\n",
             $title,
             $link,
-            DateUtility::getRSSDate(),
+            (new DateUtility())->getRSSDate(),
             $errorMessage,
             $link
         );
@@ -160,7 +160,7 @@ class XmlUI extends UserInterface
                 case 'date':
                     $templateHeader = XmlTemplate::replaceTemplateTags(
                         $tag,
-                        DateUtility::getRSSDate(),
+                        (new DateUtility())->getRSSDate(),
                         $templateHeader
                     );
                     break;
