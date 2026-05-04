@@ -2567,7 +2567,7 @@ class SettingsUI extends UserInterface
         $careerPortalSettings = new CareerPortalSettings($this->_siteID);
         $cpData = $careerPortalSettings->getAll();
         if (intval($cpData['enabled']) || !$_SESSION['CATS']->isFree() ||
-            LicenseUtility::isProfessional())
+            (new LicenseUtility())->isProfessional())
         {
             $careerPortalUnlock = true;
         }
@@ -2810,7 +2810,7 @@ class SettingsUI extends UserInterface
                         . 'Re-install PHP with the --enable-soap configuration option.<br /><br />'
                         . 'Please visit http://www.catsone.com for more support options.';
                 }
-                if (!LicenseUtility::validateProfessionalKey($key))
+                if (!(new LicenseUtility())->validateProfessionalKey($key))
                 {
                     $message = 'That is not a valid Professional membership key<br /><span style="font-size: 16px; color: #000000;">Please verify that you have the correct key and try again.</span>';
                 }
@@ -3216,7 +3216,7 @@ class SettingsUI extends UserInterface
                     }
                     else
                     {
-                        if (!LicenseUtility::validateProfessionalKey($key))
+                        if (!(new LicenseUtility())->validateProfessionalKey($key))
                         {
                             echo "That is not a valid CATS Professional license key. Please visit "
                                 . "http://www.catsone.com/professional for more information about CATS Professional.\n\n"
@@ -3241,7 +3241,7 @@ class SettingsUI extends UserInterface
         }
 
         // The key hasn't been written. But they may have manually inserted the key into their config.php, check
-        if (LicenseUtility::isLicenseValid())
+        if ((new LicenseUtility())->isLicenseValid())
         {
             echo 'Ok';
             return;
@@ -3374,7 +3374,7 @@ class SettingsUI extends UserInterface
         $siteID = $_SESSION['CATS']->getSiteID();
 
         // Echos Ok to redirect to the import stage, or Fail to go to home module
-        $files = ImportUtility::getDirectoryFiles((new FileUtility())->getUploadPath($siteID, 'massimport'));
+        $files = (new ImportUtility())->getDirectoryFiles((new FileUtility())->getUploadPath($siteID, 'massimport'));
 
         if (count($files)) echo 'Ok';
         else echo 'Fail';

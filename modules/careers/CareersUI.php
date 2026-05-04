@@ -566,7 +566,7 @@ class CareersUI extends UserInterface
                 if (!strcmp($subAction, 'resumeParse'))
                 {
                     // Check if the resume contents need to be parsed (user clicked parse contents button)
-                    if (LicenseUtility::isParsingEnabled())
+                    if ((new LicenseUtility())->isParsingEnabled())
                     {
                         $pu = new ParseUtility();
                         $fileName = isset($uploadFile) ? $uploadFile : '';
@@ -676,7 +676,7 @@ class CareersUI extends UserInterface
                 . 'style="width: 410px; height: 150px;">' . $resumeContentsEscaped . '</textarea><br /> '
                 . (
                 // If parsing is enabled, add the image link for it
-                LicenseUtility::isParsingEnabled() ?
+                (new LicenseUtility())->isParsingEnabled() ?
                     '<br /><div style="text-align: right;">'
                     . '<input type="button" value="Populate Fields ->" id="resumePopulate" onclick="resumeParse();" '.(strlen($resumeContents)?'':'disabled').' />'
                 :

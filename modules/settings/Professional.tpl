@@ -72,7 +72,7 @@ span.titleText {
 
 
 
-    <?php elseif (LicenseUtility::isProfessional()): ?>
+    <?php elseif ((new LicenseUtility())->isProfessional()): ?>
             <table>
                 <tr>
                     <td valign="top" align="left">
@@ -92,15 +92,15 @@ span.titleText {
                         <p />
                         <b>Registered to:</b>
                         <br />
-                        <?php echo LicenseUtility::getName(); ?>
+                        <?php echo (new LicenseUtility())->getName(); ?>
                         <p />
                         <b>Valid until:</b>
                         <br />
-                        <?php echo date('F j, Y', LicenseUtility::getExpirationDate()); ?>
+                        <?php echo date('F j, Y', (new LicenseUtility())->getExpirationDate()); ?>
                         <p />
                         <b>User licenses/seats:</b>
                         <br />
-                        <?php echo ucfirst((new StringUtility())->cardinal(LicenseUtility::getNumberOfSeats())); ?> (<?php echo LicenseUtility::getNumberOfSeats(); ?>)
+                        <?php echo ucfirst((new StringUtility())->cardinal((new LicenseUtility())->getNumberOfSeats())); ?> (<?php echo (new LicenseUtility())->getNumberOfSeats(); ?>)
                         </span>
                     </td>
                 </tr>

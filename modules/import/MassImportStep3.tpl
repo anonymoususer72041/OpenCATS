@@ -6,7 +6,7 @@
                     Review
                 </td>
                 <td align="right" valign="middle" class="infoFileText">
-                    <b><?php echo LicenseUtility::isParsingEnabled() ? 'Parsed and ' : ''; ?>Ready to Import</b> <?php echo number_format($cnt = count($this->documents), 0); ?>
+                    <b><?php echo (new LicenseUtility())->isParsingEnabled() ? 'Parsed and ' : ''; ?>Ready to Import</b> <?php echo number_format($cnt = count($this->documents), 0); ?>
                     resume document<?php echo $cnt != 1 ? 's' : ''; ?>
                 </td>
             </tr>
@@ -38,7 +38,7 @@
     </div>
 
     <div style="font-size: 14px;">
-        <?php if (LicenseUtility::isParsingEnabled()): ?>
+        <?php if ((new LicenseUtility())->isParsingEnabled()): ?>
             CATS has attempted to extract relevant information like contact data, education and skill sets automatically.
             This process is <b>not</b> an exact science and can sometimes guess incorrectly (or not at all). Click on a
             row above to find out more information.
@@ -53,7 +53,7 @@
     </div>
 
     <div style="text-align: right; margin-top: 20px;">
-        <input type="button" name="nextStep" id="nextStep" onclick="goStep4();" value="Import <?php if (LicenseUtility::isParsingEnabled()): ?>Candidates<?php else: ?>Resumes<?php endif; ?> ->" style="cursor: pointer;" />
+        <input type="button" name="nextStep" id="nextStep" onclick="goStep4();" value="Import <?php if ((new LicenseUtility())->isParsingEnabled()): ?>Candidates<?php else: ?>Resumes<?php endif; ?> ->" style="cursor: pointer;" />
     </div>
 
     <?php

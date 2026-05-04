@@ -956,7 +956,7 @@ class CandidatesUI extends UserInterface
         if (!eval(Hooks::get('CANDIDATE_ADD'))) return;
 
         /* If parsing is not enabled server-wide, say so. */
-        if (!LicenseUtility::isParsingEnabled())
+        if (!(new LicenseUtility())->isParsingEnabled())
         {
             $isParsingEnabled = false;
         }
@@ -980,7 +980,7 @@ class CandidatesUI extends UserInterface
             $isParsingEnabled = false;
         }
 
-        if (is_array($parsingStatus = LicenseUtility::getParsingStatus()) &&
+        if (is_array($parsingStatus = (new LicenseUtility())->getParsingStatus()) &&
             isset($parsingStatus['parseLimit']))
         {
             $parsingStatus['parseLimit'] = $parsingStatus['parseLimit'] - 1;
@@ -1010,7 +1010,7 @@ class CandidatesUI extends UserInterface
 
     public function checkParsingFunctions()
     {
-        if (LicenseUtility::isParsingEnabled())
+        if ((new LicenseUtility())->isParsingEnabled())
         {
             if (isset($_POST['documentText'])) $contents = $_POST['documentText'];
             else $contents = '';
@@ -2285,7 +2285,7 @@ class CandidatesUI extends UserInterface
 
                 foreach ($rs as $rowIndex => $row)
                 {
-                    $rs[$rowIndex]['excerpt'] = SearchUtility::searchExcerpt(
+                    $rs[$rowIndex]['excerpt'] = (new SearchUtility())->searchExcerpt(
                         $query, $row['text']
                     );
 
@@ -2385,7 +2385,7 @@ class CandidatesUI extends UserInterface
         }
 
         $candidateIDs = implode(',', (new ResultSetUtility())->getColumnValues($rs, 'candidateID'));
-        $exportForm = ExportUtility::getForm(
+        $exportForm = (new ExportUtility())->getForm(
             DATA_ITEM_CANDIDATE, $candidateIDs, 32, 9
         );
 
@@ -2441,7 +2441,7 @@ class CandidatesUI extends UserInterface
         if (!empty($data))
         {
             /* Keyword highlighting. */
-            $data['text'] = SearchUtility::makePreview($query, $data['text']);
+            $data['text'] = (new SearchUtility())->makePreview($query, $data['text']);
         }
 
         if (!eval(Hooks::get('CANDIDATE_VIEW_RESUME'))) return;
@@ -2974,7 +2974,7 @@ class CandidatesUI extends UserInterface
          * file already and just needs to be attached. The attachment has also successfully
          * been DocumentToText converted, so we know it's a good file.
          */
-        else if (LicenseUtility::isParsingEnabled())
+        else if ((new LicenseUtility())->isParsingEnabled())
         {
             /**
              * Description: User clicks "browse" and selects a resume file. User doesn't click

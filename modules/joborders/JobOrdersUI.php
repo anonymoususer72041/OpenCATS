@@ -1392,7 +1392,7 @@ class JobOrdersUI extends UserInterface
         $EEOSettings = new EEOSettings($this->_siteID);
         $EEOSettingsRS = $EEOSettings->getAll();
 
-        if (is_array($parsingStatus = LicenseUtility::getParsingStatus()) &&
+        if (is_array($parsingStatus = (new LicenseUtility())->getParsingStatus()) &&
             isset($parsingStatus['parseLimit']))
         {
             $parsingStatus['parseLimit'] = $parsingStatus['parseLimit'] - 1;
@@ -1409,7 +1409,7 @@ class JobOrdersUI extends UserInterface
         $this->_template->assign('careerPortalEnabled', $careerPortalEnabled);
         $this->_template->assign('questionnaires', $questionnaires);
         $this->_template->assign('contents', $contents);
-        $this->_template->assign('isParsingEnabled', $tmp = LicenseUtility::isParsingEnabled());
+        $this->_template->assign('isParsingEnabled', $tmp = (new LicenseUtility())->isParsingEnabled());
         $this->_template->assign('parsingStatus', $parsingStatus);
         $this->_template->assign('extraFieldRS', $extraFieldRS);
         $this->_template->assign('sourcesRS', $sourcesRS);
@@ -1850,7 +1850,7 @@ class JobOrdersUI extends UserInterface
         $query = urlencode(htmlspecialchars($query));
 
         $jobOderIDs = implode(',', (new ResultSetUtility())->getColumnValues($rs, 'jobOrderID'));
-        $exportForm = ExportUtility::getForm(
+        $exportForm = (new ExportUtility())->getForm(
             DATA_ITEM_JOBORDER, $jobOderIDs, 29, 5
         );
 

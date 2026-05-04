@@ -1392,7 +1392,7 @@ class ImportUI extends UserInterface
 
         $doc2text = new DocumentToText();
         $pu = new ParseUtility();
-        if (LicenseUtility::isParsingEnabled())
+        if ((new LicenseUtility())->isParsingEnabled())
         {
             $parsingEnabled = true;
         }
@@ -1541,7 +1541,7 @@ class ImportUI extends UserInterface
         {
             if (isset($_SESSION['CATS_PARSE_TEMP'])) unset($_SESSION['CATS_PARSE_TEMP']);
             $uploadDir = (new FileUtility())->getUploadPath($siteID, 'massimport');
-            $files = ImportUtility::getDirectoryFiles($uploadDir);
+            $files = (new ImportUtility())->getDirectoryFiles($uploadDir);
             if (is_array($files) && count($files))
             {
                 // User already has files for upload
@@ -1572,7 +1572,7 @@ class ImportUI extends UserInterface
              */
             if (isset($_SESSION['CATS_PARSE_TEMP'])) unset($_SESSION['CATS_PARSE_TEMP']);
             $uploadDir = (new FileUtility())->getUploadPath($siteID, 'massimport');
-            $files = ImportUtility::getDirectoryFiles($uploadDir);
+            $files = (new ImportUtility())->getDirectoryFiles($uploadDir);
             if ($files === -1 || !is_array($files) || !count($files))
             {
                 $this->_template->assign('errorMessage', 'You didn\'t upload any files or there was a '
@@ -1647,7 +1647,7 @@ class ImportUI extends UserInterface
         {
             // User wants to delete all files in their upload folder
             $uploadDir = (new FileUtility())->getUploadPath($siteID, 'massimport');
-            $files = ImportUtility::getDirectoryFiles($uploadDir);
+            $files = (new ImportUtility())->getDirectoryFiles($uploadDir);
             if (is_array($files) && count($files))
             {
                 foreach ($files as $file)

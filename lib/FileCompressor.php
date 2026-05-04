@@ -177,7 +177,7 @@ class ZipFileCreator
         }
         
         /* Convert our UNIX timestamp to DOS format. */
-        $DOSTime = FileCompressorUtility::UNIXToDOSTime($timestamp);
+        $DOSTime = (new FileCompressorUtility())->UNIXToDOSTime($timestamp);
 
         /* Calculate the length of the file data before compression. */
         $uncompressedLength = strlen($data);
@@ -453,13 +453,13 @@ class ZipFileCreator
         }
         
         /* Convert our UNIX timestamp to DOS format. */
-        $DOSTime = FileCompressorUtility::UNIXToDOSTime($timestamp);
+        $DOSTime = (new FileCompressorUtility())->UNIXToDOSTime($timestamp);
 
         /* Calculate the length of the file data before compression. */
         $uncompressedLength = filesize($filename);
         
         /* Calculate the CRC32 checksum of the file data to be compressed. */
-        $CRC32 = HashUtility::crc32File($filename);
+        $CRC32 = (new HashUtility())->crc32File($filename);
         
         /* Version needed to extract.
          *

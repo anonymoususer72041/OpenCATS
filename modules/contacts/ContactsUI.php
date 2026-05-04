@@ -1043,7 +1043,7 @@ class ContactsUI extends UserInterface
 
 
         $contactIDs = implode(',', (new ResultSetUtility())->getColumnValues($rs, 'contactID'));
-        $exportForm = ExportUtility::getForm(
+        $exportForm = (new ExportUtility())->getForm(
             DATA_ITEM_CONTACT, $contactIDs, 40, 15
         );
 

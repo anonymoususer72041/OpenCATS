@@ -132,12 +132,12 @@ class TemplateUtility
             // Begin top-right action block
             if (!eval(Hooks::get('TEMPLATE_LOGIN_INFO_TOP_RIGHT_UPGRADE'))) return;
 
-            if (LicenseUtility::isProfessional() &&
+            if ((new LicenseUtility())->isProfessional() &&
                 $_SESSION['CATS']->getAccessLevel(ACL::SECOBJ_ROOT) >= ACCESS_LEVEL_SA)
             {
-                if (abs(LicenseUtility::getExpirationDate() - time()) < 60*60*24*30)
+                if (abs((new LicenseUtility())->getExpirationDate() - time()) < 60*60*24*30)
                 {
-                    $daysLeft = abs(LicenseUtility::getExpirationDate() - time())/60/60/24;
+                    $daysLeft = abs((new LicenseUtility())->getExpirationDate() - time())/60/60/24;
                     echo '<a href="http://www.catsone.com/professional" target="_blank">';
                     echo '<img src="images/tabs/small_upgrade.jpg" border="0" /> ';
                     echo 'License expires in ' . number_format($daysLeft, 0) . ' days, Renew?</a>&nbsp;&nbsp;&nbsp;&nbsp;', "\n";
@@ -860,9 +860,9 @@ class TemplateUtility
         echo '</body>', "\n";
         echo '</html>', "\n";
 
-        if (LicenseUtility::isProfessional() && !rand(0,10))
+        if ((new LicenseUtility())->isProfessional() && !rand(0,10))
         {
-            if (!LicenseUtility::validateProfessionalKey(LICENSE_KEY))
+            if (!(new LicenseUtility())->validateProfessionalKey(LICENSE_KEY))
             {
                 (new CATSUtility())->changeConfigSetting('LICENSE_KEY', "''");
             }

@@ -315,7 +315,7 @@ class LoginUI extends UserInterface
         if (defined('CATS_TEST_MODE') && CATS_TEST_MODE)
         {
             // On-site wizard pages
-            if (!LicenseUtility::isLicenseValid())
+            if (!(new LicenseUtility())->isLicenseValid())
             {
                 if (defined('LICENSE_KEY') && LICENSE_KEY == '')
                 {

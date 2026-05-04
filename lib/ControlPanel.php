@@ -560,7 +560,7 @@ class ControlPanel
                 {
                     return false;
                 }
-                else if (strcmp(EncryptionUtility::decryptCreditCardNumber($dbText), $newText))
+                else if (strcmp((new EncryptionUtility())->decryptCreditCardNumber($dbText), $newText))
                 {
                     return true;
                 }
@@ -1187,7 +1187,7 @@ class ControlPanel
                 list($expireMonth, $expireYear) = explode('/', $text);
                 return '"' . sprintf('%s-%s-01', $expireYear, $expireMonth) . '"';
             case WFT_CC_NUMBER:
-                return '"' . addslashes(EncryptionUtility::encryptCreditCardNumber($text)) . '"';
+                return '"' . addslashes((new EncryptionUtility())->encryptCreditCardNumber($text)) . '"';
             case WFT_BOOLEAN:
                 return (!strcasecmp($text, 'true') ? '1' : '0');
             case WFT_CURRENCY:
@@ -1211,7 +1211,7 @@ class ControlPanel
                 if (intval($rawData) != 0) return 'true';
                 else return 'false';
             case WFT_CC_NUMBER:
-                return EncryptionUtility::decryptCreditCardNumber($rawData);
+                return (new EncryptionUtility())->decryptCreditCardNumber($rawData);
             case WFT_DATE:
                 return date('n/j/Y', strtotime($rawData));
             case WFT_CURRENCY:
@@ -1242,7 +1242,7 @@ class ControlPanel
                 if (intval($rawData) != 0) return 'true';
                 else return 'false';
             case WFT_CC_NUMBER:
-                return EncryptionUtility::decryptCreditCardNumber($rawData);
+                return (new EncryptionUtility())->decryptCreditCardNumber($rawData);
             case WFT_DATE:
                 return date('n/j/Y', strtotime($rawData));
             case WFT_CURRENCY:

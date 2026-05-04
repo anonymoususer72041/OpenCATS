@@ -24,7 +24,7 @@ You have <?php echo number_format(count($this->documents), 0); ?> document<?php 
 
         <br /><br />
 
-        <?php if (LicenseUtility::isProfessional()): ?>
+        <?php if ((new LicenseUtility())->isProfessional()): ?>
         If you need any assistance, please contact the CATS support team.</br >
         <?php else: ?>
         If you need assistance in uploading files to your web server, contact your system administrator.<br />
@@ -60,7 +60,7 @@ You have <?php echo number_format(count($this->documents), 0); ?> document<?php 
 
 <?php endif; ?>
 
-<?php if (LicenseUtility::isParsingEnabled()): ?>
+<?php if ((new LicenseUtility())->isParsingEnabled()): ?>
 <div style="padding: 10px; margin-top: 15px; text-align: left;">
     <table cellpadding="0" cellspacing="0" border="0">
         <tr>
@@ -71,15 +71,15 @@ You have <?php echo number_format(count($this->documents), 0); ?> document<?php 
             </td>
             <td align="left" valign="top">
                 <span style="font-size: 16px;">
-                <?php if (LicenseUtility::isProfessional()): ?>
-                You are a registered CATS Professional user <b><?php echo LicenseUtility::getName(); ?></b>.
-                <?php elseif (LicenseUtility::isOpenSource()): ?>
+                <?php if ((new LicenseUtility())->isProfessional()): ?>
+                You are a registered CATS Professional user <b><?php echo (new LicenseUtility())->getName(); ?></b>.
+                <?php elseif ((new LicenseUtility())->isOpenSource()): ?>
                 <b>You are a registered open source user of CATS.</b>
                 <?php endif; ?>
                 </span>
 
                 <p />
-                <?php if ((is_array($status = LicenseUtility::getParsingStatus()) && $status['parseLimit'] == -1)): ?>
+                <?php if ((is_array($status = (new LicenseUtility())->getParsingStatus()) && $status['parseLimit'] == -1)): ?>
                     <span style="font-size: 14px; color: #333333;">
                     You have unlimited use of the Resfly parsing service, which searches your resume files for contact
                     and resume information. CATS will import all applicable resume documents as candidates.
