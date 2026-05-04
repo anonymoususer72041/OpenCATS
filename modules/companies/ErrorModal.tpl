@@ -1,5 +1,5 @@
 <?php /* $Id: ErrorModal.tpl 1889 2007-02-20 05:21:54Z will $ */ ?>
-<?php TemplateUtility::printModalHeader('Companies'); ?>
+<?php (new TemplateUtility())->printModalHeader('Companies'); ?>
     <table>
         <tr>
             <td width="3%">

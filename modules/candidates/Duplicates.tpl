@@ -10,9 +10,9 @@
 * as published by the Free Software Foundation.
 */
 ?>
-<?php TemplateUtility::printHeader('Candidates', array( 'js/highlightrows.js', 'js/export.js', 'js/dataGrid.js'), 'List of duplicates'); ?>
-<?php TemplateUtility::printHeaderBlock(); ?>
-<?php TemplateUtility::printTabs($this->active); ?>
+<?php (new TemplateUtility())->printHeader('Candidates', array( 'js/highlightrows.js', 'js/export.js', 'js/dataGrid.js'), 'List of duplicates'); ?>
+<?php (new TemplateUtility())->printHeaderBlock(); ?>
+<?php (new TemplateUtility())->printTabs($this->active); ?>
 <?php $md5InstanceName = md5($this->dataGrid->getInstanceName());?>
     <style type="text/css">
     div.addCandidateButton { background: #4172E3 url(images/nodata/candidatesButton.jpg); cursor: pointer; width: 337px; height: 67px; }
@@ -21,7 +21,7 @@
     div.addMassImportButton:hover { background: #4172E3 url(images/nodata/addMassImport-o.jpg); cursor: pointer; width: 337px; height: 67px; }
     </style>
     <div id="main">
-        <?php TemplateUtility::printQuickSearch(); ?>
+        <?php (new TemplateUtility())->printQuickSearch(); ?>
 
         <div id="contents"<?php echo !$this->totalDuplicates ? ' style="background-color: #E6EEFF; padding: 0px;"' : ''; ?>>
             <?php if ($this->totalDuplicates): ?>
@@ -155,4 +155,4 @@
     </div>
 
     <div id="bottomShadow"></div>
-<?php TemplateUtility::printFooter(); ?>
+<?php (new TemplateUtility())->printFooter(); ?>

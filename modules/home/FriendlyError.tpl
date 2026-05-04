@@ -1,6 +1,6 @@
 <?php /* $Id: FriendlyError.tpl 3718 2007-11-27 20:48:00Z will $ */ ?>
-<?php if (!$this->modal) TemplateUtility::printHeader('Support'); ?>
-<?php if (!$this->modal) TemplateUtility::printHeaderBlock(); ?>
+<?php if (!$this->modal) (new TemplateUtility())->printHeader('Support'); ?>
+<?php if (!$this->modal) (new TemplateUtility())->printHeaderBlock(); ?>
 <style type="text/css">
 div.friendlyErrorTitle {
     font-size: 16pt;
@@ -20,13 +20,13 @@ div.friendlyErrorMessage {
     <?php if (!$this->modal): ?>
     <div id="header">
         <ul id="primary">
-            <?php TemplateUtility::printTabs($this->active); ?>
+            <?php (new TemplateUtility())->printTabs($this->active); ?>
         </ul>
     </div>
     <?php endif; ?>
 
     <div id="main">
-        <?php if (!$this->modal) TemplateUtility::printQuickSearch(); ?>
+        <?php if (!$this->modal) (new TemplateUtility())->printQuickSearch(); ?>
 
         <div id="contents">
             <table style="padding: 25px;">
@@ -58,5 +58,5 @@ div.friendlyErrorMessage {
         </div>
     </div>
 <?php if (!$this->modal): ?>
-<?php TemplateUtility::printFooter(); ?>
+<?php (new TemplateUtility())->printFooter(); ?>
 <?php endif; ?>

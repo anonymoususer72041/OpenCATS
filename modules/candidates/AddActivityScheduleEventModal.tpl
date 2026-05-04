@@ -1,12 +1,12 @@
 <?php /* $Id: AddActivityScheduleEventModal.tpl $ */ ?>
 <?php if ($this->isJobOrdersMode && $this->onlyScheduleEvent): ?>
-    <?php TemplateUtility::printModalHeader('Job Orders', array('modules/candidates/activityvalidator.js', 'js/activity.js'), 'Job Orders: Schedule Event'); ?>
+    <?php (new TemplateUtility())->printModalHeader('Job Orders', array('modules/candidates/activityvalidator.js', 'js/activity.js'), 'Job Orders: Schedule Event'); ?>
 <?php elseif ($this->isJobOrdersMode): ?>
-    <?php TemplateUtility::printModalHeader('Job Orders', array('modules/candidates/activityvalidator.js', 'js/activity.js'), 'Job Orders: Log Activity'); ?>
+    <?php (new TemplateUtility())->printModalHeader('Job Orders', array('modules/candidates/activityvalidator.js', 'js/activity.js'), 'Job Orders: Log Activity'); ?>
 <?php elseif ($this->onlyScheduleEvent): ?>
-    <?php TemplateUtility::printModalHeader('Candidates', array('modules/candidates/activityvalidator.js', 'js/activity.js'), 'Candidates: Schedule Event'); ?>
+    <?php (new TemplateUtility())->printModalHeader('Candidates', array('modules/candidates/activityvalidator.js', 'js/activity.js'), 'Candidates: Schedule Event'); ?>
 <?php else: ?>
-    <?php TemplateUtility::printModalHeader('Candidates', array('modules/candidates/activityvalidator.js', 'js/activity.js'), 'Candidates: Log Activity'); ?>
+    <?php (new TemplateUtility())->printModalHeader('Candidates', array('modules/candidates/activityvalidator.js', 'js/activity.js'), 'Candidates: Log Activity'); ?>
 <?php endif; ?>
 
 <?php if (!$this->isFinishedMode): ?>

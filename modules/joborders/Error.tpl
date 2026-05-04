@@ -1,10 +1,10 @@
 <?php /* $Id: Error.tpl 3093 2007-09-24 21:09:45Z brian $ */ ?>
-<?php TemplateUtility::printHeader('Job Orders', array()); ?>
-<?php TemplateUtility::printHeaderBlock(); ?>
-<?php TemplateUtility::printTabs($this->active); ?>
+<?php (new TemplateUtility())->printHeader('Job Orders', array()); ?>
+<?php (new TemplateUtility())->printHeaderBlock(); ?>
+<?php (new TemplateUtility())->printTabs($this->active); ?>
 
     <div id="main">
-        <?php TemplateUtility::printQuickSearch(); ?>
+        <?php (new TemplateUtility())->printQuickSearch(); ?>
 
         <div id="contents">
             <table>
@@ -23,4 +23,4 @@
             </p>
         </div>
     </div>
-<?php TemplateUtility::printFooter(); ?>
+<?php (new TemplateUtility())->printFooter(); ?>

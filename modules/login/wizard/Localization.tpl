@@ -4,7 +4,7 @@
 <table class="editTable">
     <tr>
         <td style="font-size: 14px;">Time Zone</td>
-        <td style="padding-bottom: 10px;"><?php TemplateUtility::printTimeZoneSelect('timeZone', 'width: 420px;', '', $this->timeZone); ?></td>
+        <td style="padding-bottom: 10px;"><?php (new TemplateUtility())->printTimeZoneSelect('timeZone', 'width: 420px;', '', $this->timeZone); ?></td>
     </tr>
 
     <tr>

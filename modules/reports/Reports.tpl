@@ -1,9 +1,9 @@
 <?php /* $Id: Reports.tpl 3304 2007-10-25 17:31:55Z will $ */ ?>
-<?php TemplateUtility::printHeader('Reports'); ?>
-<?php TemplateUtility::printHeaderBlock(); ?>
-<?php TemplateUtility::printTabs($this->active); ?>
+<?php (new TemplateUtility())->printHeader('Reports'); ?>
+<?php (new TemplateUtility())->printHeaderBlock(); ?>
+<?php (new TemplateUtility())->printTabs($this->active); ?>
     <div id="main">
-        <?php TemplateUtility::printQuickSearch(); ?>
+        <?php (new TemplateUtility())->printQuickSearch(); ?>
 
         <div id="contents">
             <table>
@@ -386,4 +386,4 @@
             </table>
         </div>
     </div>
-<?php TemplateUtility::printFooter(); ?>
+<?php (new TemplateUtility())->printFooter(); ?>

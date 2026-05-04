@@ -1,9 +1,9 @@
 <?php /* $Id: Search.tpl 1948 2007-02-23 09:49:27Z will $ */ ?>
-<?php TemplateUtility::printHeader('Activities', array('js/highlightrows.js', 'modules/activity/validator.js', 'js/sweetTitles.js')); ?>
-<?php TemplateUtility::printHeaderBlock(); ?>
-<?php TemplateUtility::printTabs($this->active); ?>
+<?php (new TemplateUtility())->printHeader('Activities', array('js/highlightrows.js', 'modules/activity/validator.js', 'js/sweetTitles.js')); ?>
+<?php (new TemplateUtility())->printHeaderBlock(); ?>
+<?php (new TemplateUtility())->printTabs($this->active); ?>
     <div id="main">
-        <?php TemplateUtility::printQuickSearch(); ?>
+        <?php (new TemplateUtility())->printQuickSearch(); ?>
         <div id="contents">
             <table width="100%">
                 <tr>
@@ -47,7 +47,7 @@
                     </tr>
 
                     <?php foreach ($this->rs as $rowNumber => $activityData): ?>
-                        <tr class="<?php TemplateUtility::printAlternatingRowClass($rowNumber); ?>">
+                        <tr class="<?php (new TemplateUtility())->printAlternatingRowClass($rowNumber); ?>">
                             <td align="left" valign="top" nowrap="nowrap">
                                 <?php echo Template::escapeHtml($activityData['dateCreated']); ?>
                             </td>
@@ -92,4 +92,4 @@
             <?php endif; ?>
         </div>
     </div>
-<?php TemplateUtility::printFooter(); ?>
+<?php (new TemplateUtility())->printFooter(); ?>

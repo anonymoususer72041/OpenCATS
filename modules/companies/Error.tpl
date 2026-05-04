@@ -1,9 +1,9 @@
 <?php /* $Id: Error.tpl 1889 2007-02-20 05:21:54Z will $ */ ?>
-<?php TemplateUtility::printHeader('Companies'); ?>
-<?php TemplateUtility::printHeaderBlock(); ?>
-<?php TemplateUtility::printTabs($this->active); ?>
+<?php (new TemplateUtility())->printHeader('Companies'); ?>
+<?php (new TemplateUtility())->printHeaderBlock(); ?>
+<?php (new TemplateUtility())->printTabs($this->active); ?>
     <div id="main">
-        <?php TemplateUtility::printQuickSearch(); ?>
+        <?php (new TemplateUtility())->printQuickSearch(); ?>
 
         <div id="contents">
             <table>
@@ -22,4 +22,4 @@
             </p>
         </div>
     </div>
-<?php TemplateUtility::printFooter(); ?>
+<?php (new TemplateUtility())->printFooter(); ?>

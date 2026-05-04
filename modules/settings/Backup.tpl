@@ -1,9 +1,9 @@
 <?php /* $Id: Backup.tpl 3582 2007-11-12 22:58:48Z brian $ */ ?>
-<?php TemplateUtility::printHeader('Settings', array('js/backup.js')); ?>
-<?php TemplateUtility::printHeaderBlock(); ?>
-<?php TemplateUtility::printTabs($this->active, $this->subActive); ?>
+<?php (new TemplateUtility())->printHeader('Settings', array('js/backup.js')); ?>
+<?php (new TemplateUtility())->printHeaderBlock(); ?>
+<?php (new TemplateUtility())->printTabs($this->active, $this->subActive); ?>
     <div id="main">
-        <?php TemplateUtility::printQuickSearch(); ?>
+        <?php (new TemplateUtility())->printQuickSearch(); ?>
 
         <div id="contents">
             <table>
@@ -87,4 +87,4 @@
 
         </div>
     </div>
-<?php TemplateUtility::printFooter(); ?>
+<?php (new TemplateUtility())->printFooter(); ?>

@@ -5,9 +5,9 @@
     <head>
         <title>OpenCATS - Login</title>
         <meta http-equiv="Content-Type" content="text/html; charset=<?php echo(HTML_ENCODING); ?>">
-        <style type="text/css" media="all">@import "<?php echo TemplateUtility::getVersionedAssetURL('modules/login/login.css'); ?>";</style>
-        <script type="text/javascript" src="<?php echo TemplateUtility::getVersionedAssetURL('js/lib.js'); ?>"></script>
-        <script type="text/javascript" src="<?php echo TemplateUtility::getVersionedAssetURL('modules/login/validator.js'); ?>"></script>
+        <style type="text/css" media="all">@import "<?php echo (new TemplateUtility())->getVersionedAssetURL('modules/login/login.css'); ?>";</style>
+        <script type="text/javascript" src="<?php echo (new TemplateUtility())->getVersionedAssetURL('js/lib.js'); ?>"></script>
+        <script type="text/javascript" src="<?php echo (new TemplateUtility())->getVersionedAssetURL('modules/login/validator.js'); ?>"></script>
     </head>
 
     <body>

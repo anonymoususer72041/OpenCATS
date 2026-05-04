@@ -1,9 +1,9 @@
 <?php /* $Id: Home.tpl 3563 2007-11-12 07:41:54Z will $ */ ?>
-<?php TemplateUtility::printHeader('Home', array('js/sweetTitles.js', 'js/dataGrid.js', 'js/dataGridFilters.js', 'js/home.js')); ?>
-<?php TemplateUtility::printHeaderBlock(); ?>
-<?php TemplateUtility::printTabs($this->active); ?>
+<?php (new TemplateUtility())->printHeader('Home', array('js/sweetTitles.js', 'js/dataGrid.js', 'js/dataGridFilters.js', 'js/home.js')); ?>
+<?php (new TemplateUtility())->printHeaderBlock(); ?>
+<?php (new TemplateUtility())->printTabs($this->active); ?>
     <div id="main" class="home">
-        <?php TemplateUtility::printQuickSearch(); ?>
+        <?php (new TemplateUtility())->printQuickSearch(); ?>
 
         <div id="contents" style="padding-top: 10px;">
 
@@ -37,7 +37,7 @@
                                 <th align="left" style="font-size:11px;">Date</th>
                             </tr>
                             <?php foreach($this->placedRS as $index => $data): ?>
-                            <tr class="<?php TemplateUtility::printAlternatingRowClass($index); ?>">
+                            <tr class="<?php (new TemplateUtility())->printAlternatingRowClass($index); ?>">
                                 <td style="font-size:11px;"><a href="<?php echo((new CATSUtility())->getIndexName()); ?>?m=candidates&amp;a=show&amp;candidateID=<?php echo($data['candidateID']); ?>"style="font-size:11px;" class="<?php echo($data['candidateClassName']); ?>"><?php $this->_($data['firstName']); ?> <?php $this->_($data['lastName']); ?></a></td>
                                 <td style="font-size:11px;"><a href="<?php echo((new CATSUtility())->getIndexName()); ?>?m=companies&amp;a=show&amp;companyID=<?php echo($data['companyID']); ?>"  style="font-size:11px;" class="<?php echo($data['companyClassName']); ?>"><?php $this->_($data['companyName']); ?></td>
                                 <td style="font-size:11px;"><?php $this->_((new StringUtility())->makeInitialName($data['userFirstName'], $data['userLastName'], false, LAST_NAME_MAXLEN)); ?></td>
@@ -85,4 +85,4 @@
             </table>
         </div>
     </div>
-<?php TemplateUtility::printFooter(); ?>
+<?php (new TemplateUtility())->printFooter(); ?>

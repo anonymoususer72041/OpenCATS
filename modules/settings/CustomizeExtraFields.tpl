@@ -1,9 +1,9 @@
 <?php /* $Id: CustomizeExtraFields.tpl 3660 2007-11-19 18:26:19Z brian $ */ ?>
-<?php TemplateUtility::printHeader('Settings', array('js/highlightrows.js', 'modules/settings/validator.js', 'js/listEditor.js')); ?>
-<?php TemplateUtility::printHeaderBlock(); ?>
-<?php TemplateUtility::printTabs($this->active, ''); ?>
+<?php (new TemplateUtility())->printHeader('Settings', array('js/highlightrows.js', 'modules/settings/validator.js', 'js/listEditor.js')); ?>
+<?php (new TemplateUtility())->printHeaderBlock(); ?>
+<?php (new TemplateUtility())->printTabs($this->active, ''); ?>
     <div id="main">
-        <?php TemplateUtility::printQuickSearch(); ?>
+        <?php (new TemplateUtility())->printQuickSearch(); ?>
 
         <div id="contents">
             <table>
@@ -49,7 +49,7 @@
                                 <script type="text/javascript">
                                 
                                     //TODO: Document me.
-                                    var alternatingClassVariable<?php echo($index); ?> = "<?php TemplateUtility::printAlternatingRowClass(count($data['RS'])); ?>";
+                                    var alternatingClassVariable<?php echo($index); ?> = "<?php (new TemplateUtility())->printAlternatingRowClass(count($data['RS'])); ?>";
                                     var onIndex<?php echo($index); ?> = <?php echo(count($data['RS'])); ?>;
                                     function alternatingClass<?php echo($index); ?>()
                                     {
@@ -458,7 +458,7 @@
                                         </tr>
                                     </thead>
                                     <?php foreach($data['RS'] as $rsIndex => $rsData): ?>
-                                        <tr class="<?php TemplateUtility::printAlternatingRowClass($rsIndex); ?>" id="table<?php echo($index); ?>row<?php echo($rsIndex); ?>">
+                                        <tr class="<?php (new TemplateUtility())->printAlternatingRowClass($rsIndex); ?>" id="table<?php echo($index); ?>row<?php echo($rsIndex); ?>">
                                             <td>
                                                 <a href="javascript:void(0);" onclick="deleteRow<?php echo($index); ?>(<?php echo($rsIndex); ?>, urlDecode('<?php echo(urlencode($rsData['fieldName'])); ?>'));"  style="padding:0px;">
                                                     <img src="images/actions/delete.gif" border="0" style="padding:0px;"/>
@@ -537,4 +537,4 @@
             </form>
         </div>
     </div>
-<?php TemplateUtility::printFooter(); ?>
+<?php (new TemplateUtility())->printFooter(); ?>

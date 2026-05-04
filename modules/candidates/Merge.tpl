@@ -10,7 +10,7 @@
 * as published by the Free Software Foundation.
 */
  ?>
-<?php TemplateUtility::printModalHeader('Candidates', array(), 'Select information to keep in merge duplicates'); ?>
+<?php (new TemplateUtility())->printModalHeader('Candidates', array(), 'Select information to keep in merge duplicates'); ?>
 
     <?php if (!$this->isFinishedMode): ?>
 

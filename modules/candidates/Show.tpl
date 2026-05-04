@@ -4,14 +4,14 @@ use OpenCATS\UI\CandidateQuickActionMenu;
 use OpenCATS\UI\CandidateDuplicateQuickActionMenu;
 ?>
 <?php if ($this->isPopup): ?>
-    <?php TemplateUtility::printHeader('Candidate - ' . $this->data['firstName'] . ' ' . $this->data['lastName'], array( 'js/activity.js', 'js/sorttable.js', 'js/match.js', 'js/lib.js', 'js/pipeline.js', 'js/attachment.js', 'modules/candidates/quickAction-candidates.js')); ?>
+    <?php (new TemplateUtility())->printHeader('Candidate - ' . $this->data['firstName'] . ' ' . $this->data['lastName'], array( 'js/activity.js', 'js/sorttable.js', 'js/match.js', 'js/lib.js', 'js/pipeline.js', 'js/attachment.js', 'modules/candidates/quickAction-candidates.js')); ?>
 <?php else: ?>
-    <?php TemplateUtility::printHeader('Candidate - ' . $this->data['firstName'] . ' ' . $this->data['lastName'], array( 'js/activity.js', 'js/sorttable.js', 'js/match.js', 'js/lib.js', 'js/pipeline.js', 'js/attachment.js', 'modules/candidates/quickAction-candidates.js', 'modules/candidates/quickAction-duplicates.js')); ?>
+    <?php (new TemplateUtility())->printHeader('Candidate - ' . $this->data['firstName'] . ' ' . $this->data['lastName'], array( 'js/activity.js', 'js/sorttable.js', 'js/match.js', 'js/lib.js', 'js/pipeline.js', 'js/attachment.js', 'modules/candidates/quickAction-candidates.js', 'modules/candidates/quickAction-duplicates.js')); ?>
     
-    <?php TemplateUtility::printHeaderBlock(); ?>
-    <?php TemplateUtility::printTabs($this->active); ?>
+    <?php (new TemplateUtility())->printHeaderBlock(); ?>
+    <?php (new TemplateUtility())->printTabs($this->active); ?>
         <div id="main">
-            <?php TemplateUtility::printQuickSearch(); ?>
+            <?php (new TemplateUtility())->printQuickSearch(); ?>
 <?php endif; ?>
 
         <script type="text/javascript">
@@ -30,7 +30,7 @@ use OpenCATS\UI\CandidateDuplicateQuickActionMenu;
                                 <img src="images/wf_error.gif" alt="duplicate_warning" width="20" height="20" border="0" title="Possible duplicate" />
                                 <?php foreach($this->data['isDuplicate'] as $item): ?>
                                     <a href="<?php echo Template::escapeUrl((new CATSUtility())->getIndexName() . '?m=candidates&a=show&candidateID=' . $item['duplicateTo']); ?>" target="_blank">Duplicate</a>
-                                    <?php TemplateUtility::printSingleQuickActionMenu(new CandidateDuplicateQuickActionMenu(
+                                    <?php (new TemplateUtility())->printSingleQuickActionMenu(new CandidateDuplicateQuickActionMenu(
                                         DATA_ITEM_DUPLICATE,
                                         $this->data['candidateID'],
                                         $_SESSION['CATS']->getAccessLevel('candidates.duplicates'),
@@ -82,7 +82,7 @@ use OpenCATS\UI\CandidateDuplicateQuickActionMenu;
                                         <?php if ($this->data['isActive'] != 1): ?>
                                             &nbsp;<span style="color:orange;">(INACTIVE)</span>
                                         <?php endif; ?>
-                                        <?php TemplateUtility::printSingleQuickActionMenu(new CandidateQuickActionMenu(DATA_ITEM_CANDIDATE, $this->data['candidateID'], $_SESSION['CATS']->getAccessLevel('candidates.edit'))); ?>
+                                        <?php (new TemplateUtility())->printSingleQuickActionMenu(new CandidateQuickActionMenu(DATA_ITEM_CANDIDATE, $this->data['candidateID'], $_SESSION['CATS']->getAccessLevel('candidates.edit'))); ?>
                                     </span>
                                 </td>
                             </tr>
@@ -517,7 +517,7 @@ use OpenCATS\UI\CandidateDuplicateQuickActionMenu;
                 </tr>
 
                 <?php foreach ($this->pipelinesRS as $rowNumber => $pipelinesData): ?>
-                    <tr class="<?php TemplateUtility::printAlternatingRowClass($rowNumber); ?>" id="pipelineRow<?php echo($rowNumber); ?>">
+                    <tr class="<?php (new TemplateUtility())->printAlternatingRowClass($rowNumber); ?>" id="pipelineRow<?php echo($rowNumber); ?>">
                         <td valign="top">
                             <span id="pipelineOpen<?php echo($rowNumber); ?>">
                                 <a href="javascript:void(0);" onclick="document.getElementById('pipelineDetails<?php echo($rowNumber); ?>').style.display=''; document.getElementById('pipelineClose<?php echo($rowNumber); ?>').style.display = ''; document.getElementById('pipelineOpen<?php echo($rowNumber); ?>').style.display = 'none'; PipelineDetails_populate(<?php echo($pipelinesData['candidateJobOrderID']); ?>, 'pipelineInner<?php echo($rowNumber); ?>', <?php echo Template::escapeJsAttr($this->sessionCookie); ?>);">
@@ -578,7 +578,7 @@ use OpenCATS\UI\CandidateDuplicateQuickActionMenu;
                         </td>
 <?php endif; ?>
                     </tr>
-                    <tr class="<?php TemplateUtility::printAlternatingRowClass($rowNumber); ?>" id="pipelineDetails<?php echo($rowNumber); ?>" style="display:none;">
+                    <tr class="<?php (new TemplateUtility())->printAlternatingRowClass($rowNumber); ?>" id="pipelineDetails<?php echo($rowNumber); ?>" style="display:none;">
                         <td colspan="11" align="center">
                             <table width="98%" border="1" class="detailsOutside" style="margin: 5px;">
                                 <tr>
@@ -612,7 +612,7 @@ use OpenCATS\UI\CandidateDuplicateQuickActionMenu;
                     <th align="left" width="250">Name</th>
                 </tr>
                 <?php foreach($this->lists as $rowNumber => $list): ?>
-                    <tr class="<?php TemplateUtility::printAlternatingRowClass($rowNumber); ?>">
+                    <tr class="<?php (new TemplateUtility())->printAlternatingRowClass($rowNumber); ?>">
                         <td>
                             <a href="<?php echo Template::escapeUrl('index.php?m=lists&a=showList&savedListID=' . $list['listID']); ?>"><?php $this->_($list['name']); ?></a>
                         </td>
@@ -635,7 +635,7 @@ use OpenCATS\UI\CandidateDuplicateQuickActionMenu;
                 </tr>
 
                 <?php foreach ($this->activityRS as $rowNumber => $activityData): ?>
-                    <tr class="<?php TemplateUtility::printAlternatingRowClass($rowNumber); ?>">
+                    <tr class="<?php (new TemplateUtility())->printAlternatingRowClass($rowNumber); ?>">
                         <td align="left" valign="top" id="activityDate<?php echo Template::escapeAttr($activityData['activityID']); ?>"><?php $this->_($activityData['dateCreated']) ?></td>
                         <td align="left" valign="top" id="activityType<?php echo Template::escapeAttr($activityData['activityID']); ?>"><?php $this->_($activityData['typeDescription']) ?></td>
                         <td align="left" valign="top"><?php $this->_($activityData['enteredByAbbrName']) ?></td>
@@ -672,4 +672,4 @@ use OpenCATS\UI\CandidateDuplicateQuickActionMenu;
 
 <?php endif; ?>
 	
-<?php TemplateUtility::printFooter(); ?>
+<?php (new TemplateUtility())->printFooter(); ?>

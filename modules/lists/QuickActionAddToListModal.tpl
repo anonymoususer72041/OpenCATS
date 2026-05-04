@@ -1,5 +1,5 @@
 <?php /* $Id: QuickActionAddToListModal.tpl 3198 2007-10-14 23:36:43Z will $ */ ?>
-<?php TemplateUtility::printModalHeader('Candidates', array('js/lists.js'), 'Add to '.$this->dataItemDesc.' Static Lists'); ?>
+<?php (new TemplateUtility())->printModalHeader('Candidates', array('js/lists.js'), 'Add to '.$this->dataItemDesc.' Static Lists'); ?>
     <table>
         <tr>
             <td><!--Add to Static Lists-->Select the lists you want to add the item<?php if (count($this->dataItemIDArray) > 1): ?>s<?php endif; ?> to.</td>
@@ -8,7 +8,7 @@
             <div class="addToListListBox" id="addToListBox">
                 <input type="hidden" style="width:200px;" id="dataItemArray" value="<?php $this->_(implode(',', $this->dataItemIDArray)); ?>">
                 <?php foreach($this->savedListsRS as $index => $data): ?>
-                    <div class="<?php TemplateUtility::printAlternatingDivClass($index); ?>" id="savedListRow<?php echo($data['savedListID']); ?>">
+                    <div class="<?php (new TemplateUtility())->printAlternatingDivClass($index); ?>" id="savedListRow<?php echo($data['savedListID']); ?>">
                         <span style="float:left;">
                             <input type="checkbox" id="savedListRowCheck<?php echo($data['savedListID']); ?>">
                             &nbsp;
@@ -18,7 +18,7 @@
                             <a href="javascript:void(0);" onclick="editListRow(<?php echo($data['savedListID']); ?>);" style="text-decoration:none;"><img src="images/actions/edit.gif" border="0">&nbsp;Edit</a>
                         </span>
                     </div>
-                    <div class="<?php TemplateUtility::printAlternatingDivClass($index); ?>" style="display:none;" id="savedListRowEditing<?php echo($data['savedListID']); ?>">
+                    <div class="<?php (new TemplateUtility())->printAlternatingDivClass($index); ?>" style="display:none;" id="savedListRowEditing<?php echo($data['savedListID']); ?>">
                         <span style="float:left;">
                             <input class="inputbox" style="width:220px; padding-left:5px; margin-top:2px;" value="<?php $this->_($data['description']); ?>" id="savedListRowInput<?php echo($data['savedListID']); ?>">
                         </span>
@@ -27,11 +27,11 @@
                             <a href="javascript:void(0);" onclick="saveListRow(<?php echo($data['savedListID']); ?>, '<?php echo($this->sessionCookie); ?>');" style="text-decoration:none;"><img src="images/actions/screen.gif" border="0">&nbsp;Save</a>
                         </span>
                     </div>
-                    <div class="<?php TemplateUtility::printAlternatingDivClass($index); ?>" style="display:none;" id="savedListRowAjaxing<?php echo($data['savedListID']); ?>">
+                    <div class="<?php (new TemplateUtility())->printAlternatingDivClass($index); ?>" style="display:none;" id="savedListRowAjaxing<?php echo($data['savedListID']); ?>">
                         <img src="images/indicator.gif">&nbsp;Saving Changes, Please Wait...
                     </div>
                 <?php endforeach; ?>
-                <div class="<?php TemplateUtility::printAlternatingDivClass(count($this->savedListsRS)); ?>" style="display:none;" id="savedListNew">
+                <div class="<?php (new TemplateUtility())->printAlternatingDivClass(count($this->savedListsRS)); ?>" style="display:none;" id="savedListNew">
                     <span style="float:left;">
                         <input class="inputbox" style="width:220px; padding-left:5px; margin-top:2px;" value="" id="savedListNewInput">
                     </span>
@@ -40,7 +40,7 @@
                         <a href="javascript:void(0);" onclick="commitNewList('<?php echo($this->sessionCookie); ?>', <?php echo($this->dataItemType); ?>);" style="text-decoration:none;"><img src="images/actions/screen.gif" border="0">&nbsp;Save</a>
                     </span>
                 </div>
-                <div class="<?php TemplateUtility::printAlternatingDivClass(count($this->savedListsRS)); ?>" style="display:none;" id="savedListNewAjaxing">
+                <div class="<?php (new TemplateUtility())->printAlternatingDivClass(count($this->savedListsRS)); ?>" style="display:none;" id="savedListNewAjaxing">
                     <img src="images/indicator.gif">&nbsp;Saving Changes...
                 </div>
             </div>

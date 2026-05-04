@@ -1,6 +1,6 @@
 <?php /* $Id: SubmissionReport.tpl 1948 2007-02-23 09:49:27Z will $ */ ?>
-<?php TemplateUtility::printHeader($this->reportTitle); ?>
-<?php TemplateUtility::printHeaderBlock(); ?>
+<?php (new TemplateUtility())->printHeader($this->reportTitle); ?>
+<?php (new TemplateUtility())->printHeaderBlock(); ?>
     <table>
         <tr>
             <td width="3%">
@@ -24,7 +24,7 @@
             </tr>
 
             <?php foreach ($submissionJobOrdersData['submissionsRS'] as $rowNumber => $submissionsData): ?>
-                <tr class="<?php TemplateUtility::printAlternatingRowClass($rowNumber); ?>">
+                <tr class="<?php (new TemplateUtility())->printAlternatingRowClass($rowNumber); ?>">
                     <td valign="top" align="left"><?php $this->_($submissionsData['firstName']) ?>&nbsp;</td>
                     <td valign="top" align="left"><?php $this->_($submissionsData['lastName']) ?>&nbsp;</td>
                     <td valign="top" align="left"><?php $this->_($submissionsData['ownerFullName']) ?>&nbsp;</td>
@@ -33,4 +33,4 @@
             <?php endforeach; ?>
         </table>
     <?php endforeach; ?>
-<?php TemplateUtility::printReportFooter(); ?>
+<?php (new TemplateUtility())->printReportFooter(); ?>

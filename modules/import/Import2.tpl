@@ -1,9 +1,9 @@
 <?php /* $Id: Import2.tpl 3370 2007-11-01 16:43:07Z andrew $ */ ?>
-<?php TemplateUtility::printHeader('Import', array('modules/import/import.js')); ?>
-<?php TemplateUtility::printHeaderBlock(); ?>
-<?php TemplateUtility::printTabs($this->active, '', 'settings'); ?>
+<?php (new TemplateUtility())->printHeader('Import', array('modules/import/import.js')); ?>
+<?php (new TemplateUtility())->printHeaderBlock(); ?>
+<?php (new TemplateUtility())->printTabs($this->active, '', 'settings'); ?>
     <div id="main">
-        <?php TemplateUtility::printQuickSearch(); ?>
+        <?php (new TemplateUtility())->printQuickSearch(); ?>
 
         <div id="contents">
             <table>
@@ -130,4 +130,4 @@
         </div>
     </div>
 
-<?php TemplateUtility::printFooter(); ?>
+<?php (new TemplateUtility())->printFooter(); ?>

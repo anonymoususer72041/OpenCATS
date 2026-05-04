@@ -1931,7 +1931,7 @@ class DataGrid
             }
             else
             {
-                echo ('<tr class="' . TemplateUtility::getAlternatingRowClass($rsIndex) . '">' . "\n");
+                echo ('<tr class="' . (new TemplateUtility())->getAlternatingRowClass($rsIndex) . '">' . "\n");
             }
 
             if (!isset($this->showExportColumn) || $this->showExportColumn)

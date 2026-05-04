@@ -110,7 +110,7 @@ class Display
         {
             echo sprintf(
                 '<link rel="stylesheet" type="text/css" href="%s" />',
-                TemplateUtility::getVersionedAssetURL($sheet)
+                (new TemplateUtility())->getVersionedAssetURL($sheet)
             );
             $profileStylesheet = $sheet;
         }

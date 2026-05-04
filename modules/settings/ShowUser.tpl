@@ -1,9 +1,9 @@
 <?php /* $Id: ShowUser.tpl 2881 2007-08-14 07:47:26Z brian $ */ ?>
-<?php TemplateUtility::printHeader('Settings', 'js/sorttable.js'); ?>
-<?php TemplateUtility::printHeaderBlock(); ?>
-<?php TemplateUtility::printTabs($this->active, $this->subActive); ?>
+<?php (new TemplateUtility())->printHeader('Settings', 'js/sorttable.js'); ?>
+<?php (new TemplateUtility())->printHeaderBlock(); ?>
+<?php (new TemplateUtility())->printTabs($this->active, $this->subActive); ?>
     <div id="main">
-        <?php TemplateUtility::printQuickSearch(); ?>
+        <?php (new TemplateUtility())->printQuickSearch(); ?>
 
         <div id="contents">
             <table>
@@ -120,7 +120,7 @@
                     </thead>
 
                     <?php foreach ($this->loginAttempts as $rowNumber => $loginAttemptsData): ?>
-                        <tr class="<?php TemplateUtility::printAlternatingRowClass($rowNumber); ?>">
+                        <tr class="<?php (new TemplateUtility())->printAlternatingRowClass($rowNumber); ?>">
                             <td><?php $this->_($loginAttemptsData['ip']); ?></td>
                             <td><?php $this->_($loginAttemptsData['hostname']); ?></td>
                             <td><?php $this->_($loginAttemptsData['shortUserAgent']); ?></td>
@@ -131,4 +131,4 @@
             <?php endif; ?>
         </div>
     </div>
-<?php TemplateUtility::printFooter(); ?>
+<?php (new TemplateUtility())->printFooter(); ?>

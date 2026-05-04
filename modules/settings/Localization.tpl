@@ -1,9 +1,9 @@
 <?php /* $Id: Localization.tpl 2108 2007-03-08 09:30:00Z will $ */ ?>
-<?php TemplateUtility::printHeader('Settings', array('modules/settings/validator.js')); ?>
-<?php TemplateUtility::printHeaderBlock(); ?>
-<?php TemplateUtility::printTabs($this->active, $this->subActive); ?>
+<?php (new TemplateUtility())->printHeader('Settings', array('modules/settings/validator.js')); ?>
+<?php (new TemplateUtility())->printHeaderBlock(); ?>
+<?php (new TemplateUtility())->printTabs($this->active, $this->subActive); ?>
     <div id="main">
-        <?php TemplateUtility::printQuickSearch(); ?>
+        <?php (new TemplateUtility())->printQuickSearch(); ?>
 
         <div id="contents">
             <table>
@@ -31,7 +31,7 @@
                                     <td>Please choose your time zone.</td>
                                 </tr>
                                 <tr>
-                                    <td style="padding-bottom: 10px;"><?php TemplateUtility::printTimeZoneSelect('timeZone', 'width: 420px;', '', $this->timeZone); ?></td>
+                                    <td style="padding-bottom: 10px;"><?php (new TemplateUtility())->printTimeZoneSelect('timeZone', 'width: 420px;', '', $this->timeZone); ?></td>
                                 </tr>
 
                                 <tr>
@@ -72,4 +72,4 @@
             </table>
         </div>
     </div>
-<?php TemplateUtility::printFooter(); ?>
+<?php (new TemplateUtility())->printFooter(); ?>

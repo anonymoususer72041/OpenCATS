@@ -10,7 +10,7 @@
 * as published by the Free Software Foundation.
 */
 ?>
-<?php TemplateUtility::printModalHeader('Candidates', array(), 'Select duplicate to this Candidate'); ?>
+<?php (new TemplateUtility())->printModalHeader('Candidates', array(), 'Select duplicate to this Candidate'); ?>
 
     <?php if (!$this->isFinishedMode): ?>
         <p>Search for a candidate below, and then click on the candidate name to link
@@ -60,7 +60,7 @@
                     </tr>
 
                     <?php foreach ($this->rs as $rowNumber => $data): ?>
-                        <tr class="<?php TemplateUtility::printAlternatingRowClass($rowNumber); ?>">
+                        <tr class="<?php (new TemplateUtility())->printAlternatingRowClass($rowNumber); ?>">
                             <td align="left" valign="top">
                                 <?php if (!$data['linked']): ?>
                                     <form method="post" action="<?php echo((new CATSUtility())->getIndexName()); ?>?m=candidates&amp;a=addDuplicates&amp;getback=getback" style="display:inline;">
@@ -123,7 +123,7 @@
                     </tr>
 
                     <?php foreach ($this->rs as $rowNumber => $data): ?>
-                        <tr class="<?php TemplateUtility::printAlternatingRowClass($rowNumber); ?>">
+                        <tr class="<?php (new TemplateUtility())->printAlternatingRowClass($rowNumber); ?>">
                             <td align="left" valign="top">
                                 <?php if (!$data['linked']): ?>
                                     <form method="post" action="<?php echo((new CATSUtility())->getIndexName()); ?>?m=candidates&amp;a=addDuplicates&amp;getback=getback" style="display:inline;">

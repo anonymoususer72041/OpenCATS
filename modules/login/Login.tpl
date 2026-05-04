@@ -5,15 +5,15 @@
     <head>
         <title>opencats - Login</title>
         <meta http-equiv="Content-Type" content="text/html; charset=<?php echo(HTML_ENCODING); ?>" />
-        <style type="text/css" media="all">@import "<?php echo TemplateUtility::getVersionedAssetURL('modules/login/login.css'); ?>";</style>
-        <script type="text/javascript" src="<?php echo TemplateUtility::getVersionedAssetURL('js/lib.js'); ?>"></script>
-        <script type="text/javascript" src="<?php echo TemplateUtility::getVersionedAssetURL('modules/login/validator.js'); ?>"></script>
-        <script type="text/javascript" src="<?php echo TemplateUtility::getVersionedAssetURL('js/submodal/subModal.js'); ?>"></script>
+        <style type="text/css" media="all">@import "<?php echo (new TemplateUtility())->getVersionedAssetURL('modules/login/login.css'); ?>";</style>
+        <script type="text/javascript" src="<?php echo (new TemplateUtility())->getVersionedAssetURL('js/lib.js'); ?>"></script>
+        <script type="text/javascript" src="<?php echo (new TemplateUtility())->getVersionedAssetURL('modules/login/validator.js'); ?>"></script>
+        <script type="text/javascript" src="<?php echo (new TemplateUtility())->getVersionedAssetURL('js/submodal/subModal.js'); ?>"></script>
     </head>
 
     <body>
     <!-- CATS_LOGIN -->
-    <?php TemplateUtility::printPopupContainer(); ?>
+    <?php (new TemplateUtility())->printPopupContainer(); ?>
 <!--       <div id="headerBlock"> 
             <span id="mainLogo">opencats</span><br /> 
              <span id="subMainLogo">Applicant Tracking System</span> 
@@ -130,6 +130,6 @@
         <script type="text/javascript">
             initPopUp();
         </script>
-        <?php TemplateUtility::printCookieTester(); ?>
+        <?php (new TemplateUtility())->printCookieTester(); ?>
     </body>
 </html>

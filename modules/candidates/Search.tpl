@@ -1,9 +1,9 @@
 <?php /* $Id: Search.tpl 3813 2007-12-05 23:16:22Z brian $ */ ?>
-<?php TemplateUtility::printHeader('Candidates', array('modules/candidates/validator.js', 'js/searchSaved.js', 'js/sweetTitles.js', 'js/searchAdvanced.js', 'js/highlightrows.js', 'js/export.js')); ?>
-<?php TemplateUtility::printHeaderBlock(); ?>
-<?php TemplateUtility::printTabs($this->active); ?>
+<?php (new TemplateUtility())->printHeader('Candidates', array('modules/candidates/validator.js', 'js/searchSaved.js', 'js/sweetTitles.js', 'js/searchAdvanced.js', 'js/highlightrows.js', 'js/export.js')); ?>
+<?php (new TemplateUtility())->printHeaderBlock(); ?>
+<?php (new TemplateUtility())->printTabs($this->active); ?>
     <div id="main">
-        <?php TemplateUtility::printQuickSearch(); ?>
+        <?php (new TemplateUtility())->printQuickSearch(); ?>
 
         <div id="contents">
             <table>
@@ -25,7 +25,7 @@
                             <input type="hidden" name="a" id="moduleAction" value="search" />
                             <input type="hidden" name="getback" id="getback" value="getback" />
 
-                            <?php TemplateUtility::printSavedSearch($this->savedSearchRS); ?>
+                            <?php (new TemplateUtility())->printSavedSearch($this->savedSearchRS); ?>
 
                             <label id="searchModeLabel" for="searchMode">Search By:</label>&nbsp;
                             <select id="searchMode" name="mode" onclick="advancedSearchConsider();" class="selectBox">
@@ -37,7 +37,7 @@
                             </select>&nbsp;
                             <input type="text" class="inputbox" id="searchText" name="wildCardString" value="<?php if (!empty($this->wildCardString)) $this->_($this->wildCardString); ?>" style="width:250px" />&nbsp;*&nbsp;
                             <input type="submit" class="button" id="searchCandidates" name="searchCandidates" value="Search" />
-                            <?php TemplateUtility::printAdvancedSearch('searchByKeySkills,searchByResume'); ?>
+                            <?php (new TemplateUtility())->printAdvancedSearch('searchByKeySkills,searchByResume'); ?>
                         </form>
                     </td>
                 </tr>
@@ -87,7 +87,7 @@
 
                     <?php if (!empty($this->rs)): ?>
                         <?php foreach ($this->rs as $rowNumber => $data): ?>
-                            <tr class="<?php TemplateUtility::printAlternatingRowClass($rowNumber); ?>">
+                            <tr class="<?php (new TemplateUtility())->printAlternatingRowClass($rowNumber); ?>">
                                 <?php if ($data['candidateID'] > 0): ?>
                                     <td valign="top" nowrap>
                                         <input type="checkbox" id="checked_<?php echo($data['candidateID']); echo($data['attachmentID']); ?>" name="checked_<?php echo($data['candidateID']); ?>" />
@@ -175,7 +175,7 @@
                         </tr>
 
                         <?php foreach ($this->rs as $rowNumber => $data): ?>
-                            <tr class="<?php TemplateUtility::printAlternatingRowClass($rowNumber); ?>">
+                            <tr class="<?php (new TemplateUtility())->printAlternatingRowClass($rowNumber); ?>">
                                 <td nowrap>
                                     <input type="checkbox" id="checked_<?php echo($data['candidateID']); ?>" name="checked_<?php echo($data['candidateID']); ?>" />
                                     <a href="javascript:void(0);" onClick="window.open('<?php echo((new CATSUtility())->getIndexName()); ?>?m=candidates&amp;a=show&amp;candidateID=<?php $this->_($data['candidateID']); ?>')" title="View in New Window">
@@ -216,4 +216,4 @@
             <?php endif; ?>
         </div>
     </div>
-<?php TemplateUtility::printFooter(); ?>
+<?php (new TemplateUtility())->printFooter(); ?>

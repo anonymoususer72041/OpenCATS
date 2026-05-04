@@ -1,9 +1,9 @@
 <?php /* $Id: HotList.tpl 3430 2007-11-06 20:44:51Z will $ */ ?>
-<?php TemplateUtility::printNonSelectableHeader('Candidates', array( 'js/highlightrows.js', 'js/export.js', 'js/listEditor.js', 'js/dataGrid.js', 'js/dataGridFilters.js')); ?>
-<?php TemplateUtility::printHeaderBlock(); ?>
-<?php TemplateUtility::printTabs($this->active); ?>
+<?php (new TemplateUtility())->printNonSelectableHeader('Candidates', array( 'js/highlightrows.js', 'js/export.js', 'js/listEditor.js', 'js/dataGrid.js', 'js/dataGridFilters.js')); ?>
+<?php (new TemplateUtility())->printHeaderBlock(); ?>
+<?php (new TemplateUtility())->printTabs($this->active); ?>
     <div id="main">
-        <?php TemplateUtility::printQuickSearch(); ?>
+        <?php (new TemplateUtility())->printQuickSearch(); ?>
 
         <div id="contents">
             <table width="100%">
@@ -65,4 +65,4 @@
         </div>
     </div>
 
-<?php TemplateUtility::printFooter(); ?>
+<?php (new TemplateUtility())->printFooter(); ?>

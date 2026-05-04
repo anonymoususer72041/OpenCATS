@@ -1,9 +1,9 @@
 <?php /* $Id: Search.tpl 3676 2007-11-21 21:02:15Z brian $ */ ?>
-<?php TemplateUtility::printHeader('Companies', array('modules/companies/validator.js', 'js/searchSaved.js', 'js/sweetTitles.js', 'js/searchAdvanced.js', 'js/highlightrows.js', 'js/export.js')); ?>
-<?php TemplateUtility::printHeaderBlock(); ?>
-<?php TemplateUtility::printTabs($this->active, $this->subActive); ?>
+<?php (new TemplateUtility())->printHeader('Companies', array('modules/companies/validator.js', 'js/searchSaved.js', 'js/sweetTitles.js', 'js/searchAdvanced.js', 'js/highlightrows.js', 'js/export.js')); ?>
+<?php (new TemplateUtility())->printHeaderBlock(); ?>
+<?php (new TemplateUtility())->printTabs($this->active, $this->subActive); ?>
     <div id="main">
-        <?php TemplateUtility::printQuickSearch(); ?>
+        <?php (new TemplateUtility())->printQuickSearch(); ?>
 
         <div id="contents">
             <table>
@@ -25,7 +25,7 @@
                             <input type="hidden" name="a" id="moduleAction" value="search" />
                             <input type="hidden" name="getback" id="getback" value="getback" />
 
-                            <?php TemplateUtility::printSavedSearch($this->savedSearchRS); ?>
+                            <?php (new TemplateUtility())->printSavedSearch($this->savedSearchRS); ?>
 
                             <label id="searchModeLabel" for="searchMode">Search By:</label>&nbsp;
                             <select id="searchMode" name="mode" onclick="advancedSearchConsider();" class="selectBox">
@@ -34,7 +34,7 @@
                             </select>&nbsp;
                             <input type="text" class="inputbox" id="searchText" name="wildCardString" value="<?php if (!empty($this->wildCardString)) echo(urldecode($this->wildCardString)); ?>" style="width:250px" />&nbsp;*&nbsp;
                             <input type="submit" class="button" id="searchCompanies" name="searchCompanies" value="Search" />
-                            <?php TemplateUtility::printAdvancedSearch('searchByKeyTechnologies'); ?>
+                            <?php (new TemplateUtility())->printAdvancedSearch('searchByKeyTechnologies'); ?>
                         </form>
                     </td>
                 </tr>
@@ -70,7 +70,7 @@
                         </tr>
 
                         <?php foreach ($this->rs as $rowNumber => $data): ?>
-                            <tr class="<?php TemplateUtility::printAlternatingRowClass($rowNumber); ?>">
+                            <tr class="<?php (new TemplateUtility())->printAlternatingRowClass($rowNumber); ?>">
                                 <td valign="top" nowrap="nowrap">
                                     <input type="checkbox" id="checked_<?php echo($data['companyID']); ?>" name="checked_<?php echo($data['companyID']); ?>" />
                                     <a href="javascript:void(0);" onclick="window.open('<?php echo((new CATSUtility())->getIndexName()); ?>?m=companies&amp;a=show&amp;companyID=<?php $this->_($data['companyID']); ?>')" title="View in New Window">
@@ -98,4 +98,4 @@
             <?php endif; ?>
         </div>
     </div>
-<?php TemplateUtility::printFooter(); ?>
+<?php (new TemplateUtility())->printFooter(); ?>

@@ -1,13 +1,13 @@
 <?php /* $Id: JobOrders.tpl 3676 2007-11-21 21:02:15Z brian $ */ ?>
-<?php TemplateUtility::printHeader('Job Orders', array( 'js/highlightrows.js',  'js/sweetTitles.js', 'js/export.js', 'js/dataGrid.js', 'js/dataGridFilters.js')); ?>
-<?php TemplateUtility::printHeaderBlock(); ?>
-<?php TemplateUtility::printTabs($this->active); ?>
+<?php (new TemplateUtility())->printHeader('Job Orders', array( 'js/highlightrows.js',  'js/sweetTitles.js', 'js/export.js', 'js/dataGrid.js', 'js/dataGridFilters.js')); ?>
+<?php (new TemplateUtility())->printHeaderBlock(); ?>
+<?php (new TemplateUtility())->printTabs($this->active); ?>
     <style type="text/css">
     div.addJobOrderButton { background: #4172E3 url(images/nodata/jobOrdersButton.jpg); cursor: pointer; width: 337px; height: 67px; }
     div.addJobOrderButton:hover { background: #4172E3 url(images/nodata/jobOrdersButton-o.jpg); cursor: pointer; width: 337px; height: 67px; }
     </style>
     <div id="main">
-        <?php TemplateUtility::printQuickSearch(); ?>
+        <?php (new TemplateUtility())->printQuickSearch(); ?>
 
         <div id="contents"<?php echo !$this->totalJobOrders ? ' style="background-color: #E6EEFF; padding: 0;"' : ''; ?>>
             <?php if ($this->totalJobOrders): ?>
@@ -18,7 +18,7 @@
                     </td>
                     <td><h2>Job Orders: Home</h2></td>
 
-                    <?php TemplateUtility::printPopupContainer(); ?>
+                    <?php (new TemplateUtility())->printPopupContainer(); ?>
 
                     <td align="right">
                         <form name="jobOrdersViewSelectorForm" id="jobOrdersViewSelectorForm" action="<?php echo((new CATSUtility())->getIndexName()); ?>" method="get">
@@ -131,4 +131,4 @@
         </div>
     </div>
 
-<?php TemplateUtility::printFooter(); ?>
+<?php (new TemplateUtility())->printFooter(); ?>

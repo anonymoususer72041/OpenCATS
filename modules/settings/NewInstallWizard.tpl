@@ -5,9 +5,9 @@
     <head>
         <title>CATS - Initial Configuration Wizard</title>
         <meta http-equiv="Content-Type" content="text/html; charset=<?php echo(HTML_ENCODING); ?>">
-        <style type="text/css" media="all">@import "<?php echo TemplateUtility::getVersionedAssetURL('modules/install/install.css'); ?>";</style>
-        <script type="text/javascript" src="<?php echo TemplateUtility::getVersionedAssetURL('js/lib.js'); ?>"></script>
-        <script type="text/javascript" src="<?php echo TemplateUtility::getVersionedAssetURL('modules/settings/validator.js'); ?>"></script>
+        <style type="text/css" media="all">@import "<?php echo (new TemplateUtility())->getVersionedAssetURL('modules/install/install.css'); ?>";</style>
+        <script type="text/javascript" src="<?php echo (new TemplateUtility())->getVersionedAssetURL('js/lib.js'); ?>"></script>
+        <script type="text/javascript" src="<?php echo (new TemplateUtility())->getVersionedAssetURL('modules/settings/validator.js'); ?>"></script>
     </head>
 
     <body>
@@ -66,7 +66,7 @@
                                 <td>Please choose your time zone.</td>
                             </tr>
                             <tr>
-                                <td style="padding-bottom: 10px;"><?php TemplateUtility::printTimeZoneSelect('timeZone', 'width: 420px;', '', OFFSET_GMT); ?></td>
+                                <td style="padding-bottom: 10px;"><?php (new TemplateUtility())->printTimeZoneSelect('timeZone', 'width: 420px;', '', OFFSET_GMT); ?></td>
                             </tr>
 
                             <tr>

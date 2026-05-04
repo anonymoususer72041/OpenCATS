@@ -1,5 +1,5 @@
 <?php /* $Id: ConsiderSearchModal.tpl 3093 2007-09-24 21:09:45Z brian $ */ ?>
-<?php TemplateUtility::printModalHeader('Candidates', array(), 'Add Candidates to Job Order'); ?>
+<?php (new TemplateUtility())->printModalHeader('Candidates', array(), 'Add Candidates to Job Order'); ?>
 
     <?php if (!$this->isFinishedMode): ?>
         <p>Search for a job order below, and then click on the job title to add
@@ -68,7 +68,7 @@
                     </tr>
 
                     <?php foreach ($this->rs as $rowNumber => $data): ?>
-                        <tr class="<?php TemplateUtility::printAlternatingRowClass($rowNumber); ?>">
+                        <tr class="<?php (new TemplateUtility())->printAlternatingRowClass($rowNumber); ?>">
                             <td align="left" valign="top"><?php $this->_($data['jobID']); ?></td>
                             <td align="left" valign="top">
                                 <?php if (!$data['inPipeline']): ?>
@@ -123,7 +123,7 @@
                     </tr>
 
                     <?php foreach ($this->rs as $rowNumber => $data): ?>
-                        <tr class="<?php TemplateUtility::printAlternatingRowClass($rowNumber); ?>">
+                        <tr class="<?php (new TemplateUtility())->printAlternatingRowClass($rowNumber); ?>">
                             <td align="left" valign="top"><?php $this->_($data['jobID']); ?></td>
                             <td align="left" valign="top">
                                 <?php if (!$data['inPipeline']): ?>

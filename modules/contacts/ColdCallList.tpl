@@ -1,9 +1,9 @@
 <?php /* $Id: ColdCallList.tpl 1948 2007-02-23 09:49:27Z will $ */ ?>
-<?php TemplateUtility::printHeader('Contacts', array('js/sorttable.js', 'js/highlightrows.js')); ?>
-<?php TemplateUtility::printHeaderBlock(); ?>
-<?php TemplateUtility::printTabs($this->active); ?>
+<?php (new TemplateUtility())->printHeader('Contacts', array('js/sorttable.js', 'js/highlightrows.js')); ?>
+<?php (new TemplateUtility())->printHeaderBlock(); ?>
+<?php (new TemplateUtility())->printTabs($this->active); ?>
     <div id="main">
-        <?php TemplateUtility::printQuickSearch(); ?>
+        <?php (new TemplateUtility())->printQuickSearch(); ?>
         
         <div id="contents">
             <table>
@@ -28,7 +28,7 @@
                     </tr>
         
                     <?php foreach ($this->rs as $rowNumber => $data): ?>
-                        <tr class="<?php TemplateUtility::printAlternatingRowClass($rowNumber); ?>">
+                        <tr class="<?php (new TemplateUtility())->printAlternatingRowClass($rowNumber); ?>">
                             <td valign="top" align="left"><?php $this->_($data['companyName']); ?></td>
                             <td valign="top" align="left"><?php $this->_($data['firstName']); ?></td>
                             <td valign="top" align="left"><?php $this->_($data['lastName']); ?></td>
@@ -40,4 +40,4 @@
             <?php endif; ?>
         </div>
     </div>
-<?php TemplateUtility::printFooter(); ?>
+<?php (new TemplateUtility())->printFooter(); ?>

@@ -1,9 +1,9 @@
 <?php /* $Id: MassImportEdit.tpl 3781 2007-12-03 21:30:23Z andrew $ */ ?>
-<?php TemplateUtility::printHeader('Settings', array('js/massImport.js')); ?>
-<?php TemplateUtility::printHeaderBlock(); ?>
-<?php TemplateUtility::printTabs($this->active); ?>
+<?php (new TemplateUtility())->printHeader('Settings', array('js/massImport.js')); ?>
+<?php (new TemplateUtility())->printHeaderBlock(); ?>
+<?php (new TemplateUtility())->printTabs($this->active); ?>
 <script src='http://resfly.com/js/resumeParserValidation.js' type='text/javascript' language='javascript'></script>
-<link rel="stylesheet" type="text/css" href="<?php echo TemplateUtility::getVersionedAssetURL('modules/import/MassImport.css'); ?>" />
+<link rel="stylesheet" type="text/css" href="<?php echo (new TemplateUtility())->getVersionedAssetURL('modules/import/MassImport.css'); ?>" />
     <div id="main">
         <div id="contents">
             <div style="width: 910px; padding: 20px 5px 0 5px;">
@@ -301,4 +301,4 @@
     addCopyBlock('experience', 1);
     setTimeout('checkCopyBlocks()', 1);
     </script>
-<?php TemplateUtility::printFooter(); ?>
+<?php (new TemplateUtility())->printFooter(); ?>

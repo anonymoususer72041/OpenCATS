@@ -1,6 +1,6 @@
 <?php /* $Id: Error.tpl 770 2006-09-06 19:04:57Z will $ */ ?>
-<?php TemplateUtility::printHeader('Fatal Error'); ?>
-<?php TemplateUtility::printHeaderBlock(); ?>
+<?php (new TemplateUtility())->printHeader('Fatal Error'); ?>
+<?php (new TemplateUtility())->printHeaderBlock(); ?>
 
 <p />
 <p class="fatalError">
@@ -9,4 +9,4 @@
     <?php $this->_($this->errorMessage); ?>
 </p>
 
-<?php TemplateUtility::printFooter(); ?>
+<?php (new TemplateUtility())->printFooter(); ?>

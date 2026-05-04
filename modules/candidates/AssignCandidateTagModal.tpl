@@ -1,5 +1,5 @@
 <?php /* $Id: CreateAttachmentModal.tpl 3093 2007-09-24 21:09:45Z brian $ */ ?>
-<?php TemplateUtility::printModalHeader('Candidates', array(''), 'Assign candidate tag'); ?>
+<?php (new TemplateUtility())->printModalHeader('Candidates', array(''), 'Assign candidate tag'); ?>
 
     <?php if (!$this->isFinishedMode): ?>
 		<form class="changeCandidateTags" id="changeCandidateTags" method="post" action="<?php echo((new CATSUtility())->getIndexName()); ?>?m=candidates&amp;a=addCandidateTags">

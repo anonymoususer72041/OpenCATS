@@ -1,7 +1,7 @@
 <?php /* $Id: CareerPortalQuestionnaire.tpl 3736 2007-11-28 01:19:24Z andrew $ */ ?>
-<?php TemplateUtility::printHeader('Settings', array('js/questionnaire.js')); ?>
-<?php TemplateUtility::printHeaderBlock(); ?>
-<?php TemplateUtility::printTabs($this->active, $this->subActive); ?>
+<?php (new TemplateUtility())->printHeader('Settings', array('js/questionnaire.js')); ?>
+<?php (new TemplateUtility())->printHeaderBlock(); ?>
+<?php (new TemplateUtility())->printTabs($this->active, $this->subActive); ?>
 
 <style>
 div.questionContainer { }
@@ -20,7 +20,7 @@ div.questionContainerPlainJane { }
 </style>
 
     <div id="main">
-        <?php TemplateUtility::printQuickSearch(); ?>
+        <?php (new TemplateUtility())->printQuickSearch(); ?>
 
         <div id="contents">
             <table>
@@ -377,4 +377,4 @@ div.questionContainerPlainJane { }
     <script type="text/javascript">
     restoreScrollPosition();
     </script>
-<?php TemplateUtility::printFooter(); ?>
+<?php (new TemplateUtility())->printFooter(); ?>

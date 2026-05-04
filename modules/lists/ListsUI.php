@@ -249,7 +249,7 @@ class ListsUI extends UserInterface
 
         $savedListsRS = $savedLists->getAll($dataItemType, STATIC_LISTS);
 
-        $dataItemDesc = TemplateUtility::getDataItemTypeDescription($dataItemType);
+        $dataItemDesc = (new TemplateUtility())->getDataItemTypeDescription($dataItemType);
 
         $this->_template->assign('dataItemDesc', $dataItemDesc);
         $this->_template->assign('savedListsRS', $savedListsRS);
@@ -292,7 +292,7 @@ class ListsUI extends UserInterface
 
         $savedListsRS = $savedLists->getAll($dataItemType, STATIC_LISTS);
 
-        $dataItemDesc = TemplateUtility::getDataItemTypeDescription($dataItemType);
+        $dataItemDesc = (new TemplateUtility())->getDataItemTypeDescription($dataItemType);
 
         $this->_template->assign('dataItemDesc', $dataItemDesc);
         $this->_template->assign('savedListsRS', $savedListsRS);
@@ -331,7 +331,7 @@ class ListsUI extends UserInterface
 
         $dataItemType = $_POST['dataItemType'];
 
-        $dataItemDesc = TemplateUtility::getDataItemTypeDescription($dataItemType);
+        $dataItemDesc = (new TemplateUtility())->getDataItemTypeDescription($dataItemType);
 
         if (!$this->isRequiredIDValid('savedListID', $_POST))
         {

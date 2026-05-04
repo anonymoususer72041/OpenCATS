@@ -1,7 +1,7 @@
 <?php /* $Id: Professional.tpl 3678 2007-11-21 23:10:42Z andrew $ */ ?>
-<?php TemplateUtility::printHeader('Settings', 'js/sorttable.js'); ?>
-<?php TemplateUtility::printHeaderBlock(); ?>
-<?php TemplateUtility::printTabs($this->active, $this->subActive); ?>
+<?php (new TemplateUtility())->printHeader('Settings', 'js/sorttable.js'); ?>
+<?php (new TemplateUtility())->printHeaderBlock(); ?>
+<?php (new TemplateUtility())->printTabs($this->active, $this->subActive); ?>
 <script>
 <?php echo $this->webForm->getJavaScript(); ?>
 </script>
@@ -18,7 +18,7 @@ span.titleText {
 </style>
 
     <div id="main">
-        <?php TemplateUtility::printQuickSearch(); ?>
+        <?php (new TemplateUtility())->printQuickSearch(); ?>
         <div id="contents">
             <table>
                 <tr>
@@ -324,4 +324,4 @@ span.titleText {
 
         </div>
     </div>
-<?php TemplateUtility::printFooter(); ?>
+<?php (new TemplateUtility())->printFooter(); ?>

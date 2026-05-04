@@ -1,8 +1,8 @@
 <?php /* $Id: MassImport.tpl 3548 2007-11-09 23:54:52Z andrew $ */ ?>
-<?php TemplateUtility::printHeader('Settings', array('js/massImport.js')); ?>
-<?php TemplateUtility::printHeaderBlock(); ?>
-<?php TemplateUtility::printTabs($this->active, '', 'settings'); ?>
-<link rel="stylesheet" type="text/css" href="<?php echo TemplateUtility::getVersionedAssetURL('modules/import/MassImport.css'); ?>" />
+<?php (new TemplateUtility())->printHeader('Settings', array('js/massImport.js')); ?>
+<?php (new TemplateUtility())->printHeaderBlock(); ?>
+<?php (new TemplateUtility())->printTabs($this->active, '', 'settings'); ?>
+<link rel="stylesheet" type="text/css" href="<?php echo (new TemplateUtility())->getVersionedAssetURL('modules/import/MassImport.css'); ?>" />
     <div id="main">
         <div id="contents">
             <div style="width: 880px; padding: 15px;">
@@ -56,4 +56,4 @@
 
         </div>
     </div>
-<?php TemplateUtility::printFooter(); ?>
+<?php (new TemplateUtility())->printFooter(); ?>

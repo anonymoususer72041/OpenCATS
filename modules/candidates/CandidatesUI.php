@@ -735,7 +735,7 @@ class CandidatesUI extends UserInterface
                 LAST_NAME_MAXLEN
             );
 
-            $pipelinesRS[$rowIndex]['ratingLine'] = TemplateUtility::getRatingObject(
+            $pipelinesRS[$rowIndex]['ratingLine'] = (new TemplateUtility())->getRatingObject(
                 $pipelinesRS[$rowIndex]['ratingValue'],
                 $pipelinesRS[$rowIndex]['candidateJobOrderID'],
                 $sessionCookie

@@ -2,11 +2,11 @@
 include_once('./vendor/autoload.php');
 use OpenCATS\UI\QuickActionMenu;
 ?>
-<?php TemplateUtility::printHeader('Company - ' . $this->data['name'], array( 'js/activity.js', 'js/sorttable.js', 'js/attachment.js')); ?>
-<?php TemplateUtility::printHeaderBlock(); ?>
-<?php TemplateUtility::printTabs($this->active); ?>
+<?php (new TemplateUtility())->printHeader('Company - ' . $this->data['name'], array( 'js/activity.js', 'js/sorttable.js', 'js/attachment.js')); ?>
+<?php (new TemplateUtility())->printHeaderBlock(); ?>
+<?php (new TemplateUtility())->printTabs($this->active); ?>
     <div id="main">
-        <?php TemplateUtility::printQuickSearch(); ?>
+        <?php (new TemplateUtility())->printQuickSearch(); ?>
 
         <div id="contents">
             <table>
@@ -28,7 +28,7 @@ use OpenCATS\UI\QuickActionMenu;
                                 <td class="vertical">Name:</td>
                                 <td class="data">
                                     <span class="<?php echo Template::escapeAttr($this->data['titleClass']); ?>"><?php $this->_($this->data['name']); ?></span>
-                                    <?php TemplateUtility::printSingleQuickActionMenu(new QuickActionMenu(DATA_ITEM_COMPANY, $this->companyID, $_SESSION['CATS']->getAccessLevel('companies.edit'))); ?>
+                                    <?php (new TemplateUtility())->printSingleQuickActionMenu(new QuickActionMenu(DATA_ITEM_COMPANY, $this->companyID, $_SESSION['CATS']->getAccessLevel('companies.edit'))); ?>
                                 </td>
                             </tr>
 
@@ -269,7 +269,7 @@ use OpenCATS\UI\QuickActionMenu;
                 </tr>
 
                 <?php foreach ($this->jobOrdersRS as $rowNumber => $jobOrdersData): ?>
-                    <tr class="<?php TemplateUtility::printAlternatingRowClass($rowNumber); ?>">
+                    <tr class="<?php (new TemplateUtility())->printAlternatingRowClass($rowNumber); ?>">
                         <td valign="top" align="left"><?php $this->_($jobOrdersData['jobOrderID']) ?></td>
                         <td valign="top">
                             <a href="<?php echo Template::escapeUrl((new CATSUtility())->getIndexName() . '?m=joborders&a=show&jobOrderID=' . $jobOrdersData['jobOrderID']); ?>">
@@ -322,7 +322,7 @@ use OpenCATS\UI\QuickActionMenu;
 
                 <?php if (count($this->contactsRSWC) != 0): ?>
                  <?php foreach ($this->contactsRSWC as $rowNumber => $contactsData): ?>
-                    <tr id="ContactsDefault<?php echo Template::escapeAttr($rowNumber); ?>" class="<?php TemplateUtility::printAlternatingRowClass($rowNumber); ?>">
+                    <tr id="ContactsDefault<?php echo Template::escapeAttr($rowNumber); ?>" class="<?php (new TemplateUtility())->printAlternatingRowClass($rowNumber); ?>">
                         <td valign="top" align="left">
                             <a href="<?php echo Template::escapeUrl((new CATSUtility())->getIndexName() . '?m=contacts&a=show&contactID=' . $contactsData['contactID']); ?>" class="<?php echo Template::escapeAttr($contactsData['linkClass']); ?>">
                                 <?php $this->_($contactsData['firstName']) ?>
@@ -360,7 +360,7 @@ use OpenCATS\UI\QuickActionMenu;
                 <?php /* The following are hidden by default */ ?>
                 <?php if (count($this->contactsRSWC) != count($this->contactsRS) && count($this->contactsRS) != 0) : ?>
                  <?php foreach ($this->contactsRS as $rowNumber => $contactsData): ?>
-                    <tr id="ContactsFull<?php echo Template::escapeAttr($rowNumber); ?>" class="<?php TemplateUtility::printAlternatingRowClass($rowNumber); ?>" style="display:none;">
+                    <tr id="ContactsFull<?php echo Template::escapeAttr($rowNumber); ?>" class="<?php (new TemplateUtility())->printAlternatingRowClass($rowNumber); ?>" style="display:none;">
                         <td valign="top" align="left">
                             <a href="<?php echo Template::escapeUrl((new CATSUtility())->getIndexName() . '?m=contacts&a=show&contactID=' . $contactsData['contactID']); ?>" class="<?php echo Template::escapeAttr($contactsData['linkClass']); ?>">
                                 <?php $this->_($contactsData['firstName']) ?>
@@ -431,7 +431,7 @@ use OpenCATS\UI\QuickActionMenu;
                 </tr>
 
                 <?php foreach ($this->activityRS as $rowNumber => $activityData): ?>
-                    <tr class="<?php TemplateUtility::printAlternatingRowClass($rowNumber); ?>">
+                    <tr class="<?php (new TemplateUtility())->printAlternatingRowClass($rowNumber); ?>">
                         <td align="left" valign="top" id="activityDate<?php echo Template::escapeAttr($activityData['activityID']); ?>"><?php $this->_($activityData['dateCreated']); ?></td>
                         <td align="left" valign="top" id="activityType<?php echo Template::escapeAttr($activityData['activityID']); ?>"><?php $this->_($activityData['typeDescription']); ?></td>
                         <td align="left" valign="top">
@@ -464,4 +464,4 @@ use OpenCATS\UI\QuickActionMenu;
         </div>
     </div>
 
-<?php TemplateUtility::printFooter(); ?>
+<?php (new TemplateUtility())->printFooter(); ?>

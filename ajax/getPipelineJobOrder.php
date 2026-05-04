@@ -106,7 +106,7 @@ foreach ($pipelinesRS as $rowIndex => $row)
         $pipelinesRS[$rowIndex]['iconTag'] .= '&nbsp;';
     }
 
-    $pipelinesRS[$rowIndex]['ratingLine'] = TemplateUtility::getRatingObject(
+    $pipelinesRS[$rowIndex]['ratingLine'] = (new TemplateUtility())->getRatingObject(
         $pipelinesRS[$rowIndex]['ratingValue'],
         $pipelinesRS[$rowIndex]['candidateJobOrderID'],
         $_SESSION['CATS']->getCookie()
@@ -181,7 +181,7 @@ if (!eval(Hooks::get('JO_AJAX_GET_PIPELINE'))) return;
 
 ?>
 
-<?php echo(TemplateUtility::getRatingsArrayJS()); ?>
+<?php echo((new TemplateUtility())->getRatingsArrayJS()); ?>
 
 <script type="text/javascript">
     PipelineJobOrder_setLimitDefaultVars('<?php echo($sortBy); ?>', '<?php echo($sortDirection); ?>');
@@ -251,7 +251,7 @@ if (!eval(Hooks::get('JO_AJAX_GET_PIPELINE'))) return;
 
     <?php for ($i = $minEntry; $i < $maxEntry; $i++): ?>
         <?php $pipelinesData = $pipelinesRS[$i]; $rowNumber = $i - $minEntry; ?>
-        <tr class="<?php TemplateUtility::printAlternatingRowClass($rowNumber); ?>" id="pipelineRow<?php echo($rowNumber); ?>">
+        <tr class="<?php (new TemplateUtility())->printAlternatingRowClass($rowNumber); ?>" id="pipelineRow<?php echo($rowNumber); ?>">
         	<td>
         		<input type="checkbox" id="checked_<?php echo($pipelinesData['candidateID']); ?>" name="checked" value="<?php echo($pipelinesData['candidateID']); ?>"/>
         	</td>
@@ -322,7 +322,7 @@ if (!eval(Hooks::get('JO_AJAX_GET_PIPELINE'))) return;
             </td>
 <?php endif; ?>
         </tr>
-        <tr class="<?php TemplateUtility::printAlternatingRowClass($rowNumber); ?>" id="pipelineDetails<?php echo($rowNumber); ?>" style="display:none;">
+        <tr class="<?php (new TemplateUtility())->printAlternatingRowClass($rowNumber); ?>" id="pipelineDetails<?php echo($rowNumber); ?>" style="display:none;">
             <td colspan="11">
                 <center>
                     <table width="98%" border=1 class="detailsOutside" style="margin:5px;">

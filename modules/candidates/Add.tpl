@@ -1,13 +1,13 @@
 <?php /* $Id: Add.tpl 3746 2007-11-28 20:28:21Z andrew $ */ ?>
 <?php if ($this->isModal): ?>
-    <?php TemplateUtility::printModalHeader('Candidates', array('modules/candidates/validator.js', 'js/addressParser.js', 'js/listEditor.js',  'js/candidate.js', 'js/candidateParser.js'), 'Add New Candidate to this Job Order'); ?>
+    <?php (new TemplateUtility())->printModalHeader('Candidates', array('modules/candidates/validator.js', 'js/addressParser.js', 'js/listEditor.js',  'js/candidate.js', 'js/candidateParser.js'), 'Add New Candidate to this Job Order'); ?>
 <?php else: ?>
-    <?php TemplateUtility::printHeader('Candidates', array('modules/candidates/validator.js', 'js/addressParser.js', 'js/listEditor.js',  'js/candidate.js', 'js/candidateParser.js')); ?>
-    <?php TemplateUtility::printHeaderBlock(); ?>
-    <?php TemplateUtility::printTabs($this->active, $this->subActive); ?>
+    <?php (new TemplateUtility())->printHeader('Candidates', array('modules/candidates/validator.js', 'js/addressParser.js', 'js/listEditor.js',  'js/candidate.js', 'js/candidateParser.js')); ?>
+    <?php (new TemplateUtility())->printHeaderBlock(); ?>
+    <?php (new TemplateUtility())->printTabs($this->active, $this->subActive); ?>
 
     <div id="main">
-        <?php TemplateUtility::printQuickSearch(); ?>
+        <?php (new TemplateUtility())->printQuickSearch(); ?>
 
         <div id="contents">
 
@@ -540,5 +540,5 @@
 <?php else: ?>
         </div>
     </div>
-<?php TemplateUtility::printFooter(); ?>
+<?php (new TemplateUtility())->printFooter(); ?>
 <?php endif; ?>

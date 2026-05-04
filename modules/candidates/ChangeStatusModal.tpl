@@ -1,8 +1,8 @@
 <?php /* $Id: ChangeStatusModal.tpl $ */ ?>
 <?php if ($this->isJobOrdersMode): ?>
-    <?php TemplateUtility::printModalHeader('Job Orders', array(), 'Job Orders: Change Status'); ?>
+    <?php (new TemplateUtility())->printModalHeader('Job Orders', array(), 'Job Orders: Change Status'); ?>
 <?php else: ?>
-    <?php TemplateUtility::printModalHeader('Candidates', array(), 'Candidates: Change Status'); ?>
+    <?php (new TemplateUtility())->printModalHeader('Candidates', array(), 'Candidates: Change Status'); ?>
 <?php endif; ?>
 
 <?php if (!$this->isFinishedMode): ?>

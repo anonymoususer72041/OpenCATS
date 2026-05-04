@@ -1,9 +1,9 @@
 <?php /* $Id: SearchEverything.tpl 1948 2007-02-23 09:49:27Z will $ */ ?>
-<?php TemplateUtility::printHeader('Quick Search', array('js/sorttable.js')); ?>
-<?php TemplateUtility::printHeaderBlock(); ?>
-<?php TemplateUtility::printTabs($this->active); ?>
+<?php (new TemplateUtility())->printHeader('Quick Search', array('js/sorttable.js')); ?>
+<?php (new TemplateUtility())->printHeaderBlock(); ?>
+<?php (new TemplateUtility())->printTabs($this->active); ?>
     <div id="main">
-        <?php TemplateUtility::printQuickSearch($this->wildCardQuickSearch); ?>
+        <?php (new TemplateUtility())->printQuickSearch($this->wildCardQuickSearch); ?>
         <div id="contents">
             <table>
                 <tr>
@@ -33,7 +33,7 @@
                     </tr>
 
                     <?php foreach ($this->jobOrdersRS as $rowNumber => $jobOrdersData): ?>
-                        <tr class="<?php TemplateUtility::printAlternatingRowClass($rowNumber); ?>">
+                        <tr class="<?php (new TemplateUtility())->printAlternatingRowClass($rowNumber); ?>">
                             <td valign="top">
                                 <a href="<?php echo((new CATSUtility())->getIndexName()); ?>?m=joborders&amp;a=show&amp;jobOrderID=<?php $this->_($jobOrdersData['jobOrderID']) ?>" class="<?php $this->_($jobOrdersData['linkClass']) ?>">
                                     <?php $this->_($jobOrdersData['title']) ?>
@@ -76,7 +76,7 @@
                     </tr>
 
                     <?php foreach ($this->candidatesRS as $rowNumber => $candidatesData): ?>
-                        <tr class="<?php TemplateUtility::printAlternatingRowClass($rowNumber); ?>">
+                        <tr class="<?php (new TemplateUtility())->printAlternatingRowClass($rowNumber); ?>">
                             <td>
                                 <a href="<?php echo((new CATSUtility())->getIndexName()); ?>?m=candidates&amp;a=show&amp;candidateID=<?php $this->_($candidatesData['candidateID']) ?>">
                                     <?php $this->_($candidatesData['firstName']) ?>
@@ -116,7 +116,7 @@
                     </thead>
 
                     <?php foreach ($this->companiesRS as $rowNumber => $companiesData): ?>
-                        <tr class="<?php TemplateUtility::printAlternatingRowClass($rowNumber); ?>">
+                        <tr class="<?php (new TemplateUtility())->printAlternatingRowClass($rowNumber); ?>">
                             <td valign="top" align="left">
                                 <a href="<?php echo((new CATSUtility())->getIndexName()); ?>?m=companies&amp;a=show&amp;companyID=<?php $this->_($companiesData['companyID']) ?>">
                                     <?php $this->_($companiesData['name']) ?>
@@ -153,7 +153,7 @@
                     </tr>
 
                     <?php foreach ($this->contactsRS as $rowNumber => $contactsData): ?>
-                        <tr class="<?php TemplateUtility::printAlternatingRowClass($rowNumber); ?>">
+                        <tr class="<?php (new TemplateUtility())->printAlternatingRowClass($rowNumber); ?>">
                             <td valign="top" align="left">
                                 <a href="<?php echo((new CATSUtility())->getIndexName()); ?>?m=contacts&amp;a=show&amp;contactID=<?php $this->_($contactsData['contactID']) ?>" class="<?php $this->_($contactsData['linkClassContact']); ?>">
                                     <?php $this->_($contactsData['firstName']) ?>
@@ -184,4 +184,4 @@
             <!-- /Contacts -->
         </div>
     </div>
-<?php TemplateUtility::printFooter(); ?>
+<?php (new TemplateUtility())->printFooter(); ?>

@@ -3,14 +3,14 @@
 include_once('./vendor/autoload.php');
 use OpenCATS\UI\QuickActionMenu;
 ?>
-<?php TemplateUtility::printHeader('Contact - ' . $this->data['firstName'] . ' ' . $this->data['lastName'], array( 'js/activity.js', 'js/attachment.js')); ?>
-<?php TemplateUtility::printHeaderBlock(); ?>
-<?php TemplateUtility::printTabs($this->active); ?>
+<?php (new TemplateUtility())->printHeader('Contact - ' . $this->data['firstName'] . ' ' . $this->data['lastName'], array( 'js/activity.js', 'js/attachment.js')); ?>
+<?php (new TemplateUtility())->printHeaderBlock(); ?>
+<?php (new TemplateUtility())->printTabs($this->active); ?>
     <script type="text/javascript">
         window.CATSUserDateFormat = <?php echo Template::escapeJs($_SESSION['CATS']->isDateDMY() ? 'DD-MM-YY' : 'MM-DD-YY'); ?>;
     </script>
     <div id="main">
-        <?php TemplateUtility::printQuickSearch(); ?>
+        <?php (new TemplateUtility())->printQuickSearch(); ?>
 
         <div id="contents">
             <table>
@@ -35,7 +35,7 @@ use OpenCATS\UI\QuickActionMenu;
                                         <span class="<?php echo Template::escapeAttr($this->data['titleClassContact']); ?>">
                                             <?php $this->_($this->data['firstName']); ?>
                                             <?php $this->_($this->data['lastName']); ?>
-                                            <?php TemplateUtility::printSingleQuickActionMenu(new QuickActionMenu(DATA_ITEM_CONTACT, $this->contactID, $_SESSION['CATS']->getAccessLevel('contacts.edit'))); ?>
+                                            <?php (new TemplateUtility())->printSingleQuickActionMenu(new QuickActionMenu(DATA_ITEM_CONTACT, $this->contactID, $_SESSION['CATS']->getAccessLevel('contacts.edit'))); ?>
                                         </span>
                                         &nbsp;
                                         <a id="vCard" href="<?php echo Template::escapeUrl((new CATSUtility())->getIndexName() . '?m=contacts&a=downloadVCard&contactID=' . $this->contactID); ?>">
@@ -250,7 +250,7 @@ use OpenCATS\UI\QuickActionMenu;
                 </tr>
 
                 <?php foreach ($this->jobOrdersRS as $rowNumber => $jobOrdersData): ?>
-                    <tr class="<?php TemplateUtility::printAlternatingRowClass($rowNumber); ?>">
+                    <tr class="<?php (new TemplateUtility())->printAlternatingRowClass($rowNumber); ?>">
                         <td valign="top">
                             <a href="<?php echo((new CATSUtility())->getIndexName()); ?>?m=joborders&amp;a=show&amp;jobOrderID=<?php $this->_($jobOrdersData['jobOrderID']) ?>">
                                 <?php $this->_($jobOrdersData['title']) ?>
@@ -284,7 +284,7 @@ use OpenCATS\UI\QuickActionMenu;
                 </tr>
 
                 <?php foreach ($this->activityRS as $rowNumber => $activityData): ?>
-                    <tr class="<?php TemplateUtility::printAlternatingRowClass($rowNumber); ?>">
+                    <tr class="<?php (new TemplateUtility())->printAlternatingRowClass($rowNumber); ?>">
                         <td align="left" valign="top" id="activityDate<?php echo Template::escapeAttr($activityData['activityID']); ?>"><?php $this->_($activityData['dateCreated']) ?></td>
                         <td align="left" valign="top" id="activityType<?php echo Template::escapeAttr($activityData['activityID']); ?>"><?php $this->_($activityData['typeDescription']) ?></td>
                         <td align="left" valign="top"><?php $this->_($activityData['enteredByAbbrName']) ?></td>
@@ -315,4 +315,4 @@ use OpenCATS\UI\QuickActionMenu;
             </div>
         </div>
     </div>
-<?php TemplateUtility::printFooter(); ?>
+<?php (new TemplateUtility())->printFooter(); ?>

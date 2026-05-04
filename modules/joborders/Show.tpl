@@ -3,13 +3,13 @@ include_once('./vendor/autoload.php');
 use OpenCATS\UI\QuickActionMenu;
 ?>
 <?php if ($this->isPopup): ?>
-    <?php TemplateUtility::printHeader('Job Order - ' . $this->data['title'], array('js/sorttable.js', 'js/match.js', 'js/pipeline.js', 'js/attachment.js')); ?>
+    <?php (new TemplateUtility())->printHeader('Job Order - ' . $this->data['title'], array('js/sorttable.js', 'js/match.js', 'js/pipeline.js', 'js/attachment.js')); ?>
 <?php else: ?>
-    <?php TemplateUtility::printHeader('Job Order - ' . $this->data['title'], array( 'js/sorttable.js', 'js/match.js', 'js/pipeline.js', 'js/attachment.js')); ?>
-    <?php TemplateUtility::printHeaderBlock(); ?>
-    <?php TemplateUtility::printTabs($this->active); ?>
+    <?php (new TemplateUtility())->printHeader('Job Order - ' . $this->data['title'], array( 'js/sorttable.js', 'js/match.js', 'js/pipeline.js', 'js/attachment.js')); ?>
+    <?php (new TemplateUtility())->printHeaderBlock(); ?>
+    <?php (new TemplateUtility())->printTabs($this->active); ?>
         <div id="main">
-            <?php TemplateUtility::printQuickSearch(); ?>
+            <?php (new TemplateUtility())->printQuickSearch(); ?>
 <?php endif; ?>
 
         <div id="contents">
@@ -61,7 +61,7 @@ use OpenCATS\UI\QuickActionMenu;
                                 <td class="data" width="300">
                                     <span class="<?php echo Template::escapeAttr($this->data['titleClass']); ?>"><?php $this->_($this->data['title']); ?></span>
                                     <?php echo($this->data['public']) ?>
-                                    <?php TemplateUtility::printSingleQuickActionMenu(new QuickActionMenu(DATA_ITEM_JOBORDER, $this->data['jobOrderID'], $_SESSION['CATS']->getAccessLevel('joborders.edit'))); ?>
+                                    <?php (new TemplateUtility())->printSingleQuickActionMenu(new QuickActionMenu(DATA_ITEM_JOBORDER, $this->data['jobOrderID'], $_SESSION['CATS']->getAccessLevel('joborders.edit'))); ?>
                                 </td>
                             </tr>
 
@@ -449,4 +449,4 @@ use OpenCATS\UI\QuickActionMenu;
     </div>
 
 <?php endif; ?>
-<?php TemplateUtility::printFooter(); ?>
+<?php (new TemplateUtility())->printFooter(); ?>

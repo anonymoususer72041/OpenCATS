@@ -1,5 +1,5 @@
 <?php /* $Id: ConsiderSearchModal.tpl 3093 2007-09-24 21:09:45Z brian $ */ ?>
-<?php TemplateUtility::printModalHeader('Job Orders', 'js/sorttable.js', 'Add Candidate to This Job Order'); ?>
+<?php (new TemplateUtility())->printModalHeader('Job Orders', 'js/sorttable.js', 'Add Candidate to This Job Order'); ?>
 
     <?php if (!$this->isFinishedMode): ?>
         <p>Search for a candidate below, and then click on the candidate's
@@ -58,7 +58,7 @@
                     </tr>
 
                     <?php foreach ($this->rs as $rowNumber => $data): ?>
-                        <tr class="<?php TemplateUtility::printAlternatingRowClass($rowNumber); ?>">
+                        <tr class="<?php (new TemplateUtility())->printAlternatingRowClass($rowNumber); ?>">
                             <?php if($data['isDuplicateCandidate'] == 1): ?>
                                 <td valign="top" align="left">
                                     <img src="images/wf_error.gif" alt="" width="16" height="16" title="Duplicate Candidate"/>
