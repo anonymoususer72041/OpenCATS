@@ -74,8 +74,8 @@ class StringUtility
 
 
     /* Prevent this class from being instantiated. */
-    private function __construct() {}
-    private function __clone() {}
+    public function __construct() {}
+    public function __clone() {}
 
 
     /**
