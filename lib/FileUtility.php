@@ -46,10 +46,6 @@ define('DOCUMENT_TYPE_TEXT',    700);
  */
 class FileUtility
 {
-    /* Prevent this class from being instantiated. */
-    public function __construct() {}
-    public function __clone() {}
-
 
     /**
      * Returns a document type based on its file extension and content type.

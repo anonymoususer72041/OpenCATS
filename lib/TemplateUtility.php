@@ -49,10 +49,6 @@ use OpenCATS\UI\QuickActionMenu;
  */
 class TemplateUtility
 {
-    /* Prevent this class from being instantiated. */
-    public function __construct() {}
-    public function __clone() {}
-
 
     /**
      * Prints the template header HTML for a non-modal window.

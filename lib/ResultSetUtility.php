@@ -37,10 +37,6 @@
  */
 class ResultSetUtility
 {
-    /* Prevent this class from being instantiated. */
-    public function __construct() {}
-    public function __clone() {}
-
 
     /**
      * Searches for a row where the specified column name has a value matching

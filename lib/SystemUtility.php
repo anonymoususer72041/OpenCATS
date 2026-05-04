@@ -39,10 +39,6 @@ include_once(LEGACY_ROOT . '/lib/QueueProcessor.php');
  */
 class SystemUtility
 {
-    /* Prevent this class from being instantiated. */
-    public function __construct() {}
-    public function __clone() {}
-
 
     /**
      * Returns true if PHP is running on Microsoft Windows.

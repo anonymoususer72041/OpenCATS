@@ -37,11 +37,6 @@
  */
 class ArrayUtility
 {
-    /* Prevent this class from being instantiated. */
-    public function __construct() {}
-    public function __clone() {}
-
-
     /**
      * Works like implode(), but only includes elements from (and including)
      * the first offset to (and including) the last offset.

@@ -41,10 +41,6 @@ include_once(LEGACY_ROOT . '/lib/FileUtility.php');
  */
 class CATSUtility
 {
-    /* Prevent this class from being instantiated. */
-    public function __construct() {}
-    public function __clone() {}
-
 
     /**
      * Returns the current CATS version string from the .version file in the

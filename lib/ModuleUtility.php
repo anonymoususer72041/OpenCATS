@@ -37,10 +37,6 @@
  */
 class ModuleUtility
 {
-    /* Prevent this class from being instantiated. */
-    public function __construct() {}
-    public function __clone() {}
-
 
     /**
      * Loads a module.

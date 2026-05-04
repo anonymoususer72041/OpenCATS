@@ -37,10 +37,6 @@
  */
 class DateUtility
 {
-    /* Prevent this class from being instantiated. */
-    public function __construct() {}
-    public function __clone() {}
-
 
     /**
      * Returns the number of days in the month for the specified month in

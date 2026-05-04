@@ -72,12 +72,6 @@ class StringUtility
     const matchURLPort         = '\:?(\d+)?';                             /* PCRE */
     const matchURLExtras       = '([\/][a-z\d.,\x27?\/+&%\$#=~_@-]*)*';   /* PCRE */
 
-
-    /* Prevent this class from being instantiated. */
-    public function __construct() {}
-    public function __clone() {}
-
-
     /**
      * Returns true if the string appears to be a phone number. Leading /
      * trailing text is expected to be stripped prior to call.
