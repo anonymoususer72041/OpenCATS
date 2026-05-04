@@ -57,12 +57,12 @@ class TemplateUtility
      * @param array JavaScript / CSS files to load
      * @return void
      */
-    public static function printHeader($pageTitle, $headIncludes = array())
+    public function printHeader($pageTitle, $headIncludes = array())
     {
-        self::_printCommonHeader($pageTitle, $headIncludes);
+        $this->_printCommonHeader($pageTitle, $headIncludes);
         echo '<body style="background: #fff">', "\n";
-        self::_printQuickActionMenuHolder();
-        self::printPopupContainer();
+        $this->_printQuickActionMenuHolder();
+        $this->printPopupContainer();
     }
 
     /**
@@ -72,15 +72,15 @@ class TemplateUtility
      * @param array JavaScript / CSS files to load
      * @return void
      */
-    public static function printModalHeader($pageTitle, $headIncludes = array(), $title = '')
+    public function printModalHeader($pageTitle, $headIncludes = array(), $title = '')
     {
-        self::_printCommonHeader($pageTitle, $headIncludes);
+        $this->_printCommonHeader($pageTitle, $headIncludes);
         echo '<body style="background: #eee;">', "\n";
         if ($title != '')
         {
             echo '<script type="text/javascript">parentSetPopTitle(', Template::escapeJs($title), ');</script>';
         }
-        self::_printQuickActionMenuHolder();
+        $this->_printQuickActionMenuHolder();
     }
 
     /**
@@ -88,7 +88,7 @@ class TemplateUtility
      *
      * @return void
      */
-    public static function printHeaderBlock($showTopRight = true)
+    public function printHeaderBlock($showTopRight = true)
     {
         $username     = $_SESSION['CATS']->getUsername();
         $siteName     = $_SESSION['CATS']->getSiteName();
@@ -215,7 +215,7 @@ class TemplateUtility
      * @param integer selected GMT offset
      * @return void
      */
-    public static function printTimeZoneSelect($selectID, $selectStyle,
+    public function printTimeZoneSelect($selectID, $selectStyle,
         $selectClass, $selectedTimeZone)
     {
         echo '<select id="', $selectID, '" name="', $selectID, '"';
@@ -258,7 +258,7 @@ class TemplateUtility
      *
      * @return void
      */
-    public static function printQuickSearch($wildCardString = '')
+    public function printQuickSearch($wildCardString = '')
     {
         /* Get the formatted MRU list from Session. */
         $MRU = $_SESSION['CATS']->getMRU()->getFormatted();
@@ -311,7 +311,7 @@ class TemplateUtility
      *
      * @return void
      */
-    public static function printAdvancedSearch($considerFields)
+    public function printAdvancedSearch($considerFields)
     {
         echo '<input type="button" class="button" name="advancedSearch" id="advancedSearch" value="Advanced"',
              ' onclick="document.getElementById(\'advancedSearchField\').style.display=\'block\'; ',
@@ -369,7 +369,7 @@ class TemplateUtility
      * @param response array
      * @return void
      */
-    public static function printSavedSearch($savedSearchRS)
+    public function printSavedSearch($savedSearchRS)
     {
         $savedSearchRecent = array();
         $savedSearchSaved = array();
@@ -524,7 +524,7 @@ class TemplateUtility
      *
      * @return void
      */
-    public static function printCookieTester()
+    public function printCookieTester()
     {
         $indexName = (new CATSUtility())->getIndexName();
 
@@ -557,7 +557,7 @@ class TemplateUtility
      *
      * @return void
      */
-    public static function printPopupContainer()
+    public function printPopupContainer()
     {
         echo '<div id="popupMask">&nbsp;</div><div id="popupContainer">',
              '<div id="popupInner"><div id="popupTitleBar">',
@@ -584,7 +584,7 @@ class TemplateUtility
      * @param string module name to forcibly highlight
      * @return void
      */
-    public static function printTabs($active, $subActive = '', $forceHighlight = '')
+    public function printTabs($active, $subActive = '', $forceHighlight = '')
     {
         /* Special tab behaviors:
          *
@@ -816,7 +816,7 @@ class TemplateUtility
      *
      * @return void
      */
-    public static function printFooter()
+    public function printFooter()
     {
         $build    = $_SESSION['CATS']->getCachedBuild();
         $loadTime = $_SESSION['CATS']->getExecutionTime();
@@ -870,7 +870,7 @@ class TemplateUtility
      *
      * @return void
      */
-    public static function printReportFooter()
+    public function printReportFooter()
     {
         $build = $_SESSION['CATS']->getCachedBuild();
 
@@ -905,7 +905,7 @@ class TemplateUtility
      * @param string PHP session cookie
      * @return string HTML
      */
-    public static function getRatingObject($rating, $candidateJobOrderID, $sessionCookie)
+    public function getRatingObject($rating, $candidateJobOrderID, $sessionCookie)
     {
         static $firstCall = true;
 
@@ -914,7 +914,7 @@ class TemplateUtility
          */
         $rating = (int) $rating;
 
-        $ratings = self::_getRatingImages();
+        $ratings = $this->_getRatingImages();
         $indexName = (new CATSUtility())->getIndexName();
 
         if ($_SESSION['CATS']->getAccessLevel('pipelines.editRating') < ACCESS_LEVEL_EDIT)
@@ -957,7 +957,7 @@ class TemplateUtility
         /* Only on the first call... */
         if ($firstCall)
         {
-            $HTML .= self::getRatingsArrayJS();
+            $HTML .= $this->getRatingsArrayJS();
         }
 
         return $HTML;
@@ -969,9 +969,9 @@ class TemplateUtility
      * @param integer table row number
      * @return void
      */
-    public static function getRatingsArrayJS()
+    public function getRatingsArrayJS()
     {
-        $ratings = self::_getRatingImages();
+        $ratings = $this->_getRatingImages();
 
         $HTML = '<script type="text/javascript">';
 
@@ -989,7 +989,7 @@ class TemplateUtility
     }
 
     // TODO: Document me.
-    public static function getDataItemTypeDescription($dataItemType)
+    public function getDataItemTypeDescription($dataItemType)
     {
         switch ($dataItemType)
         {
@@ -1022,7 +1022,7 @@ class TemplateUtility
      * @param integer table row number
      * @return void
      */
-    public static function printAlternatingRowClass($rowNumber)
+    public function printAlternatingRowClass($rowNumber)
     {
         /* Is the row number even? */
         if (($rowNumber % 2) == 0)
@@ -1042,7 +1042,7 @@ class TemplateUtility
      * @param integer div row number
      * @return void
      */
-    public static function printAlternatingDivClass($rowNumber)
+    public function printAlternatingDivClass($rowNumber)
     {
         /* Is the row number even? */
         if (($rowNumber % 2) == 0)
@@ -1062,7 +1062,7 @@ class TemplateUtility
      * @param integer table row number
      * @return void
      */
-    public static function getAlternatingRowClass($rowNumber)
+    public function getAlternatingRowClass($rowNumber)
     {
         /* Is the row number even? */
         if (($rowNumber % 2) == 0)
@@ -1100,7 +1100,7 @@ class TemplateUtility
      * @param string closing tag to be removed
      * @return string filtered HTML output
      */
-    public static function filterRemoveTextBlock($text, $startBlock, $endBlock, $closingTag = '')
+    public function filterRemoveTextBlock($text, $startBlock, $endBlock, $closingTag = '')
     {
         $startPos = strpos($text, $startBlock);
         if ($startPos !== false)
@@ -1154,12 +1154,12 @@ class TemplateUtility
         return $text;
     }
 
-    public static function printSingleQuickActionMenu(QuickActionMenu $menu)
+    public function printSingleQuickActionMenu(QuickActionMenu $menu)
     {
         return $menu->getHtml();
     }
 
-    public static function _printQuickActionMenuHolder()
+    public function _printQuickActionMenuHolder()
     {
         echo '<div class="ajaxSearchResults" id="singleQuickActionMenu" align="left" style="width:200px;" onclick="toggleVisibility()">';
 
@@ -1172,7 +1172,7 @@ class TemplateUtility
      * @param string Relative asset path
      * @return string
      */
-    public static function getVersionedAssetURL($assetPath)
+    public function getVersionedAssetURL($assetPath)
     {
         $assetPath = (string) $assetPath;
         if ($assetPath == '')
@@ -1243,7 +1243,7 @@ class TemplateUtility
      * @param array JavaScript / CSS files to load
      * @return void
      */
-    private static function _printCommonHeader($pageTitle, $headIncludes = array())
+    private function _printCommonHeader($pageTitle, $headIncludes = array())
     {
         if (!is_array($headIncludes))
         {
@@ -1273,7 +1273,7 @@ class TemplateUtility
         );
         foreach ($coreJavaScriptFiles as $coreJavaScriptFile)
         {
-            $versionedFilename = self::getVersionedAssetURL($coreJavaScriptFile);
+            $versionedFilename = $this->getVersionedAssetURL($coreJavaScriptFile);
             echo '<script type="text/javascript" src="', $versionedFilename, '"></script>', "\n";
         }
         echo '<script type="text/javascript">CATSIndexName = ', Template::escapeJs((new CATSUtility())->getIndexName()), ';</script>', "\n";
@@ -1354,7 +1354,7 @@ class TemplateUtility
             }
             $extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
 
-            $versionedFilename = self::getVersionedAssetURL($filename);
+            $versionedFilename = $this->getVersionedAssetURL($filename);
 
             if ($extension == 'js')
             {
@@ -1367,10 +1367,10 @@ class TemplateUtility
         }
 
         echo '<!--[if IE]><link rel="stylesheet" type="text/css" href="',
-             self::getVersionedAssetURL('ie.css'),
+             $this->getVersionedAssetURL('ie.css'),
              '" /><![endif]-->', "\n";
         echo '<![if !IE]><link rel="stylesheet" type="text/css" href="',
-             self::getVersionedAssetURL('not-ie.css'),
+             $this->getVersionedAssetURL('not-ie.css'),
              '" /><![endif]>', "\n";
         echo '</head>', "\n\n";
     }
@@ -1381,7 +1381,7 @@ class TemplateUtility
      *
      * @return array rating values and associated image paths
      */
-    private static function _getRatingImages()
+    private function _getRatingImages()
     {
         return array(
             0  => 'images/stars/star0.gif',
