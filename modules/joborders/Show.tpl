@@ -1,7 +1,9 @@
-<?php $catsUtility = new CATSUtility(); $templateUtility = new TemplateUtility(); ?>
 <?php /* $Id: Show.tpl 3814 2007-12-06 17:54:28Z brian $ */
 include_once('./vendor/autoload.php');
 use OpenCATS\UI\QuickActionMenu;
+
+$catsUtility = new CATSUtility();
+$templateUtility = new TemplateUtility();
 ?>
 <?php if ($this->isPopup): ?>
     <?php $templateUtility->printHeader('Job Order - ' . $this->data['title'], array('js/sorttable.js', 'js/match.js', 'js/pipeline.js', 'js/attachment.js')); ?>
