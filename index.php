@@ -69,6 +69,9 @@ include_once(LEGACY_ROOT . '/lib/UserInterface.php'); /* Depends: Template, Sess
 include_once(LEGACY_ROOT . '/lib/ModuleUtility.php'); /* Depends: UserInterface */
 include_once(LEGACY_ROOT . '/lib/TemplateUtility.php'); /* Depends: ModuleUtility, Hooks */
 
+$moduleUtility = new ModuleUtility();
+$catsUtility = new CATSUtility();
+
 
 /* Give the session a unique name to avoid conflicts and start the session. */
 @session_name(CATS_SESSION_NAME);
@@ -99,13 +102,14 @@ if (get_magic_quotes_runtime())
 if (get_magic_quotes_gpc())
 {
     include_once(LEGACY_ROOT . '/lib/ArrayUtility.php');
+    $arrayUtility = new ArrayUtility();
 
     $_GET     = array_map('stripslashes_deep', $_GET);
     $_POST    = array_map('stripslashes_deep', $_POST);
     $_REQUEST = array_map('stripslashes_deep', $_REQUEST);
-    $_GET     = (new ArrayUtility())->arrayMapKeys('stripslashes_deep', $_GET);
-    $_POST    = (new ArrayUtility())->arrayMapKeys('stripslashes_deep', $_POST);
-    $_REQUEST = (new ArrayUtility())->arrayMapKeys('stripslashes_deep', $_REQUEST);
+    $_GET     = $arrayUtility->arrayMapKeys('stripslashes_deep', $_GET);
+    $_POST    = $arrayUtility->arrayMapKeys('stripslashes_deep', $_POST);
+    $_REQUEST = $arrayUtility->arrayMapKeys('stripslashes_deep', $_REQUEST);
 }
 
 /* Objects can't be stored in the session if session.auto_start is enabled. */
@@ -166,7 +170,7 @@ if ($_SESSION['CATS']->isLoggedIn())
                 $URI .= '&s=' . $unixName;
             }
 
-            (new CATSUtility())->transferRelativeURI($URI);
+            $catsUtility->transferRelativeURI($URI);
             die();
         }
     }
@@ -196,27 +200,27 @@ if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST' &
 if (((isset($careerPage) && $careerPage) ||
     (isset($_GET['showCareerPortal']) && $_GET['showCareerPortal'] == '1')))
 {
-    (new ModuleUtility())->loadModule('careers');
+    $moduleUtility->loadModule('careers');
 }
 
 /* Check to see if we are supposed to display an rss page. */
 else if (isset($rssPage) && $rssPage)
 {
-    (new ModuleUtility())->loadModule('rss');
+    $moduleUtility->loadModule('rss');
 }
 
 else if (isset($xmlPage) && $xmlPage)
 {
-    (new ModuleUtility())->loadModule('xml');
+    $moduleUtility->loadModule('xml');
 }
 
 /* Check to see if the user was forcibly logged out (logged in from another browser). */
 else if ($_SESSION['CATS']->isLoggedIn() &&
-    (!isset($_GET['m']) || (new ModuleUtility())->moduleRequiresAuthentication($_GET['m'])) &&
+    (!isset($_GET['m']) || $moduleUtility->moduleRequiresAuthentication($_GET['m'])) &&
     $_SESSION['CATS']->checkForceLogout())
 {
     // FIXME: Unset session / etc.?
-    (new ModuleUtility())->loadModule('login');
+    $moduleUtility->loadModule('login');
 }
 
 /* If user specified a module, load it; otherwise, load the home module. */
@@ -228,11 +232,11 @@ else if (!isset($_GET['m']) || empty($_GET['m']))
 
         if (!eval(Hooks::get('INDEX_LOAD_HOME'))) return;
 
-        (new ModuleUtility())->loadModule('home');
+        $moduleUtility->loadModule('home');
     }
     else
     {
-        (new ModuleUtility())->loadModule('login');
+        $moduleUtility->loadModule('login');
     }
 }
 else
@@ -277,32 +281,32 @@ else
         }
 
         /* catsone.com demo domain doesn't relogin. */
-        if (strpos((new CATSUtility())->getIndexName(), '://demo.catsone.com') !== false)
+        if (strpos($catsUtility->getIndexName(), '://demo.catsone.com') !== false)
         {
-            (new CATSUtility())->transferURL('http://www.catsone.com');
+            $catsUtility->transferURL('http://www.catsone.com');
         }
         else
         {
-            (new CATSUtility())->transferRelativeURI($URI);
+            $catsUtility->transferRelativeURI($URI);
         }
     }
-    else if (!(new ModuleUtility())->moduleRequiresAuthentication($_GET['m']))
+    else if (!$moduleUtility->moduleRequiresAuthentication($_GET['m']))
     {
         /* No authentication required; load the module. */
-        (new ModuleUtility())->loadModule($_GET['m']);
+        $moduleUtility->loadModule($_GET['m']);
     }
     else if (!$_SESSION['CATS']->isLoggedIn())
     {
         /* User isn't logged in and authentication is required; send the user
          * to the login page.
          */
-        (new ModuleUtility())->loadModule('login');
+        $moduleUtility->loadModule('login');
     }
     else
     {
         /* Everything's good; load the requested module. */
         $_SESSION['CATS']->logPageView();
-        (new ModuleUtility())->loadModule($_GET['m']);
+        $moduleUtility->loadModule($_GET['m']);
     }
 }
 
