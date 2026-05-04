@@ -270,7 +270,7 @@ class CompaniesUI extends UserInterface
         /* We want to handle formatting the city and state here instead
          * of in the template.
          */
-        $data['cityAndState'] = (new StringUtility())->makeCityStateString(
+        $data['cityAndState'] = $stringUtility->makeCityStateString(
             $data['city'], $data['state']
         );
 
