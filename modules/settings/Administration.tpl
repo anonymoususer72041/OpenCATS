@@ -1,5 +1,7 @@
-<?php $catsUtility = new CATSUtility(); $templateUtility = new TemplateUtility(); ?>
-<?php /* $Id: Administration.tpl 3722 2007-11-27 21:49:36Z andrew $ */ ?>
+<?php /* $Id: Administration.tpl 3722 2007-11-27 21:49:36Z andrew $ */
+$catsUtility = new CATSUtility();
+$templateUtility = new TemplateUtility();
+?>
 <?php $templateUtility->printHeader('Settings', array('modules/settings/validator.js')); ?>
 <?php $templateUtility->printHeaderBlock(); ?>
 <style>

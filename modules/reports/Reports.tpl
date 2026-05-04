@@ -1,5 +1,7 @@
-<?php $catsUtility = new CATSUtility(); $templateUtility = new TemplateUtility(); ?>
-<?php /* $Id: Reports.tpl 3304 2007-10-25 17:31:55Z will $ */ ?>
+<?php /* $Id: Reports.tpl 3304 2007-10-25 17:31:55Z will $ */
+$catsUtility = new CATSUtility();
+$templateUtility = new TemplateUtility();
+?>
 <?php $templateUtility->printHeader('Reports'); ?>
 <?php $templateUtility->printHeaderBlock(); ?>
 <?php $templateUtility->printTabs($this->active); ?>
