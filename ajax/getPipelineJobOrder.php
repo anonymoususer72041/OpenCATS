@@ -64,6 +64,8 @@ $jobOrdersData = $jobOrders->get($jobOrderID);
 /* Get an array of the pipeline data. */
 $pipelines = new Pipelines($siteID);
 $pipelinesRS = $pipelines->getJobOrderPipeline($jobOrderID);
+$stringUtility = new StringUtility();
+$templateUtility = new TemplateUtility();
 
 /* Format pipeline data. */
 foreach ($pipelinesRS as $rowIndex => $row)
@@ -81,7 +83,7 @@ foreach ($pipelinesRS as $rowIndex => $row)
         $pipelinesRS[$rowIndex]['highlightStyle'] = 'jobLinkCold';
     }
 
-    $pipelinesRS[$rowIndex]['addedByAbbrName'] = (new StringUtility())->makeInitialName(
+    $pipelinesRS[$rowIndex]['addedByAbbrName'] = $stringUtility->makeInitialName(
         $pipelinesRS[$rowIndex]['addedByFirstName'],
         $pipelinesRS[$rowIndex]['addedByLastName'],
         LAST_NAME_MAXLEN
@@ -106,7 +108,7 @@ foreach ($pipelinesRS as $rowIndex => $row)
         $pipelinesRS[$rowIndex]['iconTag'] .= '&nbsp;';
     }
 
-    $pipelinesRS[$rowIndex]['ratingLine'] = (new TemplateUtility())->getRatingObject(
+    $pipelinesRS[$rowIndex]['ratingLine'] = $templateUtility->getRatingObject(
         $pipelinesRS[$rowIndex]['ratingValue'],
         $pipelinesRS[$rowIndex]['candidateJobOrderID'],
         $_SESSION['CATS']->getCookie()
@@ -181,7 +183,7 @@ if (!eval(Hooks::get('JO_AJAX_GET_PIPELINE'))) return;
 
 ?>
 
-<?php echo((new TemplateUtility())->getRatingsArrayJS()); ?>
+<?php echo($templateUtility->getRatingsArrayJS()); ?>
 
 <script type="text/javascript">
     PipelineJobOrder_setLimitDefaultVars('<?php echo($sortBy); ?>', '<?php echo($sortDirection); ?>');
@@ -251,7 +253,7 @@ if (!eval(Hooks::get('JO_AJAX_GET_PIPELINE'))) return;
 
     <?php for ($i = $minEntry; $i < $maxEntry; $i++): ?>
         <?php $pipelinesData = $pipelinesRS[$i]; $rowNumber = $i - $minEntry; ?>
-        <tr class="<?php (new TemplateUtility())->printAlternatingRowClass($rowNumber); ?>" id="pipelineRow<?php echo($rowNumber); ?>">
+        <tr class="<?php $templateUtility->printAlternatingRowClass($rowNumber); ?>" id="pipelineRow<?php echo($rowNumber); ?>">
         	<td>
         		<input type="checkbox" id="checked_<?php echo($pipelinesData['candidateID']); ?>" name="checked" value="<?php echo($pipelinesData['candidateID']); ?>"/>
         	</td>
@@ -322,7 +324,7 @@ if (!eval(Hooks::get('JO_AJAX_GET_PIPELINE'))) return;
             </td>
 <?php endif; ?>
         </tr>
-        <tr class="<?php (new TemplateUtility())->printAlternatingRowClass($rowNumber); ?>" id="pipelineDetails<?php echo($rowNumber); ?>" style="display:none;">
+        <tr class="<?php $templateUtility->printAlternatingRowClass($rowNumber); ?>" id="pipelineDetails<?php echo($rowNumber); ?>" style="display:none;">
             <td colspan="11">
                 <center>
                     <table width="98%" border=1 class="detailsOutside" style="margin:5px;">

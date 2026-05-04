@@ -444,7 +444,7 @@ class CATSUtility
     public function transferRelativeURI($relativePath)
     {
         $newLocation = $this->getAbsoluteURI(
-            (new CATSUtility())->getIndexName() . '?' . $relativePath
+            $this->getIndexName() . '?' . $relativePath
         );
 
         $this->transferURL($newLocation);

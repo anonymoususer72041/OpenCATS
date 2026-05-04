@@ -90,10 +90,11 @@ class TemplateUtility
      */
     public function printHeaderBlock($showTopRight = true)
     {
+        $catsUtility  = new CATSUtility();
         $username     = $_SESSION['CATS']->getUsername();
         $siteName     = $_SESSION['CATS']->getSiteName();
         $fullName     = $_SESSION['CATS']->getFullName();
-        $indexName    = (new CATSUtility())->getIndexName();
+        $indexName    = $catsUtility->getIndexName();
 
         echo '<div id="headerBlock">', "\n";
 
@@ -178,7 +179,7 @@ class TemplateUtility
             $systemInfoData = $systemInfo->getSystemInfo();
 
             if (isset($systemInfoData['available_version']) &&
-                $systemInfoData['available_version'] > (new CATSUtility())->getVersionAsInteger() &&
+                $systemInfoData['available_version'] > $catsUtility->getVersionAsInteger() &&
                 isset($systemInfoData['disable_version_check']) &&
                 !$systemInfoData['disable_version_check'] &&
                 $_SESSION['CATS']->getAccessLevel(ACL::SECOBJ_ROOT) >= ACCESS_LEVEL_SA)
@@ -860,7 +861,8 @@ class TemplateUtility
         {
             if (!(new LicenseUtility())->validateProfessionalKey(LICENSE_KEY))
             {
-                (new CATSUtility())->changeConfigSetting('LICENSE_KEY', "''");
+                $catsUtility = new CATSUtility();
+                $catsUtility->changeConfigSetting('LICENSE_KEY', "''");
             }
         }
     }
@@ -1245,6 +1247,7 @@ class TemplateUtility
      */
     private function _printCommonHeader($pageTitle, $headIncludes = array())
     {
+        $catsUtility = new CATSUtility();
         if (!is_array($headIncludes))
         {
             $headIncludes = array($headIncludes);
@@ -1261,7 +1264,7 @@ class TemplateUtility
         echo '<link rel="icon" href="images/favicon.ico" type="image/x-icon" />', "\n";
         echo '<link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />', "\n";
         echo '<link rel="alternate" type="application/rss+xml" title="RSS" href="',
-             (new CATSUtility())->getIndexName(), '?m=rss" />', "\n";
+             $catsUtility->getIndexName(), '?m=rss" />', "\n";
 
         /* Core JS files */
         $coreJavaScriptFiles = array(
@@ -1276,7 +1279,7 @@ class TemplateUtility
             $versionedFilename = $this->getVersionedAssetURL($coreJavaScriptFile);
             echo '<script type="text/javascript" src="', $versionedFilename, '"></script>', "\n";
         }
-        echo '<script type="text/javascript">CATSIndexName = ', Template::escapeJs((new CATSUtility())->getIndexName()), ';</script>', "\n";
+        echo '<script type="text/javascript">CATSIndexName = ', Template::escapeJs($catsUtility->getIndexName()), ';</script>', "\n";
         if (isset($_SESSION['CATS']) && $_SESSION['CATS']->isLoggedIn())
         {
             $csrfToken = $_SESSION['CATS']->getCSRFToken();

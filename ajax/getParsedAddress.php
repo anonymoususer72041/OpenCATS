@@ -77,18 +77,19 @@ $addressParser->parse($addressBlock, $mode);
 /* Get the parsed address as an associative array. */
 $parsedAddressArray = $addressParser->getAddressArray();
 $phoneNumbers = $parsedAddressArray['phoneNumbers'];
+$resultSetUtility = new ResultSetUtility();
 
 /* Fetch individual phone numbers. */
-$homePhoneRow = (new ResultSetUtility())->findRowByColumnValue(
+$homePhoneRow = $resultSetUtility->findRowByColumnValue(
     $phoneNumbers, 'type', 'home'
 );
-$workPhoneRow = (new ResultSetUtility())->findRowByColumnValue(
+$workPhoneRow = $resultSetUtility->findRowByColumnValue(
     $phoneNumbers, 'type', 'work'
 );
-$cellPhoneRow = (new ResultSetUtility())->findRowByColumnValue(
+$cellPhoneRow = $resultSetUtility->findRowByColumnValue(
     $phoneNumbers, 'type', 'cell'
 );
-$faxRow = (new ResultSetUtility())->findRowByColumnValue(
+$faxRow = $resultSetUtility->findRowByColumnValue(
     $phoneNumbers, 'type', 'fax'
 );
 

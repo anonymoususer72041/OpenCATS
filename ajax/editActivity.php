@@ -81,8 +81,9 @@ $activityAMPM = trim(urldecode($_POST['ampm']));
 $dateFormatFlag = $_SESSION['CATS']->isDateDMY()
     ? DATE_FORMAT_DDMMYY
     : DATE_FORMAT_MMDDYY;
+$dateUtility = new DateUtility();
 
-if (!(new DateUtility())->validate('-', $activityDate, $dateFormatFlag))
+if (!$dateUtility->validate('-', $activityDate, $dateFormatFlag))
 {
     die('Invalid availability date.');
     return;
@@ -103,7 +104,7 @@ $time = strtotime(
 /* Create MySQL date string w/ 24hr time (YYYY-MM-DD HH:MM:SS). */
 $date = sprintf(
     '%s %s',
-    (new DateUtility())->convert(
+    $dateUtility->convert(
         '-', $activityDate, $dateFormatFlag, DATE_FORMAT_YYYYMMDD
     ),
     date('H:i:00', $time)
@@ -115,9 +116,10 @@ if (strpos($activityNote, 'Status change: ') === 0)
     $pipelines = new Pipelines($siteID);
 
     $statusRS = $pipelines->getStatusesForPicking();
+    $stringUtility = new StringUtility();
     foreach ($statusRS as $data)
     {
-        $activityNote = (new StringUtility())->replaceOnce(
+        $activityNote = $stringUtility->replaceOnce(
             $data['status'],
             '<span style="color: #ff6c00;">' . $data['status'] . '</span>',
             $activityNote

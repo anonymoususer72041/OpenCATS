@@ -37,13 +37,14 @@ class ReportsUI extends UserInterface
     public function __construct()
     {
         parent::__construct();
+        $catsUtility = new CATSUtility();
 
         $this->_authenticationRequired = true;
         $this->_moduleDirectory = 'reports';
         $this->_moduleName = 'reports';
         $this->_moduleTabText = 'Reports';
         $this->_subTabs = array(
-                'EEO Reports' => (new CATSUtility())->getIndexName() . '?m=reports&amp;a=customizeEEOReport'
+                'EEO Reports' => $catsUtility->getIndexName() . '?m=reports&amp;a=customizeEEOReport'
             );
     }
 
@@ -347,6 +348,7 @@ class ReportsUI extends UserInterface
 
     private function customizeJobOrderReport()
     {
+        $dateUtility = new DateUtility();
         /* Bail out if we don't have a valid candidate ID. */
         if (!$this->isRequiredIDValid('jobOrderID', $_GET))
         {
@@ -376,7 +378,7 @@ class ReportsUI extends UserInterface
         $reportParameters['periodLine'] = sprintf(
             '%s - %s',
             strtok($data['dateCreated'], ' '),
-            (new DateUtility())->getAdjustedDate('m-d-y')
+            $dateUtility->getAdjustedDate('m-d-y')
         );
 
         $reportParameters['dataSet1'] = $data['pipeline'];
@@ -408,6 +410,8 @@ class ReportsUI extends UserInterface
 
     private function generateJobOrderReportPDF()
     {
+        $dateUtility = new DateUtility();
+        $catsUtility = new CATSUtility();
         /* E_STRICT doesn't like FPDF. */
         $errorReporting = error_reporting();
         error_reporting($errorReporting & ~ E_STRICT);
@@ -462,7 +466,7 @@ class ReportsUI extends UserInterface
 
         $pdf->SetFont($fontFace, '', 10);
         $pdf->SetX(25);
-        $pdf->Write(5, (new DateUtility())->getAdjustedDate('l, F d, Y') . "\n\n\n");
+        $pdf->Write(5, $dateUtility->getAdjustedDate('l, F d, Y') . "\n\n\n");
 
         $pdf->SetFont($fontFace, 'B', 10);
         $pdf->SetX(25);
@@ -491,8 +495,8 @@ class ReportsUI extends UserInterface
         //        really don't like this... There has to be a way.
         // FIXME: "could not make seekable" - http://demo.catsone.net/index.php?m=graphs&a=jobOrderReportGraph&data=%2C%2C%2C
         //        in /usr/local/www/catsone.net/data/lib/fpdf/fpdf.php on line 1500
-        $URI = (new CATSUtility())->getAbsoluteURI(
-            (new CATSUtility())->getIndexName()
+        $URI = $catsUtility->getAbsoluteURI(
+            $catsUtility->getIndexName()
             . '?m=graphs&a=jobOrderReportGraph&data='
             . urlencode(implode(',', $dataSet))
         );
@@ -566,6 +570,7 @@ class ReportsUI extends UserInterface
 
     function generateEEOReportPreview()
     {
+        $catsUtility = new CATSUtility();
         $modePeriod = $this->getTrimmedInput('period', $_GET);
         $modeStatus = $this->getTrimmedInput('status', $_GET);
 
@@ -616,9 +621,9 @@ class ReportsUI extends UserInterface
             $data[] = $line['numberOfCandidates'];
         }
 
-        $urlEthnicGraph = (new CATSUtility())->getAbsoluteURI(
+        $urlEthnicGraph = $catsUtility->getAbsoluteURI(
             sprintf("%s?m=graphs&a=generic&title=%s&labels=%s&data=%s&width=%s&height=%s",
-                (new CATSUtility())->getIndexName(),
+                $catsUtility->getIndexName(),
                 urlencode('Number of Candidates'.$labelStatus.' by Ethnic Type'.$labelPeriod),
                 urlencode(implode(',', $labels)),
                 urlencode(implode(',', $data)),
@@ -639,9 +644,9 @@ class ReportsUI extends UserInterface
             $data[] = $line['numberOfCandidates'];
         }
 
-        $urlVeteranGraph = (new CATSUtility())->getAbsoluteURI(
+        $urlVeteranGraph = $catsUtility->getAbsoluteURI(
             sprintf("%s?m=graphs&a=generic&title=%s&labels=%s&data=%s&width=%s&height=%s",
-                (new CATSUtility())->getIndexName(),
+                $catsUtility->getIndexName(),
                 urlencode('Number of Candidates'.$labelStatus.' by Veteran Status'.$labelPeriod),
                 urlencode(implode(',', $labels)),
                 urlencode(implode(',', $data)),
@@ -661,9 +666,9 @@ class ReportsUI extends UserInterface
         $labels[] = 'Female ('.$rsGenderStatistics['numberOfCandidatesFemale'].')';
         $data[] = $rsGenderStatistics['numberOfCandidatesFemale'];
 
-        $urlGenderGraph = (new CATSUtility())->getAbsoluteURI(
+        $urlGenderGraph = $catsUtility->getAbsoluteURI(
             sprintf("%s?m=graphs&a=genericPie&title=%s&labels=%s&data=%s&width=%s&height=%s&legendOffset=%s",
-                (new CATSUtility())->getIndexName(),
+                $catsUtility->getIndexName(),
                 urlencode('Number of Candidates by Gender'),
                 urlencode(implode(',', $labels)),
                 urlencode(implode(',', $data)),
@@ -689,9 +694,9 @@ class ReportsUI extends UserInterface
         $labels[] = 'Non Disabled ('.$rsDisabledStatistics['numberOfCandidatesNonDisabled'].')';
         $data[] = $rsDisabledStatistics['numberOfCandidatesNonDisabled'];
 
-        $urlDisabilityGraph = (new CATSUtility())->getAbsoluteURI(
+        $urlDisabilityGraph = $catsUtility->getAbsoluteURI(
             sprintf("%s?m=graphs&a=genericPie&title=%s&labels=%s&data=%s&width=%s&height=%s&legendOffset=%s",
-                (new CATSUtility())->getIndexName(),
+                $catsUtility->getIndexName(),
                 urlencode('Number of Candidates by Disability Status'),
                 urlencode(implode(',', $labels)),
                 urlencode(implode(',', $data)),
