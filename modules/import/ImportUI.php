@@ -522,7 +522,7 @@ class ImportUI extends UserInterface
         if ($fileUploadError != UPLOAD_ERR_OK)
         {
             $this->_template->assign(
-                'errorMessage', FileUtility::getErrorMessage($fileUploadError)
+                'errorMessage', (new FileUtility())->getErrorMessage($fileUploadError)
             );
             $this->importSelectType();
             return;
@@ -558,7 +558,7 @@ class ImportUI extends UserInterface
         /* Make a random file name for the file. */
         if ($dataType != 'Resume')
         {
-            $randomFile = FileUtility::makeRandomFilename($tempFilename) . '.tmp';
+            $randomFile = (new FileUtility())->makeRandomFilename($tempFilename) . '.tmp';
         }
         else
         {
@@ -1540,7 +1540,7 @@ class ImportUI extends UserInterface
         if ($step == 1)
         {
             if (isset($_SESSION['CATS_PARSE_TEMP'])) unset($_SESSION['CATS_PARSE_TEMP']);
-            $uploadDir = FileUtility::getUploadPath($siteID, 'massimport');
+            $uploadDir = (new FileUtility())->getUploadPath($siteID, 'massimport');
             $files = ImportUtility::getDirectoryFiles($uploadDir);
             if (is_array($files) && count($files))
             {
@@ -1552,7 +1552,7 @@ class ImportUI extends UserInterface
             $script = $_SERVER['SCRIPT_FILENAME'];
             $mp = explode('/', $script);
             $rootPath = implode('/', array_slice($mp, 0, count($mp) - 1));
-            $subPath = FileUtility::getUploadPath($siteID, 'massimport');
+            $subPath = (new FileUtility())->getUploadPath($siteID, 'massimport');
             if ($subPath !== false)
             {
                 $uploadPath = $rootPath . '/' . $subPath . '/';
@@ -1571,7 +1571,7 @@ class ImportUI extends UserInterface
              * Step 1: Find any uploaded files and get them into an array.
              */
             if (isset($_SESSION['CATS_PARSE_TEMP'])) unset($_SESSION['CATS_PARSE_TEMP']);
-            $uploadDir = FileUtility::getUploadPath($siteID, 'massimport');
+            $uploadDir = (new FileUtility())->getUploadPath($siteID, 'massimport');
             $files = ImportUtility::getDirectoryFiles($uploadDir);
             if ($files === -1 || !is_array($files) || !count($files))
             {
@@ -1646,7 +1646,7 @@ class ImportUI extends UserInterface
         else if ($step == 99)
         {
             // User wants to delete all files in their upload folder
-            $uploadDir = FileUtility::getUploadPath($siteID, 'massimport');
+            $uploadDir = (new FileUtility())->getUploadPath($siteID, 'massimport');
             $files = ImportUtility::getDirectoryFiles($uploadDir);
             if (is_array($files) && count($files))
             {
@@ -1890,7 +1890,7 @@ class ImportUI extends UserInterface
                             if (!strcmp($fileName, $matches[1]))
                             {
                                 $brExists = true;
-                                if (FileUtility::isUploadFileSafe($siteID, 'massimport', $doc['name']))
+                                if ((new FileUtility())->isUploadFileSafe($siteID, 'massimport', $doc['name']))
                                 {
                                     @unlink($doc['name']);
                                 }
@@ -1954,7 +1954,7 @@ class ImportUI extends UserInterface
                                 // Delete the permanent file
                                 $attachments->delete($bulkResume['attachmentID'], true);
                                 // Delete the temporary file
-                                if (FileUtility::isUploadFileSafe($siteID, 'massimport', $doc['name']))
+                                if ((new FileUtility())->isUploadFileSafe($siteID, 'massimport', $doc['name']))
                                 {
                                     @unlink($doc['name']);
                                 }
@@ -1972,7 +1972,7 @@ class ImportUI extends UserInterface
                 );
 
                 // Make sure it's a safe filename to delete and located in the site's upload directory
-                if (FileUtility::isUploadFileSafe($siteID, 'massimport', $doc['name']))
+                if ((new FileUtility())->isUploadFileSafe($siteID, 'massimport', $doc['name']))
                 {
                     @unlink($doc['name']);
                 }
@@ -2092,7 +2092,7 @@ class ImportUI extends UserInterface
             CommonErrors::fatal(COMMONERROR_PERMISSION, $this);
         }
 
-        $uploadPath = FileUtility::getUploadPath($this->_siteID, 'massimport');
+        $uploadPath = (new FileUtility())->getUploadPath($this->_siteID, 'massimport');
 
         $attachments = new Attachments($this->_siteID);
         $bulkResumes = $attachments->getBulkAttachments();
@@ -2125,7 +2125,7 @@ class ImportUI extends UserInterface
             CommonErrors::fatal(COMMONERROR_PERMISSION, $this);
         }
 
-        $uploadPath = FileUtility::getUploadPath($this->_siteID, 'massimport');
+        $uploadPath = (new FileUtility())->getUploadPath($this->_siteID, 'massimport');
 
         $attachments = new Attachments($this->_siteID);
         $bulkResumes = $attachments->getBulkAttachments();

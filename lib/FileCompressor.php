@@ -661,7 +661,7 @@ class ZipFileCreator
         }
         unset($fileRecord);
 
-        $tempFilename = FileUtility::makeRandomTemporaryFilePath();
+        $tempFilename = (new FileUtility())->makeRandomTemporaryFilePath();
 
         $compressedLength = 0;
         $fhSource = fopen(realpath($filename), 'rb');        

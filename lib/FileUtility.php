@@ -215,7 +215,7 @@ class FileUtility
          */
         do
         {
-            $filePath = CATS_TEMP_DIR . '/' . FileUtility::makeRandomFilename();
+            $filePath = CATS_TEMP_DIR . '/' . (new FileUtility())->makeRandomFilename();
         }
         while (file_exists($filePath));
 
@@ -502,7 +502,7 @@ class FileUtility
 
     /**
      * Checks whether a given file is safe to view, edit, delete, that it exists, and
-     * that it is contained in a path restricted by FileUtility::getUploadPath()
+     * that it is contained in a path restricted by (new FileUtility())->getUploadPath()
      *
      * @param integer ID of the site
      * @param string subdirectory (if necessary)
@@ -511,7 +511,7 @@ class FileUtility
      */
     public static function isUploadFileSafe($siteID, $subDirectory, $fileName)
     {
-        if (($uploadPath = FileUtility::getUploadPath($siteID, $subDirectory)) === false)
+        if (($uploadPath = (new FileUtility())->getUploadPath($siteID, $subDirectory)) === false)
         {
             // site has no upload path, by definition it is not safe
             return false;
@@ -580,8 +580,8 @@ class FileUtility
 
             if (!eval(Hooks::get('FILE_UTILITY_SPACE_CHECK'))) return;
 
-            $uploadPath = FileUtility::getUploadPath($siteID, $subDirectory);
-            $newFileName = FileUtility::makeSafeFilename($_FILES[$id]['name']);
+            $uploadPath = (new FileUtility())->getUploadPath($siteID, $subDirectory);
+            $newFileName = (new FileUtility())->makeSafeFilename($_FILES[$id]['name']);
 
             // Could just while(file_exists) it, but I'm paranoid of infinate loops
             // Shouldn't have 1000 files of the same name anyway

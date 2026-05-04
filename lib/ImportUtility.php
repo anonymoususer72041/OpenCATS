@@ -69,7 +69,7 @@ class ImportUtility
                 $fileExt = strtolower(substr($fileExt, 1));
 
                 // Make sure it's a document type we can get text from
-                if (($docType = FileUtility::getDocumentType($file)) == DOCUMENT_TYPE_UNKNOWN) continue;
+                if (($docType = (new FileUtility())->getDocumentType($file)) == DOCUMENT_TYPE_UNKNOWN) continue;
 
                 $fileMp = array(
                     'realName' => $file,

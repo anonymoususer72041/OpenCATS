@@ -51,7 +51,7 @@ class DocumentToText
 
     /**
      * Returns a document type based on its file extension and content type.
-     * This is simply a wrapper for FileUtility::getDocumentType().
+     * This is simply a wrapper for (new FileUtility())->getDocumentType().
      *
      * @param string Document file name with extension.
      * @param string MIME content type.
@@ -59,7 +59,7 @@ class DocumentToText
      */
     public function getDocumentType($fileName, $contentType = false)
     {
-        return FileUtility::getDocumentType($fileName, $contentType);
+        return (new FileUtility())->getDocumentType($fileName, $contentType);
     }
 
     /**
@@ -355,7 +355,7 @@ class DocumentToText
             $tempFile = sprintf(
                 '%s/%s.txt',
                 realpath(CATS_TEMP_DIR),
-                FileUtility::makeRandomFilename()
+                (new FileUtility())->makeRandomFilename()
             );
 
             /* Create a new COM Windows Scripting Host Shell object. */

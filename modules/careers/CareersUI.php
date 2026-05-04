@@ -371,10 +371,10 @@ class CareersUI extends UserInterface
                 $candidate['eeoDisabilityStatus']
             );
 
-            $uploadResume = FileUtility::getUploadFileFromPost($siteID, 'careerportaladd', 'file');
+            $uploadResume = (new FileUtility())->getUploadFileFromPost($siteID, 'careerportaladd', 'file');
             if ($uploadResume !== false)
             {
-                $uploadPath = FileUtility::getUploadFilePath($siteID, 'careerportaladd', $uploadResume);
+                $uploadPath = (new FileUtility())->getUploadFilePath($siteID, 'careerportaladd', $uploadResume);
                 if ($uploadPath !== false)
                 {
                     // Replace most current resume with new uploaded resume
@@ -540,9 +540,9 @@ class CareersUI extends UserInterface
                 }
 
                 // Check if a file has been uploaded, if so populate the contents textarea
-                if (($uploadFile = FileUtility::getUploadFileFromPost($siteID, 'careerportaladd', 'resumeFile')) !== false)
+                if (($uploadFile = (new FileUtility())->getUploadFileFromPost($siteID, 'careerportaladd', 'resumeFile')) !== false)
                 {
-                    $uploadFilePath = FileUtility::getUploadFilePath($siteID, 'careerportaladd', $uploadFile);
+                    $uploadFilePath = (new FileUtility())->getUploadFilePath($siteID, 'careerportaladd', $uploadFile);
 
                     if ($uploadFilePath !== false)
                     {
@@ -1683,7 +1683,7 @@ class CareersUI extends UserInterface
         {
             $resumePath = '';
 
-            $newFilePath = FileUtility::getUploadFilePath($siteID, 'careerportaladd', $_POST['file']);
+            $newFilePath = (new FileUtility())->getUploadFilePath($siteID, 'careerportaladd', $_POST['file']);
 
             if ($newFilePath !== false)
             {
@@ -1949,7 +1949,7 @@ class CareersUI extends UserInterface
             $appendHiddenTag($name, $value);
         }
 
-        if (($uploadFile = FileUtility::getUploadFileFromPost($siteID, 'careerportaladd', 'file')) !== false)
+        if (($uploadFile = (new FileUtility())->getUploadFileFromPost($siteID, 'careerportaladd', 'file')) !== false)
         {
             $fileFieldName = 'file';
             if ($isValidName($fileFieldName))

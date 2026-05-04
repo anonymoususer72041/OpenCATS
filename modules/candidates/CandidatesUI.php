@@ -680,7 +680,7 @@ class CandidatesUI extends UserInterface
 
             /* Show an attachment icon based on the document's file type. */
             $attachmentIcon = strtolower(
-                FileUtility::getAttachmentIcon(
+                (new FileUtility())->getAttachmentIcon(
                     $attachmentsRS[$rowNumber]['originalFilename']
                 )
             );
@@ -896,7 +896,7 @@ class CandidatesUI extends UserInterface
 
             /* Show an attachment icon based on the document's file type. */
             $attachmentIcon = strtolower(
-                FileUtility::getAttachmentIcon(
+                (new FileUtility())->getAttachmentIcon(
                     $associatedAttachmentRS['originalFilename']
                 )
             );
@@ -939,7 +939,7 @@ class CandidatesUI extends UserInterface
             $associatedFileResume = $_SESSION['CATS']->retrieveData($_GET['resumeFileID']);
             $associatedFileResume['id'] = $_GET['resumeFileID'];
             $associatedFileResume['attachmentIcon'] = strtolower(
-                FileUtility::getAttachmentIcon(
+                (new FileUtility())->getAttachmentIcon(
                     $associatedFileResume['filename']
                 )
             );
@@ -1054,7 +1054,7 @@ class CandidatesUI extends UserInterface
             if (isset($_POST['loadDocument']) && $_POST['loadDocument'] == 'true')
             {
                 // Get the upload file from the post data
-                $newFileName = FileUtility::getUploadFileFromPost(
+                $newFileName = (new FileUtility())->getUploadFileFromPost(
                     $this->_siteID, // The site ID
                     'addcandidate', // Sub-directory of the site's upload folder
                     'documentFile'  // The DOM "name" from the <input> element
@@ -1063,7 +1063,7 @@ class CandidatesUI extends UserInterface
                 if ($newFileName !== false)
                 {
                     // Get the relative path to the file (to perform operations on)
-                    $newFilePath = FileUtility::getUploadFilePath(
+                    $newFilePath = (new FileUtility())->getUploadFilePath(
                         $this->_siteID, // The site ID
                         'addcandidate', // The sub-directory
                         $newFileName
@@ -1096,7 +1096,7 @@ class CandidatesUI extends UserInterface
                         strcasecmp($oldFile, $newFileName))
                     {
                         // Get the safe, old file they uploaded and didn't use (if exists) and delete
-                        $oldFilePath = FileUtility::getUploadFilePath($this->_siteID, 'addcandidate', $oldFile);
+                        $oldFilePath = (new FileUtility())->getUploadFilePath($this->_siteID, 'addcandidate', $oldFile);
 
                         if ($oldFilePath !== false)
                         {
@@ -2985,11 +2985,11 @@ class CandidatesUI extends UserInterface
              * box over what's already uploaded method to avoid losing resumes on candidate
              * additions.
              */
-            $newFile = FileUtility::getUploadFileFromPost($this->_siteID, 'addcandidate', 'documentFile');
+            $newFile = (new FileUtility())->getUploadFileFromPost($this->_siteID, 'addcandidate', 'documentFile');
 
             if ($newFile !== false)
             {
-                $newFilePath = FileUtility::getUploadFilePath($this->_siteID, 'addcandidate', $newFile);
+                $newFilePath = (new FileUtility())->getUploadFilePath($this->_siteID, 'addcandidate', $newFile);
 
                 $tempFile = $newFile;
                 $tempFullPath = $newFilePath;
@@ -3005,7 +3005,7 @@ class CandidatesUI extends UserInterface
                 {
                     $tempFile = $_POST['documentTempFile'];
                     // Get the path of the file they uploaded already to attach
-                    $tempFullPath = FileUtility::getUploadFilePath(
+                    $tempFullPath = (new FileUtility())->getUploadFilePath(
                         $this->_siteID,   // ID of the containing site
                         'addcandidate',   // Sub-directory in their storage
                         $tempFile         // Name of the file (not pathed)

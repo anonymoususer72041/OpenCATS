@@ -51,7 +51,7 @@ class CATSSchema
                 {
                     if (strlen($data[\'directory_name\']) < 25)
                     {
-                        $dir = FileUtility::getUniqueDirectory();
+                        $dir = (new FileUtility())->getUniqueDirectory();
                         if (rename(\'attachments/\' . $data[\'directory_name\'], \'attachments/\' . $dir))
                         {
                             $db->query("UPDATE attachment SET directory_name = \'" . $dir . "\' WHERE attachment_id = " . $data[\'attachment_id\']);

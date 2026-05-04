@@ -527,7 +527,7 @@ class InstallationTests
                 echo sprintf(
                     '<tr class="fail"><td>Antiword binary %s is not executable (permissions: %s).</td></tr>',
                     ANTIWORD_PATH,
-                    FileUtility::getOctalPermissions(ANTIWORD_PATH)
+                    (new FileUtility())->getOctalPermissions(ANTIWORD_PATH)
                 );
             }
             else
@@ -577,7 +577,7 @@ class InstallationTests
                 echo sprintf(
                     '<tr class="fail"><td>Pdftotext binary %s is not executable (permissions: %s).</td></tr>',
                     PDFTOTEXT_PATH,
-                    FileUtility::getOctalPermissions(PDFTOTEXT_PATH)
+                    (new FileUtility())->getOctalPermissions(PDFTOTEXT_PATH)
                 );
             }
             else
@@ -627,7 +627,7 @@ class InstallationTests
                 echo sprintf(
                     '<tr class="fail"><td>Html2Text binary %s is not executable (permissions: %s).</td></tr>',
                     HTML2TEXT_PATH,
-                    FileUtility::getOctalPermissions(HTML2TEXT_PATH)
+                    (new FileUtility())->getOctalPermissions(HTML2TEXT_PATH)
                 );
             }
             else
@@ -677,7 +677,7 @@ class InstallationTests
                 echo sprintf(
                     '<tr class="fail"><td>UnRTF binary %s is not executable (permissions: %s).</td></tr>',
                     HTML2TEXT_PATH,
-                    FileUtility::getOctalPermissions(HTML2TEXT_PATH)
+                    (new FileUtility())->getOctalPermissions(HTML2TEXT_PATH)
                 );
             }
             else
@@ -740,7 +740,7 @@ class InstallationTests
     public static function checkDirectoryWritable()
     {
         $proceed = true;
-        if (!self::DEBUG_FAIL && FileUtility::isDirectoryWritable('./'))
+        if (!self::DEBUG_FAIL && (new FileUtility())->isDirectoryWritable('./'))
         {
             echo sprintf(
                 '<tr class="pass"><td>Creating a file within ./ succeeded.</td></tr>'
@@ -807,7 +807,7 @@ class InstallationTests
             return false;
         }
 
-        $octalPermissions = FileUtility::getOctalPermissions($directory);
+        $octalPermissions = (new FileUtility())->getOctalPermissions($directory);
 
         $proceed = true;
 
@@ -852,7 +852,7 @@ class InstallationTests
         /* Test ACTUAL writeability by creating a file, not relying on is_writable()
          * as it sometimes returns a false positive.
          */
-        if (FileUtility::isDirectoryWritable($directory))
+        if ((new FileUtility())->isDirectoryWritable($directory))
         {
             echo sprintf(
                 '<tr class="pass"><td>Creating a file within %s succeeded.</td></tr>',
@@ -873,7 +873,7 @@ class InstallationTests
 
         if (is_dir($testPath))
         {
-            FileUtility::recursivelyRemoveDirectory($testPath);
+            (new FileUtility())->recursivelyRemoveDirectory($testPath);
         }
 
         if (@mkdir($testPath, 0777))
@@ -894,7 +894,7 @@ class InstallationTests
 
         if (is_dir($testPath))
         {
-            FileUtility::recursivelyRemoveDirectory($testPath);
+            (new FileUtility())->recursivelyRemoveDirectory($testPath);
         }
 
         return $proceed;

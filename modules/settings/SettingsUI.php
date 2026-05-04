@@ -2222,7 +2222,7 @@ class SettingsUI extends UserInterface
 
         foreach ($attachmentsRS as $index => $data)
         {
-            $attachmentsRS[$index]['fileSize'] = FileUtility::sizeToHuman(
+            $attachmentsRS[$index]['fileSize'] = (new FileUtility())->sizeToHuman(
                 filesize($data['retrievalURLLocal']), 2, 1
             );
         }
@@ -3374,7 +3374,7 @@ class SettingsUI extends UserInterface
         $siteID = $_SESSION['CATS']->getSiteID();
 
         // Echos Ok to redirect to the import stage, or Fail to go to home module
-        $files = ImportUtility::getDirectoryFiles(FileUtility::getUploadPath($siteID, 'massimport'));
+        $files = ImportUtility::getDirectoryFiles((new FileUtility())->getUploadPath($siteID, 'massimport'));
 
         if (count($files)) echo 'Ok';
         else echo 'Fail';

@@ -359,7 +359,7 @@ class Attachments
         $directoryName = 'attachments/' . $directoryName;
         if (is_dir($directoryName))
         {
-            FileUtility::recursivelyRemoveDirectory($directoryName);
+            (new FileUtility())->recursivelyRemoveDirectory($directoryName);
         }
 
         return true;
@@ -416,7 +416,7 @@ class Attachments
 
             if (is_dir($directory))
             {
-                FileUtility::recursivelyRemoveDirectory($directory);
+                (new FileUtility())->recursivelyRemoveDirectory($directory);
             }
         }
 
@@ -707,7 +707,7 @@ class Attachments
      */
     public static function fileMimeType($filename)
     {
-        $extension = FileUtility::getFileExtension($filename);
+        $extension = (new FileUtility())->getFileExtension($filename);
 
         foreach (file('lib/mime.types') as $line)
         {
@@ -951,7 +951,7 @@ class AttachmentCreator
         if ($uploadError != UPLOAD_ERR_OK)
         {
             $this->_isError = true;
-            $this->_error = FileUtility::getErrorMessage($uploadError);
+            $this->_error = (new FileUtility())->getErrorMessage($uploadError);
             return false;
         }
 
@@ -967,7 +967,7 @@ class AttachmentCreator
             'xlsx', 'xps'
         );
 
-        $extension = FileUtility::getFileExtension($originalFilename);
+        $extension = (new FileUtility())->getFileExtension($originalFilename);
 
         if (!in_array($extension, $allowedExtensions, true))
         {
@@ -1077,10 +1077,10 @@ class AttachmentCreator
         $contentType, $fileContents, $fileExists)
     {
         /* Make a 'safe' filename with only standard ASCII characters. */
-        $storedFilename = FileUtility::makeSafeFilename($originalFilename);
+        $storedFilename = (new FileUtility())->makeSafeFilename($originalFilename);
 
         /* Create an attachment title. */
-        $attachmentTitle = FileUtility::getFileWithoutExtension(
+        $attachmentTitle = (new FileUtility())->getFileWithoutExtension(
             $originalFilename
         );
 
@@ -1361,7 +1361,7 @@ class AttachmentCreator
         $uniqueDirectory = sprintf(
             '%s/%s/',
             $IDGroupDirectory,
-            FileUtility::getUniqueDirectory($IDGroupDirectory, $storedFilename)
+            (new FileUtility())->getUniqueDirectory($IDGroupDirectory, $storedFilename)
         );
 
         /* Attempt to create a directory for this attachment ID. */

@@ -484,7 +484,7 @@ class JobOrdersUI extends UserInterface
         {
             /* Show an attachment icon based on the document's file type. */
             $attachmentIcon = strtolower(
-                FileUtility::getAttachmentIcon(
+                (new FileUtility())->getAttachmentIcon(
                     $attachmentsRS[$rowNumber]['originalFilename']
                 )
             );
