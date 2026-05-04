@@ -15,16 +15,16 @@ class AddressParserTest extends TestCase
 
     function makePhoneNumberArray($phoneNumbers)
     {
-        $homePhoneRow = ResultSetUtility::findRowByColumnValue(
+        $homePhoneRow = (new ResultSetUtility())->findRowByColumnValue(
             $phoneNumbers, 'type', 'home'
             );
-        $workPhoneRow = ResultSetUtility::findRowByColumnValue(
+        $workPhoneRow = (new ResultSetUtility())->findRowByColumnValue(
             $phoneNumbers, 'type', 'work'
             );
-        $cellPhoneRow = ResultSetUtility::findRowByColumnValue(
+        $cellPhoneRow = (new ResultSetUtility())->findRowByColumnValue(
             $phoneNumbers, 'type', 'cell'
             );
-        $faxRow = ResultSetUtility::findRowByColumnValue(
+        $faxRow = (new ResultSetUtility())->findRowByColumnValue(
             $phoneNumbers, 'type', 'fax'
             );
 

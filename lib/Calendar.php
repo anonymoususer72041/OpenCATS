@@ -158,7 +158,7 @@ class Calendar
             /* See if we can find a row in the result set that has 'day' set
              * to $i.
              */
-            $firstOffset = ResultSetUtility::findRowByColumnValue(
+            $firstOffset = (new ResultSetUtility())->findRowByColumnValue(
                 $rs, 'day', $i
             );
 
@@ -183,7 +183,7 @@ class Calendar
              */
             for ($skip = 1; ; ++$skip)
             {
-                $nextOffset = ResultSetUtility::findRowByColumnValue(
+                $nextOffset = (new ResultSetUtility())->findRowByColumnValue(
                     $rs, 'day', $i, $skip
                 );
                 if ($nextOffset === false)

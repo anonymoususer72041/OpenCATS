@@ -1042,7 +1042,7 @@ class ContactsUI extends UserInterface
         }
 
 
-        $contactIDs = implode(',', ResultSetUtility::getColumnValues($rs, 'contactID'));
+        $contactIDs = implode(',', (new ResultSetUtility())->getColumnValues($rs, 'contactID'));
         $exportForm = ExportUtility::getForm(
             DATA_ITEM_CONTACT, $contactIDs, 40, 15
         );
@@ -1354,7 +1354,7 @@ class ContactsUI extends UserInterface
             $activityTypeID = (int) $_POST['activityTypeID'];
             $activityEntries = new ActivityEntries($this->_siteID);
             $activityTypes = $activityEntries->getTypes();
-            if (ResultSetUtility::findRowByColumnValue(
+            if ((new ResultSetUtility())->findRowByColumnValue(
                 $activityTypes, 'typeID', $activityTypeID
             ) === false)
             {
@@ -1372,7 +1372,7 @@ class ContactsUI extends UserInterface
                 $this->_userID,
                 $regardingID
             );
-            $activityTypeDescription = ResultSetUtility::getColumnValueByIDValue(
+            $activityTypeDescription = (new ResultSetUtility())->getColumnValueByIDValue(
                 $activityTypes, 'typeID', $activityTypeID, 'type'
             );
 
@@ -1522,7 +1522,7 @@ class ContactsUI extends UserInterface
             $calendar = new Calendar($this->_siteID);
             $calendarEventTypes = $calendar->getAllEventTypes();
 
-            $eventTypeDescription = ResultSetUtility::getColumnValueByIDValue(
+            $eventTypeDescription = (new ResultSetUtility())->getColumnValueByIDValue(
                 $calendarEventTypes, 'typeID', $eventTypeID, 'description'
             );
 

@@ -748,13 +748,13 @@ class AddressParser
         /* Figure out which phone number types we've already found. We'll
          * use this below.
          */
-        $homePhoneRow = ResultSetUtility::findRowByColumnValue(
+        $homePhoneRow = (new ResultSetUtility())->findRowByColumnValue(
             $numbers, 'type', 'home'
         );
-        $workPhoneRow = ResultSetUtility::findRowByColumnValue(
+        $workPhoneRow = (new ResultSetUtility())->findRowByColumnValue(
             $numbers, 'type', 'work'
         );
-        $cellPhoneRow = ResultSetUtility::findRowByColumnValue(
+        $cellPhoneRow = (new ResultSetUtility())->findRowByColumnValue(
             $numbers, 'type', 'cell'
         );
             

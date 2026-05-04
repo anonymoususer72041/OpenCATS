@@ -1285,7 +1285,7 @@ class JobOrdersUI extends UserInterface
 
         foreach ($rs as $rowIndex => $row)
         {
-            if (ResultSetUtility::findRowByColumnValue($pipelinesRS,
+            if ((new ResultSetUtility())->findRowByColumnValue($pipelinesRS,
                 'candidateID', $row['candidateID']) !== false)
             {
                 $rs[$rowIndex]['inPipeline'] = true;
@@ -1849,7 +1849,7 @@ class JobOrdersUI extends UserInterface
 
         $query = urlencode(htmlspecialchars($query));
 
-        $jobOderIDs = implode(',', ResultSetUtility::getColumnValues($rs, 'jobOrderID'));
+        $jobOderIDs = implode(',', (new ResultSetUtility())->getColumnValues($rs, 'jobOrderID'));
         $exportForm = ExportUtility::getForm(
             DATA_ITEM_JOBORDER, $jobOderIDs, 29, 5
         );

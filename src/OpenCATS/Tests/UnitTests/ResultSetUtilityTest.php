@@ -48,78 +48,78 @@ class ResultSetUtilityTest extends TestCase
 
         /* Test simple 'finding' functionality. */
         $this->assertSame(
-            ResultSetUtility::findRowByColumnValue($input, 'ID', 100),
+            (new ResultSetUtility())->findRowByColumnValue($input, 'ID', 100),
             0
             );
         $this->assertSame(
-            ResultSetUtility::findRowByColumnValue($input, 'ID', 200),
+            (new ResultSetUtility())->findRowByColumnValue($input, 'ID', 200),
             1
             );
         $this->assertSame(
-            ResultSetUtility::findRowByColumnValue($input, 'ID', 300),
+            (new ResultSetUtility())->findRowByColumnValue($input, 'ID', 300),
             2
             );
         $this->assertSame(
-            ResultSetUtility::findRowByColumnValue($input, 'ID', 400),
+            (new ResultSetUtility())->findRowByColumnValue($input, 'ID', 400),
             3
             );
         $this->assertSame(
-            ResultSetUtility::findRowByColumnValue($input, 'ID', 500),
+            (new ResultSetUtility())->findRowByColumnValue($input, 'ID', 500),
             4
             );
         $this->assertSame(
-            ResultSetUtility::findRowByColumnValue($input, 'ID', 500.0),
+            (new ResultSetUtility())->findRowByColumnValue($input, 'ID', 500.0),
             4
             );
         $this->assertSame(
-            ResultSetUtility::findRowByColumnValue($input, 'ID', '500'),
+            (new ResultSetUtility())->findRowByColumnValue($input, 'ID', '500'),
             4
             );
         $this->assertSame(
-            ResultSetUtility::findRowByColumnValue($input, 'Type', 'Mammal'),
+            (new ResultSetUtility())->findRowByColumnValue($input, 'Type', 'Mammal'),
             0
             );
         $this->assertSame(
-            ResultSetUtility::findRowByColumnValue($input, 'Sound', 'Hiss'),
+            (new ResultSetUtility())->findRowByColumnValue($input, 'Sound', 'Hiss'),
             4
             );
         $this->assertSame(
-            ResultSetUtility::findRowByColumnValue($input, 'ID', 600),
+            (new ResultSetUtility())->findRowByColumnValue($input, 'ID', 600),
             false
             );
 
         /* Test skipping. */
         $this->assertSame(
-            ResultSetUtility::findRowByColumnValue($input, 'Type', 'Mammal', 1),
+            (new ResultSetUtility())->findRowByColumnValue($input, 'Type', 'Mammal', 1),
             1
             );
         $this->assertSame(
-            ResultSetUtility::findRowByColumnValue($input, 'Type', 'Mammal', 2),
+            (new ResultSetUtility())->findRowByColumnValue($input, 'Type', 'Mammal', 2),
             2
             );
 
 
         /* Test strict matching. */
         $this->assertSame(
-            ResultSetUtility::findRowByColumnValueStrict($input, 'Sound', 'Hiss'),
+            (new ResultSetUtility())->findRowByColumnValueStrict($input, 'Sound', 'Hiss'),
             4
             );
         $this->assertSame(
-            ResultSetUtility::findRowByColumnValueStrict($input, 'ID', '500'),
+            (new ResultSetUtility())->findRowByColumnValueStrict($input, 'ID', '500'),
             false
             );
         $this->assertSame(
-            ResultSetUtility::findRowByColumnValueStrict($input, 'ID', 500.0),
+            (new ResultSetUtility())->findRowByColumnValueStrict($input, 'ID', 500.0),
             false
             );
 
         /* Just in case strict and non-strict functions aren't identical... */
         $this->assertSame(
-            ResultSetUtility::findRowByColumnValueStrict($input, 'Type', 'Mammal', 1),
+            (new ResultSetUtility())->findRowByColumnValueStrict($input, 'Type', 'Mammal', 1),
             1
             );
         $this->assertSame(
-            ResultSetUtility::findRowByColumnValueStrict($input, 'Type', 'Mammal', 2),
+            (new ResultSetUtility())->findRowByColumnValueStrict($input, 'Type', 'Mammal', 2),
             2
             );
     }

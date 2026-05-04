@@ -1091,7 +1091,7 @@ class CompaniesUI extends UserInterface
             }
         }
 
-        $companyIDs = implode(',', ResultSetUtility::getColumnValues($rs, 'companyID'));
+        $companyIDs = implode(',', (new ResultSetUtility())->getColumnValues($rs, 'companyID'));
         $exportForm = ExportUtility::getForm(
             DATA_ITEM_COMPANY, $companyIDs, 40, 15
         );

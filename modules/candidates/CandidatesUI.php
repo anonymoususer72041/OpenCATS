@@ -1620,7 +1620,7 @@ class CandidatesUI extends UserInterface
 
         foreach ($rs as $rowIndex => $row)
         {
-            if (ResultSetUtility::findRowByColumnValue($pipelinesRS,
+            if ((new ResultSetUtility())->findRowByColumnValue($pipelinesRS,
                 'jobOrderID', $row['jobOrderID']) !== false && count($candidateIDArray) == 1)
             {
                 $rs[$rowIndex]['inPipeline'] = true;
@@ -1883,7 +1883,7 @@ class CandidatesUI extends UserInterface
         $statusRS = $pipelines->getStatusesForPicking();
         if ($selectedJobOrderID != -1)
         {
-            $pipelineData = ResultSetUtility::findRowByColumnValue(
+            $pipelineData = (new ResultSetUtility())->findRowByColumnValue(
                 $pipelineRS,
                 'jobOrderID',
                 $selectedJobOrderID
@@ -2384,7 +2384,7 @@ class CandidatesUI extends UserInterface
                 break;
         }
 
-        $candidateIDs = implode(',', ResultSetUtility::getColumnValues($rs, 'candidateID'));
+        $candidateIDs = implode(',', (new ResultSetUtility())->getColumnValues($rs, 'candidateID'));
         $exportForm = ExportUtility::getForm(
             DATA_ITEM_CANDIDATE, $candidateIDs, 32, 9
         );
@@ -3142,7 +3142,7 @@ class CandidatesUI extends UserInterface
             $activityTypeID = (int) $_POST['activityTypeID'];
             $activityEntries = new ActivityEntries($this->_siteID);
             $activityTypes = $activityEntries->getTypes();
-            if (ResultSetUtility::findRowByColumnValue(
+            if ((new ResultSetUtility())->findRowByColumnValue(
                 $activityTypes, 'typeID', $activityTypeID
             ) === false)
             {
@@ -3160,7 +3160,7 @@ class CandidatesUI extends UserInterface
                 $this->_userID,
                 $regardingID
             );
-            $activityTypeDescription = ResultSetUtility::getColumnValueByIDValue(
+            $activityTypeDescription = (new ResultSetUtility())->getColumnValueByIDValue(
                 $activityTypes, 'typeID', $activityTypeID, 'type'
             );
 
@@ -3314,7 +3314,7 @@ class CandidatesUI extends UserInterface
             $calendar = new Calendar($this->_siteID);
             $calendarEventTypes = $calendar->getAllEventTypes();
 
-            $eventTypeDescription = ResultSetUtility::getColumnValueByIDValue(
+            $eventTypeDescription = (new ResultSetUtility())->getColumnValueByIDValue(
                 $calendarEventTypes, 'typeID', $eventTypeID, 'description'
             );
 
@@ -3411,7 +3411,7 @@ class CandidatesUI extends UserInterface
         }
 
         $statusID = (int) $_POST['statusID'];
-        $validStatus = ResultSetUtility::findRowByColumnValue(
+        $validStatus = (new ResultSetUtility())->findRowByColumnValue(
             $statusRS, 'statusID', $statusID
         );
         if ($validStatus === false)
@@ -3453,7 +3453,7 @@ class CandidatesUI extends UserInterface
         }
 
         $oldStatusDescription = $data['status'];
-        $newStatusDescription = ResultSetUtility::getColumnValueByIDValue(
+        $newStatusDescription = (new ResultSetUtility())->getColumnValueByIDValue(
             $statusRS, 'statusID', $statusID, 'status'
         );
         $statusChanged = ($statusID != $data['statusID']);
