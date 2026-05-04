@@ -1503,7 +1503,7 @@ class JobOrdersUI extends UserInterface
         $calendar = new Calendar($this->_siteID);
         $calendarEventTypes = $calendar->getAllEventTypes();
 
-        if (SystemUtility::isSchedulerEnabled() && !$_SESSION['CATS']->isDemo())
+        if ((new SystemUtility())->isSchedulerEnabled() && !$_SESSION['CATS']->isDemo())
         {
             $allowEventReminders = true;
         }

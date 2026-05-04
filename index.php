@@ -196,27 +196,27 @@ if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST' &
 if (((isset($careerPage) && $careerPage) ||
     (isset($_GET['showCareerPortal']) && $_GET['showCareerPortal'] == '1')))
 {
-    ModuleUtility::loadModule('careers');
+    (new ModuleUtility())->loadModule('careers');
 }
 
 /* Check to see if we are supposed to display an rss page. */
 else if (isset($rssPage) && $rssPage)
 {
-    ModuleUtility::loadModule('rss');
+    (new ModuleUtility())->loadModule('rss');
 }
 
 else if (isset($xmlPage) && $xmlPage)
 {
-    ModuleUtility::loadModule('xml');
+    (new ModuleUtility())->loadModule('xml');
 }
 
 /* Check to see if the user was forcibly logged out (logged in from another browser). */
 else if ($_SESSION['CATS']->isLoggedIn() &&
-    (!isset($_GET['m']) || ModuleUtility::moduleRequiresAuthentication($_GET['m'])) &&
+    (!isset($_GET['m']) || (new ModuleUtility())->moduleRequiresAuthentication($_GET['m'])) &&
     $_SESSION['CATS']->checkForceLogout())
 {
     // FIXME: Unset session / etc.?
-    ModuleUtility::loadModule('login');
+    (new ModuleUtility())->loadModule('login');
 }
 
 /* If user specified a module, load it; otherwise, load the home module. */
@@ -228,11 +228,11 @@ else if (!isset($_GET['m']) || empty($_GET['m']))
 
         if (!eval(Hooks::get('INDEX_LOAD_HOME'))) return;
 
-        ModuleUtility::loadModule('home');
+        (new ModuleUtility())->loadModule('home');
     }
     else
     {
-        ModuleUtility::loadModule('login');
+        (new ModuleUtility())->loadModule('login');
     }
 }
 else
@@ -286,23 +286,23 @@ else
             CATSUtility::transferRelativeURI($URI);
         }
     }
-    else if (!ModuleUtility::moduleRequiresAuthentication($_GET['m']))
+    else if (!(new ModuleUtility())->moduleRequiresAuthentication($_GET['m']))
     {
         /* No authentication required; load the module. */
-        ModuleUtility::loadModule($_GET['m']);
+        (new ModuleUtility())->loadModule($_GET['m']);
     }
     else if (!$_SESSION['CATS']->isLoggedIn())
     {
         /* User isn't logged in and authentication is required; send the user
          * to the login page.
          */
-        ModuleUtility::loadModule('login');
+        (new ModuleUtility())->loadModule('login');
     }
     else
     {
         /* Everything's good; load the requested module. */
         $_SESSION['CATS']->logPageView();
-        ModuleUtility::loadModule($_GET['m']);
+        (new ModuleUtility())->loadModule($_GET['m']);
     }
 }
 

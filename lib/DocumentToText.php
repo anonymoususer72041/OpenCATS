@@ -137,7 +137,7 @@ class DocumentToText
                 $nativeEncoding = 'ISO-8859-1';
                 $convertEncoding = false;
                 
-                if (SystemUtility::isWindows())
+                if ((new SystemUtility())->isWindows())
                 {
                     $command = 'TYPE ' . $escapedFilename . ' | "'. HTML2TEXT_PATH . '" -nobs ';
                 }
@@ -349,7 +349,7 @@ class DocumentToText
     private function _executeCommand($command)
     {
         /* Running on Windows? */
-        if (SystemUtility::isWindows())
+        if ((new SystemUtility())->isWindows())
         {
             /* Generate a random temp file name. */
             $tempFile = sprintf(

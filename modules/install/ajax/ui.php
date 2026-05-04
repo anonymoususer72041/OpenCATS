@@ -305,7 +305,7 @@ switch ($action)
 
             include_once ('lib/SystemUtility.php');
             /* Change Windows default command to UNIX default command hack. */
-            if (strpos(strtolower($antiwordWithSlashes), "c:\\") === 0 && !SystemUtility::isWindows())
+            if (strpos(strtolower($antiwordWithSlashes), "c:\\") === 0 && !(new SystemUtility())->isWindows())
             {
                 $antiwordWithSlashes = '/usr/bin/antiword';
             }
@@ -335,7 +335,7 @@ switch ($action)
 
             include_once ('lib/SystemUtility.php');
             /* Change Windows default command to UNIX default command hack. */
-            if (strpos(strtolower($pdftotextWithSlashes), "c:\\") === 0 && !SystemUtility::isWindows())
+            if (strpos(strtolower($pdftotextWithSlashes), "c:\\") === 0 && !(new SystemUtility())->isWindows())
             {
                 $pdftotextWithSlashes = '/usr/bin/pdftotext';
             }
@@ -365,7 +365,7 @@ switch ($action)
 
             include_once ('lib/SystemUtility.php');
             /* Change Windows default command to UNIX default command hack. */
-            if (strpos(strtolower($html2textWithSlashes), "c:\\") === 0 && !SystemUtility::isWindows())
+            if (strpos(strtolower($html2textWithSlashes), "c:\\") === 0 && !(new SystemUtility())->isWindows())
             {
                 $html2textWithSlashes = '/usr/bin/html2text';
             }
@@ -395,7 +395,7 @@ switch ($action)
 
             include_once ('lib/SystemUtility.php');
             /* Change Windows default command to UNIX default command hack. */
-            if (strpos(strtolower($unrtfWithSlashes), "c:\\") === 0 && !SystemUtility::isWindows())
+            if (strpos(strtolower($unrtfWithSlashes), "c:\\") === 0 && !(new SystemUtility())->isWindows())
             {
                 $unrtfWithSlashes = '/usr/bin/unrtf';
             }

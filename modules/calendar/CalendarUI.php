@@ -260,7 +260,7 @@ class CalendarUI extends UserInterface
 
         if (!eval(Hooks::get('CALENDAR_SHOW'))) return;
 
-        if (SystemUtility::isSchedulerEnabled() && !$_SESSION['CATS']->isDemo())
+        if ((new SystemUtility())->isSchedulerEnabled() && !$_SESSION['CATS']->isDemo())
         {
             $allowEventReminders = true;
         }

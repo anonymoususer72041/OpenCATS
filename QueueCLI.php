@@ -75,7 +75,7 @@ if (!isset($_SESSION['CATS']) || empty($_SESSION['CATS']))
 }
 
 // Register module specific tasks
-$taskedModules = ModuleUtility::registerModuleTasks();
+$taskedModules = (new ModuleUtility())->registerModuleTasks();
 
 print_r($taskedModules);
 

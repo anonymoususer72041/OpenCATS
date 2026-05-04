@@ -1815,7 +1815,7 @@ class CandidatesUI extends UserInterface
 
         if (!eval(Hooks::get('CANDIDATE_ADD_ACTIVITY_CHANGE_STATUS'))) return;
 
-        if (SystemUtility::isSchedulerEnabled() && !$_SESSION['CATS']->isDemo())
+        if ((new SystemUtility())->isSchedulerEnabled() && !$_SESSION['CATS']->isDemo())
         {
             $allowEventReminders = true;
         }

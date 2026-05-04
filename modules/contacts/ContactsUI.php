@@ -1116,7 +1116,7 @@ class ContactsUI extends UserInterface
 
         if (!eval(Hooks::get('CONTACTS_ADD_ACTIVITY_SCHEDULE_EVENT'))) return;
 
-        if (SystemUtility::isSchedulerEnabled() && !$_SESSION['CATS']->isDemo())
+        if ((new SystemUtility())->isSchedulerEnabled() && !$_SESSION['CATS']->isDemo())
         {
             $allowEventReminders = true;
         }

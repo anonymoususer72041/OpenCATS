@@ -614,7 +614,7 @@ class TemplateUtility
 
         $indexName = CATSUtility::getIndexName();
 
-        $modules = ModuleUtility::getModules();
+        $modules = (new ModuleUtility())->getModules();
         foreach ($modules as $moduleName => $parameters)
         {
             $tabText = $parameters[1];

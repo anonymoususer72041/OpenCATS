@@ -1090,7 +1090,7 @@ class SettingsUI extends UserInterface
         }
 
         /* Get user categories, if any. */
-        $modules = ModuleUtility::getModules();
+        $modules = (new ModuleUtility())->getModules();
         $categories = array();
         foreach ($modules as $moduleName => $parameters)
         {
@@ -1133,7 +1133,7 @@ class SettingsUI extends UserInterface
         $license = $users->getLicenseData();
 
         /* Get user categories, if any. */
-        $modules = ModuleUtility::getModules();
+        $modules = (new ModuleUtility())->getModules();
         $categories = array();
         foreach ($modules as $moduleName => $parameters)
         {
@@ -1239,7 +1239,7 @@ class SettingsUI extends UserInterface
         );
 
         /* Check role (category) to make sure that the role is allowed to be set. */
-        $modules = ModuleUtility::getModules();
+        $modules = (new ModuleUtility())->getModules();
         foreach ($modules as $moduleName => $parameters)
         {
             $moduleCategories = $parameters[MODULE_SETTINGS_USER_CATEGORIES];
@@ -1326,7 +1326,7 @@ class SettingsUI extends UserInterface
         }
 
         /* Get user categories, if any. */
-        $modules = ModuleUtility::getModules();
+        $modules = (new ModuleUtility())->getModules();
         $categories = array();
         foreach ($modules as $moduleName => $parameters)
         {
@@ -1458,7 +1458,7 @@ class SettingsUI extends UserInterface
         }
 
         /* Set categories. */
-        $modules = ModuleUtility::getModules();
+        $modules = (new ModuleUtility())->getModules();
         $users->updateCategories($userID, '');
         foreach ($modules as $moduleName => $parameters)
         {
@@ -2500,11 +2500,11 @@ class SettingsUI extends UserInterface
 
                     $installationDirectory = realpath('./');
 
-                    if (SystemUtility::isWindows())
+                    if ((new SystemUtility())->isWindows())
                     {
                         $OSType = 'Windows';
                     }
-                    else if (SystemUtility::isMacOSX())
+                    else if ((new SystemUtility())->isMacOSX())
                     {
                         $OSType = 'Mac OS X';
                     }
@@ -2513,7 +2513,7 @@ class SettingsUI extends UserInterface
                         $OSType = 'UNIX';
                     }
 
-                    $schemaVersions = ModuleUtility::getModuleSchemaVersions();
+                    $schemaVersions = (new ModuleUtility())->getModuleSchemaVersions();
 
                     $this->_template->assign('databaseVersion', $databaseVersion);
                     $this->_template->assign('installationDirectory', $installationDirectory);
@@ -2534,7 +2534,7 @@ class SettingsUI extends UserInterface
             /* Load extra settings. */
             $extraSettings = array();
 
-            $modules = ModuleUtility::getModules();
+            $modules = (new ModuleUtility())->getModules();
             foreach ($modules as $moduleName => $parameters)
             {
                 $extraSettingsModule = $parameters[MODULE_SETTINGS_ENTRIES];
