@@ -61,15 +61,16 @@ class ContactsUI extends UserInterface
     public function __construct()
     {
         parent::__construct();
+        $catsUtility = new CATSUtility();
 
         $this->_authenticationRequired = true;
         $this->_moduleDirectory = 'contacts';
         $this->_moduleName = 'contacts';
         $this->_moduleTabText = 'Contacts';
         $this->_subTabs = array(
-            'Add Contact'     => (new CATSUtility())->getIndexName() . '?m=contacts&amp;a=add*al=' . ACCESS_LEVEL_EDIT . '@contacts.add',
-            'Search Contacts' => (new CATSUtility())->getIndexName() . '?m=contacts&amp;a=search',
-            'Cold Call List'  => (new CATSUtility())->getIndexName() . '?m=contacts&amp;a=showColdCallList'
+            'Add Contact'     => $catsUtility->getIndexName() . '?m=contacts&amp;a=add*al=' . ACCESS_LEVEL_EDIT . '@contacts.add',
+            'Search Contacts' => $catsUtility->getIndexName() . '?m=contacts&amp;a=search',
+            'Cold Call List'  => $catsUtility->getIndexName() . '?m=contacts&amp;a=showColdCallList'
         );
     }
 
@@ -239,6 +240,8 @@ class ContactsUI extends UserInterface
      */
     private function show()
     {
+        $dateUtility = new DateUtility();
+        $stringUtility = new StringUtility();
         /* Bail out if we don't have a valid contact ID. */
         if (!$this->isRequiredIDValid('contactID', $_GET))
         {
@@ -313,7 +316,7 @@ class ContactsUI extends UserInterface
             foreach ($jobOrdersRS as $rowIndex => $row)
             {
                 /* Convert '00-00-00' dates to empty strings. */
-                $jobOrdersRS[$rowIndex]['startDate'] = (new DateUtility())->fixZeroDate(
+                $jobOrdersRS[$rowIndex]['startDate'] = $dateUtility->fixZeroDate(
                     $jobOrdersRS[$rowIndex]['startDate']
                 );
 
@@ -330,14 +333,14 @@ class ContactsUI extends UserInterface
                     $jobOrdersRS[$rowIndex]['linkClass'] = 'jobLinkCold';
                 }
 
-                $jobOrdersRS[$rowIndex]['recruiterAbbrName'] = (new StringUtility())->makeInitialName(
+                $jobOrdersRS[$rowIndex]['recruiterAbbrName'] = $stringUtility->makeInitialName(
                     $jobOrdersRS[$rowIndex]['recruiterFirstName'],
                     $jobOrdersRS[$rowIndex]['recruiterLastName'],
                     false,
                     LAST_NAME_MAXLEN
                 );
 
-                $jobOrdersRS[$rowIndex]['ownerAbbrName'] = (new StringUtility())->makeInitialName(
+                $jobOrdersRS[$rowIndex]['ownerAbbrName'] = $stringUtility->makeInitialName(
                     $jobOrdersRS[$rowIndex]['ownerFirstName'],
                     $jobOrdersRS[$rowIndex]['ownerLastName'],
                     false,
@@ -363,7 +366,7 @@ class ContactsUI extends UserInterface
                     $activityRS[$rowIndex]['regarding'] = 'General';
                 }
 
-                $activityRS[$rowIndex]['enteredByAbbrName'] = (new StringUtility())->makeInitialName(
+                $activityRS[$rowIndex]['enteredByAbbrName'] = $stringUtility->makeInitialName(
                     $activityRS[$rowIndex]['enteredByFirstName'],
                     $activityRS[$rowIndex]['enteredByLastName'],
                     false,
@@ -378,7 +381,7 @@ class ContactsUI extends UserInterface
         {
             foreach ($calendarRS as $rowIndex => $row)
             {
-                $calendarRS[$rowIndex]['enteredByAbbrName'] = (new StringUtility())->makeInitialName(
+                $calendarRS[$rowIndex]['enteredByAbbrName'] = $stringUtility->makeInitialName(
                     $calendarRS[$rowIndex]['enteredByFirstName'],
                     $calendarRS[$rowIndex]['enteredByLastName'],
                     false,
@@ -481,13 +484,14 @@ class ContactsUI extends UserInterface
      */
     private function onAdd()
     {
+        $stringUtility = new StringUtility();
         /* Bail out if we don't have a valid company ID. */
         if (!$this->isRequiredIDValid('companyID', $_POST))
         {
             CommonErrors::fatal(COMMONERROR_BADINDEX, $this, 'Invalid company ID.');
         }
 
-        $formattedPhoneWork = (new StringUtility())->extractPhoneNumber(
+        $formattedPhoneWork = $stringUtility->extractPhoneNumber(
             $this->getTrimmedInput('phoneWork', $_POST)
         );
         if (!empty($formattedPhoneWork))
@@ -499,7 +503,7 @@ class ContactsUI extends UserInterface
             $phoneWork = $this->getTrimmedInput('phoneWork', $_POST);
         }
 
-        $formattedPhoneCell = (new StringUtility())->extractPhoneNumber(
+        $formattedPhoneCell = $stringUtility->extractPhoneNumber(
             $this->getTrimmedInput('phoneCell', $_POST)
         );
         if (!empty($formattedPhoneCell))
@@ -511,7 +515,7 @@ class ContactsUI extends UserInterface
             $phoneCell = $this->getTrimmedInput('phoneCell', $_POST);
         }
 
-        $formattedPhoneOther = (new StringUtility())->extractPhoneNumber(
+        $formattedPhoneOther = $stringUtility->extractPhoneNumber(
             $this->getTrimmedInput('phoneOther', $_POST)
         );
         if (!empty($formattedPhoneOther))
@@ -692,6 +696,7 @@ class ContactsUI extends UserInterface
      */
     private function onEdit()
     {
+        $stringUtility = new StringUtility();
         /* Bail out if we don't have a valid contact ID. */
         if (!$this->isRequiredIDValid('contactID', $_POST))
         {
@@ -714,7 +719,7 @@ class ContactsUI extends UserInterface
         $companyID  = $_POST['companyID'];
         $owner      = $_POST['owner'];
 
-        $formattedPhoneWork = (new StringUtility())->extractPhoneNumber(
+        $formattedPhoneWork = $stringUtility->extractPhoneNumber(
             $this->getTrimmedInput('phoneWork', $_POST)
         );
         if (!empty($formattedPhoneWork))
@@ -726,7 +731,7 @@ class ContactsUI extends UserInterface
             $phoneWork = $this->getTrimmedInput('phoneWork', $_POST);
         }
 
-        $formattedPhoneCell = (new StringUtility())->extractPhoneNumber(
+        $formattedPhoneCell = $stringUtility->extractPhoneNumber(
             $this->getTrimmedInput('phoneCell', $_POST)
         );
         if (!empty($formattedPhoneCell))
@@ -738,7 +743,7 @@ class ContactsUI extends UserInterface
             $phoneCell = $this->getTrimmedInput('phoneCell', $_POST);
         }
 
-        $formattedPhoneOther = (new StringUtility())->extractPhoneNumber(
+        $formattedPhoneOther = $stringUtility->extractPhoneNumber(
             $this->getTrimmedInput('phoneOther', $_POST)
         );
         if (!empty($formattedPhoneOther))

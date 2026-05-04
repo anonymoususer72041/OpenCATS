@@ -66,14 +66,15 @@ class CandidatesUI extends UserInterface
     public function __construct()
     {
         parent::__construct();
+        $catsUtility = new CATSUtility();
 
         $this->_authenticationRequired = true;
         $this->_moduleDirectory = 'candidates';
         $this->_moduleName = 'candidates';
         $this->_moduleTabText = 'Candidates';
         $this->_subTabs = array(
-            'Add Candidate'     => (new CATSUtility())->getIndexName() . '?m=candidates&amp;a=add*al=' . ACCESS_LEVEL_EDIT . '@candidates.add',
-            'Search Candidates' => (new CATSUtility())->getIndexName() . '?m=candidates&amp;a=search'
+            'Add Candidate'     => $catsUtility->getIndexName() . '?m=candidates&amp;a=add*al=' . ACCESS_LEVEL_EDIT . '@candidates.add',
+            'Search Candidates' => $catsUtility->getIndexName() . '?m=candidates&amp;a=search'
         );
     }
 
@@ -620,7 +621,11 @@ class CandidatesUI extends UserInterface
         /* We want to handle formatting the city and state here instead
          * of in the template.
          */
-        $data['cityAndState'] = (new StringUtility())->makeCityStateString(
+        $stringUtility = new StringUtility();
+        $fileUtility = new FileUtility();
+        $templateUtility = new TemplateUtility();
+        $catsUtility = new CATSUtility();
+        $data['cityAndState'] = $stringUtility->makeCityStateString(
             $data['city'], $data['state']
         );
 
@@ -680,7 +685,7 @@ class CandidatesUI extends UserInterface
 
             /* Show an attachment icon based on the document's file type. */
             $attachmentIcon = strtolower(
-                (new FileUtility())->getAttachmentIcon(
+                $fileUtility->getAttachmentIcon(
                     $attachmentsRS[$rowNumber]['originalFilename']
                 )
             );
@@ -692,7 +697,7 @@ class CandidatesUI extends UserInterface
             {
                 $attachmentsRS[$rowNumber]['previewLink'] = sprintf(
                     '<a href="#" onclick="window.open(\'%s?m=candidates&amp;a=viewResume&amp;attachmentID=%s\', \'viewResume\', \'scrollbars=1,width=800,height=760\')"><img width="15" height="15" style="border: none;" src="images/search.gif" alt="(Preview)" /></a>',
-                    (new CATSUtility())->getIndexName(),
+                    $catsUtility->getIndexName(),
                     $attachmentsRS[$rowNumber]['attachmentID']
                 );
             }
@@ -721,21 +726,21 @@ class CandidatesUI extends UserInterface
                 $pipelinesRS[$rowIndex]['linkClass'] = 'jobLinkCold';
             }
 
-            $pipelinesRS[$rowIndex]['ownerAbbrName'] = (new StringUtility())->makeInitialName(
+            $pipelinesRS[$rowIndex]['ownerAbbrName'] = $stringUtility->makeInitialName(
                 $pipelinesRS[$rowIndex]['ownerFirstName'],
                 $pipelinesRS[$rowIndex]['ownerLastName'],
                 false,
                 LAST_NAME_MAXLEN
             );
 
-            $pipelinesRS[$rowIndex]['addedByAbbrName'] = (new StringUtility())->makeInitialName(
+            $pipelinesRS[$rowIndex]['addedByAbbrName'] = $stringUtility->makeInitialName(
                 $pipelinesRS[$rowIndex]['addedByFirstName'],
                 $pipelinesRS[$rowIndex]['addedByLastName'],
                 false,
                 LAST_NAME_MAXLEN
             );
 
-            $pipelinesRS[$rowIndex]['ratingLine'] = (new TemplateUtility())->getRatingObject(
+            $pipelinesRS[$rowIndex]['ratingLine'] = $templateUtility->getRatingObject(
                 $pipelinesRS[$rowIndex]['ratingValue'],
                 $pipelinesRS[$rowIndex]['candidateJobOrderID'],
                 $sessionCookie
@@ -759,7 +764,7 @@ class CandidatesUI extends UserInterface
                     $activityRS[$rowIndex]['regarding'] = 'General';
                 }
 
-                $activityRS[$rowIndex]['enteredByAbbrName'] = (new StringUtility())->makeInitialName(
+                $activityRS[$rowIndex]['enteredByAbbrName'] = $stringUtility->makeInitialName(
                     $activityRS[$rowIndex]['enteredByFirstName'],
                     $activityRS[$rowIndex]['enteredByLastName'],
                     false,
@@ -774,7 +779,7 @@ class CandidatesUI extends UserInterface
         {
             foreach ($calendarRS as $rowIndex => $row)
             {
-                $calendarRS[$rowIndex]['enteredByAbbrName'] = (new StringUtility())->makeInitialName(
+                $calendarRS[$rowIndex]['enteredByAbbrName'] = $stringUtility->makeInitialName(
                     $calendarRS[$rowIndex]['enteredByFirstName'],
                     $calendarRS[$rowIndex]['enteredByLastName'],
                     false,
@@ -1283,6 +1288,8 @@ class CandidatesUI extends UserInterface
     private function onEdit()
     {
         $candidates = new Candidates($this->_siteID);
+        $dateUtility = new DateUtility();
+        $stringUtility = new StringUtility();
 
         /* Bail out if we don't have a valid candidate ID. */
         if (!$this->isRequiredIDValid('candidateID', $_POST))
@@ -1306,18 +1313,18 @@ class CandidatesUI extends UserInterface
             : DATE_FORMAT_MMDDYY;
         if (!empty($dateAvailable))
         {
-            if (!(new DateUtility())->validate('-', $dateAvailable, $dateFormatFlag))
+            if (!$dateUtility->validate('-', $dateAvailable, $dateFormatFlag))
             {
                 CommonErrors::fatal(COMMONERROR_MISSINGFIELDS, $this, 'Invalid availability date.');
             }
 
             /* Convert start_date to something MySQL can understand. */
-            $dateAvailable = (new DateUtility())->convert(
+            $dateAvailable = $dateUtility->convert(
                 '-', $dateAvailable, $dateFormatFlag, DATE_FORMAT_YYYYMMDD
             );
         }
 
-        $formattedPhoneHome = (new StringUtility())->extractPhoneNumber(
+        $formattedPhoneHome = $stringUtility->extractPhoneNumber(
             $this->getTrimmedInput('phoneHome', $_POST)
         );
         if (!empty($formattedPhoneHome))
@@ -1329,7 +1336,7 @@ class CandidatesUI extends UserInterface
             $phoneHome = $this->getTrimmedInput('phoneHome', $_POST);
         }
 
-        $formattedPhoneCell = (new StringUtility())->extractPhoneNumber(
+        $formattedPhoneCell = $stringUtility->extractPhoneNumber(
             $this->getTrimmedInput('phoneCell', $_POST)
         );
         if (!empty($formattedPhoneCell))
@@ -1341,7 +1348,7 @@ class CandidatesUI extends UserInterface
             $phoneCell = $this->getTrimmedInput('phoneCell', $_POST);
         }
 
-        $formattedPhoneWork = (new StringUtility())->extractPhoneNumber(
+        $formattedPhoneWork = $stringUtility->extractPhoneNumber(
             $this->getTrimmedInput('phoneWork', $_POST)
         );
         if (!empty($formattedPhoneWork))
@@ -1617,10 +1624,13 @@ class CandidatesUI extends UserInterface
 
         $pipelines = new Pipelines($this->_siteID);
         $pipelinesRS = $pipelines->getCandidatePipeline($candidateIDArray[0]);
+        $resultSetUtility = new ResultSetUtility();
+        $dateUtility = new DateUtility();
+        $stringUtility = new StringUtility();
 
         foreach ($rs as $rowIndex => $row)
         {
-            if ((new ResultSetUtility())->findRowByColumnValue($pipelinesRS,
+            if ($resultSetUtility->findRowByColumnValue($pipelinesRS,
                 'jobOrderID', $row['jobOrderID']) !== false && count($candidateIDArray) == 1)
             {
                 $rs[$rowIndex]['inPipeline'] = true;
@@ -1631,7 +1641,7 @@ class CandidatesUI extends UserInterface
             }
 
             /* Convert '00-00-00' dates to empty strings. */
-            $rs[$rowIndex]['startDate'] = (new DateUtility())->fixZeroDate(
+            $rs[$rowIndex]['startDate'] = $dateUtility->fixZeroDate(
                 $row['startDate']
             );
 
@@ -1644,14 +1654,14 @@ class CandidatesUI extends UserInterface
                 $rs[$rowIndex]['linkClass'] = 'jobLinkCold';
             }
 
-            $rs[$rowIndex]['recruiterAbbrName'] = (new StringUtility())->makeInitialName(
+            $rs[$rowIndex]['recruiterAbbrName'] = $stringUtility->makeInitialName(
                 $row['recruiterFirstName'],
                 $row['recruiterLastName'],
                 false,
                 LAST_NAME_MAXLEN
             );
 
-            $rs[$rowIndex]['ownerAbbrName'] = (new StringUtility())->makeInitialName(
+            $rs[$rowIndex]['ownerAbbrName'] = $stringUtility->makeInitialName(
                 $row['ownerFirstName'],
                 $row['ownerLastName'],
                 false,

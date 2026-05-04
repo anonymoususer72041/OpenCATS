@@ -76,6 +76,7 @@ class JobOrdersUI extends UserInterface
     public function __construct()
     {
         parent::__construct();
+        $catsUtility = new CATSUtility();
 
         $this->_authenticationRequired = true;
         $this->_moduleDirectory = 'joborders';
@@ -83,8 +84,8 @@ class JobOrdersUI extends UserInterface
         $this->_moduleTabText = 'Job Orders';
         $this->_subTabs = array(
             //'Add Job Order'     => (new CATSUtility())->getIndexName() . '?m=joborders&amp;a=add*al=' . ACCESS_LEVEL_EDIT . '@joborders.add',
-            'Add Job Order' => 'javascript:void(0);*js=showPopWin(\''.(new CATSUtility())->getIndexName().'?m=joborders&amp;a=addJobOrderPopup\', 400, 250, null);*al=' . ACCESS_LEVEL_EDIT . '@joborders.add',
-            'Search Job Orders' => (new CATSUtility())->getIndexName() . '?m=joborders&amp;a=search'
+            'Add Job Order' => 'javascript:void(0);*js=showPopWin(\''.$catsUtility->getIndexName().'?m=joborders&amp;a=addJobOrderPopup\', 400, 250, null);*al=' . ACCESS_LEVEL_EDIT . '@joborders.add',
+            'Search Job Orders' => $catsUtility->getIndexName() . '?m=joborders&amp;a=search'
         );
     }
 
@@ -402,6 +403,10 @@ class JobOrdersUI extends UserInterface
      */
     private function show()
     {
+        $stringUtility = new StringUtility();
+        $catsUtility = new CATSUtility();
+        $dateUtility = new DateUtility();
+        $fileUtility = new FileUtility();
         /* Is this a popup? */
         if (isset($_GET['display']) && $_GET['display'] == 'popup')
         {
@@ -440,18 +445,18 @@ class JobOrdersUI extends UserInterface
         /* We want to handle formatting the city and state here instead of in
          * the template.
          */
-        $data['cityAndState'] = (new StringUtility())->makeCityStateString(
+        $data['cityAndState'] = $stringUtility->makeCityStateString(
             $data['city'], $data['state']
         );
 
-        $data['description'] = (new CATSUtility())->sanitizeHtmlAllowlist(isset($data['description']) ? $data['description'] : '');
-        $data['notes'] = (new CATSUtility())->sanitizeHtmlAllowlist(isset($data['notes']) ? $data['notes'] : '');
+        $data['description'] = $catsUtility->sanitizeHtmlAllowlist(isset($data['description']) ? $data['description'] : '');
+        $data['notes'] = $catsUtility->sanitizeHtmlAllowlist(isset($data['notes']) ? $data['notes'] : '');
 
         /* Determine the Job Type Description */
         $data['typeDescription'] = $jobOrders->typeCodeToString($data['type']);
 
         /* Convert '00-00-00' dates to empty strings. */
-        $data['startDate'] = (new DateUtility())->fixZeroDate(
+        $data['startDate'] = $dateUtility->fixZeroDate(
             $data['startDate']
         );
 
@@ -484,7 +489,7 @@ class JobOrdersUI extends UserInterface
         {
             /* Show an attachment icon based on the document's file type. */
             $attachmentIcon = strtolower(
-                (new FileUtility())->getAttachmentIcon(
+                $fileUtility->getAttachmentIcon(
                     $attachmentsRS[$rowNumber]['originalFilename']
                 )
             );

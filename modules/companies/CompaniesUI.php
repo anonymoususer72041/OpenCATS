@@ -52,15 +52,16 @@ class CompaniesUI extends UserInterface
     public function __construct()
     {
         parent::__construct();
+        $catsUtility = new CATSUtility();
 
         $this->_authenticationRequired = true;
         $this->_moduleDirectory = 'companies';
         $this->_moduleName = 'companies';
         $this->_moduleTabText = 'Companies';
         $this->_subTabs = array(
-            'Add Company'     => (new CATSUtility())->getIndexName() . '?m=companies&amp;a=add*al=' . ACCESS_LEVEL_EDIT . '@companies.add' . '*hrmode=0',
-            'Search Companies' => (new CATSUtility())->getIndexName() . '?m=companies&amp;a=search*hrmode=0',
-            'Go To My Company' => (new CATSUtility())->getIndexName() . '?m=companies&amp;a=internalPostings*hrmode=0'
+            'Add Company'     => $catsUtility->getIndexName() . '?m=companies&amp;a=add*al=' . ACCESS_LEVEL_EDIT . '@companies.add' . '*hrmode=0',
+            'Search Companies' => $catsUtility->getIndexName() . '?m=companies&amp;a=search*hrmode=0',
+            'Go To My Company' => $catsUtility->getIndexName() . '?m=companies&amp;a=internalPostings*hrmode=0'
         );
     }
 
@@ -244,6 +245,9 @@ class CompaniesUI extends UserInterface
      */
     private function show()
     {
+        $fileUtility = new FileUtility();
+        $dateUtility = new DateUtility();
+        $stringUtility = new StringUtility();
         /* Bail out if we don't have a valid company ID. */
         if (!$this->isRequiredIDValid('companyID', $_GET))
         {
@@ -335,7 +339,7 @@ class CompaniesUI extends UserInterface
         {
             /* Show an attachment icon based on the document's file type. */
             $attachmentIcon = strtolower(
-                (new FileUtility())->getAttachmentIcon(
+                $fileUtility->getAttachmentIcon(
                     $attachmentsRS[$rowNumber]['originalFilename']
                 )
             );
@@ -354,7 +358,7 @@ class CompaniesUI extends UserInterface
             foreach ($jobOrdersRS as $rowIndex => $row)
             {
                 /* Convert '00-00-00' dates to empty strings. */
-                $jobOrdersRS[$rowIndex]['startDate'] = (new DateUtility())->fixZeroDate(
+                $jobOrdersRS[$rowIndex]['startDate'] = $dateUtility->fixZeroDate(
                     $jobOrdersRS[$rowIndex]['startDate']
                 );
 
@@ -370,14 +374,14 @@ class CompaniesUI extends UserInterface
                     $jobOrdersRS[$rowIndex]['linkClass'] = 'jobLinkCold';
                 }
 
-                $jobOrdersRS[$rowIndex]['recruiterAbbrName'] = (new StringUtility())->makeInitialName(
+                $jobOrdersRS[$rowIndex]['recruiterAbbrName'] = $stringUtility->makeInitialName(
                     $jobOrdersRS[$rowIndex]['recruiterFirstName'],
                     $jobOrdersRS[$rowIndex]['recruiterLastName'],
                     false,
                     LAST_NAME_MAXLEN
                 );
 
-                $jobOrdersRS[$rowIndex]['ownerAbbrName'] = (new StringUtility())->makeInitialName(
+                $jobOrdersRS[$rowIndex]['ownerAbbrName'] = $stringUtility->makeInitialName(
                     $jobOrdersRS[$rowIndex]['ownerFirstName'],
                     $jobOrdersRS[$rowIndex]['ownerLastName'],
                     false,
@@ -408,7 +412,7 @@ class CompaniesUI extends UserInterface
 
                 if (!empty($contactsRS[$rowIndex]['ownerFirstName']))
                 {
-                    $contactsRS[$rowIndex]['ownerAbbrName'] = (new StringUtility())->makeInitialName(
+                    $contactsRS[$rowIndex]['ownerAbbrName'] = $stringUtility->makeInitialName(
                         $contactsRS[$rowIndex]['ownerFirstName'],
                         $contactsRS[$rowIndex]['ownerLastName'],
                         false,
@@ -448,7 +452,7 @@ class CompaniesUI extends UserInterface
                     $activityRS[$rowIndex]['regarding'] = 'General';
                 }
 
-                $activityRS[$rowIndex]['enteredByAbbrName'] = (new StringUtility())->makeInitialName(
+                $activityRS[$rowIndex]['enteredByAbbrName'] = $stringUtility->makeInitialName(
                     $activityRS[$rowIndex]['enteredByFirstName'],
                     $activityRS[$rowIndex]['enteredByLastName'],
                     false,
@@ -543,7 +547,8 @@ class CompaniesUI extends UserInterface
      */
     private function onAdd()
     {
-        $formattedPhone1 = (new StringUtility())->extractPhoneNumber(
+        $stringUtility = new StringUtility();
+        $formattedPhone1 = $stringUtility->extractPhoneNumber(
             $this->getTrimmedInput('phone1', $_POST)
         );
         if (!empty($formattedPhone1))
@@ -555,7 +560,7 @@ class CompaniesUI extends UserInterface
             $phone1 = $this->getTrimmedInput('phone1', $_POST);
         }
 
-        $formattedPhone2 = (new StringUtility())->extractPhoneNumber(
+        $formattedPhone2 = $stringUtility->extractPhoneNumber(
             $this->getTrimmedInput('phone2', $_POST)
         );
         if (!empty($formattedPhone2))
@@ -567,7 +572,7 @@ class CompaniesUI extends UserInterface
             $phone2 = $this->getTrimmedInput('phone2', $_POST);
         }
 
-        $formattedFaxNumber = (new StringUtility())->extractPhoneNumber(
+        $formattedFaxNumber = $stringUtility->extractPhoneNumber(
             $this->getTrimmedInput('faxNumber', $_POST)
         );
         if (!empty($formattedFaxNumber))
@@ -582,7 +587,7 @@ class CompaniesUI extends UserInterface
         $url = $this->getTrimmedInput('url', $_POST);
         if (!empty($url))
         {
-            $formattedURL = (new StringUtility())->extractURL($url);
+            $formattedURL = $stringUtility->extractURL($url);
 
             if (!empty($formattedURL))
             {
@@ -752,7 +757,8 @@ class CompaniesUI extends UserInterface
             return;
         }
 
-        $formattedPhone1 = (new StringUtility())->extractPhoneNumber(
+        $stringUtility = new StringUtility();
+        $formattedPhone1 = $stringUtility->extractPhoneNumber(
             $this->getTrimmedInput('phone1', $_POST)
         );
         if (!empty($formattedPhone1))
@@ -764,7 +770,7 @@ class CompaniesUI extends UserInterface
             $phone1 = $this->getTrimmedInput('phone1', $_POST);
         }
 
-        $formattedPhone2 = (new StringUtility())->extractPhoneNumber(
+        $formattedPhone2 = $stringUtility->extractPhoneNumber(
             $this->getTrimmedInput('phone2', $_POST)
         );
         if (!empty($formattedPhone2))
@@ -776,7 +782,7 @@ class CompaniesUI extends UserInterface
             $phone2 = $this->getTrimmedInput('phone2', $_POST);
         }
 
-        $formattedFaxNumber = (new StringUtility())->extractPhoneNumber(
+        $formattedFaxNumber = $stringUtility->extractPhoneNumber(
             $this->getTrimmedInput('faxNumber', $_POST)
         );
         if (!empty($formattedFaxNumber))
@@ -791,7 +797,7 @@ class CompaniesUI extends UserInterface
         $url = $this->getTrimmedInput('url', $_POST);
         if (!empty($url))
         {
-            $formattedURL = (new StringUtility())->extractURL($url);
+            $formattedURL = $stringUtility->extractURL($url);
 
             if (!empty($formattedURL))
             {

@@ -197,6 +197,7 @@ class AddressParser
     // FIXME: Document me.
     protected function _initialize($addressBlock, $mode)
     {
+        $stringUtility = new StringUtility();
         /* Set some safe default values. */
         $this->_company        = '';
         $this->_firstName      = '';
@@ -216,7 +217,7 @@ class AddressParser
         $this->_addressBlock = array();
 
         /* Remove blank or space-only lines from address block. */
-        $addressBlock = (new StringUtility())->removeEmptyLines($addressBlock);
+        $addressBlock = $stringUtility->removeEmptyLines($addressBlock);
 
         /* Split address block into an array indexed by line number. */
         $addressBlockArray = explode("\n", $addressBlock);
@@ -234,11 +235,12 @@ class AddressParser
     // FIXME: Document me.
     protected function _isStreetAddress($string)
     {
+        $stringUtility = new StringUtility();
         /* Phone number matching is pretty solid. Return false if this is
          * a phone number. We do this to rule out other parts of an address
          * block that start with numbers.
          */
-        if ((new StringUtility())->containsPhoneNumber($string))
+        if ($stringUtility->containsPhoneNumber($string))
         {
             return false;
         }
@@ -347,6 +349,8 @@ class AddressParser
 
     protected function _getFullNameArray($addressOneLineOffset)
     {
+        $stringUtility = new StringUtility();
+        $arrayUtility = new ArrayUtility();
         /* Safe default values. */
         $fullNameArray['firstName']  = '';
         $fullNameArray['middleName'] = '';
@@ -360,7 +364,7 @@ class AddressParser
             return $fullNameArray;
         }
 
-        if (($addressOneLineOffset - 2) >= 0 && (new StringUtility())->isEmailAddress(
+        if (($addressOneLineOffset - 2) >= 0 && $stringUtility->isEmailAddress(
             $this->_addressBlock[$addressOneLineOffset - 1]))
         {
             $possibleFirstName = $this->_addressBlock[$addressOneLineOffset - 2];
@@ -393,13 +397,13 @@ class AddressParser
         }
 
         /* Count the number of "words" / tokens in the name. */
-        $tokenCount = (new StringUtility())->countTokens(", \t", $fullName);
+        $tokenCount = $stringUtility->countTokens(", \t", $fullName);
         if (!$tokenCount)
         {
             return $fullNameArray;
         }
 
-        $tokens = (new StringUtility())->tokenize(", \t", $fullName);
+        $tokens = $stringUtility->tokenize(", \t", $fullName);
         switch ($tokenCount)
         {
             case '2':
@@ -423,7 +427,7 @@ class AddressParser
                     /* Assume that the first token is the last name, the last token
                      * is the middle name, and the tokens inbetween are the first name.
                      */
-                    $fullNameArray['firstName']  = (new ArrayUtility())->implodeRange(
+                    $fullNameArray['firstName']  = $arrayUtility->implodeRange(
                         ' ', $tokens, 1, ($tokenCount - 2)
                     );
                     $fullNameArray['middleName'] = $tokens[$tokenCount - 1];
@@ -435,7 +439,7 @@ class AddressParser
                      * the last token is the middle name, and all other preceding
                      * tokens are part of the first name.
                      */
-                    $fullNameArray['firstName']  = (new ArrayUtility())->implodeRange(
+                    $fullNameArray['firstName']  = $arrayUtility->implodeRange(
                         ' ', $tokens, 0, ($tokenCount - 3)
                     );
                     $fullNameArray['middleName'] = $tokens[$tokenCount - 2];
@@ -450,20 +454,22 @@ class AddressParser
     // FIXME: Document me.
     protected function _getCityStateZipArray($cityStateZipLine)
     {
+        $stringUtility = new StringUtility();
+        $arrayUtility = new ArrayUtility();
         /* Safe default values. */
         $city  = '';
         $state = '';
         $zip   = '';
         
         /* Count the number of "words" / tokens in the line. */
-        $tokenCount = (new StringUtility())->countTokens(";, \t", $cityStateZipLine);
+        $tokenCount = $stringUtility->countTokens(";, \t", $cityStateZipLine);
         if ($tokenCount < 2)
         {
             return array('city' => '', 'state' => '', 'zip' => '');
         }
         
         /* Split the string into an array of tokens. */
-        $tokens = (new StringUtility())->tokenize(";, \t", $cityStateZipLine);
+        $tokens = $stringUtility->tokenize(";, \t", $cityStateZipLine);
         if ($tokenCount == 3)
         {
             $city  = $tokens[0];
@@ -473,10 +479,10 @@ class AddressParser
         else
         {
             /* If we have a known two- or three-word state, recognize it. */
-            $twoWordState = (new ArrayUtility())->implodeRange(
+            $twoWordState = $arrayUtility->implodeRange(
                 ' ', $tokens, ($tokenCount - 3), ($tokenCount - 2)
             );
-            $threeWordState = (new ArrayUtility())->implodeRange(
+            $threeWordState = $arrayUtility->implodeRange(
                 ' ', $tokens, ($tokenCount - 4), ($tokenCount - 2)
             );
             
@@ -519,7 +525,7 @@ class AddressParser
                  * proceeding tokens before are part of the state, and all
                  * other preceding tokens are part of the city.
                  */
-                $city  = (new ArrayUtility())->implodeRange(
+                $city  = $arrayUtility->implodeRange(
                     ' ', $tokens, 0, ($tokenCount - 4)
                 );
                 $state = $twoWordState;
@@ -536,7 +542,7 @@ class AddressParser
                  * three proceeding tokens before are part of the state,
                  * and all other preceding tokens are part of the city.
                  */
-                $city  = (new ArrayUtility())->implodeRange(
+                $city  = $arrayUtility->implodeRange(
                     ' ', $tokens, 0, ($tokenCount - 5)
                 );
                 $state = $threeWordState;
@@ -552,7 +558,7 @@ class AddressParser
                  * the last token is the state, and all other preceding tokens
                  * are part of the city.
                  */
-                $city  = (new ArrayUtility())->implodeRange(
+                $city  = $arrayUtility->implodeRange(
                     ' ', $tokens, 0, ($tokenCount - 3)
                 );
                 $state = $tokens[$tokenCount - 2];
@@ -601,22 +607,23 @@ class AddressParser
     // FIXME: Document me.
     protected function _extractEmailAddress()
     {
+        $stringUtility = new StringUtility();
         foreach ($this->_addressBlock as $lineNumber => $line)
         {
-            if (!(new StringUtility())->containsEmailAddress($line))
+            if (!$stringUtility->containsEmailAddress($line))
             {
                 continue;
             }
 
             /* Extract and properly format the e-mail address. */
-            $emailAddress = (new StringUtility())->extractEmailAddress($line);
+            $emailAddress = $stringUtility->extractEmailAddress($line);
 
             /* If there is more on this line, remove the e-mail address from
              * the line. Otherwise, just delete the line.
              */
-            if (!(new StringUtility())->isEmailAddress($line))
+            if (!$stringUtility->isEmailAddress($line))
             {
-                $line = (new StringUtility())->removeEmailAddress($line, true);
+                $line = $stringUtility->removeEmailAddress($line, true);
                 $this->_addressBlock[$lineNumber] = $line;
             }
             else
@@ -636,6 +643,8 @@ class AddressParser
     // FIXME: Document me.
     protected function _getPhoneNumbers()
     {
+        $stringUtility = new StringUtility();
+        $resultSetUtility = new ResultSetUtility();
         /* Sanity check. It is possible that the only line of the address
          * block has been removed during e-mail address extraction.
          */
@@ -653,7 +662,7 @@ class AddressParser
         foreach ($this->_addressBlock as $lineNumber => $line)
         {
             /* Skip lines that don't contain phone numbers. */
-            if (!(new StringUtility())->containsPhoneNumber($line))
+            if (!$stringUtility->containsPhoneNumber($line))
             {
                 continue;
             }
@@ -676,21 +685,21 @@ class AddressParser
             if (preg_match($cell, $line))
             {
                 $numbers[] = array(
-                    'number' => (new StringUtility())->extractPhoneNumber($line),
+                    'number' => $stringUtility->extractPhoneNumber($line),
                     'type'   => 'cell'
                 );
             }
             else if (preg_match($home, $line))
             {
                 $numbers[] = array(
-                    'number' => (new StringUtility())->extractPhoneNumber($line),
+                    'number' => $stringUtility->extractPhoneNumber($line),
                     'type'   => 'home'
                 );
             }
             else if (preg_match($work, $line))
             {
                 $numbers[] = array(
-                    'number' => (new StringUtility())->extractPhoneNumber($line),
+                    'number' => $stringUtility->extractPhoneNumber($line),
                     'type'   => 'work'
                 );
             }
@@ -698,12 +707,12 @@ class AddressParser
             {
                 if ($this->_mode != ADDRESSPARSER_MODE_COMPANY)
                 {
-                    $unknownNumbers[] = (new StringUtility())->extractPhoneNumber($line);
+                    $unknownNumbers[] = $stringUtility->extractPhoneNumber($line);
                 }
                 else
                 {
                     $numbers[] = array(
-                        'number' => (new StringUtility())->extractPhoneNumber($line),
+                        'number' => $stringUtility->extractPhoneNumber($line),
                         'type'   => 'general'
                     );
                 }
@@ -711,50 +720,50 @@ class AddressParser
             else if (preg_match($fax, $line))
             {
                 $numbers[] = array(
-                    'number' => (new StringUtility())->extractPhoneNumber($line),
+                    'number' => $stringUtility->extractPhoneNumber($line),
                     'type'   => 'fax'
                 );
             }
             else if (preg_match($tty, $line))
             {
                 $numbers[] = array(
-                    'number' => (new StringUtility())->extractPhoneNumber($line),
+                    'number' => $stringUtility->extractPhoneNumber($line),
                     'type'   => 'tty'
                 );
             }
             else if (preg_match($pager, $line))
             {
                 $numbers[] = array(
-                    'number' => (new StringUtility())->extractPhoneNumber($line),
+                    'number' => $stringUtility->extractPhoneNumber($line),
                     'type'   => 'pager'
                 );
             }
-            else if ((new StringUtility())->isPhoneNumber($line))
+            else if ($stringUtility->isPhoneNumber($line))
             {
                 /* In this case, the line contains only a phone number, and is
                  * truely unknown.
                  */
-                $unknownNumbers[] = (new StringUtility())->extractPhoneNumber($line);
+                $unknownNumbers[] = $stringUtility->extractPhoneNumber($line);
             }
             else
             {
                 /* In this case, the line contains other data besides just a
                  * phone number. We just can't identify it as anything.
                  */
-                $unknownNumbers[] = (new StringUtility())->extractPhoneNumber($line);
+                $unknownNumbers[] = $stringUtility->extractPhoneNumber($line);
             }
         }
 
         /* Figure out which phone number types we've already found. We'll
          * use this below.
          */
-        $homePhoneRow = (new ResultSetUtility())->findRowByColumnValue(
+        $homePhoneRow = $resultSetUtility->findRowByColumnValue(
             $numbers, 'type', 'home'
         );
-        $workPhoneRow = (new ResultSetUtility())->findRowByColumnValue(
+        $workPhoneRow = $resultSetUtility->findRowByColumnValue(
             $numbers, 'type', 'work'
         );
-        $cellPhoneRow = (new ResultSetUtility())->findRowByColumnValue(
+        $cellPhoneRow = $resultSetUtility->findRowByColumnValue(
             $numbers, 'type', 'cell'
         );
             

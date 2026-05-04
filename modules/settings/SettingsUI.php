@@ -61,6 +61,7 @@ class SettingsUI extends UserInterface
     public function __construct()
     {
         parent::__construct();
+        $catsUtility = new CATSUtility();
 
         $this->_realAccessLevel = $_SESSION['CATS']->getRealAccessLevel();
         $this->_authenticationRequired = true;
@@ -75,8 +76,8 @@ class SettingsUI extends UserInterface
         }
 
         $mp = array(
-            'Administration' => (new CATSUtility())->getIndexName() . '?m=settings&amp;a=administration',
-            'My Profile'     => (new CATSUtility())->getIndexName() . '?m=settings'
+            'Administration' => $catsUtility->getIndexName() . '?m=settings&amp;a=administration',
+            'My Profile'     => $catsUtility->getIndexName() . '?m=settings'
         );
 
         $this->_subTabs = $mp;
@@ -1024,6 +1025,8 @@ class SettingsUI extends UserInterface
      */
     private function showUser()
     {
+        $dateUtility = new DateUtility();
+        $moduleUtility = new ModuleUtility();
         // FIXME: Does $_GET['userID'] exist?
         if (isset($_GET['privledged']) &&  $_GET['privledged'] == 'false' &&
             $this->_userID == $_GET['userID'])
@@ -1045,11 +1048,11 @@ class SettingsUI extends UserInterface
             CommonErrors::fatal(COMMONERROR_BADINDEX, $this, 'No user found with selected ID.');
         }
 
-        $data['successfulDate'] = (new DateUtility())->fixZeroDate(
+        $data['successfulDate'] = $dateUtility->fixZeroDate(
             $data['successfulDate'], 'Never'
         );
 
-        $data['unsuccessfulDate'] = (new DateUtility())->fixZeroDate(
+        $data['unsuccessfulDate'] = $dateUtility->fixZeroDate(
             $data['unsuccessfulDate'], 'Never'
         );
 
@@ -1090,7 +1093,7 @@ class SettingsUI extends UserInterface
         }
 
         /* Get user categories, if any. */
-        $modules = (new ModuleUtility())->getModules();
+        $modules = $moduleUtility->getModules();
         $categories = array();
         foreach ($modules as $moduleName => $parameters)
         {
@@ -1126,6 +1129,7 @@ class SettingsUI extends UserInterface
      */
     private function addUser()
     {
+        $moduleUtility = new ModuleUtility();
         $users = new Users($this->_siteID);
         $accessLevels = $users->getAccessLevels();
 
@@ -1133,7 +1137,7 @@ class SettingsUI extends UserInterface
         $license = $users->getLicenseData();
 
         /* Get user categories, if any. */
-        $modules = (new ModuleUtility())->getModules();
+        $modules = $moduleUtility->getModules();
         $categories = array();
         foreach ($modules as $moduleName => $parameters)
         {
@@ -2404,6 +2408,7 @@ class SettingsUI extends UserInterface
      */
     private function administration()
     {
+        $moduleUtility = new ModuleUtility();
         $systemInfo = new SystemInfo();
         $systemInfoData = $systemInfo->getSystemInfo();
 
@@ -2500,11 +2505,12 @@ class SettingsUI extends UserInterface
 
                     $installationDirectory = realpath('./');
 
-                    if ((new SystemUtility())->isWindows())
+                    $systemUtility = new SystemUtility();
+                    if ($systemUtility->isWindows())
                     {
                         $OSType = 'Windows';
                     }
-                    else if ((new SystemUtility())->isMacOSX())
+                    else if ($systemUtility->isMacOSX())
                     {
                         $OSType = 'Mac OS X';
                     }
@@ -2513,7 +2519,7 @@ class SettingsUI extends UserInterface
                         $OSType = 'UNIX';
                     }
 
-                    $schemaVersions = (new ModuleUtility())->getModuleSchemaVersions();
+                    $schemaVersions = $moduleUtility->getModuleSchemaVersions();
 
                     $this->_template->assign('databaseVersion', $databaseVersion);
                     $this->_template->assign('installationDirectory', $installationDirectory);
@@ -2534,7 +2540,7 @@ class SettingsUI extends UserInterface
             /* Load extra settings. */
             $extraSettings = array();
 
-            $modules = (new ModuleUtility())->getModules();
+            $modules = $moduleUtility->getModules();
             foreach ($modules as $moduleName => $parameters)
             {
                 $extraSettingsModule = $parameters[MODULE_SETTINGS_ENTRIES];
@@ -2737,17 +2743,18 @@ class SettingsUI extends UserInterface
      */
     private function manageUsers()
     {
+        $dateUtility = new DateUtility();
         $users = new Users($this->_siteID);
         $rs = $users->getAll();
         $license = $users->getLicenseData();
 
         foreach ($rs as $rowIndex => $row)
         {
-            $rs[$rowIndex]['successfulDate'] = (new DateUtility())->fixZeroDate(
+            $rs[$rowIndex]['successfulDate'] = $dateUtility->fixZeroDate(
                 $rs[$rowIndex]['successfulDate'], 'Never'
             );
 
-            $rs[$rowIndex]['unsuccessfulDate'] = (new DateUtility())->fixZeroDate(
+            $rs[$rowIndex]['unsuccessfulDate'] = $dateUtility->fixZeroDate(
                 $rs[$rowIndex]['unsuccessfulDate'], 'Never'
             );
 
@@ -2773,6 +2780,8 @@ class SettingsUI extends UserInterface
 
     private function manageProfessional()
     {
+        $catsUtility = new CATSUtility();
+        $licenseUtility = new LicenseUtility();
         $wf = new WebForm();
         $wf->addField('licenseKey', 'License Key', WFT_TEXT, true, 60, 30, 190, '', '/[A-Za-z0-9 ]+/',
             'That is not a valid license key!');
@@ -2796,7 +2805,7 @@ class SettingsUI extends UserInterface
             }
             else if ($license->isProfessional())
             {
-                if (!(new CATSUtility())->isSOAPEnabled())
+                if (!$catsUtility->isSOAPEnabled())
                 {
                     $message = 'CATS Professional requires the PHP SOAP library which isn\'t currently installed.<br /><br />'
                         . 'Installation Instructions:<br /><br />'
@@ -2810,11 +2819,11 @@ class SettingsUI extends UserInterface
                         . 'Re-install PHP with the --enable-soap configuration option.<br /><br />'
                         . 'Please visit http://www.catsone.com for more support options.';
                 }
-                if (!(new LicenseUtility())->validateProfessionalKey($key))
+                if (!$licenseUtility->validateProfessionalKey($key))
                 {
                     $message = 'That is not a valid Professional membership key<br /><span style="font-size: 16px; color: #000000;">Please verify that you have the correct key and try again.</span>';
                 }
-                else if (!(new CATSUtility())->changeConfigSetting('LICENSE_KEY', "'" . $key . "'"))
+                else if (!$catsUtility->changeConfigSetting('LICENSE_KEY', "'" . $key . "'"))
                 {
                     $message = 'Internal Permissions Error<br /><span style="font-size: 12px; color: #000000;">CATS is unable '
                         . 'to write changes to your <b>config.php</b> file. Please change the file permissions or contact us '
@@ -3186,6 +3195,8 @@ class SettingsUI extends UserInterface
 
     private function wizard_checkKey()
     {
+        $catsUtility = new CATSUtility();
+        $licenseUtility = new LicenseUtility();
         $fileError = false;
 
         if (isset($_GET[$id = 'key']) && $_GET[$id] != '')
@@ -3199,7 +3210,7 @@ class SettingsUI extends UserInterface
             {
                 if ($license->isProfessional())
                 {
-                    if (!(new CATSUtility())->isSOAPEnabled())
+                    if (!$catsUtility->isSOAPEnabled())
                     {
                         echo "CATS Professional requires the PHP SOAP library which isn't currently installed.\n\n"
                             . "Installation Instructions:\n\n"
@@ -3216,7 +3227,7 @@ class SettingsUI extends UserInterface
                     }
                     else
                     {
-                        if (!(new LicenseUtility())->validateProfessionalKey($key))
+                        if (!$licenseUtility->validateProfessionalKey($key))
                         {
                             echo "That is not a valid CATS Professional license key. Please visit "
                                 . "http://www.catsone.com/professional for more information about CATS Professional.\n\n"
@@ -3227,7 +3238,7 @@ class SettingsUI extends UserInterface
                     }
                 }
 
-                if ((new CATSUtility())->changeConfigSetting('LICENSE_KEY', "'" . $key . "'"))
+                if ($catsUtility->changeConfigSetting('LICENSE_KEY', "'" . $key . "'"))
                 {
                     $configWritten = true;
                 }
@@ -3241,7 +3252,7 @@ class SettingsUI extends UserInterface
         }
 
         // The key hasn't been written. But they may have manually inserted the key into their config.php, check
-        if ((new LicenseUtility())->isLicenseValid())
+        if ($licenseUtility->isLicenseValid())
         {
             echo 'Ok';
             return;
@@ -3372,9 +3383,11 @@ class SettingsUI extends UserInterface
     private function wizard_import()
     {
         $siteID = $_SESSION['CATS']->getSiteID();
+        $importUtility = new ImportUtility();
+        $fileUtility = new FileUtility();
 
         // Echos Ok to redirect to the import stage, or Fail to go to home module
-        $files = (new ImportUtility())->getDirectoryFiles((new FileUtility())->getUploadPath($siteID, 'massimport'));
+        $files = $importUtility->getDirectoryFiles($fileUtility->getUploadPath($siteID, 'massimport'));
 
         if (count($files)) echo 'Ok';
         else echo 'Fail';
