@@ -1447,6 +1447,25 @@ class CATSSchema
                 SET short_description = \'Not reached\'
                 WHERE activity_type_id = 100;
             ',
+            '377' => '
+                ALTER TABLE `calendar_event` MODIFY `joborder_id` int(11) NULL DEFAULT NULL;
+
+                UPDATE `calendar_event`
+                SET `joborder_id` = NULL
+                WHERE `joborder_id` = -1;
+
+                UPDATE
+                    `calendar_event` AS `ce`
+                LEFT JOIN
+                    `joborder` AS `jo` ON
+                        `ce`.`joborder_id` = `jo`.`joborder_id` AND
+                        `ce`.`site_id` = `jo`.`site_id`
+                SET
+                    `ce`.`joborder_id` = NULL
+                WHERE
+                    `ce`.`joborder_id` IS NOT NULL AND
+                    `jo`.`joborder_id` IS NULL;
+            ',
 
         );
     }
