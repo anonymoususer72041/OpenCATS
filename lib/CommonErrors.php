@@ -113,7 +113,7 @@ class CommonErrors
                     . 'in the blink of an eye. Modules are like plug-ins, and perform specific tasks like integrating with '
                     . 'job boards or keeping your calendar up to date. You\'re getting this message because you followed '
                     . 'an old link, a bad link, or the module you\'re asking for no longer exists.<p>'
-                    . '<a href="'.CATSUtility::getIndexName().'?m=home">Click here</a> to view the home module.';
+                    . '<a href="'.(new CATSUtility())->getIndexName().'?m=home">Click here</a> to view the home module.';
                 break;
 
             case COMMONERROR_FILEERROR:

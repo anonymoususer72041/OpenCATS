@@ -15,7 +15,7 @@
                 </tr>
             </table>
 
-            <form name="addContactForm" id="addContactForm" action="<?php echo(CATSUtility::getIndexName()); ?>?m=contacts&amp;a=add&amp;v=<?php if ($this->selectedCompanyID === false) { echo('-1'); } else { echo($this->selectedCompanyID); } ?>" method="post" onsubmit="return checkAddForm(document.addContactForm);" autocomplete="off">
+            <form name="addContactForm" id="addContactForm" action="<?php echo((new CATSUtility())->getIndexName()); ?>?m=contacts&amp;a=add&amp;v=<?php if ($this->selectedCompanyID === false) { echo('-1'); } else { echo($this->selectedCompanyID); } ?>" method="post" onsubmit="return checkAddForm(document.addContactForm);" autocomplete="off">
                 <input type="hidden" name="postback" id="postback" value="postback" />
                 <table>
                     <tr>
@@ -243,7 +243,7 @@
                 </table>
                 <input type="submit" class="button" value="Add Contact" />&nbsp;
                 <input type="reset"  class="button" value="Reset" />&nbsp;
-                <input type="button" class="button" value="Back to Contacts" onclick="javascript:goToURL('<?php echo(CATSUtility::getIndexName()); ?>?m=contacts&amp;a=listRecent');" />
+                <input type="button" class="button" value="Back to Contacts" onclick="javascript:goToURL('<?php echo((new CATSUtility())->getIndexName()); ?>?m=contacts&amp;a=listRecent');" />
             </form>
 
             <script type="text/javascript">

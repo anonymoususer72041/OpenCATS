@@ -25,13 +25,13 @@
                     <tr>
                         <td>
                             <span><span class="bold">You have not added any companies yet.</span> You can't add a job order until
-                            you add at least one company. Please go to the <a href="<?php echo(CATSUtility::getIndexName()); ?>?m=companies">Companies</a>
+                            you add at least one company. Please go to the <a href="<?php echo((new CATSUtility())->getIndexName()); ?>?m=companies">Companies</a>
                             module and add a company.</span>
                         </td>
                     </tr>
                 </table>
             <?php else: ?>
-                <form name="addJobOrderForm" id="addJobOrderForm" action="<?php echo(CATSUtility::getIndexName()); ?>?m=joborders&amp;a=add" method="post" onsubmit="return checkAddForm(document.addJobOrderForm);" autocomplete="off">
+                <form name="addJobOrderForm" id="addJobOrderForm" action="<?php echo((new CATSUtility())->getIndexName()); ?>?m=joborders&amp;a=add" method="post" onsubmit="return checkAddForm(document.addJobOrderForm);" autocomplete="off">
                     <input type="hidden" name="postback" id="postback" value="postback" />
 
                     <table class="editTable" width="700">
@@ -299,7 +299,7 @@
                                 </select>
                                 <?php if ($this->getUserAccessLevel('settings.careerPortalSettings') >= ACCESS_LEVEL_SA): ?>
                                 <br />
-                                <a href="<?php echo CATSUtility::getIndexName(); ?>?m=settings&a=careerPortalSettings" target="_blank">Add / Edit / Delete Questionnaires</a>
+                                <a href="<?php echo (new CATSUtility())->getIndexName(); ?>?m=settings&a=careerPortalSettings" target="_blank">Add / Edit / Delete Questionnaires</a>
                                 <?php endif; ?>
                             </td>
                             <?php endif; ?>
@@ -307,7 +307,7 @@
                     </table>
                     <input type="submit" tabindex="20" class="button" name="submit" value="Add Job Order" />&nbsp;
                     <input type="reset"  tabindex="21" class="button" name="reset"  value="Reset" />&nbsp;
-                    <input type="button" tabindex="22" class="button" name="back"   value="Back to Job Orders" onclick="javascript:goToURL('<?php echo(CATSUtility::getIndexName()); ?>?m=joborders&amp;a=listByView');" />
+                    <input type="button" tabindex="22" class="button" name="back"   value="Back to Job Orders" onclick="javascript:goToURL('<?php echo((new CATSUtility())->getIndexName()); ?>?m=joborders&amp;a=listByView');" />
                 </form>
                 
                 <script type="text/javascript">

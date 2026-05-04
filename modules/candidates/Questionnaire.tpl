@@ -21,10 +21,10 @@
             <table cellpadding="0" cellspacing="0" width="100%" border="0">
                 <tr>
                     <td align="left" valign="top">
-                        <input type="button" class="button" value="<- Back to Candidate Profile" onclick="document.location.href='<?php echo CATSUtility::getIndexName(); ?>?m=candidates&a=show&candidateID=<?php echo $this->candidateID; ?>';" />
+                        <input type="button" class="button" value="<- Back to Candidate Profile" onclick="document.location.href='<?php echo (new CATSUtility())->getIndexName(); ?>?m=candidates&a=show&candidateID=<?php echo $this->candidateID; ?>';" />
                     </td>
                     <td align="right">
-                        <a href="<?php echo CATSUtility::getIndexName() . '?' . str_replace('print=no', 'print=yes', $_SERVER['QUERY_STRING']); ?>">
+                        <a href="<?php echo (new CATSUtility())->getIndexName() . '?' . str_replace('print=no', 'print=yes', $_SERVER['QUERY_STRING']); ?>">
                         <img src="images/actions/print.gif" border="0" />
                         Printer Friendly
                         </a>

@@ -82,9 +82,9 @@ class JobOrdersUI extends UserInterface
         $this->_moduleName = 'joborders';
         $this->_moduleTabText = 'Job Orders';
         $this->_subTabs = array(
-            //'Add Job Order'     => CATSUtility::getIndexName() . '?m=joborders&amp;a=add*al=' . ACCESS_LEVEL_EDIT . '@joborders.add',
-            'Add Job Order' => 'javascript:void(0);*js=showPopWin(\''.CATSUtility::getIndexName().'?m=joborders&amp;a=addJobOrderPopup\', 400, 250, null);*al=' . ACCESS_LEVEL_EDIT . '@joborders.add',
-            'Search Job Orders' => CATSUtility::getIndexName() . '?m=joborders&amp;a=search'
+            //'Add Job Order'     => (new CATSUtility())->getIndexName() . '?m=joborders&amp;a=add*al=' . ACCESS_LEVEL_EDIT . '@joborders.add',
+            'Add Job Order' => 'javascript:void(0);*js=showPopWin(\''.(new CATSUtility())->getIndexName().'?m=joborders&amp;a=addJobOrderPopup\', 400, 250, null);*al=' . ACCESS_LEVEL_EDIT . '@joborders.add',
+            'Search Job Orders' => (new CATSUtility())->getIndexName() . '?m=joborders&amp;a=search'
         );
     }
 
@@ -444,8 +444,8 @@ class JobOrdersUI extends UserInterface
             $data['city'], $data['state']
         );
 
-        $data['description'] = CATSUtility::sanitizeHtmlAllowlist(isset($data['description']) ? $data['description'] : '');
-        $data['notes'] = CATSUtility::sanitizeHtmlAllowlist(isset($data['notes']) ? $data['notes'] : '');
+        $data['description'] = (new CATSUtility())->sanitizeHtmlAllowlist(isset($data['description']) ? $data['description'] : '');
+        $data['notes'] = (new CATSUtility())->sanitizeHtmlAllowlist(isset($data['notes']) ? $data['notes'] : '');
 
         /* Determine the Job Type Description */
         $data['typeDescription'] = $jobOrders->typeCodeToString($data['type']);
@@ -556,7 +556,7 @@ class JobOrdersUI extends UserInterface
         $cpSettings = $careerPortalSettings->getAll();
         if (intval($cpSettings['enabled']))
         {
-            $careerPortalURL = CATSUtility::getAbsoluteURI() . 'careers/';
+            $careerPortalURL = (new CATSUtility())->getAbsoluteURI() . 'careers/';
         }
 
         $this->_template->assign('active', $this);
@@ -850,7 +850,7 @@ class JobOrdersUI extends UserInterface
 
         if (!eval(Hooks::get('JO_ON_ADD_POST'))) return;
 
-        CATSUtility::transferRelativeURI(
+        (new CATSUtility())->transferRelativeURI(
             'm=joborders&a=show&jobOrderID=' . $jobOrderID
         );
     }
@@ -1183,7 +1183,7 @@ class JobOrdersUI extends UserInterface
 
         if (!eval(Hooks::get('JO_ON_EDIT_POST'))) return;
 
-        CATSUtility::transferRelativeURI(
+        (new CATSUtility())->transferRelativeURI(
             'm=joborders&a=show&jobOrderID=' . $jobOrderID
         );
     }
@@ -1213,7 +1213,7 @@ class JobOrdersUI extends UserInterface
 
         if (!eval(Hooks::get('JO_ON_DELETE_POST'))) return;
 
-        CATSUtility::transferRelativeURI('m=joborders&a=listByView');
+        (new CATSUtility())->transferRelativeURI('m=joborders&a=listByView');
     }
 
     /*
@@ -1699,7 +1699,7 @@ class JobOrdersUI extends UserInterface
 
         if (!eval(Hooks::get('JO_ON_REMOVE_PIPELINE_POST'))) return;
 
-        CATSUtility::transferRelativeURI(
+        (new CATSUtility())->transferRelativeURI(
             'm=joborders&a=show&jobOrderID=' . $jobOrderID
         );
     }
@@ -1777,7 +1777,7 @@ class JobOrdersUI extends UserInterface
             $sortDirection = 'ASC';
         }
 
-        $baseURL = CATSUtility::getFilteredGET(
+        $baseURL = (new CATSUtility())->getFilteredGET(
             array('sortBy', 'sortDirection', 'page'), '&amp;'
         );
         $searchPager->setSortByParameters($baseURL, $sortBy, $sortDirection);
@@ -1958,7 +1958,7 @@ class JobOrdersUI extends UserInterface
 
         if (!eval(Hooks::get('JO_ON_DELETE_ATTACHMENT_POST'))) return;
 
-        CATSUtility::transferRelativeURI(
+        (new CATSUtility())->transferRelativeURI(
             'm=joborders&a=show&jobOrderID=' . $jobOrderID
         );
     }
@@ -1987,7 +1987,7 @@ class JobOrdersUI extends UserInterface
         $joborders = new JobOrders($this->_siteID);
         $joborders->administrativeHideShow($jobOrderID, $state);
 
-        CATSUtility::transferRelativeURI('m=joborders&a=show&jobOrderID='.$jobOrderID);
+        (new CATSUtility())->transferRelativeURI('m=joborders&a=show&jobOrderID='.$jobOrderID);
     }
 
     /**

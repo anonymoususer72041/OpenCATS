@@ -52,7 +52,7 @@ class ExportUtility
      */
     public static function getForm($dataItemType, $IDs, $popUpOffset = 35, $linkOffset = 5)
     {
-        $indexName = CATSUtility::getIndexName();
+        $indexName = (new CATSUtility())->getIndexName();
 
         /* Build form header. */
         $header = '<form name="selectedObjects" action="'

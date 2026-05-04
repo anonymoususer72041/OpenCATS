@@ -5,7 +5,7 @@
 You have <?php echo number_format(count($this->documents), 0); ?> document<?php echo count($this->documents) != 1 ? 's' : ''; ?> in your upload queue.
 <br /><br />
 <input type="button" value="Delete File<?php echo count($this->documents) != 1 ? 's' : ''; ?>" onclick="deleteUploadFiles();" class="button" />
-<input type="button" class="button" value="Import File<?php echo count($this->documents) != 1 ? 's' : ''; ?>" onclick="document.location.href='<?php echo CATSUtility::getIndexName(); ?>?m=import&a=massImport&step=2';" />
+<input type="button" class="button" value="Import File<?php echo count($this->documents) != 1 ? 's' : ''; ?>" onclick="document.location.href='<?php echo (new CATSUtility())->getIndexName(); ?>?m=import&a=massImport&step=2';" />
 </div>
 <?php endif; ?>
 
@@ -19,7 +19,7 @@ You have <?php echo number_format(count($this->documents), 0); ?> document<?php 
         <b><?php echo $this->uploadPath; ?></b>
 
         <br /><br />
-        Once you have resumes in this folder, <a href="<?php echo CATSUtility::getIndexName(); ?>?m=import&a=importSelectType&typeOfImport=resume">
+        Once you have resumes in this folder, <a href="<?php echo (new CATSUtility())->getIndexName(); ?>?m=import&a=importSelectType&typeOfImport=resume">
         reload</a> this page to start the import process.
 
         <br /><br />

@@ -38,17 +38,17 @@
                     <td>
                         <?php foreach ($this->data as $data): ?>
                             Import #<?php echo($data['importID']); ?> - <?php echo($data['addedLines']); ?> entries added to database.<br />
-                            <form method="post" action="<?php echo(CATSUtility::getIndexName()); ?>?m=import&amp;a=revert" style="display:inline;">
+                            <form method="post" action="<?php echo((new CATSUtility())->getIndexName()); ?>?m=import&amp;a=revert" style="display:inline;">
                                 <input type="hidden" name="postback" value="postback" />
                                 <input type="hidden" name="importID" value="<?php echo($data['importID']) ?>" />
                                 <input type="submit" value="Revert Import" class="button">
                             </form>
-                            <form method="post" action="<?php echo(CATSUtility::getIndexName()); ?>?m=import&amp;a=commit" style="display:inline;">
+                            <form method="post" action="<?php echo((new CATSUtility())->getIndexName()); ?>?m=import&amp;a=commit" style="display:inline;">
                                 <input type="hidden" name="postback" value="postback" />
                                 <input type="hidden" name="importID" value="<?php echo($data['importID']) ?>" />
                                 <input type="submit" value="Commit Import" class="button">
                             </form>
-                            <input type="button" onclick="document.location.href='<?php echo(CATSUtility::getIndexName()); ?>?m=import&amp;a=viewerrors&amp;importID=<?php echo($data['importID']) ?>';" value="View Errors" class="button">
+                            <input type="button" onclick="document.location.href='<?php echo((new CATSUtility())->getIndexName()); ?>?m=import&amp;a=viewerrors&amp;importID=<?php echo($data['importID']) ?>';" value="View Errors" class="button">
                             <br /><br />
                         <?php endforeach; ?>
                     </td>
@@ -67,12 +67,12 @@
                         </td>
                     </tr>
                 </table>
-                <form method="post" action="<?php echo(CATSUtility::getIndexName()); ?>?m=import&amp;a=revert" style="display:inline;">
+                <form method="post" action="<?php echo((new CATSUtility())->getIndexName()); ?>?m=import&amp;a=revert" style="display:inline;">
                     <input type="hidden" name="postback" value="postback" />
                     <input type="hidden" name="importID" value="<?php echo($this->importID); ?>" />
                     <input type="submit" value="Revert Import" class="button">
                 </form>
-                <form method="post" action="<?php echo(CATSUtility::getIndexName()); ?>?m=import&amp;a=commit" style="display:inline;">
+                <form method="post" action="<?php echo((new CATSUtility())->getIndexName()); ?>?m=import&amp;a=commit" style="display:inline;">
                     <input type="hidden" name="postback" value="postback" />
                     <input type="hidden" name="importID" value="<?php echo($this->importID); ?>" />
                     <input type="submit" value="Commit Import" class="button">

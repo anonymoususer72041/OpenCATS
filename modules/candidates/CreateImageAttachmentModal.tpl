@@ -3,7 +3,7 @@
     <p class="noteUnsized">Edit Profile Image</p>
 
     <?php if (!$this->isFinishedMode): ?>
-        <form name="createAttachmentForm" id="createAttachmentForm" action="<?php echo(CATSUtility::getIndexName()); ?>?m=candidates&amp;a=addEditImage" enctype="multipart/form-data" method="post" onsubmit="">
+        <form name="createAttachmentForm" id="createAttachmentForm" action="<?php echo((new CATSUtility())->getIndexName()); ?>?m=candidates&amp;a=addEditImage" enctype="multipart/form-data" method="post" onsubmit="">
             <input type="hidden" name="postback" id="postback" value="postback" />
             <input type="hidden" id="candidateID" name="candidateID" value="<?php echo($this->candidateID); ?>" />
             <?php foreach ($this->attachmentsRS as $rowNumber => $attachmentsData): ?>

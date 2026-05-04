@@ -32,7 +32,7 @@
                 <tr>
                     <td class="tdVertical">
                         This profile may already be in the system.&nbsp;&nbsp;Possible duplicate candidate profile:&nbsp;&nbsp;
-                        <a href="javascript:void(0);" onclick="window.open('<?php echo(CATSUtility::getIndexName()); ?>?m=candidates&amp;a=show&amp;candidateID='+candidateIsAlreadyInSystemID);">
+                        <a href="javascript:void(0);" onclick="window.open('<?php echo((new CATSUtility())->getIndexName()); ?>?m=candidates&amp;a=show&amp;candidateID='+candidateIsAlreadyInSystemID);">
                             <img src="images/new_window.gif" border="0" />
                             <img src="images/candidate_small.gif" border="0" />
                             <span id="candidateAlreadyInSystemName"></span>
@@ -42,9 +42,9 @@
             </table>
 
             <?php if ($this->isModal): ?>
-                <?php $URI = CATSUtility::getIndexName() . '?m=joborders&amp;a=addCandidateModal&jobOrderID=' . $this->jobOrderID; ?>
+                <?php $URI = (new CATSUtility())->getIndexName() . '?m=joborders&amp;a=addCandidateModal&jobOrderID=' . $this->jobOrderID; ?>
             <?php else: ?>
-                <?php $URI = CATSUtility::getIndexName() . '?m=candidates&amp;a=add'; ?>
+                <?php $URI = (new CATSUtility())->getIndexName() . '?m=candidates&amp;a=add'; ?>
             <?php endif; ?>
 
             <form name="addCandidateForm" id="addCandidateForm" enctype="multipart/form-data" action="<?php echo($URI); ?>" method="post" onsubmit="return (checkAddForm(document.addCandidateForm) && onSubmitEmailInSystem() && onSubmitPhoneInSystem());" autocomplete="off" enctype="multipart/form-data">
@@ -116,7 +116,7 @@
                                             <div style="color: #666666; text-align: center;">
                                             (<b>hint:</b> you may also paste the resume contents)
                                             <br /><br />
-                                            Need to upload multiple resumes? <a href="<?php echo CATSUtility::getIndexName(); ?>?m=import&a=massImport">Click here!</a>
+                                            Need to upload multiple resumes? <a href="<?php echo (new CATSUtility())->getIndexName(); ?>?m=import&a=massImport">Click here!</a>
                                             </div>
                                         </td>
                                     </tr>
@@ -509,9 +509,9 @@
                 <input type="submit" tabindex="<?php echo($tabIndex++); ?>" class="button" value="Add Candidate" />&nbsp;
                 <input type="reset"  tabindex="<?php echo($tabIndex++); ?>" class="button" value="Reset" />&nbsp;
                 <?php if ($this->isModal): ?>
-                    <input type="button" tabindex="<?php echo($tabIndex++); ?>" class="button" value="Back to Search" onclick="javascript:goToURL('<?php echo(CATSUtility::getIndexName()); ?>?m=joborders&amp;a=considerCandidateSearch&amp;jobOrderID=<?php echo($this->jobOrderID); ?>');" />
+                    <input type="button" tabindex="<?php echo($tabIndex++); ?>" class="button" value="Back to Search" onclick="javascript:goToURL('<?php echo((new CATSUtility())->getIndexName()); ?>?m=joborders&amp;a=considerCandidateSearch&amp;jobOrderID=<?php echo($this->jobOrderID); ?>');" />
                 <?php else: ?>
-                    <input type="button" tabindex="<?php echo($tabIndex++); ?>" class="button" value="Back to Candidates" onclick="javascript:goToURL('<?php echo(CATSUtility::getIndexName()); ?>?m=candidates');" />
+                    <input type="button" tabindex="<?php echo($tabIndex++); ?>" class="button" value="Back to Candidates" onclick="javascript:goToURL('<?php echo((new CATSUtility())->getIndexName()); ?>?m=candidates');" />
                 <?php endif; ?>
             </form>
 

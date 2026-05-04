@@ -42,7 +42,7 @@
                 <div id="formBlock">
                     <img src="images/CATS-sig.gif" alt="Login" hspace="10" vspace="10" />
                     <br />
-                    <form name="loginForm" id="loginForm" action="<?php echo(CATSUtility::getIndexName()); ?>?m=login&amp;a=attemptLogin<?php if ($this->reloginVars != ''): ?>&amp;reloginVars=<?php echo($this->reloginVars); ?><?php endif; ?>" method="post" onsubmit="return checkLoginForm(document.loginForm);" autocomplete="off">
+                    <form name="loginForm" id="loginForm" action="<?php echo((new CATSUtility())->getIndexName()); ?>?m=login&amp;a=attemptLogin<?php if ($this->reloginVars != ''): ?>&amp;reloginVars=<?php echo($this->reloginVars); ?><?php endif; ?>" method="post" onsubmit="return checkLoginForm(document.loginForm);" autocomplete="off">
                         <div id="subFormBlock">
                             <?php if ($this->siteName != '' && $this->siteName != 'choose'): ?>
                                 <?php if ($this->siteNameFull == 'error'): ?>
@@ -75,7 +75,7 @@
                         </div>
                     </form>
                 
-                    <span style="line-height: 30px;font-size: 10px;padding-LEFT: 10px;">Version <?php echo(CATSUtility::getVersion()); ?></span>
+                    <span style="line-height: 30px;font-size: 10px;padding-LEFT: 10px;">Version <?php echo((new CATSUtility())->getVersion()); ?></span>
                 </div>
                 <div style="clear: both;"></div>
             </div>

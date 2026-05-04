@@ -22,7 +22,7 @@
                     <td>
                         <?php if ($this->versionCheckPref): ?>
                             <p>
-                                Your current version is: <span class="bold"><?php echo(CATSUtility::getVersion()); ?> Build <?php echo(CATSUtility::getBuild()); ?></span>.<br />
+                                Your current version is: <span class="bold"><?php echo((new CATSUtility())->getVersion()); ?> Build <?php echo((new CATSUtility())->getBuild()); ?></span>.<br />
                                 <?php if ($this->newVersion): ?>
                                     <span class="bold">A new version is available!</span><br />
                                     Go to <a href="http://www.catsone.com/" target="_blank">www.catsone.com</a> to learn more.<br />
@@ -34,13 +34,13 @@
                         <?php else: ?>
                             <span>Version checking is currently disabled.</span><br /><br />
                         <?php endif; ?>
-                        <!-- <form action="<?php echo(CATSUtility::getIndexName()); ?>?m=settings&amp;a=administration" id="changeNewVersionForm" method="post">
+                        <!-- <form action="<?php echo((new CATSUtility())->getIndexName()); ?>?m=settings&amp;a=administration" id="changeNewVersionForm" method="post">
                             <input type="hidden" name="postback" value="postback" />
                             <input type="hidden" name="administrationMode" value="changeVersionCheck" />
 
                             <input type="checkbox" name="versionCheck" id="versionCheck"<?php if ($this->versionCheckPref): ?> checked<?php endif; ?> />Enable New Version Check (Recommended)<br /><br />
                             <input type="submit" name="save" class = "button" value="Save" />
-                            <input type="button" name="back" class = "button" value="Back" onclick="document.location.href='<?php echo(CATSUtility::getIndexName()); ?>?m=settings&amp;a=administration';" />
+                            <input type="button" name="back" class = "button" value="Back" onclick="document.location.href='<?php echo((new CATSUtility())->getIndexName()); ?>?m=settings&amp;a=administration';" />
                         </form> -->
                     </td>
                 </tr>

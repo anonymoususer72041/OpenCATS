@@ -545,7 +545,7 @@ class Attachments
         {
             $rs[$index]['retrievalURL'] = sprintf(
                 '%s?m=attachments&amp;a=getAttachment&amp;id=%s&amp;directoryNameHash=%s',
-                CATSUtility::getIndexName(),
+                (new CATSUtility())->getIndexName(),
                 $data['attachmentID'],
                 urlencode(md5($data['directoryName']))
             );
@@ -616,7 +616,7 @@ class Attachments
         {
             $rs['retrievalURL'] = sprintf(
                 '%s?m=attachments&amp;a=getAttachment&amp;id=%s&amp;directoryNameHash=%s',
-                CATSUtility::getIndexName(),
+                (new CATSUtility())->getIndexName(),
                 $rs['attachmentID'],
                 urlencode(md5($rs['directoryName']))
             );

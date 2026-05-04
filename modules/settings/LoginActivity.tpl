@@ -17,7 +17,7 @@
 
             <p class="note">Recent Login Activity</p>
 
-            <form name="loginActivityViewSelectorForm" id="loginActivityViewSelectorForm" action="<?php echo(CATSUtility::getIndexName()); ?>" method="get">
+            <form name="loginActivityViewSelectorForm" id="loginActivityViewSelectorForm" action="<?php echo((new CATSUtility())->getIndexName()); ?>" method="get">
                 <input type="hidden" name="m" value="settings" />
                 <input type="hidden" name="a" value="loginActivity" />
 
@@ -71,12 +71,12 @@
                     <?php foreach ($this->rs as $rowNumber => $data): ?>
                         <tr class="<?php TemplateUtility::printAlternatingRowClass($rowNumber); ?>">
                             <td valign="top" align="left">
-                                <a href="<?php echo(CATSUtility::getIndexName()); ?>?m=settings&a=showUser&userID=<?php $this->_($data['userID']); ?>">
+                                <a href="<?php echo((new CATSUtility())->getIndexName()); ?>?m=settings&a=showUser&userID=<?php $this->_($data['userID']); ?>">
                                     <?php $this->_($data['firstName']); ?>
                                 </a>
                             </td>
                             <td valign="top" align="left">
-                                <a href="<?php echo(CATSUtility::getIndexName()); ?>?m=settings&a=showUser&userID=<?php $this->_($data['userID']); ?>">
+                                <a href="<?php echo((new CATSUtility())->getIndexName()); ?>?m=settings&a=showUser&userID=<?php $this->_($data['userID']); ?>">
                                     <?php $this->_($data['lastName']); ?>
                                 </a>
                             </td>

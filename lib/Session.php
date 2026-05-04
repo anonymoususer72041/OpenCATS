@@ -113,7 +113,7 @@ class CATSSession
     {
         if ($this->_storedBuild == -1)
         {
-            $this->_storedBuild = CATSUtility::getBuild();
+            $this->_storedBuild = (new CATSUtility())->getBuild();
         }
 
         return (integer) $this->_storedBuild;
@@ -129,11 +129,11 @@ class CATSSession
      */
     public function checkForcedUpdate()
     {
-       $build = CATSUtility::getBuild();
+       $build = (new CATSUtility())->getBuild();
 
        /* We don't want to force an update on the first check (when the stored
         * build -1), because we just reloaded all of the modules anyway.
-        * CATSUtility::getBuild() should never return -1, but just in case...
+        * (new CATSUtility())->getBuild() should never return -1, but just in case...
         */
        if ($this->_storedBuild != -1 && $this->_storedBuild != $build)
        {
@@ -178,7 +178,7 @@ class CATSSession
         }
 
         /* Is _loggedInDirectory equal getDirectoryName?  If not, logout. */
-        if ($this->_loggedInDirectory != '' && $this->_loggedInDirectory != CATSUtility::getDirectoryName())
+        if ($this->_loggedInDirectory != '' && $this->_loggedInDirectory != (new CATSUtility())->getDirectoryName())
         {
             return true;
         }
@@ -839,7 +839,7 @@ class CATSSession
                 $this->_dateDMY                = ($rs['dateFormatDMY'] == 0 ? false : true);
                 $this->_canSeeEEOInfo          = ($rs['canSeeEEOInfo'] == 0 ? false : true);
                 $this->_pipelineEntriesPerPage = $rs['pipelineEntriesPerPage'];
-                $this->_loggedInScript         = CATSUtility::getDirectoryName(); 
+                $this->_loggedInScript         = (new CATSUtility())->getDirectoryName(); 
 
                 /* SA's can always see EEO Info. */
                 if ($this->_accessLevel >= ACCESS_LEVEL_SA)

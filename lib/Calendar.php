@@ -765,7 +765,7 @@ class Calendar
         );
         $futureRS = $this->_db->getAllAssoc($sql);
 
-        $indexName = CATSUtility::getIndexName();
+        $indexName = (new CATSUtility())->getIndexName();
 
         foreach ($todayRS as $rowIndex => $row)
         {
@@ -843,7 +843,7 @@ class Calendar
      */
     private function getHTMLOfLink($dataItemID, $dataItemType, $showTitle = true)
     {
-        $string = '<a href="' . CATSUtility::getIndexName();
+        $string = '<a href="' . (new CATSUtility())->getIndexName();
 
         switch ($dataItemType)
         {

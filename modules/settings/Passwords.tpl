@@ -30,7 +30,7 @@
                                 </td>
                             </tr>
                         </table>
-                        <input type="button" name="back" class="button" value="Back" onclick="document.location.href='<?php echo(CATSUtility::getIndexName()); ?>?m=settings&amp;a=administration';" />
+                        <input type="button" name="back" class="button" value="Back" onclick="document.location.href='<?php echo((new CATSUtility())->getIndexName()); ?>?m=settings&amp;a=administration';" />
                     </td>
                 </tr>
             </table>

@@ -20,7 +20,7 @@
             <table>
                 <tr>
                     <td>
-                        <form name="emailSettingsForm" id="emailSettingsForm" action="<?php echo(CATSUtility::getIndexName()); ?>?m=settings&amp;a=emailSettings" method="post">
+                        <form name="emailSettingsForm" id="emailSettingsForm" action="<?php echo((new CATSUtility())->getIndexName()); ?>?m=settings&amp;a=emailSettings" method="post">
                             <input type="hidden" name="postback" value="postback" />
                             <input type="hidden" name="configured" value="1" />
 

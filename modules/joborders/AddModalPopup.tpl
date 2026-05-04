@@ -32,7 +32,7 @@
                 </td>
             </tr>
         </table>
-        <input type="button" class="button"  value="Create Job Order" onclick="parentGoToURL('<?php echo(CATSUtility::getIndexName()); ?>?m=joborders&amp;a=add&amp;jobOrderID='+document.getElementById('copyFrom').value+'&amp;typeOfAdd='+typeOfAdd);"/>&nbsp;
+        <input type="button" class="button"  value="Create Job Order" onclick="parentGoToURL('<?php echo((new CATSUtility())->getIndexName()); ?>?m=joborders&amp;a=add&amp;jobOrderID='+document.getElementById('copyFrom').value+'&amp;typeOfAdd='+typeOfAdd);"/>&nbsp;
         <input type="button" class="button" name="close" value="Close" onclick="parentHidePopWin();" />
     </body>
 </html>

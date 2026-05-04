@@ -448,7 +448,7 @@ class CATSUtility
     public static function transferRelativeURI($relativePath)
     {
         $newLocation = self::getAbsoluteURI(
-            CATSUtility::getIndexName() . '?' . $relativePath
+            (new CATSUtility())->getIndexName() . '?' . $relativePath
         );
 
         self::transferURL($newLocation);

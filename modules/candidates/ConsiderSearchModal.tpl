@@ -6,7 +6,7 @@
         the candidate to the selected job order.</p>
 
         <table class="searchTable">
-            <form id="searchByJobTitleForm" name="searchByJobTitleForm" action="<?php echo(CATSUtility::getIndexName()); ?>?m=candidates&amp;a=considerForJobSearch" method="post">
+            <form id="searchByJobTitleForm" name="searchByJobTitleForm" action="<?php echo((new CATSUtility())->getIndexName()); ?>?m=candidates&amp;a=considerForJobSearch" method="post">
                 <input type="hidden" name="postback" id="postback" value="postback" />
                 <input type="hidden" id="mode_jobtitle" name="mode" value="searchByJobTitle" />
                 <input type="hidden" id="candidateID_jobtitle" name="candidateIDArrayStored" value="<?php echo($this->candidateIDArrayStored); ?>" />
@@ -23,7 +23,7 @@
                 </tr>
             </form>
 
-            <form id="searchByCompanyNameForm" name="searchByCompanyNameForm" action="<?php echo(CATSUtility::getIndexName()); ?>?m=candidates&amp;a=considerForJobSearch" method="post">
+            <form id="searchByCompanyNameForm" name="searchByCompanyNameForm" action="<?php echo((new CATSUtility())->getIndexName()); ?>?m=candidates&amp;a=considerForJobSearch" method="post">
                 <input type="hidden" name="postback" id="postback" value="postback" />
                 <input type="hidden" id="mode_companyname" name="mode" value="searchByCompanyName" />
                 <input type="hidden" id="candidateID_companyname" name="candidateIDArrayStored" value="<?php echo($this->candidateIDArrayStored); ?>" />
@@ -72,7 +72,7 @@
                             <td align="left" valign="top"><?php $this->_($data['jobID']); ?></td>
                             <td align="left" valign="top">
                                 <?php if (!$data['inPipeline']): ?>
-                                    <form method="post" action="<?php echo(CATSUtility::getIndexName()); ?>?m=candidates&amp;a=addToPipeline&amp;getback=getback" style="display:inline;">
+                                    <form method="post" action="<?php echo((new CATSUtility())->getIndexName()); ?>?m=candidates&amp;a=addToPipeline&amp;getback=getback" style="display:inline;">
                                         <input type="hidden" name="postback" value="postback" />
                                         <input type="hidden" name="candidateIDArrayStored" value="<?php echo($this->candidateIDArrayStored); ?>" />
                                         <input type="hidden" name="jobOrderID" value="<?php $this->_($data['jobOrderID']); ?>" />
@@ -92,7 +92,7 @@
                             <td align="left" valign="top" nowrap="nowrap"><?php $this->_($data['recruiterAbbrName']); ?></td>
                             <td align="left" valign="top" nowrap="nowrap"><?php $this->_($data['ownerAbbrName']); ?></td>
                             <td align="center" nowrap="nowrap">
-                                <a href="#" title="Show Job Order" onclick="javascript:openCenteredPopup('<?php echo(CATSUtility::getIndexName()); ?>?m=joborders&amp;a=show&amp;display=popup&amp;jobOrderID=<?php $this->_($data['jobOrderID']); ?>', 'viewJobOrderDetails', 1000, 675, true); return false;">
+                                <a href="#" title="Show Job Order" onclick="javascript:openCenteredPopup('<?php echo((new CATSUtility())->getIndexName()); ?>?m=joborders&amp;a=show&amp;display=popup&amp;jobOrderID=<?php $this->_($data['jobOrderID']); ?>', 'viewJobOrderDetails', 1000, 675, true); return false;">
                                     <img src="images/new_browser_inline.gif" alt="consider" width="16" height="16" border="0" class="absmiddle" />
                                 </a>
                             </td>
@@ -102,7 +102,7 @@
             <?php else: ?>
                 <p>No matching entries found.</p>
             <?php endif; ?>
-            <input type="button" class="button" id="showRecentJobOrders" name="showRecentJobOrders" value="Show Recently Modified Job Orders" onclick="document.location.href='<?php echo(CATSUtility::getIndexName()); ?>?m=candidates&amp;a=considerForJobSearch&amp;candidateIDArrayStored=<?php echo($this->candidateIDArrayStored); ?>';" />
+            <input type="button" class="button" id="showRecentJobOrders" name="showRecentJobOrders" value="Show Recently Modified Job Orders" onclick="document.location.href='<?php echo((new CATSUtility())->getIndexName()); ?>?m=candidates&amp;a=considerForJobSearch&amp;candidateIDArrayStored=<?php echo($this->candidateIDArrayStored); ?>';" />
         <?php else: ?>
             <br />
             <p class="noteUnsized">Recently Modified Job Orders</p>
@@ -127,7 +127,7 @@
                             <td align="left" valign="top"><?php $this->_($data['jobID']); ?></td>
                             <td align="left" valign="top">
                                 <?php if (!$data['inPipeline']): ?>
-                                    <form method="post" action="<?php echo(CATSUtility::getIndexName()); ?>?m=candidates&amp;a=addToPipeline&amp;getback=getback" style="display:inline;">
+                                    <form method="post" action="<?php echo((new CATSUtility())->getIndexName()); ?>?m=candidates&amp;a=addToPipeline&amp;getback=getback" style="display:inline;">
                                         <input type="hidden" name="postback" value="postback" />
                                         <input type="hidden" name="candidateIDArrayStored" value="<?php echo($this->candidateIDArrayStored); ?>" />
                                         <input type="hidden" name="jobOrderID" value="<?php $this->_($data['jobOrderID']); ?>" />
@@ -147,7 +147,7 @@
                             <td align="left" valign="top" nowrap="nowrap"><?php $this->_($data['recruiterAbbrName']); ?></td>
                             <td align="left" valign="top" nowrap="nowrap"><?php $this->_($data['ownerAbbrName']); ?></td>
                             <td align="center" nowrap="nowrap">
-                                <a href="#" title="Show Job Order" onclick="javascript:openCenteredPopup('<?php echo(CATSUtility::getIndexName()); ?>?m=joborders&amp;a=show&amp;display=popup&amp;jobOrderID=<?php $this->_($data['jobOrderID']); ?>', 'viewJobOrderDetails', 1000, 675, true); return false;">
+                                <a href="#" title="Show Job Order" onclick="javascript:openCenteredPopup('<?php echo((new CATSUtility())->getIndexName()); ?>?m=joborders&amp;a=show&amp;display=popup&amp;jobOrderID=<?php $this->_($data['jobOrderID']); ?>', 'viewJobOrderDetails', 1000, 675, true); return false;">
                                     <img src="images/new_browser_inline.gif" alt="consider" width="16" height="16" border="0" class="absmiddle" />
                                 </a>
                             </td>
@@ -161,7 +161,7 @@
     <?php else: ?>
         <p>The <?php if(count($this->candidateIDArray)>1): ?> <?php echo(count($this->candidateIDArray)); ?> candidates have<?php else: ?>candidate has<?php endif; ?> been successfully added to the pipeline for the selected job order.</p>
 
-        <form method="get" action="<?php echo(CATSUtility::getIndexName()); ?>">
+        <form method="get" action="<?php echo((new CATSUtility())->getIndexName()); ?>">
             <input type="button" name="close" value="Close" onclick="parentHidePopWinRefresh();" />
         </form>
     <?php endif; ?>

@@ -12,7 +12,7 @@
     window.CATSUserDateFormat = '<?php echo($_SESSION['CATS']->isDateDMY() ? 'DD-MM-YY' : 'MM-DD-YY'); ?>';
 </script>
 
-    <form name="logActivityForm" id="logActivityForm" action="<?php echo(CATSUtility::getIndexName()); ?>?m=contacts&amp;a=addActivityScheduleEvent<?php if($this->onlyScheduleEvent): ?>&amp;onlyScheduleEvent=true<?php endif; ?>" method="post" onsubmit="return checkActivityForm(document.logActivityForm);" autocomplete="off">
+    <form name="logActivityForm" id="logActivityForm" action="<?php echo((new CATSUtility())->getIndexName()); ?>?m=contacts&amp;a=addActivityScheduleEvent<?php if($this->onlyScheduleEvent): ?>&amp;onlyScheduleEvent=true<?php endif; ?>" method="post" onsubmit="return checkActivityForm(document.logActivityForm);" autocomplete="off">
         <input type="hidden" name="postback" id="postback" value="postback" />
         <input type="hidden" id="contactID" name="contactID" value="<?php echo($this->contactID); ?>" />
 
@@ -147,7 +147,7 @@
 
         </table>
         <input type="submit" class="button" name="submit" id="submit" value="Save" />&nbsp;
-        <input type="button" class="button" name="close" value="Cancel" onclick="parentGoToURL(<?php echo Template::escapeJsAttr(CATSUtility::getIndexName() . '?m=contacts&a=show&contactID=' . $this->contactID); ?>);" />
+        <input type="button" class="button" name="close" value="Cancel" onclick="parentGoToURL(<?php echo Template::escapeJsAttr((new CATSUtility())->getIndexName() . '?m=contacts&a=show&contactID=' . $this->contactID); ?>);" />
     </form>
 
     <script type="text/javascript">
@@ -174,7 +174,7 @@
     <?php echo($this->eventHTML); ?>
     
     <form>
-        <input type="button" name="close" class="button" value="Close" onclick="parentGoToURL(<?php echo Template::escapeJsAttr(CATSUtility::getIndexName() . '?m=contacts&a=show&contactID=' . $this->contactID); ?>);" />
+        <input type="button" name="close" class="button" value="Close" onclick="parentGoToURL(<?php echo Template::escapeJsAttr((new CATSUtility())->getIndexName() . '?m=contacts&a=show&contactID=' . $this->contactID); ?>);" />
     </form>
 <?php endif; ?>
 

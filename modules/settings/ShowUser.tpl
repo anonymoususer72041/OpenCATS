@@ -19,7 +19,7 @@
                 <?php /* Leave these separate; just one span makes the background image display weird. */ ?>
                 <?php if ($this->privledged): ?>
                     <span style="float: left;">User Details</span>
-                    <span style="float: right;"><a href='<?php echo(CATSUtility::getIndexName()); ?>?m=settings&amp;a=manageUsers'>Back to User Management</a></span>&nbsp;
+                    <span style="float: right;"><a href='<?php echo((new CATSUtility())->getIndexName()); ?>?m=settings&amp;a=manageUsers'>Back to User Management</a></span>&nbsp;
                 <?php else: ?>
                     User Details
                 <?php endif; ?>
@@ -97,11 +97,11 @@
                 </tr>
             </table>
             <?php if ($this->privledged): ?>
-                <a id="edit_link" href="<?php echo(CATSUtility::getIndexName()); ?>?m=settings&amp;a=editUser&amp;userID=<?php $this->_($this->data['userID']); ?>" title="Edit">
+                <a id="edit_link" href="<?php echo((new CATSUtility())->getIndexName()); ?>?m=settings&amp;a=editUser&amp;userID=<?php $this->_($this->data['userID']); ?>" title="Edit">
                     <img src="images/actions/edit.gif" width="16" height="16" class="absmiddle" style="border: none;" alt="edit user" />&nbsp;Edit
                 </a>
             <?php else: ?>
-                <input type="button" name="back" class = "button" value="Back" onclick="document.location.href='<?php echo(CATSUtility::getIndexName()); ?>?m=settings';" />
+                <input type="button" name="back" class = "button" value="Back" onclick="document.location.href='<?php echo((new CATSUtility())->getIndexName()); ?>?m=settings';" />
             <?php endif; ?>
             <br clear="all" />
             <br />

@@ -17,7 +17,7 @@
 
             <p class="note">Generate a report on Equal Employment Opportunity Statistics.</p>
 
-            <form name="jobOrderReportForm" id="jobOrderReportForm" action="<?php echo(CATSUtility::getIndexName()); ?>" method="get">
+            <form name="jobOrderReportForm" id="jobOrderReportForm" action="<?php echo((new CATSUtility())->getIndexName()); ?>" method="get">
                 <input type="hidden" name="m" value="reports">
                 <input type="hidden" name="a" value="generateEEOReportPreview">
                 

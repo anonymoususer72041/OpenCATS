@@ -75,8 +75,8 @@ class SettingsUI extends UserInterface
         }
 
         $mp = array(
-            'Administration' => CATSUtility::getIndexName() . '?m=settings&amp;a=administration',
-            'My Profile'     => CATSUtility::getIndexName() . '?m=settings'
+            'Administration' => (new CATSUtility())->getIndexName() . '?m=settings&amp;a=administration',
+            'My Profile'     => (new CATSUtility())->getIndexName() . '?m=settings'
         );
 
         $this->_subTabs = $mp;
@@ -102,7 +102,7 @@ class SettingsUI extends UserInterface
             'HOME' => '
                 if ($_SESSION[\'CATS\']->hasUserCategory(\'careerportal\'))
                 {
-                    CATSUtility::transferRelativeURI(\'m=settings\');
+                    (new CATSUtility())->transferRelativeURI(\'m=settings\');
                     return false;
                 }
             ',
@@ -111,7 +111,7 @@ class SettingsUI extends UserInterface
             'SETTINGS_DISPLAY_PROFILE_SETTINGS' => '
                 if ($_SESSION[\'CATS\']->hasUserCategory(\'careerportal\'))
                 {
-                    CATSUtility::transferRelativeURI(\'m=settings&a=administration\');
+                    (new CATSUtility())->transferRelativeURI(\'m=settings&a=administration\');
                     return false;
                 }
             ',
@@ -160,7 +160,7 @@ class SettingsUI extends UserInterface
 						</li>
 					</ul>
 				</li>',
-	        $arr['id'],$arr['id'],$arr['tag_title'], CATSUtility::getIndexName(), $arr['id']);        	
+	        $arr['id'],$arr['id'],$arr['tag_title'], (new CATSUtility())->getIndexName(), $arr['id']);        	
         }
         
         
@@ -305,7 +305,7 @@ class SettingsUI extends UserInterface
             case 'upgradeSiteName':
                 if ($this->getUserAccessLevel('settings.upgradeSiteName') < ACCESS_LEVEL_SA)
                 {
-                    CATSUtility::transferRelativeURI('m=settings&a=newInstallFinished');
+                    (new CATSUtility())->transferRelativeURI('m=settings&a=newInstallFinished');
                 }
                 if ($this->isPostBack())
                 {
@@ -1268,7 +1268,7 @@ class SettingsUI extends UserInterface
 
         if (!eval(Hooks::get('SETTINGS_ON_ADD_USER'))) return;
 
-        CATSUtility::transferRelativeURI(
+        (new CATSUtility())->transferRelativeURI(
             'm=settings&a=showUser&userID=' . $userID
         );
     }
@@ -1481,7 +1481,7 @@ class SettingsUI extends UserInterface
             }
         }
 
-        CATSUtility::transferRelativeURI(
+        (new CATSUtility())->transferRelativeURI(
             'm=settings&a=showUser&userID=' . $userID
         );
     }
@@ -1511,7 +1511,7 @@ class SettingsUI extends UserInterface
         $users = new Users($this->_siteID);
         $users->delete($userID);
 
-        CATSUtility::transferRelativeURI('m=settings&a=manageUsers');
+        (new CATSUtility())->transferRelativeURI('m=settings&a=manageUsers');
     }
 
     /*
@@ -1608,7 +1608,7 @@ class SettingsUI extends UserInterface
             }
         }
 
-        CATSUtility::transferRelativeURI('m=settings&a=customizeExtraFields');
+        (new CATSUtility())->transferRelativeURI('m=settings&a=customizeExtraFields');
     }
 
     //FIXME: Document me.
@@ -1670,7 +1670,7 @@ class SettingsUI extends UserInterface
         $emailTemplates = new EmailTemplates($this->_siteID);
         $emailTemplates->update($templateID, $templateTitle, $text, $disabled);
 
-        CATSUtility::transferRelativeURI('m=settings&a=emailTemplates');
+        (new CATSUtility())->transferRelativeURI('m=settings&a=emailTemplates');
     }
 
     /*
@@ -1811,13 +1811,13 @@ class SettingsUI extends UserInterface
 
         if ($continueEdit == '1')
         {
-            CATSUtility::transferRelativeURI(
+            (new CATSUtility())->transferRelativeURI(
                 'm=settings&a=careerPortalTemplateEdit&templateName=' . urlencode($templateName)
             );
         }
         else
         {
-            CATSUtility::transferRelativeURI(
+            (new CATSUtility())->transferRelativeURI(
                 'm=settings&a=careerPortalSettings&templateName=' . urlencode($templateName)
             );
         }
@@ -1833,7 +1833,7 @@ class SettingsUI extends UserInterface
         $careerPortalTemplateNames = $careerPortalSettings->getDefaultTemplates();
         $careerPortalTemplateCustomNames = $careerPortalSettings->getCustomTemplates();
 
-        $careerPortalURL = CATSUtility::getAbsoluteURI() . 'careers/';
+        $careerPortalURL = (new CATSUtility())->getAbsoluteURI() . 'careers/';
 
         if (!eval(Hooks::get('SETTINGS_CAREER_PORTAL'))) return;
 
@@ -1867,7 +1867,7 @@ class SettingsUI extends UserInterface
                     $careerPortalSettings->set($setting, '1');
                     if($value != '1')
                     {
-                        CATSUtility::transferRelativeURI('m=settings&a=careerPortalSettings');
+                        (new CATSUtility())->transferRelativeURI('m=settings&a=careerPortalSettings');
                     }
                 }
                 else
@@ -1875,7 +1875,7 @@ class SettingsUI extends UserInterface
                     $careerPortalSettings->set($setting, '0');
                     if($value != '0')
                     {
-                        CATSUtility::transferRelativeURI('m=settings&a=careerPortalSettings');
+                        (new CATSUtility())->transferRelativeURI('m=settings&a=careerPortalSettings');
                     }
                 }
             }
@@ -1932,7 +1932,7 @@ class SettingsUI extends UserInterface
             }
         }
 
-        CATSUtility::transferRelativeURI('m=settings&a=administration');
+        (new CATSUtility())->transferRelativeURI('m=settings&a=administration');
     }
 
     private function onCareerPortalTweak()
@@ -2016,7 +2016,7 @@ class SettingsUI extends UserInterface
                 break;
         }
 
-        CATSUtility::transferRelativeURI('m=settings&a=careerPortalSettings');
+        (new CATSUtility())->transferRelativeURI('m=settings&a=careerPortalSettings');
     }
 
     /*
@@ -2052,7 +2052,7 @@ class SettingsUI extends UserInterface
             }
         }
 
-        CATSUtility::transferRelativeURI('m=settings&a=administration');
+        (new CATSUtility())->transferRelativeURI('m=settings&a=administration');
     }
 
     /*
@@ -2115,7 +2115,7 @@ class SettingsUI extends UserInterface
         }
 
         $this->_template->assign('active', $this);
-        CATSUtility::transferRelativeURI('m=settings&a=administration');
+        (new CATSUtility())->transferRelativeURI('m=settings&a=administration');
     }
 
     /*
@@ -2164,7 +2164,7 @@ class SettingsUI extends UserInterface
         }
 
         $this->_template->assign('active', $this);
-        CATSUtility::transferRelativeURI('m=settings&a=administration');
+        (new CATSUtility())->transferRelativeURI('m=settings&a=administration');
     }
 
     /*
@@ -2242,7 +2242,7 @@ class SettingsUI extends UserInterface
             "AND content_type = 'catsbackup'"
         );
 
-        CATSUtility::transferRelativeURI('m=settings&a=createBackup');
+        (new CATSUtility())->transferRelativeURI('m=settings&a=createBackup');
     }
 
     private function forceEmail()
@@ -2353,7 +2353,7 @@ class SettingsUI extends UserInterface
         }
         else
         {
-            CATSUtility::transferRelativeURI('m=settings&a=newSiteName');
+            (new CATSUtility())->transferRelativeURI('m=settings&a=newSiteName');
         }
     }
 
@@ -2385,18 +2385,18 @@ class SettingsUI extends UserInterface
             /* If no E-Mail set for current user, make user set E-Mail address. */
             if (trim($_SESSION['CATS']->getEmail()) == '')
             {
-                CATSUtility::transferRelativeURI('m=settings&a=forceEmail');
+                (new CATSUtility())->transferRelativeURI('m=settings&a=forceEmail');
             }
             else
             {
-                CATSUtility::transferRelativeURI('m=settings&a=newInstallFinished');
+                (new CATSUtility())->transferRelativeURI('m=settings&a=newInstallFinished');
             }
         }
     }
 
     private function onNewInstallFinished()
     {
-        CATSUtility::transferRelativeURI('m=home');
+        (new CATSUtility())->transferRelativeURI('m=home');
     }
 
     /*
@@ -2407,7 +2407,7 @@ class SettingsUI extends UserInterface
         $systemInfo = new SystemInfo();
         $systemInfoData = $systemInfo->getSystemInfo();
 
-        if (isset($systemInfoData['available_version']) && $systemInfoData['available_version'] > CATSUtility::getVersionAsInteger())
+        if (isset($systemInfoData['available_version']) && $systemInfoData['available_version'] > (new CATSUtility())->getVersionAsInteger())
         {
             $newVersion = true;
         }
@@ -2607,7 +2607,7 @@ class SettingsUI extends UserInterface
                 }
 
                 $this->changeSiteName($siteName);
-                CATSUtility::transferRelativeURI('m=settings&a=administration');
+                (new CATSUtility())->transferRelativeURI('m=settings&a=administration');
                 break;
 
             case 'changeVersionCheck':
@@ -2621,7 +2621,7 @@ class SettingsUI extends UserInterface
                 );
 
                 $versionCheckPref = $this->isChecked('versionCheck', $_POST);
-                CATSUtility::transferRelativeURI('m=settings&a=administration');
+                (new CATSUtility())->transferRelativeURI('m=settings&a=administration');
                 break;
 
             case 'localization':
@@ -2668,11 +2668,11 @@ class SettingsUI extends UserInterface
                 $_SESSION['CATS']->logout();
                 unset($_SESSION['CATS']);
 
-                CATSUtility::transferRelativeURI('?m=settings&a=administration&messageSuccess=true&message='.urlencode('Localization settings saved!  Please log back in for the settings to take effect.'));
+                (new CATSUtility())->transferRelativeURI('?m=settings&a=administration&messageSuccess=true&message='.urlencode('Localization settings saved!  Please log back in for the settings to take effect.'));
                 break;
 
             default:
-                CATSUtility::transferRelativeURI('m=settings&a=administration');
+                (new CATSUtility())->transferRelativeURI('m=settings&a=administration');
                 break;
         }
     }
@@ -2796,7 +2796,7 @@ class SettingsUI extends UserInterface
             }
             else if ($license->isProfessional())
             {
-                if (!CATSUtility::isSOAPEnabled())
+                if (!(new CATSUtility())->isSOAPEnabled())
                 {
                     $message = 'CATS Professional requires the PHP SOAP library which isn\'t currently installed.<br /><br />'
                         . 'Installation Instructions:<br /><br />'
@@ -2814,7 +2814,7 @@ class SettingsUI extends UserInterface
                 {
                     $message = 'That is not a valid Professional membership key<br /><span style="font-size: 16px; color: #000000;">Please verify that you have the correct key and try again.</span>';
                 }
-                else if (!CATSUtility::changeConfigSetting('LICENSE_KEY', "'" . $key . "'"))
+                else if (!(new CATSUtility())->changeConfigSetting('LICENSE_KEY', "'" . $key . "'"))
                 {
                     $message = 'Internal Permissions Error<br /><span style="font-size: 12px; color: #000000;">CATS is unable '
                         . 'to write changes to your <b>config.php</b> file. Please change the file permissions or contact us '
@@ -2936,7 +2936,7 @@ class SettingsUI extends UserInterface
 
         if ($logout)
         {
-            $indexName = CATSUtility::getIndexName();
+            $indexName = (new CATSUtility())->getIndexName();
 
             echo '<html><body>';
             echo '<form id="logoutForm" method="post" action="', $indexName, '?m=logout">';
@@ -3199,7 +3199,7 @@ class SettingsUI extends UserInterface
             {
                 if ($license->isProfessional())
                 {
-                    if (!CATSUtility::isSOAPEnabled())
+                    if (!(new CATSUtility())->isSOAPEnabled())
                     {
                         echo "CATS Professional requires the PHP SOAP library which isn't currently installed.\n\n"
                             . "Installation Instructions:\n\n"
@@ -3227,7 +3227,7 @@ class SettingsUI extends UserInterface
                     }
                 }
 
-                if (CATSUtility::changeConfigSetting('LICENSE_KEY', "'" . $key . "'"))
+                if ((new CATSUtility())->changeConfigSetting('LICENSE_KEY', "'" . $key . "'"))
                 {
                     $configWritten = true;
                 }
@@ -3886,7 +3886,7 @@ class SettingsUI extends UserInterface
                     $_SESSION['CATS_QUESTIONNAIRE']['questions']
                 );
 
-                CATSUtility::transferRelativeURI('m=settings&a=careerPortalSettings');
+                (new CATSUtility())->transferRelativeURI('m=settings&a=careerPortalSettings');
                 return;
             }
         }
@@ -3914,7 +3914,7 @@ class SettingsUI extends UserInterface
             }
         }
 
-        CATSUtility::transferRelativeURI('m=settings&a=careerPortalSettings');
+        (new CATSUtility())->transferRelativeURI('m=settings&a=careerPortalSettings');
     }
 
     private function careerPortalQuestionnairePreview()

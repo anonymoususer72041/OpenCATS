@@ -97,7 +97,7 @@ class TemplateUtility
         $username     = $_SESSION['CATS']->getUsername();
         $siteName     = $_SESSION['CATS']->getSiteName();
         $fullName     = $_SESSION['CATS']->getFullName();
-        $indexName    = CATSUtility::getIndexName();
+        $indexName    = (new CATSUtility())->getIndexName();
 
         echo '<div id="headerBlock">', "\n";
 
@@ -182,7 +182,7 @@ class TemplateUtility
             $systemInfoData = $systemInfo->getSystemInfo();
 
             if (isset($systemInfoData['available_version']) &&
-                $systemInfoData['available_version'] > CATSUtility::getVersionAsInteger() &&
+                $systemInfoData['available_version'] > (new CATSUtility())->getVersionAsInteger() &&
                 isset($systemInfoData['disable_version_check']) &&
                 !$systemInfoData['disable_version_check'] &&
                 $_SESSION['CATS']->getAccessLevel(ACL::SECOBJ_ROOT) >= ACCESS_LEVEL_SA)
@@ -266,7 +266,7 @@ class TemplateUtility
     {
         /* Get the formatted MRU list from Session. */
         $MRU = $_SESSION['CATS']->getMRU()->getFormatted();
-        $indexName = CATSUtility::getIndexName();
+        $indexName = (new CATSUtility())->getIndexName();
 
         /* MRU List */
         echo '<div id="MRUPanel">', "\n";
@@ -400,7 +400,7 @@ class TemplateUtility
         }
 
         $currentUrlGETString = urlencode(implode('&', $currentUrlGET));
-        $indexName = CATSUtility::getIndexName();
+        $indexName = (new CATSUtility())->getIndexName();
 
         echo '<div class="recentSearchResults">';
         echo '<table style="vertical-align: top; border-collapse: collapse;"><tr style="vertical-align: top;"><td>';
@@ -530,7 +530,7 @@ class TemplateUtility
      */
     public static function printCookieTester()
     {
-        $indexName = CATSUtility::getIndexName();
+        $indexName = (new CATSUtility())->getIndexName();
 
         echo '<script type="text/javascript">
             if (navigator.cookieEnabled)
@@ -612,7 +612,7 @@ class TemplateUtility
         echo '<div id="header">', "\n";
         echo '<ul id="primary">', "\n";
 
-        $indexName = CATSUtility::getIndexName();
+        $indexName = (new CATSUtility())->getIndexName();
 
         $modules = (new ModuleUtility())->getModules();
         foreach ($modules as $moduleName => $parameters)
@@ -864,7 +864,7 @@ class TemplateUtility
         {
             if (!LicenseUtility::validateProfessionalKey(LICENSE_KEY))
             {
-                CATSUtility::changeConfigSetting('LICENSE_KEY', "''");
+                (new CATSUtility())->changeConfigSetting('LICENSE_KEY', "''");
             }
         }
     }
@@ -919,7 +919,7 @@ class TemplateUtility
         $rating = (int) $rating;
 
         $ratings = self::_getRatingImages();
-        $indexName = CATSUtility::getIndexName();
+        $indexName = (new CATSUtility())->getIndexName();
 
         if ($_SESSION['CATS']->getAccessLevel('pipelines.editRating') < ACCESS_LEVEL_EDIT)
         {
@@ -1265,7 +1265,7 @@ class TemplateUtility
         echo '<link rel="icon" href="images/favicon.ico" type="image/x-icon" />', "\n";
         echo '<link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />', "\n";
         echo '<link rel="alternate" type="application/rss+xml" title="RSS" href="',
-             CATSUtility::getIndexName(), '?m=rss" />', "\n";
+             (new CATSUtility())->getIndexName(), '?m=rss" />', "\n";
 
         /* Core JS files */
         $coreJavaScriptFiles = array(
@@ -1280,7 +1280,7 @@ class TemplateUtility
             $versionedFilename = self::getVersionedAssetURL($coreJavaScriptFile);
             echo '<script type="text/javascript" src="', $versionedFilename, '"></script>', "\n";
         }
-        echo '<script type="text/javascript">CATSIndexName = ', Template::escapeJs(CATSUtility::getIndexName()), ';</script>', "\n";
+        echo '<script type="text/javascript">CATSIndexName = ', Template::escapeJs((new CATSUtility())->getIndexName()), ';</script>', "\n";
         if (isset($_SESSION['CATS']) && $_SESSION['CATS']->isLoggedIn())
         {
             $csrfToken = $_SESSION['CATS']->getCSRFToken();

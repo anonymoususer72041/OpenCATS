@@ -39,7 +39,7 @@ div.questionContainerPlainJane { }
             </div>
             <br /><br />
 
-            <form method="post" action="<?php echo CATSUtility::getIndexName(); ?>?m=settings&a=careerPortalQuestionnaire" name="questionnaireForm" onsubmit="return validateFields();">
+            <form method="post" action="<?php echo (new CATSUtility())->getIndexName(); ?>?m=settings&a=careerPortalQuestionnaire" name="questionnaireForm" onsubmit="return validateFields();">
             <input type="hidden" name="questionnaireID" value="<?php echo $this->questionnaireID; ?>" />
             <input type="hidden" name="postback" value="1" />
             <input type="hidden" id="restrictAction" name="restrictAction" value="none" />

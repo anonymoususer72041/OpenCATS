@@ -98,7 +98,7 @@ class NewVersionCheck
 
         //FIXME: Library code Session dependencies suck.
         $siteName = $_SESSION['CATS']->getSiteName();
-        $catsVersion = CATSUtility::getVersionAsInteger();
+        $catsVersion = (new CATSUtility())->getVersionAsInteger();
 
         $users = new Users(1);
         $numberOfActiveUsers = $users->getUsageData();
@@ -178,7 +178,7 @@ class NewVersionCheck
         }
 
         /* Only display new version news if a new version is available. */
-        if ($systemInfo['available_version'] > CATSUtility::getVersionAsInteger())
+        if ($systemInfo['available_version'] > (new CATSUtility())->getVersionAsInteger())
         {
             return urldecode($systemInfo['available_version_description']);
         }

@@ -96,7 +96,7 @@ class WizardUI extends UserInterface
         {
             // The user has removed or the session for the wizard has been lost,
             // redirect to rebuild it
-            CATSUtility::transferRelativeURI(CATSUtility::getIndexName() . 'm=home');
+            (new CATSUtility())->transferRelativeURI((new CATSUtility())->getIndexName() . 'm=home');
             return;
         }
 

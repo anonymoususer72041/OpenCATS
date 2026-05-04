@@ -14,7 +14,7 @@
                     </td>
                     <td><h2>Lists: Home</h2></td>
                     <td align="right">
-                        <form name="jobOrdersViewSelectorForm" id="jobOrdersViewSelectorForm" action="<?php echo(CATSUtility::getIndexName()); ?>" method="get">
+                        <form name="jobOrdersViewSelectorForm" id="jobOrdersViewSelectorForm" action="<?php echo((new CATSUtility())->getIndexName()); ?>" method="get">
                             <input type="hidden" name="m" value="joborders" />
                             <input type="hidden" name="a" value="list" />
 

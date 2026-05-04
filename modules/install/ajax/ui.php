@@ -124,22 +124,22 @@ switch ($action)
         {
             if (isset($_REQUEST['user']) && !empty($_REQUEST['user']))
             {
-                CATSUtility::changeConfigSetting('DATABASE_USER', var_export($_REQUEST['user'], true));
+                (new CATSUtility())->changeConfigSetting('DATABASE_USER', var_export($_REQUEST['user'], true));
             }
 
             if (isset($_REQUEST['pass']) && $_REQUEST['pass'] !== '')
             {
-                CATSUtility::changeConfigSetting('DATABASE_PASS', var_export($_REQUEST['pass'], true));
+                (new CATSUtility())->changeConfigSetting('DATABASE_PASS', var_export($_REQUEST['pass'], true));
             }
 
             if (isset($_REQUEST['host']) && !empty($_REQUEST['host']))
             {
-                CATSUtility::changeConfigSetting('DATABASE_HOST', var_export($_REQUEST['host'], true));
+                (new CATSUtility())->changeConfigSetting('DATABASE_HOST', var_export($_REQUEST['host'], true));
             }
 
             if (isset($_REQUEST['name']) && !empty($_REQUEST['name']))
             {
-                CATSUtility::changeConfigSetting('DATABASE_NAME', var_export($_REQUEST['name'], true));
+                (new CATSUtility())->changeConfigSetting('DATABASE_NAME', var_export($_REQUEST['name'], true));
             }
 
             echo '
@@ -235,20 +235,20 @@ switch ($action)
 
             if ($mailSupport == 4)
             {
-                CATSUtility::changeConfigSetting('MAIL_MAILER', '3');
-                CATSUtility::changeConfigSetting('MAIL_SMTP_AUTH', 'true');
+                (new CATSUtility())->changeConfigSetting('MAIL_MAILER', '3');
+                (new CATSUtility())->changeConfigSetting('MAIL_SMTP_AUTH', 'true');
             }
             else
             {
-                CATSUtility::changeConfigSetting('MAIL_MAILER', sprintf('%d', $mailSupport));
-                CATSUtility::changeConfigSetting('MAIL_SMTP_AUTH', 'false');
+                (new CATSUtility())->changeConfigSetting('MAIL_MAILER', sprintf('%d', $mailSupport));
+                (new CATSUtility())->changeConfigSetting('MAIL_SMTP_AUTH', 'false');
             }
 
-            CATSUtility::changeConfigSetting('MAIL_SENDMAIL_PATH', var_export($mailSendmailPath, true));
-            CATSUtility::changeConfigSetting('MAIL_SMTP_HOST', var_export($mailSmtpHost, true));
-            CATSUtility::changeConfigSetting('MAIL_SMTP_PORT', sprintf('%d', $mailSmtpPort));
-            CATSUtility::changeConfigSetting('MAIL_SMTP_USER', var_export($mailSmtpUsername, true));
-            CATSUtility::changeConfigSetting('MAIL_SMTP_PASS', var_export($mailSmtpPassword, true));
+            (new CATSUtility())->changeConfigSetting('MAIL_SENDMAIL_PATH', var_export($mailSendmailPath, true));
+            (new CATSUtility())->changeConfigSetting('MAIL_SMTP_HOST', var_export($mailSmtpHost, true));
+            (new CATSUtility())->changeConfigSetting('MAIL_SMTP_PORT', sprintf('%d', $mailSmtpPort));
+            (new CATSUtility())->changeConfigSetting('MAIL_SMTP_USER', var_export($mailSmtpUsername, true));
+            (new CATSUtility())->changeConfigSetting('MAIL_SMTP_PASS', var_export($mailSmtpPassword, true));
 
             @session_name(CATS_SESSION_NAME);
             session_start();
@@ -420,16 +420,16 @@ switch ($action)
             </script>';
 
         $antiwordPath = $_REQUEST['docExecutable'];
-        CATSUtility::changeConfigSetting('ANTIWORD_PATH', var_export($antiwordPath, true));
+        (new CATSUtility())->changeConfigSetting('ANTIWORD_PATH', var_export($antiwordPath, true));
 
         $pdftotextPath = $_REQUEST['pdfExecutable'];
-        CATSUtility::changeConfigSetting('PDFTOTEXT_PATH', var_export($pdftotextPath, true));
+        (new CATSUtility())->changeConfigSetting('PDFTOTEXT_PATH', var_export($pdftotextPath, true));
 
         $html2textPath = $_REQUEST['htmlExecutable'];
-        CATSUtility::changeConfigSetting('HTML2TEXT_PATH', var_export($html2textPath, true));
+        (new CATSUtility())->changeConfigSetting('HTML2TEXT_PATH', var_export($html2textPath, true));
 
         $unrtfPath = $_REQUEST['rtfExecutable'];
-        CATSUtility::changeConfigSetting('UNRTF_PATH', var_export($unrtfPath, true));
+        (new CATSUtility())->changeConfigSetting('UNRTF_PATH', var_export($unrtfPath, true));
 
         break;
 
@@ -533,7 +533,7 @@ switch ($action)
 
         // FIXME: Input validation.
         $timeZone = $_REQUEST['timeZone'];
-        CATSUtility::changeConfigSetting('OFFSET_GMT', ($timeZone));
+        (new CATSUtility())->changeConfigSetting('OFFSET_GMT', ($timeZone));
 
         $dateFormat = $_REQUEST['dateFormat'];
 
@@ -729,7 +729,7 @@ switch ($action)
         MySQLConnect();
         $extractor = new ZipFileExtractor('./restore/catsbackup.bak');
 
-        CATSUtility::changeConfigSetting('ENABLE_DEMO_MODE', 'false');
+        (new CATSUtility())->changeConfigSetting('ENABLE_DEMO_MODE', 'false');
 
         /* Extract the file.  This command also executes all sql commands in the file. */
         /* Normally, we could just do the following lines, but we want a custom extractor
@@ -791,7 +791,7 @@ switch ($action)
     case 'doInstallEmptyDatabase':
         MySQLConnect();
 
-        CATSUtility::changeConfigSetting('ENABLE_DEMO_MODE', 'false');
+        (new CATSUtility())->changeConfigSetting('ENABLE_DEMO_MODE', 'false');
 
         $schema = file_get_contents('db/cats_schema.sql');
         MySQLQueryMultiple($schema, ";\n");
@@ -815,7 +815,7 @@ switch ($action)
         break;
 
     case 'onLoadDemoData':
-        CATSUtility::changeConfigSetting('ENABLE_DEMO_MODE', 'true');
+        (new CATSUtility())->changeConfigSetting('ENABLE_DEMO_MODE', 'true');
 
         include_once(LEGACY_ROOT . '/lib/FileCompressor.php');
         MySQLConnect();

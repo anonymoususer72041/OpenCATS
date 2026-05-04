@@ -238,7 +238,7 @@ class Pager
 
         echo sprintf(
             '<a href="%s?%s&amp;page=%s&amp;sortBy=%s&amp;sortDirection=%s"><nobr>%s%s</nobr></a>',
-            CATSUtility::getIndexName(),
+            (new CATSUtility())->getIndexName(),
             $this->_baseURL,
             $this->_currentPage,
             $headerField,
@@ -298,7 +298,7 @@ class Pager
 
         $rsNav = null;
             
-        $indexName = CATSUtility::getIndexName();
+        $indexName = (new CATSUtility())->getIndexName();
 
         /* If there is a previous page, show "<< Previous" as a link; otherwise
          * just as text.

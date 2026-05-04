@@ -20,7 +20,7 @@
             <table class="searchTable" id="searchTable ">
                 <tr>
                     <td>
-                        <form name="searchForm" id="searchForm" action="<?php echo(CATSUtility::getIndexName()); ?>" method="get" autocomplete="off">
+                        <form name="searchForm" id="searchForm" action="<?php echo((new CATSUtility())->getIndexName()); ?>" method="get" autocomplete="off">
                             <input type="hidden" name="m" id="moduleName" value="candidates" />
                             <input type="hidden" name="a" id="moduleAction" value="search" />
                             <input type="hidden" name="getback" id="getback" value="getback" />
@@ -91,17 +91,17 @@
                                 <?php if ($data['candidateID'] > 0): ?>
                                     <td valign="top" nowrap>
                                         <input type="checkbox" id="checked_<?php echo($data['candidateID']); echo($data['attachmentID']); ?>" name="checked_<?php echo($data['candidateID']); ?>" />
-                                        <a href="javascript:void(0);" onClick="window.open('<?php echo(CATSUtility::getIndexName()); ?>?m=candidates&amp;a=show&amp;candidateID=<?php $this->_($data['candidateID']); ?>')" title="View in New Window">
+                                        <a href="javascript:void(0);" onClick="window.open('<?php echo((new CATSUtility())->getIndexName()); ?>?m=candidates&amp;a=show&amp;candidateID=<?php $this->_($data['candidateID']); ?>')" title="View in New Window">
                                             <img src="images/new_window.gif" class="abstop" alt="(Preview)" border="0" width="15" height="15" />
                                         </a>
                                     </td>
                                     <td valign="top">
-                                        <a href="<?php echo(CATSUtility::getIndexName()); ?>?m=candidates&amp;a=show&amp;candidateID=<?php $this->_($data['candidateID']); ?>">
+                                        <a href="<?php echo((new CATSUtility())->getIndexName()); ?>?m=candidates&amp;a=show&amp;candidateID=<?php $this->_($data['candidateID']); ?>">
                                             <?php $this->_($data['firstName']); ?>
                                         </a>
                                     </td>
                                     <td valign="top">
-                                        <a href="<?php echo(CATSUtility::getIndexName()); ?>?m=candidates&amp;a=show&amp;candidateID=<?php $this->_($data['candidateID']); ?>">
+                                        <a href="<?php echo((new CATSUtility())->getIndexName()); ?>?m=candidates&amp;a=show&amp;candidateID=<?php $this->_($data['candidateID']); ?>">
                                             <?php $this->_($data['lastName']); ?>
                                         </a>
                                     </td>
@@ -110,14 +110,14 @@
                                     <td valign="top" nowrap="nowrap">
                                     </td>
                                     <td valign="top" colspan="2">
-                                        <a href="<?php echo(CATSUtility::getIndexName()); ?>?m=candidates&amp;a=add&amp;attachmentID=<?php $this->_($data['attachmentID']); ?>">
+                                        <a href="<?php echo((new CATSUtility())->getIndexName()); ?>?m=candidates&amp;a=add&amp;attachmentID=<?php $this->_($data['attachmentID']); ?>">
                                             <img src="images/candidate_tiny.gif" width="16" height="16" border="0" class="absmiddle" alt="" title="Create Candidate Profile" />
                                         </a>
                                         &nbsp;Bulk Resume
                                     </td>
                                 <?php endif; ?>
                                 <td valign="top">
-                                    <a href="#" onclick="window.open('<?php echo(CATSUtility::getIndexName()); ?>?m=candidates&amp;a=viewResume&amp;wildCardString=<?php $this->_(urlencode($this->wildCardString)); ?>&amp;attachmentID=<?php $this->_($data['attachmentID']); ?>', 'viewResume', 'scrollbars=1,width=700,height=600')">
+                                    <a href="#" onclick="window.open('<?php echo((new CATSUtility())->getIndexName()); ?>?m=candidates&amp;a=viewResume&amp;wildCardString=<?php $this->_(urlencode($this->wildCardString)); ?>&amp;attachmentID=<?php $this->_($data['attachmentID']); ?>', 'viewResume', 'scrollbars=1,width=700,height=600')">
                                         <img src="images/resume_preview_inline.gif" class="abstop" alt="(Preview)" border="0" width="15" height="15" />
                                     </a>&nbsp;
                                     <?php echo($data['excerpt']); ?>
@@ -178,23 +178,23 @@
                             <tr class="<?php TemplateUtility::printAlternatingRowClass($rowNumber); ?>">
                                 <td nowrap>
                                     <input type="checkbox" id="checked_<?php echo($data['candidateID']); ?>" name="checked_<?php echo($data['candidateID']); ?>" />
-                                    <a href="javascript:void(0);" onClick="window.open('<?php echo(CATSUtility::getIndexName()); ?>?m=candidates&amp;a=show&amp;candidateID=<?php $this->_($data['candidateID']); ?>')" title="View in New Window">
+                                    <a href="javascript:void(0);" onClick="window.open('<?php echo((new CATSUtility())->getIndexName()); ?>?m=candidates&amp;a=show&amp;candidateID=<?php $this->_($data['candidateID']); ?>')" title="View in New Window">
                                         <img src="images/new_window.gif" class="abstop" alt="(Preview)" border="0" width="15" height="15" />
                                     </a>&nbsp;
                                 </td>
                                 <td>
-                                    <a href="<?php echo(CATSUtility::getIndexName()); ?>?m=candidates&amp;a=show&amp;candidateID=<?php $this->_($data['candidateID']); ?>">
+                                    <a href="<?php echo((new CATSUtility())->getIndexName()); ?>?m=candidates&amp;a=show&amp;candidateID=<?php $this->_($data['candidateID']); ?>">
                                         <?php $this->_($data['firstName']); ?>
                                     </a>
                                 </td>
                                 <td>
-                                    <a href="<?php echo(CATSUtility::getIndexName()); ?>?m=candidates&amp;a=show&amp;candidateID=<?php $this->_($data['candidateID']); ?>">
+                                    <a href="<?php echo((new CATSUtility())->getIndexName()); ?>?m=candidates&amp;a=show&amp;candidateID=<?php $this->_($data['candidateID']); ?>">
                                         <?php $this->_($data['lastName']); ?>
                                     </a>
                                 </td>
                                 <td>
                                     <?php if (isset($data['resumeID'])): ?>
-                                        <a href="javascript:void(0);" onclick="window.open('<?php echo(CATSUtility::getIndexName()); ?>?m=candidates&amp;a=viewResume&amp;wildCardString=<?php $this->_(urlencode($this->wildCardString)); ?>&amp;attachmentID=<?php $this->_($data['resumeID']); ?>', 'viewResume', 'scrollbars=1,width=700,height=600')" Title="View resume">
+                                        <a href="javascript:void(0);" onclick="window.open('<?php echo((new CATSUtility())->getIndexName()); ?>?m=candidates&amp;a=viewResume&amp;wildCardString=<?php $this->_(urlencode($this->wildCardString)); ?>&amp;attachmentID=<?php $this->_($data['resumeID']); ?>', 'viewResume', 'scrollbars=1,width=700,height=600')" Title="View resume">
                                             <img src="images/resume_preview_inline.gif" class="abstop" alt="(Preview)" border="0" width="15" height="15" />
                                         </a>
                                     <?php endif; ?>

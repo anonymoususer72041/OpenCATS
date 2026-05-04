@@ -687,7 +687,7 @@ class LicenseUtility
     public static function isParsingEnabled()
     {
         // Parsing requires the use of the SOAP libraries
-        if (!CATSUtility::isSOAPEnabled())
+        if (!(new CATSUtility())->isSOAPEnabled())
         {
             return true;
         }

@@ -1046,12 +1046,12 @@ class ImportUI extends UserInterface
         $message .= 'You will have 1 week to review the import before the changes become permanent.<br /><br />';
 
         $message .= '<input type="button" onclick="document.location.href=\'';
-        $message .= CATSUtility::getIndexName() . '?m=import&amp;a=revert&amp;importID=' . $importID . '\';" value="Revert Import" class="button">';
+        $message .= (new CATSUtility())->getIndexName() . '?m=import&amp;a=revert&amp;importID=' . $importID . '\';" value="Revert Import" class="button">';
 
         if ($totalRows != $totalImported)
         {
             $message .= '<input type="button" onclick="document.location.href=\'';
-            $message .= CATSUtility::getIndexName() . '?m=import&amp;a=viewerrors&amp;importID=' . $importID . '\';" value="View Import Errors" class="button">';
+            $message .= (new CATSUtility())->getIndexName() . '?m=import&amp;a=viewerrors&amp;importID=' . $importID . '\';" value="View Import Errors" class="button">';
         }
 
         if (!eval(Hooks::get('IMPORT_ON_IMPORT_DELIMITED_10'))) return;
@@ -1629,7 +1629,7 @@ class ImportUI extends UserInterface
                     . 'Ooops! You probably used the <b>back</b> or <b>refresh</b> '
                     . 'buttons on your browser. The information you previously had here is no longer '
                     . 'available. To start a new '
-                    . 'mass resume import, <a style="font-size: 16px;" href="' . CATSUtility::getIndexName() . '?m=import&a=massImport&'
+                    . 'mass resume import, <a style="font-size: 16px;" href="' . (new CATSUtility())->getIndexName() . '?m=import&a=massImport&'
                     . 'step=1">click here</a>.'
                 );
             }
@@ -1846,7 +1846,7 @@ class ImportUI extends UserInterface
                                 'resume' => $doc['realName'],
                                 'url' => sprintf(
                                     '%s?m=candidates&a=show&candidateID=%d',
-                                    CATSUtility::getIndexName(),
+                                    (new CATSUtility())->getIndexName(),
                                     $candidateID
                                 ),
                                 'location' => trim($doc['city'] . ' ' . $doc['state'] . ' ' . $doc['zipCode'])
@@ -2160,7 +2160,7 @@ class ImportUI extends UserInterface
             }
         }
 
-        CATSUtility::transferRelativeURI('m=import&a=massImport&step=2');
+        (new CATSUtility())->transferRelativeURI('m=import&a=massImport&step=2');
     }
 }
 

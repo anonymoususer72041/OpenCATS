@@ -7,7 +7,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <link rel="icon" href="images/favicon.ico" type="image/x-icon" />
         <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
-        <link rel="alternate" type="application/rss+xml" title="RSS" href="<?php echo(CATSUtility::getIndexName()); ?>?m=rss&amp;siteID=<?php echo($_SESSION['CATS']->getSiteID()); ?>" />
+        <link rel="alternate" type="application/rss+xml" title="RSS" href="<?php echo((new CATSUtility())->getIndexName()); ?>?m=rss&amp;siteID=<?php echo($_SESSION['CATS']->getSiteID()); ?>" />
         <style type="text/css" media="all">@import "<?php echo TemplateUtility::getVersionedAssetURL('main.css'); ?>";</style>
         <script type="text/javascript" src="<?php echo TemplateUtility::getVersionedAssetURL('js/lib.js'); ?>"></script>
         <style type="text/css">
@@ -45,7 +45,7 @@
             }
             </script>
 
-            <p id="footerText" align="center">CATS Version <?php echo(CATSUtility::getVersion()); ?> build <?php echo(CATSUtility::getBuild()); ?>. Powered by <a href="http://www.opencats.org" target="_blank"><strong>OpenCATS</strong></a>.<br />
+            <p id="footerText" align="center">CATS Version <?php echo((new CATSUtility())->getVersion()); ?> build <?php echo((new CATSUtility())->getBuild()); ?>. Powered by <a href="http://www.opencats.org" target="_blank"><strong>OpenCATS</strong></a>.<br />
             <span id="footerCopyright">&copy;2007-2023 OpenCATS All rights reserved.</span></p>
         </div>
     </body>

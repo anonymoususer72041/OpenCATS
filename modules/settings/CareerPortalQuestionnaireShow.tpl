@@ -17,7 +17,7 @@
             </table>
             <br />
 
-            <form method="post" action="<?php echo CATSUtility::getIndexName(); ?>?m=settings&a=careerPortalQuestionnairePreview&questionnaireID=<?php echo $this->questionnaireID; ?>" name="questionnairePreviewForm">
+            <form method="post" action="<?php echo (new CATSUtility())->getIndexName(); ?>?m=settings&a=careerPortalQuestionnairePreview&questionnaireID=<?php echo $this->questionnaireID; ?>" name="questionnairePreviewForm">
 <?php endif; ?>
     <style>
         td.QAquestionText { padding: 10px; }

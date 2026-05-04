@@ -46,7 +46,7 @@
                                 </td>
                                 <td id="addEventTD" style="display:none;">
                                     <p class="noteUnsized">Add Event</p>
-                                    <form name="addEventForm" id="addEventForm" action="<?php echo(CATSUtility::getIndexName()); ?>?m=calendar&amp;a=addEvent" method="post" onsubmit="return checkAddForm(document.addEventForm);" autocomplete="off">
+                                    <form name="addEventForm" id="addEventForm" action="<?php echo((new CATSUtility())->getIndexName()); ?>?m=calendar&amp;a=addEvent" method="post" onsubmit="return checkAddForm(document.addEventForm);" autocomplete="off">
                                         <input type="hidden" name="postback" id="postbackA" value="postback" />
 
                                         <table class="editTableMini" width="235">
@@ -192,7 +192,7 @@
                                 </td>
                                 <td style="display:none" id="editEventTD">
                                     <p class="noteUnsized">Edit Event</p>
-                                    <form name="editEventForm" id="editEventForm" action="<?php echo(CATSUtility::getIndexName()); ?>?m=calendar&amp;a=editEvent" method="post" onsubmit="return checkEditForm(document.editEventForm);" autocomplete="off">
+                                    <form name="editEventForm" id="editEventForm" action="<?php echo((new CATSUtility())->getIndexName()); ?>?m=calendar&amp;a=editEvent" method="post" onsubmit="return checkEditForm(document.editEventForm);" autocomplete="off">
                                         <input type="hidden" name="postback" id="postbackB" value="postback" />
                                         <input type="hidden" name="eventID" id="eventIDEdit" />
                                         <input type="hidden" name="dataItemType" id="dataItemTypeEdit" />
@@ -570,7 +570,7 @@
 
     <script type="text/javascript">
         /* Settings */
-        indexName = '<?php echo(CATSUtility::getIndexName()); ?>';
+        indexName = '<?php echo((new CATSUtility())->getIndexName()); ?>';
         todayDay = <?php echo($this->currentDay); ?>;
         todayMonth = <?php echo($this->currentMonth); ?>;
         todayYear = <?php echo($this->currentYear); ?>;

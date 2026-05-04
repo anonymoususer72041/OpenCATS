@@ -299,7 +299,7 @@ class LoginUI extends UserInterface
         // Intentionally disabled for now to skip the first-login wizard flow.
         // TODO: Decide whether to remove the first-login wizard entirely or re-enable it and update the Behat tests accordingly.
         /*
-        $wizard = new Wizard(CATSUtility::getIndexName() . '?m=home', './js/wizardIntro.js');
+        $wizard = new Wizard((new CATSUtility())->getIndexName() . '?m=home', './js/wizardIntro.js');
         if ($_SESSION['CATS']->isFirstTimeSetup())
         {
             $wizard->addPage('Welcome!', './modules/login/wizard/Intro.tpl', '', false, true);
@@ -386,7 +386,7 @@ class LoginUI extends UserInterface
 
         if (isset($_GET['reloginVars']))
         {
-            CATSUtility::transferRelativeURI($_GET['reloginVars']);
+            (new CATSUtility())->transferRelativeURI($_GET['reloginVars']);
         }
 
         /* LOGGED_IN_MESSAGES hooks are only for messages which show up on initial login (warnings, etc) */
@@ -397,14 +397,14 @@ class LoginUI extends UserInterface
         if (false && strtolower($username) == 'admin' &&
             $password === DEFAULT_ADMIN_PASSWORD)
         {
-            CATSUtility::transferRelativeURI('m=settings&a=newInstallPassword');
+            (new CATSUtility())->transferRelativeURI('m=settings&a=newInstallPassword');
         }
 
         /* If no site name set, make user set site name. */
         else if ($accessLevel >= ACCESS_LEVEL_SA &&
                  $_SESSION['CATS']->getSiteName() === 'default_site')
         {
-            CATSUtility::transferRelativeURI('m=settings&a=upgradeSiteName');
+            (new CATSUtility())->transferRelativeURI('m=settings&a=upgradeSiteName');
         }
 
         /* If the default email is set in the configuration, complain to the admin. */
@@ -424,14 +424,14 @@ class LoginUI extends UserInterface
         /* If no E-Mail set for current user, make user set E-Mail address. */
         else if (trim($_SESSION['CATS']->getEmail()) == '')
         {
-            CATSUtility::transferRelativeURI('m=settings&a=forceEmail');
+            (new CATSUtility())->transferRelativeURI('m=settings&a=forceEmail');
         }
 
         /* If nothing else has stopped us, just go to the home page. */
         else
         {
             if (!eval(Hooks::get('LOGGED_IN_HOME_PAGE'))) return;
-            CATSUtility::transferRelativeURI('m=home');
+            (new CATSUtility())->transferRelativeURI('m=home');
         }
     }
 

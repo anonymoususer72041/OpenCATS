@@ -32,7 +32,7 @@
                     </td>
                     <td><h2>Duplicates: Home</h2></td>
                     <td align="right">
-                        <form name="candidatesViewSelectorForm" id="candidatesViewSelectorForm" action="<?php echo(CATSUtility::getIndexName()); ?>" method="get">
+                        <form name="candidatesViewSelectorForm" id="candidatesViewSelectorForm" action="<?php echo((new CATSUtility())->getIndexName()); ?>" method="get">
                             <input type="hidden" name="m" value="candidates" />
                             <input type="hidden" name="a" value="listByView" />
 

@@ -37,7 +37,7 @@
 
             <?php if ($this->inputType == 'password'): ?>
                 <div id="subFormBlock" style="text-align: left;">
-                    <form name="configurationForm" id="configurationForm" action="<?php echo(CATSUtility::getIndexName()); ?>?m=settings&amp;a=<?php echo($this->action); ?>" method="post" autocomplete="off">
+                    <form name="configurationForm" id="configurationForm" action="<?php echo((new CATSUtility())->getIndexName()); ?>?m=settings&amp;a=<?php echo($this->action); ?>" method="post" autocomplete="off">
                         <input type="hidden" name="postback" value="postback" />
                         <label id="passwordLabel1" for="password1">New Password</label><br />
                         <input type="password" name="password1" id="password1" class="input-box" />
@@ -58,7 +58,7 @@
 
             <?php if ($this->inputType == 'localization'): ?>
                 <div id="subFormBlock" style="text-align: left;">
-                    <form name="configurationForm" id="configurationForm" action="<?php echo(CATSUtility::getIndexName()); ?>?m=settings&amp;a=<?php echo($this->action); ?>" method="post" autocomplete="off">
+                    <form name="configurationForm" id="configurationForm" action="<?php echo((new CATSUtility())->getIndexName()); ?>?m=settings&amp;a=<?php echo($this->action); ?>" method="post" autocomplete="off">
                         <input type="hidden" name="postback" value="postback" />
 
                         <table>
@@ -93,7 +93,7 @@
 
             <?php if ($this->inputType == 'siteName'): ?>
                 <div id="subFormBlock" style="text-align: left;">
-                    <form name="configurationForm" id="configurationForm" action="<?php echo(CATSUtility::getIndexName()); ?>?m=settings&amp;a=<?php echo($this->action); ?>" method="post" autocomplete="off">
+                    <form name="configurationForm" id="configurationForm" action="<?php echo((new CATSUtility())->getIndexName()); ?>?m=settings&amp;a=<?php echo($this->action); ?>" method="post" autocomplete="off">
                         <input type="hidden" name="postback" value="postback" />
 
                         <label id="siteNameLabel" for="siteName"><?php echo($this->inputTypeTextParam); ?></label><br />
@@ -111,7 +111,7 @@
 
            <?php if ($this->inputType == 'text'): ?>
                 <div id="subFormBlock" style="text-align: left;">
-                    <form name="configurationForm" id="configurationForm" action="<?php echo(CATSUtility::getIndexName()); ?>?m=settings&amp;a=<?php echo($this->action); ?>" method="post" autocomplete="off">
+                    <form name="configurationForm" id="configurationForm" action="<?php echo((new CATSUtility())->getIndexName()); ?>?m=settings&amp;a=<?php echo($this->action); ?>" method="post" autocomplete="off">
                         <input type="hidden" name="postback" value="postback" />
                         <label id="text1Label" for="text1"><?php echo($this->inputTypeTextParam); ?></label><br />
                         <input name="text1" id="text1" class="input-box" />
@@ -126,7 +126,7 @@
 
            <?php if ($this->inputType == 'conclusion'): ?>
                 <div id="subFormBlock" style="text-align: center;">
-                    <form name="configurationForm" id="configurationForm" action="<?php echo(CATSUtility::getIndexName()); ?>?m=<?php echo($this->home); ?>" method="post" autocomplete="off">
+                    <form name="configurationForm" id="configurationForm" action="<?php echo((new CATSUtility())->getIndexName()); ?>?m=<?php echo($this->home); ?>" method="post" autocomplete="off">
                         <input type="submit" id="submit" name="submit" class="button" value="Continue Using OpenCATS" />
                     </form>
                 </div>

@@ -1998,7 +1998,7 @@ class CandidatesDataGrid extends DataGrid
                                      'filterable' => false),
 
             'First Name' =>     array('select'         => 'candidate.first_name AS firstName',
-                                      'pagerRender'    => 'if ($rsData[\'isHot\'] == 1) $className =  \'jobLinkHot\'; else $className = \'jobLinkCold\'; return \'<a href="'.CATSUtility::getIndexName().'?m=candidates&amp;a=show&amp;candidateID=\'.$rsData[\'candidateID\'].\'" class="\'.$className.\'">\'.htmlspecialchars($rsData[\'firstName\']).\'</a>\';',
+                                      'pagerRender'    => 'if ($rsData[\'isHot\'] == 1) $className =  \'jobLinkHot\'; else $className = \'jobLinkCold\'; return \'<a href="'.(new CATSUtility())->getIndexName().'?m=candidates&amp;a=show&amp;candidateID=\'.$rsData[\'candidateID\'].\'" class="\'.$className.\'">\'.htmlspecialchars($rsData[\'firstName\']).\'</a>\';',
                                       'sortableColumn' => 'firstName',
                                       'pagerWidth'     => 75,
                                       'pagerOptional'  => false,
@@ -2007,7 +2007,7 @@ class CandidatesDataGrid extends DataGrid
 
             'Last Name' =>      array('select'         => 'candidate.last_name AS lastName',
                                      'sortableColumn'  => 'lastName',
-                                     'pagerRender'     => 'if ($rsData[\'isHot\'] == 1) $className =  \'jobLinkHot\'; else $className = \'jobLinkCold\'; return \'<a href="'.CATSUtility::getIndexName().'?m=candidates&amp;a=show&amp;candidateID=\'.$rsData[\'candidateID\'].\'" class="\'.$className.\'">\'.htmlspecialchars($rsData[\'lastName\']).\'</a>\';',
+                                     'pagerRender'     => 'if ($rsData[\'isHot\'] == 1) $className =  \'jobLinkHot\'; else $className = \'jobLinkCold\'; return \'<a href="'.(new CATSUtility())->getIndexName().'?m=candidates&amp;a=show&amp;candidateID=\'.$rsData[\'candidateID\'].\'" class="\'.$className.\'">\'.htmlspecialchars($rsData[\'lastName\']).\'</a>\';',
                                      'pagerWidth'      => 85,
                                      'pagerOptional'   => false,
                                      'alphaNavigation' => true,
@@ -2083,7 +2083,7 @@ class CandidatesDataGrid extends DataGrid
             'Recent Status' => array('select'  => '(
                                                     SELECT
                                                         CONCAT(
-                                                            \'<a href="'.CATSUtility::getIndexName().'?m=joborders&amp;a=show&amp;jobOrderID=\',
+                                                            \'<a href="'.(new CATSUtility())->getIndexName().'?m=joborders&amp;a=show&amp;jobOrderID=\',
                                                             joborder.joborder_id,
                                                             \'" title="\',
                                                             joborder.title,
@@ -2121,12 +2121,12 @@ class CandidatesDataGrid extends DataGrid
                                                         CONCAT(
                                                             candidate_joborder_status.short_description,
                                                             \'<br />\',
-                                                            \'<a href="'.CATSUtility::getIndexName().'?m=companies&amp;a=show&amp;companyID=\',
+                                                            \'<a href="'.(new CATSUtility())->getIndexName().'?m=companies&amp;a=show&amp;companyID=\',
                                                             company.company_id,
                                                             \'">\',
                                                             company.name,
                                                             \'</a> - \',
-                                                            \'<a href="'.CATSUtility::getIndexName().'?m=joborders&amp;a=show&amp;jobOrderID=\',
+                                                            \'<a href="'.(new CATSUtility())->getIndexName().'?m=joborders&amp;a=show&amp;jobOrderID=\',
                                                             joborder.joborder_id,
                                                             \'">\',
                                                             joborder.title,

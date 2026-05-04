@@ -20,7 +20,7 @@
             <table width="100%">
                 <tr>
                     <td>
-                        <form name="EEOForm" id="EEOForm" action="<?php echo(CATSUtility::getIndexName()); ?>?m=settings&amp;a=eeo" method="post">
+                        <form name="EEOForm" id="EEOForm" action="<?php echo((new CATSUtility())->getIndexName()); ?>?m=settings&amp;a=eeo" method="post">
                             <input type="hidden" name="postback" value="postback" />
 
                             <table class="editTable" width="100%">

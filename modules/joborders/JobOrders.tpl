@@ -21,7 +21,7 @@
                     <?php TemplateUtility::printPopupContainer(); ?>
 
                     <td align="right">
-                        <form name="jobOrdersViewSelectorForm" id="jobOrdersViewSelectorForm" action="<?php echo(CATSUtility::getIndexName()); ?>" method="get">
+                        <form name="jobOrdersViewSelectorForm" id="jobOrdersViewSelectorForm" action="<?php echo((new CATSUtility())->getIndexName()); ?>" method="get">
                             <input type="hidden" name="m" value="joborders" />
                             <input type="hidden" name="a" value="list" />
 
@@ -118,7 +118,7 @@
                     to the pipeline with their status (interviewing, qualifying, etc.)
                     </div>
 
-                    <a href="javascript:void(0);"  onclick="showPopWin('<?php echo CATSUtility::getIndexName(); ?>?m=joborders&amp;a=addJobOrderPopup', 400, 250, null);">
+                    <a href="javascript:void(0);"  onclick="showPopWin('<?php echo (new CATSUtility())->getIndexName(); ?>?m=joborders&amp;a=addJobOrderPopup', 400, 250, null);">
                     <div class="addJobOrderButton">&nbsp;</div>
                     </a>
                 </td>

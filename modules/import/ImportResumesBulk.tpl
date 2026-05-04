@@ -57,7 +57,7 @@
             
             <br />
             
-            <form name="importDataForm" id="importDataForm" action="<?php echo(CATSUtility::getIndexName()); ?>?m=import&amp;a=importUploadResume" enctype="multipart/form-data" method="post" autocomplete="off" onsubmit="document.getElementById('nextSpan').style.display='none'; document.getElementById('uploadingSpan').style.display='';">
+            <form name="importDataForm" id="importDataForm" action="<?php echo((new CATSUtility())->getIndexName()); ?>?m=import&amp;a=importUploadResume" enctype="multipart/form-data" method="post" autocomplete="off" onsubmit="document.getElementById('nextSpan').style.display='none'; document.getElementById('uploadingSpan').style.display='';">
                 <table class="searchTable" width="100%" id="importHide3">
                     <tr>
                         <td class="tdVertical">
@@ -65,7 +65,7 @@
                         </td>
                         <td class="tdData">
                             <img src="images/file/doc.gif">&nbsp;Resume&nbsp;<a href="javascript:void(0);" onclick="showPopWin('index.php?m=import&a=whatIsBulkResumes', 420, 275, null);">(How do I use bulk resumes?)</a><br />
-                            <span style="font-style: italic;">This will not create candidates, it will only add resumes to the <a href="<?php echo(CATSUtility::getIndexName()); ?>?m=candidates&a=search">resume search</a>!</span>
+                            <span style="font-style: italic;">This will not create candidates, it will only add resumes to the <a href="<?php echo((new CATSUtility())->getIndexName()); ?>?m=candidates&a=search">resume search</a>!</span>
                         </td>
                     </tr>
                     

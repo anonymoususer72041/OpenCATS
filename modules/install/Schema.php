@@ -856,11 +856,11 @@ class CATSSchema
                     $db->query(\'DELETE FROM zipcodes\');
                     $schemaZipcodes = @file_get_contents(\'db/upgrade-zipcodes.sql\');
                     $db->queryMultiple($schemaZipcodes);
-                    CATSUtility::changeConfigSetting(\'US_ZIPS_ENABLED\', "true");
+                    (new CATSUtility())->changeConfigSetting(\'US_ZIPS_ENABLED\', "true");
                 }
                 else
                 {
-                    CATSUtility::changeConfigSetting(\'US_ZIPS_ENABLED\', "false");
+                    (new CATSUtility())->changeConfigSetting(\'US_ZIPS_ENABLED\', "false");
                 }
             ',
             '254' => '

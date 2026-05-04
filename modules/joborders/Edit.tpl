@@ -20,7 +20,7 @@
 
             <p class="note">Edit Job Order</p>
 
-            <form name="editJobOrderForm" id="editJobOrderForm" action="<?php echo(CATSUtility::getIndexName()); ?>?m=joborders&amp;a=edit" method="post" onsubmit="return checkEditForm(document.editJobOrderForm);" autocomplete="off">
+            <form name="editJobOrderForm" id="editJobOrderForm" action="<?php echo((new CATSUtility())->getIndexName()); ?>?m=joborders&amp;a=edit" method="post" onsubmit="return checkEditForm(document.editJobOrderForm);" autocomplete="off">
                 <input type="hidden" name="postback" id="postback" value="postback" />
                 <input type="hidden" id="jobOrderID" name="jobOrderID" value="<?php echo($this->jobOrderID); ?>" />
 
@@ -325,7 +325,7 @@
                             </select>
                             <?php if ($this->getUserAccessLevel('settings.careerPortalSettings') >= ACCESS_LEVEL_SA): ?>
                             <br />
-                            <a href="<?php echo CATSUtility::getIndexName(); ?>?m=settings&a=careerPortalSettings" target="_blank">Add / Edit / Delete Questionnaires</a>
+                            <a href="<?php echo (new CATSUtility())->getIndexName(); ?>?m=settings&a=careerPortalSettings" target="_blank">Add / Edit / Delete Questionnaires</a>
                             <?php endif; ?>
                         </td>
                         <?php endif; ?>
@@ -333,7 +333,7 @@
                 </table>
                 <input type="submit" tabindex="22" class="button" name="submit" id="submit" value="Save" />&nbsp;
                 <input type="reset"  tabindex="23" class="button" name="reset"  id="reset"  value="Reset" />&nbsp;
-                <input type="button" tabindex="24" class="button" name="back"   id="back"   value="Back to Details" onclick="javascript:goToURL('<?php echo(CATSUtility::getIndexName()); ?>?m=joborders&amp;a=show&amp;jobOrderID=<?php echo($this->jobOrderID); ?>');" />
+                <input type="button" tabindex="24" class="button" name="back"   id="back"   value="Back to Details" onclick="javascript:goToURL('<?php echo((new CATSUtility())->getIndexName()); ?>?m=joborders&amp;a=show&amp;jobOrderID=<?php echo($this->jobOrderID); ?>');" />
             </form>
 
             <script type="text/javascript">

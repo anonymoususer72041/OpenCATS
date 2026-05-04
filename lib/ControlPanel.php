@@ -453,7 +453,7 @@ class ControlPanel
                     else
                     {
                         $src = substr($_SERVER['REQUEST_URI'], strpos($_SERVER['REQUEST_URI'], '?')+1);
-                        CATSUtility::transferRelativeURI($src . '&cpChangesMade=1');
+                        (new CATSUtility())->transferRelativeURI($src . '&cpChangesMade=1');
                     }
                 }
             }

@@ -174,7 +174,7 @@ class HomeUI extends UserInterface
 
         if (!eval(Hooks::get('HOME_DELETE_SAVED_SEARCH_POST'))) return;
 
-        CATSUtility::transferRelativeURI($currentURL);
+        (new CATSUtility())->transferRelativeURI($currentURL);
     }
 
     private function addSavedSearch()
@@ -199,7 +199,7 @@ class HomeUI extends UserInterface
 
         if (!eval(Hooks::get('HOME_ADD_SAVED_SEARCH_POST'))) return;
 
-        CATSUtility::transferRelativeURI($currentURL);
+        (new CATSUtility())->transferRelativeURI($currentURL);
     }
 
     private function quickSearch()

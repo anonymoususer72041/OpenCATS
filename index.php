@@ -166,7 +166,7 @@ if ($_SESSION['CATS']->isLoggedIn())
                 $URI .= '&s=' . $unixName;
             }
 
-            CATSUtility::transferRelativeURI($URI);
+            (new CATSUtility())->transferRelativeURI($URI);
             die();
         }
     }
@@ -277,13 +277,13 @@ else
         }
 
         /* catsone.com demo domain doesn't relogin. */
-        if (strpos(CATSUtility::getIndexName(), '://demo.catsone.com') !== false)
+        if (strpos((new CATSUtility())->getIndexName(), '://demo.catsone.com') !== false)
         {
-            CATSUtility::transferURL('http://www.catsone.com');
+            (new CATSUtility())->transferURL('http://www.catsone.com');
         }
         else
         {
-            CATSUtility::transferRelativeURI($URI);
+            (new CATSUtility())->transferRelativeURI($URI);
         }
     }
     else if (!(new ModuleUtility())->moduleRequiresAuthentication($_GET['m']))

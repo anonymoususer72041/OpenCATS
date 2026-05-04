@@ -53,9 +53,9 @@ class ListsUI extends UserInterface
         $this->_moduleName = 'lists';
         $this->_moduleTabText = 'Lists';
         $this->_subTabs = array(
-            'Show Lists'     => CATSUtility::getIndexName() . '?m=lists'
-           /* 'New Static List' => CATSUtility::getIndexName() . '?m=lists&a=newListStatic*al=' . ACCESS_LEVEL_EDIT  . '@lists.newListStatic', */
-           /* 'New Dynamic List' => CATSUtility::getIndexName() . '?m=lists&a=newListDynamic*al=' . ACCESS_LEVEL_EDIT . '@lists.newListDynamic' */
+            'Show Lists'     => (new CATSUtility())->getIndexName() . '?m=lists'
+           /* 'New Static List' => (new CATSUtility())->getIndexName() . '?m=lists&a=newListStatic*al=' . ACCESS_LEVEL_EDIT  . '@lists.newListStatic', */
+           /* 'New Dynamic List' => (new CATSUtility())->getIndexName() . '?m=lists&a=newListDynamic*al=' . ACCESS_LEVEL_EDIT . '@lists.newListDynamic' */
         );
     }
 
@@ -362,7 +362,7 @@ class ListsUI extends UserInterface
 
         /* Redirect to the saved list page we were on. */
         /* FIXME: What if we are on the last page? */
-        CATSUtility::transferRelativeURI('m=lists&a=showList&savedListID='.$savedListID);
+        (new CATSUtility())->transferRelativeURI('m=lists&a=showList&savedListID='.$savedListID);
     }
 
     /*
@@ -385,7 +385,7 @@ class ListsUI extends UserInterface
         $savedLists->delete($savedListID);
 
 
-        CATSUtility::transferRelativeURI('m=lists');
+        (new CATSUtility())->transferRelativeURI('m=lists');
     }
 }
 

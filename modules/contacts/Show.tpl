@@ -38,7 +38,7 @@ use OpenCATS\UI\QuickActionMenu;
                                             <?php TemplateUtility::printSingleQuickActionMenu(new QuickActionMenu(DATA_ITEM_CONTACT, $this->contactID, $_SESSION['CATS']->getAccessLevel('contacts.edit'))); ?>
                                         </span>
                                         &nbsp;
-                                        <a id="vCard" href="<?php echo Template::escapeUrl(CATSUtility::getIndexName() . '?m=contacts&a=downloadVCard&contactID=' . $this->contactID); ?>">
+                                        <a id="vCard" href="<?php echo Template::escapeUrl((new CATSUtility())->getIndexName() . '?m=contacts&a=downloadVCard&contactID=' . $this->contactID); ?>">
                                             <img src="images/vcard.gif" class="absmiddle" alt="vCard" border="0" />
                                         </a>
                                     </span>
@@ -48,7 +48,7 @@ use OpenCATS\UI\QuickActionMenu;
                             <tr>
                                 <td class="vertical">Company:</td>
                                 <td class="data">
-                                    <a href="<?php echo Template::escapeUrl(CATSUtility::getIndexName() . '?m=companies&a=show&companyID=' . $this->data['companyID']); ?>">
+                                    <a href="<?php echo Template::escapeUrl((new CATSUtility())->getIndexName() . '?m=companies&a=show&companyID=' . $this->data['companyID']); ?>">
                                         <span class="<?php echo Template::escapeAttr($this->data['titleClassCompany']); ?>">
                                             <?php $this->_($this->data['companyName']); ?>
                                         </span>
@@ -101,7 +101,7 @@ use OpenCATS\UI\QuickActionMenu;
                                     <?php if($this->data['reportsTo'] == -1 || $this->data['reportsTo'] == 0 || $this->data['reportsToTitle'] == ''): ?>
                                         (None)
                                     <?php else: ?>
-                                        <a href="<?php echo Template::escapeUrl(CATSUtility::getIndexName() . '?m=contacts&a=show&contactID=' . $this->data['reportsTo']); ?>">
+                                        <a href="<?php echo Template::escapeUrl((new CATSUtility())->getIndexName() . '?m=contacts&a=show&contactID=' . $this->data['reportsTo']); ?>">
                                             <img src="images/contact_small.gif" border="0" />&nbsp;
                                             <?php $this->_($this->data['reportsToFirstName']); ?>&nbsp;<?php $this->_($this->data['reportsToLastName']); ?>
                                         </a>
@@ -189,7 +189,7 @@ use OpenCATS\UI\QuickActionMenu;
                                 <td id="shortNotes" style="display:block;" class="data">
                                 <?php foreach ($this->calendarRS as $rowNumber => $calendarData): ?>
                                     <div>
-                                        <a href="<?php echo(CATSUtility::getIndexName()); ?>?m=calendar&amp;view=DAYVIEW&amp;month=<?php echo($calendarData['month']); ?>&amp;year=20<?php echo($calendarData['year']); ?>&amp;day=<?php echo($calendarData['day']); ?>&amp;showEvent=<?php echo($calendarData['eventID']); ?>">
+                                        <a href="<?php echo((new CATSUtility())->getIndexName()); ?>?m=calendar&amp;view=DAYVIEW&amp;month=<?php echo($calendarData['month']); ?>&amp;year=20<?php echo($calendarData['year']); ?>&amp;day=<?php echo($calendarData['day']); ?>&amp;showEvent=<?php echo($calendarData['eventID']); ?>">
                                             <img src="<?php $this->_($calendarData['typeImage']) ?>" alt="" border="0">
                                             <?php $this->_($calendarData['dateShow']) ?>:
                                             <?php $this->_($calendarData['title']); ?>
@@ -197,7 +197,7 @@ use OpenCATS\UI\QuickActionMenu;
                                     </div>
                                 <?php endforeach; ?>
                                 <?php if ($this->getUserAccessLevel('contacts.addActivityScheduleEvent') >= ACCESS_LEVEL_EDIT): ?>
-                                    <a href="#" onclick="showPopWin(<?php echo Template::escapeJsAttr(CATSUtility::getIndexName() . '?m=contacts&a=addActivityScheduleEvent&contactID=' . $this->contactID . '&onlyScheduleEvent=true'); ?>, 600, 200, null); return false;">
+                                    <a href="#" onclick="showPopWin(<?php echo Template::escapeJsAttr((new CATSUtility())->getIndexName() . '?m=contacts&a=addActivityScheduleEvent&contactID=' . $this->contactID . '&onlyScheduleEvent=true'); ?>, 600, 200, null); return false;">
                                         <img src="images/calendar_add.gif" width="16" height="16" border="0" alt="Schedule Event" class="absmiddle" />&nbsp;Schedule Event
                                     </a>
                                 <?php endif; ?>
@@ -208,13 +208,13 @@ use OpenCATS\UI\QuickActionMenu;
                 </tr>
             </table>
             <?php if ($this->getUserAccessLevel('contacts.edit') >= ACCESS_LEVEL_EDIT): ?>
-                <a id="edit_link" href="<?php echo Template::escapeUrl(CATSUtility::getIndexName() . '?m=contacts&a=edit&contactID=' . $this->contactID); ?>">
+                <a id="edit_link" href="<?php echo Template::escapeUrl((new CATSUtility())->getIndexName() . '?m=contacts&a=edit&contactID=' . $this->contactID); ?>">
                     <img src="images/actions/edit.gif" width="16" height="16" class="absmiddle" alt="edit" border="0" />&nbsp;Edit
                 </a>
                 &nbsp;&nbsp;&nbsp;&nbsp;
             <?php endif; ?>
             <?php if ($this->getUserAccessLevel('contacts.delete') >= ACCESS_LEVEL_DELETE): ?>
-                <form id="delete_link" method="post" action="<?php echo(CATSUtility::getIndexName()); ?>?m=contacts&amp;a=delete" style="display:inline;" onsubmit="return confirm('Delete this contact?');">
+                <form id="delete_link" method="post" action="<?php echo((new CATSUtility())->getIndexName()); ?>?m=contacts&amp;a=delete" style="display:inline;" onsubmit="return confirm('Delete this contact?');">
                     <input type="hidden" name="postback" value="postback" />
                     <input type="hidden" name="contactID" value="<?php echo Template::escapeAttr($this->contactID); ?>" />
                     <button type="submit" class="linkButton">
@@ -224,7 +224,7 @@ use OpenCATS\UI\QuickActionMenu;
                 &nbsp;&nbsp;&nbsp;&nbsp;
             <?php endif; ?>
             <?php if ($this->privledgedUser): ?>
-                <a id="history_link" href="<?php echo Template::escapeUrl(CATSUtility::getIndexName() . '?m=settings&a=viewItemHistory&dataItemType=300&dataItemID=' . $this->contactID); ?>">
+                <a id="history_link" href="<?php echo Template::escapeUrl((new CATSUtility())->getIndexName() . '?m=settings&a=viewItemHistory&dataItemType=300&dataItemID=' . $this->contactID); ?>">
                     <img src="images/icon_clock.gif" width="16" height="16" class="absmiddle"  border="0" />&nbsp;View History
                 </a>
                 &nbsp;&nbsp;&nbsp;&nbsp;
@@ -252,7 +252,7 @@ use OpenCATS\UI\QuickActionMenu;
                 <?php foreach ($this->jobOrdersRS as $rowNumber => $jobOrdersData): ?>
                     <tr class="<?php TemplateUtility::printAlternatingRowClass($rowNumber); ?>">
                         <td valign="top">
-                            <a href="<?php echo(CATSUtility::getIndexName()); ?>?m=joborders&amp;a=show&amp;jobOrderID=<?php $this->_($jobOrdersData['jobOrderID']) ?>">
+                            <a href="<?php echo((new CATSUtility())->getIndexName()); ?>?m=joborders&amp;a=show&amp;jobOrderID=<?php $this->_($jobOrdersData['jobOrderID']) ?>">
                                 <?php $this->_($jobOrdersData['title']) ?>
                             </a>
                         </td>
@@ -307,7 +307,7 @@ use OpenCATS\UI\QuickActionMenu;
             </table>
             <div id="addActivityDiv">
                 <?php if ($this->getUserAccessLevel('contacts.logActivityScheduleEvent') >= ACCESS_LEVEL_EDIT): ?>
-                    <a href="#" id="addActivityLink" title="Log an Activity / Schedule Event" onclick="showPopWin(<?php echo Template::escapeJsAttr(CATSUtility::getIndexName() . '?m=contacts&a=addActivityScheduleEvent&contactID=' . $this->contactID); ?>, 600, 375, null); return false;">
+                    <a href="#" id="addActivityLink" title="Log an Activity / Schedule Event" onclick="showPopWin(<?php echo Template::escapeJsAttr((new CATSUtility())->getIndexName() . '?m=contacts&a=addActivityScheduleEvent&contactID=' . $this->contactID); ?>, 600, 375, null); return false;">
                         <img src="images/new_activity_inline.gif" width="16" height="16" class="absmiddle" title="Log an Activity / Schedule Event" alt="Log an Activity / Schedule Event" border="0" />&nbsp;Log an Activity / Schedule Event
                     </a>
                 <?php endif; ?>

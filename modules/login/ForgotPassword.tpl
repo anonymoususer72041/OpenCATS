@@ -31,7 +31,7 @@
             <div id="formBlock">
                 <img src="images/login.gif" alt="Login" />
                 <?php if (!$this->complete): ?>
-                    <form name="loginForm" id="loginForm" action="<?php echo(CATSUtility::getIndexName()); ?>?m=login&amp;a=forgotPassword" method="post" autocomplete="off">
+                    <form name="loginForm" id="loginForm" action="<?php echo((new CATSUtility())->getIndexName()); ?>?m=login&amp;a=forgotPassword" method="post" autocomplete="off">
                         <input type="hidden" name="postback" value="true" />
                         <div id="subFormBlock">
                             <label id="usernameLabel" for="username">Username</label><br />
@@ -44,7 +44,7 @@
                 <?php else: ?>
                     <p>
                         An email has been sent to <?php $this->_($this->username); ?> containing your password.<br /><br />
-                        <a href="<?php echo(CATSUtility::getIndexName()); ?>?m=login">Return to login page</a>
+                        <a href="<?php echo((new CATSUtility())->getIndexName()); ?>?m=login">Return to login page</a>
                     </p>
                 <?php endif; ?>
             </div>

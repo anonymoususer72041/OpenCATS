@@ -71,7 +71,7 @@ class RssUI extends UserInterface
         /* XML Headers */
         header('Content-type: text/xml');
 
-        $link = CATSUtility::getAbsoluteURI('../careers/');
+        $link = (new CATSUtility())->getAbsoluteURI('../careers/');
 
         echo sprintf(
             "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
@@ -110,7 +110,7 @@ class RssUI extends UserInterface
         /* XML Headers */
         header('Content-type: text/xml');
 
-        $indexName = CATSUtility::getIndexName();
+        $indexName = (new CATSUtility())->getIndexName();
 
         $stream = sprintf(
             "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
@@ -120,14 +120,14 @@ class RssUI extends UserInterface
             . "<description>CATS RSS Feed</description>\n"
             . "<link>%s</link>\n"
             . "<pubDate>%s</pubDate>\n",
-            CATSUtility::getAbsoluteURI(),
+            (new CATSUtility())->getAbsoluteURI(),
             (new DateUtility())->getRSSDate()
         );
 
         foreach ($rs as $rowIndex => $row)
         {
             $uri = sprintf("%scareers/?p=showJob&amp;ID=%d",
-                CATSUtility::getAbsoluteURI(),
+                (new CATSUtility())->getAbsoluteURI(),
                 $row['jobOrderID']
             );
 

@@ -58,9 +58,9 @@ class CompaniesUI extends UserInterface
         $this->_moduleName = 'companies';
         $this->_moduleTabText = 'Companies';
         $this->_subTabs = array(
-            'Add Company'     => CATSUtility::getIndexName() . '?m=companies&amp;a=add*al=' . ACCESS_LEVEL_EDIT . '@companies.add' . '*hrmode=0',
-            'Search Companies' => CATSUtility::getIndexName() . '?m=companies&amp;a=search*hrmode=0',
-            'Go To My Company' => CATSUtility::getIndexName() . '?m=companies&amp;a=internalPostings*hrmode=0'
+            'Add Company'     => (new CATSUtility())->getIndexName() . '?m=companies&amp;a=add*al=' . ACCESS_LEVEL_EDIT . '@companies.add' . '*hrmode=0',
+            'Search Companies' => (new CATSUtility())->getIndexName() . '?m=companies&amp;a=search*hrmode=0',
+            'Go To My Company' => (new CATSUtility())->getIndexName() . '?m=companies&amp;a=internalPostings*hrmode=0'
         );
     }
 
@@ -515,7 +515,7 @@ class CompaniesUI extends UserInterface
         $companies = new Companies($this->_siteID);
         $companyID = $companies->getDefaultCompany();
 
-        CATSUtility::transferRelativeURI(
+        (new CATSUtility())->transferRelativeURI(
             'm=companies&a=show&companyID=' . $companyID
         );
     }
@@ -639,7 +639,7 @@ class CompaniesUI extends UserInterface
 
         $companies->updateDepartments($companyID, $departmentsDifferences);
 
-        CATSUtility::transferRelativeURI(
+        (new CATSUtility())->transferRelativeURI(
             'm=companies&a=show&companyID=' . $companyID
         );
     }
@@ -915,7 +915,7 @@ class CompaniesUI extends UserInterface
         }
 
 
-       CATSUtility::transferRelativeURI(
+       (new CATSUtility())->transferRelativeURI(
             'm=companies&a=show&companyID=' . $companyID
         );
     }
@@ -960,7 +960,7 @@ class CompaniesUI extends UserInterface
 
        if (!eval(Hooks::get('CLIENTS_ON_DELETE_POST'))) return;
 
-        CATSUtility::transferRelativeURI('m=companies&a=listByView');
+        (new CATSUtility())->transferRelativeURI('m=companies&a=listByView');
     }
 
     /*
@@ -1035,7 +1035,7 @@ class CompaniesUI extends UserInterface
             $sortDirection = 'ASC';
         }
 
-        $baseURL = CATSUtility::getFilteredGET(
+        $baseURL = (new CATSUtility())->getFilteredGET(
             array('sortBy', 'sortDirection', 'page'), '&amp;'
         );
         $searchPager->setSortByParameters($baseURL, $sortBy, $sortDirection);
@@ -1208,7 +1208,7 @@ class CompaniesUI extends UserInterface
 
         if (!eval(Hooks::get('CLIENTS_ON_DELETE_ATTACHMENT_POST'))) return;
 
-        CATSUtility::transferRelativeURI(
+        (new CATSUtility())->transferRelativeURI(
             'm=companies&a=show&companyID=' . $companyID
         );
     }

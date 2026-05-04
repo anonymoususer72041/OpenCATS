@@ -27,7 +27,7 @@ use OpenCATS\UI\QuickActionMenu;
             <?php if ($this->data['isAdminHidden'] == 1): ?>
                 <div class="warning">
                     This Job Order is hidden.  Only Site Administrators can view it or search for it.  To make it visible by the site users, click
-                    <form method="post" action="<?php echo(CATSUtility::getIndexName()); ?>?m=joborders&amp;a=administrativeHideShow" style="display:inline;">
+                    <form method="post" action="<?php echo((new CATSUtility())->getIndexName()); ?>?m=joborders&amp;a=administrativeHideShow" style="display:inline;">
                         <input type="hidden" name="postback" value="postback" />
                         <input type="hidden" name="jobOrderID" value="<?php echo Template::escapeAttr($this->jobOrderID); ?>" />
                         <input type="hidden" name="state" value="0" />
@@ -42,7 +42,7 @@ use OpenCATS\UI\QuickActionMenu;
                         <td class="tdVertical">
                             This Job Order is <?php $this->_($this->data['status']); ?> and can not be modified.
                            <?php if ($this->getUserAccessLevel('joborders.edit') >= ACCESS_LEVEL_EDIT): ?>
-                               <a id="edit_link" href="<?php echo Template::escapeUrl(CATSUtility::getIndexName() . '?m=joborders&a=edit&jobOrderID=' . $this->jobOrderID); ?>">
+                               <a id="edit_link" href="<?php echo Template::escapeUrl((new CATSUtility())->getIndexName() . '?m=joborders&a=edit&jobOrderID=' . $this->jobOrderID); ?>">
                                    <img src="images/actions/edit.gif" width="16" height="16" class="absmiddle" alt="edit" border="0" />&nbsp;Edit
                                </a>
                                the Job Order to make it Active.&nbsp;&nbsp;
@@ -68,7 +68,7 @@ use OpenCATS\UI\QuickActionMenu;
                             <tr>
                                 <td class="vertical">Company Name:</td>
                                 <td class="data">
-                                    <a href="<?php echo Template::escapeUrl(CATSUtility::getIndexName() . '?m=companies&a=show&companyID=' . $this->data['companyID']); ?>">
+                                    <a href="<?php echo Template::escapeUrl((new CATSUtility())->getIndexName() . '?m=companies&a=show&companyID=' . $this->data['companyID']); ?>">
                                         <?php $this->_($this->data['companyName']); ?>
                                     </a>
                                 </td>
@@ -95,7 +95,7 @@ use OpenCATS\UI\QuickActionMenu;
                             <tr>
                                 <td class="vertical">Contact Name:</td>
                                 <td class="data">
-                                    <a href="<?php echo Template::escapeUrl(CATSUtility::getIndexName() . '?m=contacts&a=show&contactID=' . $this->data['contactID']); ?>">
+                                    <a href="<?php echo Template::escapeUrl((new CATSUtility())->getIndexName() . '?m=contacts&a=show&contactID=' . $this->data['contactID']); ?>">
                                         <?php $this->_($this->data['contactFullName']); ?>
                                     </a>
                                 </td>
@@ -227,11 +227,11 @@ use OpenCATS\UI\QuickActionMenu;
                 <?php endif; ?>
 
                 <?php if ($this->questionnaireID !== false): ?>
-                    <br />Applicants must complete the "<i><?php $this->_($this->questionnaireData['title']); ?></i>" (<a href="<?php echo Template::escapeUrl(CATSUtility::getIndexName() . '?m=settings&a=careerPortalQuestionnaire&questionnaireID=' . $this->questionnaireID); ?>">edit</a>) questionnaire when applying.
+                    <br />Applicants must complete the "<i><?php $this->_($this->questionnaireData['title']); ?></i>" (<a href="<?php echo Template::escapeUrl((new CATSUtility())->getIndexName() . '?m=settings&a=careerPortalQuestionnaire&questionnaireID=' . $this->questionnaireID); ?>">edit</a>) questionnaire when applying.
                 <?php else: ?>
                     <br />You have not attached any
                     <?php if ($this->getUserAccessLevel('setting.carrerPortalSettings') >= ACCESS_LEVEL_SA): ?>
-                        <a href="<?php echo Template::escapeUrl(CATSUtility::getIndexName() . '?m=settings&a=careerPortalSettings'); ?>">Questionnaires</a>.
+                        <a href="<?php echo Template::escapeUrl((new CATSUtility())->getIndexName() . '?m=settings&a=careerPortalSettings'); ?>">Questionnaires</a>.
                     <?php else: ?>
                         Questionnaires.
                     <?php endif; ?>
@@ -260,7 +260,7 @@ use OpenCATS\UI\QuickActionMenu;
                                                 <td>
                                                     <?php if (!$this->isPopup): ?>
                                                         <?php if ($this->getUserAccessLevel('joborders.deleteAttachment') >= ACCESS_LEVEL_DELETE): ?>
-                                                            <form method="post" action="<?php echo(CATSUtility::getIndexName()); ?>?m=joborders&amp;a=deleteAttachment" style="display:inline;" onsubmit="return confirm('Delete this attachment?');">
+                                                            <form method="post" action="<?php echo((new CATSUtility())->getIndexName()); ?>?m=joborders&amp;a=deleteAttachment" style="display:inline;" onsubmit="return confirm('Delete this attachment?');">
                                                                 <input type="hidden" name="postback" value="postback" />
                                                                 <input type="hidden" name="jobOrderID" value="<?php echo Template::escapeAttr($this->jobOrderID); ?>" />
                                                                 <input type="hidden" name="attachmentID" value="<?php echo Template::escapeAttr($attachmentsData['attachmentID']); ?>" />
@@ -277,7 +277,7 @@ use OpenCATS\UI\QuickActionMenu;
                                             <?php if (isset($this->attachmentLinkHTML)): ?>
                                                 <?php echo($this->attachmentLinkHTML); ?>
                                             <?php else: ?>
-                                                <a href="#" onclick="showPopWin(<?php echo Template::escapeJsAttr(CATSUtility::getIndexName() . '?m=joborders&a=createAttachment&jobOrderID=' . $this->jobOrderID); ?>, 400, 125, null); return false;">
+                                                <a href="#" onclick="showPopWin(<?php echo Template::escapeJsAttr((new CATSUtility())->getIndexName() . '?m=joborders&a=createAttachment&jobOrderID=' . $this->jobOrderID); ?>, 400, 125, null); return false;">
                                             <?php endif; ?>
                                                 <img src="images/paperclip_add.gif" width="16" height="16" border="0" alt="add attachment" class="absmiddle" />&nbsp;Add Attachment
                                             </a>
@@ -332,13 +332,13 @@ use OpenCATS\UI\QuickActionMenu;
             <div id="actionbar">
                 <span style="float:left;">
                     <?php if ($this->getUserAccessLevel('joborders.edit') >= ACCESS_LEVEL_EDIT): ?>
-                        <a id="edit_link" href="<?php echo Template::escapeUrl(CATSUtility::getIndexName() . '?m=joborders&a=edit&jobOrderID=' . $this->jobOrderID); ?>">
+                        <a id="edit_link" href="<?php echo Template::escapeUrl((new CATSUtility())->getIndexName() . '?m=joborders&a=edit&jobOrderID=' . $this->jobOrderID); ?>">
                             <img src="images/actions/edit.gif" width="16" height="16" class="absmiddle" alt="edit" border="0" />&nbsp;Edit
                         </a>
                         &nbsp;&nbsp;&nbsp;&nbsp;
                     <?php endif; ?>
                     <?php if ($this->getUserAccessLevel('joborders.delete') >= ACCESS_LEVEL_DELETE): ?>
-                        <form id="delete_link" method="post" action="<?php echo(CATSUtility::getIndexName()); ?>?m=joborders&amp;a=delete" style="display:inline;" onsubmit="return confirm('Delete this job order?');">
+                        <form id="delete_link" method="post" action="<?php echo((new CATSUtility())->getIndexName()); ?>?m=joborders&amp;a=delete" style="display:inline;" onsubmit="return confirm('Delete this job order?');">
                             <input type="hidden" name="postback" value="postback" />
                             <input type="hidden" name="jobOrderID" value="<?php echo Template::escapeAttr($this->jobOrderID); ?>" />
                             <button type="submit" class="linkButton">
@@ -349,7 +349,7 @@ use OpenCATS\UI\QuickActionMenu;
                     <?php endif; ?>
                     <?php if ($this->getUserAccessLevel('joborders.hidden') >= ACCESS_LEVEL_SA): ?>
                         <?php if ($this->data['isAdminHidden'] == 1): ?>
-                            <form method="post" action="<?php echo(CATSUtility::getIndexName()); ?>?m=joborders&amp;a=administrativeHideShow" style="display:inline;">
+                            <form method="post" action="<?php echo((new CATSUtility())->getIndexName()); ?>?m=joborders&amp;a=administrativeHideShow" style="display:inline;">
                                 <input type="hidden" name="postback" value="postback" />
                                 <input type="hidden" name="jobOrderID" value="<?php echo Template::escapeAttr($this->jobOrderID); ?>" />
                                 <input type="hidden" name="state" value="0" />
@@ -358,7 +358,7 @@ use OpenCATS\UI\QuickActionMenu;
                                 </button>
                             </form>
                             <?php else: ?>
-                            <form method="post" action="<?php echo(CATSUtility::getIndexName()); ?>?m=joborders&amp;a=administrativeHideShow" style="display:inline;">
+                            <form method="post" action="<?php echo((new CATSUtility())->getIndexName()); ?>?m=joborders&amp;a=administrativeHideShow" style="display:inline;">
                                 <input type="hidden" name="postback" value="postback" />
                                 <input type="hidden" name="jobOrderID" value="<?php echo Template::escapeAttr($this->jobOrderID); ?>" />
                                 <input type="hidden" name="state" value="1" />
@@ -372,18 +372,18 @@ use OpenCATS\UI\QuickActionMenu;
                 </span>
                 <span style="float:right;">
                     <?php if (!empty($this->data['public']) && $this->careerPortalEnabled): ?>
-                        <a id="public_link" href="<?php echo Template::escapeUrl(CATSUtility::getAbsoluteURI() . 'careers/' . CATSUtility::getIndexName() . '?p=showJob&ID=' . $this->jobOrderID); ?>">
+                        <a id="public_link" href="<?php echo Template::escapeUrl((new CATSUtility())->getAbsoluteURI() . 'careers/' . (new CATSUtility())->getIndexName() . '?p=showJob&ID=' . $this->jobOrderID); ?>">
                             <img src="images/public.gif" width="16" height="16" class="absmiddle" alt="Online Application" border="0" />&nbsp;Online Application
                         </a>
                         &nbsp;&nbsp;&nbsp;&nbsp;
                     <?php endif; ?>
                     <?php /* TODO: Make report available for every site. */ ?>
-                    <a id="report_link" href="<?php echo Template::escapeUrl(CATSUtility::getIndexName() . '?m=reports&a=customizeJobOrderReport&jobOrderID=' . $this->jobOrderID); ?>">
+                    <a id="report_link" href="<?php echo Template::escapeUrl((new CATSUtility())->getIndexName() . '?m=reports&a=customizeJobOrderReport&jobOrderID=' . $this->jobOrderID); ?>">
                         <img src="images/reportsSmall.gif" width="16" height="16" class="absmiddle" alt="report" border="0" />&nbsp;Generate Report
                     </a>
                     <?php if ($this->privledgedUser): ?>
                         &nbsp;&nbsp;&nbsp;&nbsp;
-                        <a id="history_link" href="<?php echo Template::escapeUrl(CATSUtility::getIndexName() . '?m=settings&a=viewItemHistory&dataItemType=400&dataItemID=' . $this->jobOrderID); ?>">
+                        <a id="history_link" href="<?php echo Template::escapeUrl((new CATSUtility())->getIndexName() . '?m=settings&a=viewItemHistory&dataItemType=400&dataItemID=' . $this->jobOrderID); ?>">
                             <img src="images/icon_clock.gif" width="16" height="16" class="absmiddle"  border="0" />&nbsp;View History
                         </a>
                     <?php endif; ?>
@@ -397,7 +397,7 @@ use OpenCATS\UI\QuickActionMenu;
 
             <p id="ajaxPipelineControl">
                 Number of visible entries:&nbsp;&nbsp;
-                <select id="numberOfEntriesSelect" onchange="PipelineJobOrder_changeLimit(<?php $this->_($this->data['jobOrderID']); ?>, this.value, <?php if ($this->isPopup) echo(1); else echo(0); ?>, 'ajaxPipelineTable', <?php echo Template::escapeJsAttr($this->sessionCookie); ?>, 'ajaxPipelineTableIndicator', <?php echo Template::escapeJsAttr(CATSUtility::getIndexName()); ?>);" class="selectBox">
+                <select id="numberOfEntriesSelect" onchange="PipelineJobOrder_changeLimit(<?php $this->_($this->data['jobOrderID']); ?>, this.value, <?php if ($this->isPopup) echo(1); else echo(0); ?>, 'ajaxPipelineTable', <?php echo Template::escapeJsAttr($this->sessionCookie); ?>, 'ajaxPipelineTableIndicator', <?php echo Template::escapeJsAttr((new CATSUtility())->getIndexName()); ?>);" class="selectBox">
                     <option value="15" <?php if ($this->pipelineEntriesPerPage == 15): ?>selected<?php endif; ?>>15 entries</option>
                     <option value="30" <?php if ($this->pipelineEntriesPerPage == 30): ?>selected<?php endif; ?>>30 entries</option>
                     <option value="50" <?php if ($this->pipelineEntriesPerPage == 50): ?>selected<?php endif; ?>>50 entries</option>
@@ -427,7 +427,7 @@ use OpenCATS\UI\QuickActionMenu;
 ?>
 					var exportArray<?= $instance_md5 ?> = getSelected_candidates();
             		if (exportArray<?= $instance_md5 ?>.length>0) {
-                		window.location.href='<?= CATSUtility::getIndexName()?>?m=export&a=exportByDataGrid&i=<?= urlencode($instance_name); ?>&p=<?= urlencode(json_encode($params)) ?>&dynamicArgument<?= $instance_md5 ?>=' + serializeArray(exportArray<?= $instance_md5 ?>);
+                		window.location.href='<?= (new CATSUtility())->getIndexName()?>?m=export&a=exportByDataGrid&i=<?= urlencode($instance_name); ?>&p=<?= urlencode(json_encode($params)) ?>&dynamicArgument<?= $instance_md5 ?>=' + serializeArray(exportArray<?= $instance_md5 ?>);
             		} else {
                 		alert('No data selected');
             		}
@@ -436,12 +436,12 @@ use OpenCATS\UI\QuickActionMenu;
 
             </script>
             <script type="text/javascript">
-                PipelineJobOrder_populate(<?php $this->_($this->data['jobOrderID']); ?>, 0, <?php $this->_($this->pipelineEntriesPerPage); ?>, 'dateCreatedInt', 'desc', <?php if ($this->isPopup) echo(1); else echo(0); ?>, 'ajaxPipelineTable', <?php echo Template::escapeJs($this->sessionCookie); ?>, 'ajaxPipelineTableIndicator', <?php echo Template::escapeJs(CATSUtility::getIndexName()); ?>);
+                PipelineJobOrder_populate(<?php $this->_($this->data['jobOrderID']); ?>, 0, <?php $this->_($this->pipelineEntriesPerPage); ?>, 'dateCreatedInt', 'desc', <?php if ($this->isPopup) echo(1); else echo(0); ?>, 'ajaxPipelineTable', <?php echo Template::escapeJs($this->sessionCookie); ?>, 'ajaxPipelineTableIndicator', <?php echo Template::escapeJs((new CATSUtility())->getIndexName()); ?>);
             </script>
 
             <?php if (!$this->isPopup): ?>
             <?php if ($this->getUserAccessLevel('joborders.considerCandidateSearch') >= ACCESS_LEVEL_EDIT && !isset($this->frozen)): ?>
-                <a href="#" onclick="showPopWin(<?php echo Template::escapeJsAttr(CATSUtility::getIndexName() . '?m=joborders&a=considerCandidateSearch&jobOrderID=' . $this->jobOrderID); ?>, 820, 550, null); return false;">
+                <a href="#" onclick="showPopWin(<?php echo Template::escapeJsAttr((new CATSUtility())->getIndexName() . '?m=joborders&a=considerCandidateSearch&jobOrderID=' . $this->jobOrderID); ?>, 820, 550, null); return false;">
                     <img src="images/consider.gif" width="16" height="16" class="absmiddle" alt="add candidate" border="0" />&nbsp;Add Candidate to This Job Order
                 </a>
             <?php endif; ?>

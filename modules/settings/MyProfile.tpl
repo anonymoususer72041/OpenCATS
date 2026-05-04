@@ -28,7 +28,7 @@
                         <table class="searchTable" width="100%">
                             <tr>
                                 <td width="230">
-                                    <a href="<?php echo(CATSUtility::getIndexName()); ?>?m=settings&amp;a=showUser&amp;userID=<?php echo($this->userID); ?>&amp;privledged=false">
+                                    <a href="<?php echo((new CATSUtility())->getIndexName()); ?>?m=settings&amp;a=showUser&amp;userID=<?php echo($this->userID); ?>&amp;privledged=false">
                                         <img src="images/bullet_black.gif" alt="" border="0" />View Profile
                                     </a>
                                 </td>
@@ -38,7 +38,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <a href="<?php echo(CATSUtility::getIndexName()); ?>?m=settings&amp;a=myProfile&amp;s=changePassword">
+                                    <a href="<?php echo((new CATSUtility())->getIndexName()); ?>?m=settings&amp;a=myProfile&amp;s=changePassword">
                                         <img src="images/bullet_black.gif" alt="" border="0" />Change Password
                                     </a>
                                 </td>
@@ -48,7 +48,7 @@
                             </tr>
                             <!--<tr>
                                 <td>
-                                    <a href="<?php echo(CATSUtility::getIndexName()); ?>?m=settings&amp;a=myProfile&amp;s=notificationOptions">
+                                    <a href="<?php echo((new CATSUtility())->getIndexName()); ?>?m=settings&amp;a=myProfile&amp;s=notificationOptions">
                                         <img src="images/bullet_black.gif" alt="" border="0" />Change Notification Options
                                     </a>
                                 </td>

@@ -43,7 +43,7 @@ class ReportsUI extends UserInterface
         $this->_moduleName = 'reports';
         $this->_moduleTabText = 'Reports';
         $this->_subTabs = array(
-                'EEO Reports' => CATSUtility::getIndexName() . '?m=reports&amp;a=customizeEEOReport'
+                'EEO Reports' => (new CATSUtility())->getIndexName() . '?m=reports&amp;a=customizeEEOReport'
             );
     }
 
@@ -491,8 +491,8 @@ class ReportsUI extends UserInterface
         //        really don't like this... There has to be a way.
         // FIXME: "could not make seekable" - http://demo.catsone.net/index.php?m=graphs&a=jobOrderReportGraph&data=%2C%2C%2C
         //        in /usr/local/www/catsone.net/data/lib/fpdf/fpdf.php on line 1500
-        $URI = CATSUtility::getAbsoluteURI(
-            CATSUtility::getIndexName()
+        $URI = (new CATSUtility())->getAbsoluteURI(
+            (new CATSUtility())->getIndexName()
             . '?m=graphs&a=jobOrderReportGraph&data='
             . urlencode(implode(',', $dataSet))
         );
@@ -616,9 +616,9 @@ class ReportsUI extends UserInterface
             $data[] = $line['numberOfCandidates'];
         }
 
-        $urlEthnicGraph = CATSUtility::getAbsoluteURI(
+        $urlEthnicGraph = (new CATSUtility())->getAbsoluteURI(
             sprintf("%s?m=graphs&a=generic&title=%s&labels=%s&data=%s&width=%s&height=%s",
-                CATSUtility::getIndexName(),
+                (new CATSUtility())->getIndexName(),
                 urlencode('Number of Candidates'.$labelStatus.' by Ethnic Type'.$labelPeriod),
                 urlencode(implode(',', $labels)),
                 urlencode(implode(',', $data)),
@@ -639,9 +639,9 @@ class ReportsUI extends UserInterface
             $data[] = $line['numberOfCandidates'];
         }
 
-        $urlVeteranGraph = CATSUtility::getAbsoluteURI(
+        $urlVeteranGraph = (new CATSUtility())->getAbsoluteURI(
             sprintf("%s?m=graphs&a=generic&title=%s&labels=%s&data=%s&width=%s&height=%s",
-                CATSUtility::getIndexName(),
+                (new CATSUtility())->getIndexName(),
                 urlencode('Number of Candidates'.$labelStatus.' by Veteran Status'.$labelPeriod),
                 urlencode(implode(',', $labels)),
                 urlencode(implode(',', $data)),
@@ -661,9 +661,9 @@ class ReportsUI extends UserInterface
         $labels[] = 'Female ('.$rsGenderStatistics['numberOfCandidatesFemale'].')';
         $data[] = $rsGenderStatistics['numberOfCandidatesFemale'];
 
-        $urlGenderGraph = CATSUtility::getAbsoluteURI(
+        $urlGenderGraph = (new CATSUtility())->getAbsoluteURI(
             sprintf("%s?m=graphs&a=genericPie&title=%s&labels=%s&data=%s&width=%s&height=%s&legendOffset=%s",
-                CATSUtility::getIndexName(),
+                (new CATSUtility())->getIndexName(),
                 urlencode('Number of Candidates by Gender'),
                 urlencode(implode(',', $labels)),
                 urlencode(implode(',', $data)),
@@ -689,9 +689,9 @@ class ReportsUI extends UserInterface
         $labels[] = 'Non Disabled ('.$rsDisabledStatistics['numberOfCandidatesNonDisabled'].')';
         $data[] = $rsDisabledStatistics['numberOfCandidatesNonDisabled'];
 
-        $urlDisabilityGraph = CATSUtility::getAbsoluteURI(
+        $urlDisabilityGraph = (new CATSUtility())->getAbsoluteURI(
             sprintf("%s?m=graphs&a=genericPie&title=%s&labels=%s&data=%s&width=%s&height=%s&legendOffset=%s",
-                CATSUtility::getIndexName(),
+                (new CATSUtility())->getIndexName(),
                 urlencode('Number of Candidates by Disability Status'),
                 urlencode(implode(',', $labels)),
                 urlencode(implode(',', $data)),

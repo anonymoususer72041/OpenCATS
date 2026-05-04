@@ -20,7 +20,7 @@
 	    <?php endif; ?>
             <p class="note">Change Password</p>
 
-            <form name="changePasswordForm" id="changePasswordForm" action="<?php echo(CATSUtility::getIndexName()); ?>?m=settings&amp;a=changePassword" method="post" onsubmit="return checkChangePasswordForm(document.changePasswordForm);">
+            <form name="changePasswordForm" id="changePasswordForm" action="<?php echo((new CATSUtility())->getIndexName()); ?>?m=settings&amp;a=changePassword" method="post" onsubmit="return checkChangePasswordForm(document.changePasswordForm);">
                 <input type="hidden" name="postback" id="postback" value="postback" />
 
 
@@ -76,7 +76,7 @@
                             <br />
                             <input type="submit" class="button" id="changePassword" name="changePassword" value="Change Password" />
                             <input type="reset"  class="button" id="reset"          name="reset"          value="Reset" />
-                            <input type="button" name="back" class = "button" value="Back" onclick="document.location.href='<?php echo(CATSUtility::getIndexName()); ?>?m=settings';" />
+                            <input type="button" name="back" class = "button" value="Back" onclick="document.location.href='<?php echo((new CATSUtility())->getIndexName()); ?>?m=settings';" />
                        </td>
                     </tr>
                 </table>

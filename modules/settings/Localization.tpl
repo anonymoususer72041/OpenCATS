@@ -22,7 +22,7 @@
                     <td>
                         <div style="width: 700px;">These options affect how CATS formats numbers, dates, and time. <span style="font-weight:bold;">You (and your other site users) will need to log out and log back in for these settings to take effect.</span></div>
                         <br />
-                        <form action="<?php echo(CATSUtility::getIndexName()); ?>?m=settings&amp;a=administration" id="localizationForm" method="post">
+                        <form action="<?php echo((new CATSUtility())->getIndexName()); ?>?m=settings&amp;a=administration" id="localizationForm" method="post">
                             <input type="hidden" name="postback" value="postback" />
                             <input type="hidden" name="administrationMode" value="localization" />
 
@@ -65,7 +65,7 @@
                                 </tr>
                             </table>
                         <input type="submit" class="button" value="Save (And Logout)" />&nbsp;
-                        <input type="button" name="back" class="button" value="Back" onclick="document.location.href='<?php echo(CATSUtility::getIndexName()); ?>?m=settings&amp;a=administration';" />
+                        <input type="button" name="back" class="button" value="Back" onclick="document.location.href='<?php echo((new CATSUtility())->getIndexName()); ?>?m=settings&amp;a=administration';" />
                         </form>
                     </td>
                 </tr>

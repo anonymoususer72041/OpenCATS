@@ -7,7 +7,7 @@
         pipeline.</p>
 
         <table class="searchTable">
-            <form id="searchByFullNameForm" name="searchByFullNameForm" action="<?php echo(CATSUtility::getIndexName()); ?>?m=joborders&amp;a=considerCandidateSearch" method="post">
+            <form id="searchByFullNameForm" name="searchByFullNameForm" action="<?php echo((new CATSUtility())->getIndexName()); ?>?m=joborders&amp;a=considerCandidateSearch" method="post">
                 <input type="hidden" name="postback" id="postback" value="postback" />
                 <input type="hidden" id="mode_fullname" name="mode" value="searchByFullName" />
                 <input type="hidden" id="jobOrderID_fullName" name="jobOrderID" value="<?php echo($this->jobOrderID); ?>" />
@@ -26,7 +26,7 @@
         </table>
         <br />
 
-        <a href="<?php echo(CATSUtility::getIndexName()); ?>?m=joborders&amp;a=addCandidateModal&amp;jobOrderID=<?php echo($this->jobOrderID); ?>">
+        <a href="<?php echo((new CATSUtility())->getIndexName()); ?>?m=joborders&amp;a=addCandidateModal&amp;jobOrderID=<?php echo($this->jobOrderID); ?>">
             <img src="images/candidate_inline.gif" width="16" height="16" class="absmiddle" alt="add" border="0" />&nbsp;Add Candidate
         </a>
         <br />
@@ -70,7 +70,7 @@
                             <?php endif; ?>
                             <?php if (!$data['inPipeline']): ?>
                                 <td valign="top" align="left">
-                                    <form method="post" action="<?php echo(CATSUtility::getIndexName()); ?>?m=joborders&amp;a=addToPipeline&amp;getback=getback" style="display:inline;">
+                                    <form method="post" action="<?php echo((new CATSUtility())->getIndexName()); ?>?m=joborders&amp;a=addToPipeline&amp;getback=getback" style="display:inline;">
                                         <input type="hidden" name="postback" value="postback" />
                                         <input type="hidden" name="jobOrderID" value="<?php echo($this->jobOrderID); ?>" />
                                         <input type="hidden" name="candidateID" value="<?php $this->_($data['candidateID']); ?>" />
@@ -81,7 +81,7 @@
                                     &nbsp;
                                 </td>
                                 <td valign="top" align="left">
-                                    <form method="post" action="<?php echo(CATSUtility::getIndexName()); ?>?m=joborders&amp;a=addToPipeline&amp;getback=getback" style="display:inline;">
+                                    <form method="post" action="<?php echo((new CATSUtility())->getIndexName()); ?>?m=joborders&amp;a=addToPipeline&amp;getback=getback" style="display:inline;">
                                         <input type="hidden" name="postback" value="postback" />
                                         <input type="hidden" name="jobOrderID" value="<?php echo($this->jobOrderID); ?>" />
                                         <input type="hidden" name="candidateID" value="<?php $this->_($data['candidateID']); ?>" />
@@ -99,7 +99,7 @@
                             <td valign="top" align="left" nowrap="nowrap"><?php $this->_($data['dateCreated']); ?>&nbsp;</td>
                             <td valign="top" align="left" nowrap="nowrap"><?php $this->_($data['ownerAbbrName']); ?>&nbsp;</td>
                             <td align="center" nowrap="nowrap">
-                                <a href="#" title="Show Candidate" onclick="javascript:openCenteredPopup('<?php echo(CATSUtility::getIndexName()); ?>?m=candidates&amp;a=show&amp;display=popup&amp;candidateID=<?php $this->_($data['candidateID']); ?>', 'viewCandidateDetails', 1000, 675, true); return false;">
+                                <a href="#" title="Show Candidate" onclick="javascript:openCenteredPopup('<?php echo((new CATSUtility())->getIndexName()); ?>?m=candidates&amp;a=show&amp;display=popup&amp;candidateID=<?php $this->_($data['candidateID']); ?>', 'viewCandidateDetails', 1000, 675, true); return false;">
                                     <img src="images/new_browser_inline.gif" alt="consider" width="16" height="16" border="0" class="absmiddle" />
                                 </a>
                             </td>
@@ -113,8 +113,8 @@
     <?php else: ?>
         <p>The selected candidate has been successfully added to the pipeline for this job order.</p>
 
-        <form method="get" action="<?php echo(CATSUtility::getIndexName()); ?>">
-            <input type="button" name="close" value="Close" onclick="parentGoToURL('<?php echo(CATSUtility::getIndexName()); ?>?m=joborders&amp;a=show&amp;jobOrderID=<?php echo($this->jobOrderID); ?>');" />
+        <form method="get" action="<?php echo((new CATSUtility())->getIndexName()); ?>">
+            <input type="button" name="close" value="Close" onclick="parentGoToURL('<?php echo((new CATSUtility())->getIndexName()); ?>?m=joborders&amp;a=show&amp;jobOrderID=<?php echo($this->jobOrderID); ?>');" />
         </form>
     <?php endif; ?>
     </body>

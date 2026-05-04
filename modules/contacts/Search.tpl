@@ -20,7 +20,7 @@
             <table class="searchTable" id="searchTable ">
                 <tr>
                     <td>
-                        <form name="searchForm" id="searchForm" action="<?php echo(CATSUtility::getIndexName()); ?>" method="get" autocomplete="off">
+                        <form name="searchForm" id="searchForm" action="<?php echo((new CATSUtility())->getIndexName()); ?>" method="get" autocomplete="off">
                             <input type="hidden" name="m" id="moduleName" value="contacts" />
                             <input type="hidden" name="a" id="moduleAction" value="search" />
                             <input type="hidden" name="getback" id="getback" value="getback" />
@@ -78,23 +78,23 @@
                             <tr class="<?php TemplateUtility::printAlternatingRowClass($rowNumber); ?>">
                                 <td valign="top" nowrap="nowrap">
                                     <input type="checkbox" id="checked_<?php echo($data['contactID']); ?>" name="checked_<?php echo($data['contactID']); ?>" />
-                                    <a href="javascript:void(0);" onclick="window.open('<?php echo(CATSUtility::getIndexName()); ?>?m=contacts&amp;a=show&amp;contactID=<?php $this->_($data['contactID']); ?>')" title="View in New Window">
+                                    <a href="javascript:void(0);" onclick="window.open('<?php echo((new CATSUtility())->getIndexName()); ?>?m=contacts&amp;a=show&amp;contactID=<?php $this->_($data['contactID']); ?>')" title="View in New Window">
                                         <img src="images/new_window.gif" alt="(Preview)" border="0" width="15" height="15" />
                                     </a>
                                 </td>
                                 <td valign="top" align="left">
-                                    <a href="<?php echo(CATSUtility::getIndexName()); ?>?m=contacts&amp;a=show&amp;contactID=<?php $this->_($data['contactID']); ?>" class="<?php $this->_($data['linkClassContact']); ?>">
+                                    <a href="<?php echo((new CATSUtility())->getIndexName()); ?>?m=contacts&amp;a=show&amp;contactID=<?php $this->_($data['contactID']); ?>" class="<?php $this->_($data['linkClassContact']); ?>">
                                         <?php $this->_($data['firstName']); ?>
                                     </a>
                                 </td>
                                 <td valign="top" align="left">
-                                    <a href="<?php echo(CATSUtility::getIndexName()); ?>?m=contacts&amp;a=show&amp;contactID=<?php $this->_($data['contactID']); ?>" class="<?php $this->_($data['linkClassContact']); ?>">
+                                    <a href="<?php echo((new CATSUtility())->getIndexName()); ?>?m=contacts&amp;a=show&amp;contactID=<?php $this->_($data['contactID']); ?>" class="<?php $this->_($data['linkClassContact']); ?>">
                                         <?php $this->_($data['lastName']); ?>
                                     </a>
                                 </td>
                                 <td valign="top" align="left"><?php $this->_($data['title']); ?></td>
                                 <td valign="top" align="left">
-                                    <a href="<?php echo(CATSUtility::getIndexName()); ?>?m=companies&amp;a=show&amp;companyID=<?php $this->_($data['companyID']); ?>" class="<?php $this->_($data['linkClassCompany']); ?>">
+                                    <a href="<?php echo((new CATSUtility())->getIndexName()); ?>?m=companies&amp;a=show&amp;companyID=<?php $this->_($data['companyID']); ?>" class="<?php $this->_($data['linkClassCompany']); ?>">
                                         <?php $this->_($data['companyName']); ?>
                                     </a>
                                 </td>

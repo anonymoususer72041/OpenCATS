@@ -269,7 +269,7 @@ class MRU
      */
     private function makeMRUURL($dataItemType, $dataItemID)
     {
-        $URL = CATSUtility::getIndexName();
+        $URL = (new CATSUtility())->getIndexName();
 
         switch ($dataItemType)
         {

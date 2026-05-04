@@ -788,7 +788,7 @@ class DataGrid
         echo sprintf(
             '<select id="rowsPerPageSelector%s" onchange="document.location.href=\'%s?%s&dynamicArgument%s=\' + this.value;" class="selectBox">%s',
             $md5InstanceName,      //Select Box ID
-            CATSUtility::getIndexName(),
+            (new CATSUtility())->getIndexName(),
             $requestString,
             urlencode($this->_instanceName),
             "\n"
@@ -2336,7 +2336,7 @@ echo ('<script type="text/javascript">setTableWidth("table'.$md5InstanceName.'",
                     $ID, $md5InstanceName,
                     $this->_totalPages,
                     $ID, $md5InstanceName,
-                    CATSUtility::getIndexName(),
+                    (new CATSUtility())->getIndexName(),
                     $requestString,
                     urlencode($this->_instanceName),
                     $ID, $md5InstanceName,
@@ -2548,7 +2548,7 @@ echo ('<script type="text/javascript">setTableWidth("table'.$md5InstanceName.'",
 
             return sprintf(
                 '<a href="%s?%s" style="%s%s" onclick="%s" %s %s>',
-                CATSUtility::getIndexName(),
+                (new CATSUtility())->getIndexName(),
                 $requestString,
                 $this->globalStyle,
                 $style,
@@ -2695,7 +2695,7 @@ echo ('<script type="text/javascript">setTableWidth("table'.$md5InstanceName.'",
 
                 echo sprintf(
                     'document.location.href=\'%s?%s&dynamicArgument%s=\' + urlEncode(document.getElementById(\'filterArea%s\').value);',
-                    CATSUtility::getIndexName(),
+                    (new CATSUtility())->getIndexName(),
                     $requestString,
                     urlencode($this->_instanceName),
                     $md5InstanceName
@@ -2713,7 +2713,7 @@ echo ('<script type="text/javascript">setTableWidth("table'.$md5InstanceName.'",
 
                 echo sprintf(
                     'document.location.href=\'%s?%s&dynamicArgument%s=\' + urlEncode(document.getElementById(\'filterArea%s\').value);',
-                    CATSUtility::getIndexName(),
+                    (new CATSUtility())->getIndexName(),
                     $requestString,
                     urlencode($this->_instanceName),
                     $md5InstanceName
@@ -2730,7 +2730,7 @@ echo ('<script type="text/javascript">setTableWidth("table'.$md5InstanceName.'",
 
                 echo sprintf(
                     'document.location.href=\'%s?%s&dynamicArgument%s=\' + urlEncode(document.getElementById(\'filterArea%s\').value);',
-                    CATSUtility::getIndexName(),
+                    (new CATSUtility())->getIndexName(),
                     $requestString,
                     urlencode($this->_instanceName),
                     $md5InstanceName

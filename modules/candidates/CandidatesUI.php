@@ -72,8 +72,8 @@ class CandidatesUI extends UserInterface
         $this->_moduleName = 'candidates';
         $this->_moduleTabText = 'Candidates';
         $this->_subTabs = array(
-            'Add Candidate'     => CATSUtility::getIndexName() . '?m=candidates&amp;a=add*al=' . ACCESS_LEVEL_EDIT . '@candidates.add',
-            'Search Candidates' => CATSUtility::getIndexName() . '?m=candidates&amp;a=search'
+            'Add Candidate'     => (new CATSUtility())->getIndexName() . '?m=candidates&amp;a=add*al=' . ACCESS_LEVEL_EDIT . '@candidates.add',
+            'Search Candidates' => (new CATSUtility())->getIndexName() . '?m=candidates&amp;a=search'
         );
     }
 
@@ -468,7 +468,7 @@ class CandidatesUI extends UserInterface
         if (strpos($transferURI, 'a=addToPipeline') !== false)
         {
             parse_str($transferURI, $params);
-            $action = CATSUtility::getIndexName();
+            $action = (new CATSUtility())->getIndexName();
             if (isset($params['m']) && isset($params['a']))
             {
                 $action .= '?m=' . urlencode($params['m']) . '&a=' . urlencode($params['a']);
@@ -495,7 +495,7 @@ class CandidatesUI extends UserInterface
             return;
         }
 
-        CATSUtility::transferRelativeURI($transferURI);
+        (new CATSUtility())->transferRelativeURI($transferURI);
     }
 
 
@@ -692,7 +692,7 @@ class CandidatesUI extends UserInterface
             {
                 $attachmentsRS[$rowNumber]['previewLink'] = sprintf(
                     '<a href="#" onclick="window.open(\'%s?m=candidates&amp;a=viewResume&amp;attachmentID=%s\', \'viewResume\', \'scrollbars=1,width=800,height=760\')"><img width="15" height="15" style="border: none;" src="images/search.gif" alt="(Preview)" /></a>',
-                    CATSUtility::getIndexName(),
+                    (new CATSUtility())->getIndexName(),
                     $attachmentsRS[$rowNumber]['attachmentID']
                 );
             }
@@ -908,7 +908,7 @@ class CandidatesUI extends UserInterface
             {
                 $associatedAttachmentRS['previewLink'] = sprintf(
                     '<a href="#" onclick="window.open(\'%s?m=candidates&amp;a=viewResume&amp;attachmentID=%s\', \'viewResume\', \'scrollbars=1,width=800,height=760\')"><img width="15" height="15" style="border: none;" src="images/popup.gif" alt="(Preview)" /></a>',
-                    CATSUtility::getIndexName(),
+                    (new CATSUtility())->getIndexName(),
                     $associatedAttachmentRS['attachmentID']
                 );
             }
@@ -1173,7 +1173,7 @@ class CandidatesUI extends UserInterface
             $this->_userID
         );
 
-        CATSUtility::transferRelativeURI(
+        (new CATSUtility())->transferRelativeURI(
             'm=candidates&a=show&candidateID=' . $candidateID
         );
     }
@@ -1511,7 +1511,7 @@ class CandidatesUI extends UserInterface
 
         if (!eval(Hooks::get('CANDIDATE_ON_EDIT_POST'))) return;
 
-        CATSUtility::transferRelativeURI(
+        (new CATSUtility())->transferRelativeURI(
             'm=candidates&a=show&candidateID=' . $candidateID
         );
     }
@@ -1539,7 +1539,7 @@ class CandidatesUI extends UserInterface
             DATA_ITEM_CANDIDATE, $candidateID
         );
 
-        CATSUtility::transferRelativeURI('m=candidates&a=listByView');
+        (new CATSUtility())->transferRelativeURI('m=candidates&a=listByView');
     }
 
     /*
@@ -2087,7 +2087,7 @@ class CandidatesUI extends UserInterface
 
         if (!eval(Hooks::get('CANDIDATE_REMOVE_FROM_PIPELINE_POST'))) return;
 
-        CATSUtility::transferRelativeURI(
+        (new CATSUtility())->transferRelativeURI(
             'm=candidates&a=show&candidateID=' . $candidateID
         );
     }
@@ -2172,7 +2172,7 @@ class CandidatesUI extends UserInterface
             $sortDirection = 'ASC';
         }
 
-        $baseURL = CATSUtility::getFilteredGET(
+        $baseURL = (new CATSUtility())->getFilteredGET(
             array('sortBy', 'sortDirection', 'page'), '&amp;'
         );
         $searchPager->setSortByParameters($baseURL, $sortBy, $sortDirection);
@@ -2626,7 +2626,7 @@ class CandidatesUI extends UserInterface
 
         if (!eval(Hooks::get('CANDIDATE_ON_DELETE_ATTACHMENT_POST'))) return;
 
-        CATSUtility::transferRelativeURI(
+        (new CATSUtility())->transferRelativeURI(
             'm=candidates&a=show&candidateID=' . $candidateID
         );
     }
@@ -2655,7 +2655,7 @@ class CandidatesUI extends UserInterface
         $candidates = new Candidates($this->_siteID);
         $candidates->administrativeHideShow($candidateID, $state);
 
-        CATSUtility::transferRelativeURI('m=candidates&a=show&candidateID='.$candidateID);
+        (new CATSUtility())->transferRelativeURI('m=candidates&a=show&candidateID='.$candidateID);
     }
 
     /**
@@ -3835,7 +3835,7 @@ class CandidatesUI extends UserInterface
         $params['newCandidateID'] = $_POST['newCandidateID'];
         
         $candidates->mergeDuplicates($params, $candidates->getWithDuplicity($params['newCandidateID']));
-        CATSUtility::transferRelativeURI(
+        (new CATSUtility())->transferRelativeURI(
             'm=candidates&a=show&candidateID=' . $params['oldCandidateID']
         );
     }
@@ -3854,7 +3854,7 @@ class CandidatesUI extends UserInterface
         $oldCandidateID = $_POST['oldCandidateID'];
         $newCandidateID = $_POST['newCandidateID'];
         $candidates->removeDuplicity($oldCandidateID, $newCandidateID);
-        $url = CATSUtility::getIndexName()."?m=candidates";
+        $url = (new CATSUtility())->getIndexName()."?m=candidates";
         header("Location: " . $url); /* Redirect browser */
         exit();
     }

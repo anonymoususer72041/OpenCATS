@@ -120,7 +120,7 @@ span.titleText {
                         <table>
                             <tr>
                                 <td valign="top" align="left">
-                                    <form id="keyEntry" name="keyEntry" method="get" action="<?php echo CATSUtility::getIndexName(); ?>">
+                                    <form id="keyEntry" name="keyEntry" method="get" action="<?php echo (new CATSUtility())->getIndexName(); ?>">
                                     <input type="hidden" name="m" value="settings" />
                                     <input type="hidden" name="a" value="professional" />
                                     <p />
@@ -289,7 +289,7 @@ span.titleText {
         <br /><br />
 
         <div style="width: 830px; padding: 20px; ">
-            <form id="keyEntry" name="keyEntry" method="get" action="<?php echo CATSUtility::getIndexName(); ?>">
+            <form id="keyEntry" name="keyEntry" method="get" action="<?php echo (new CATSUtility())->getIndexName(); ?>">
             <table cellpadding="0" cellspacing="0" border="0">
                 <tr>
                     <td align="left" valign="top" colspan="2" style="font-size: 22px; font-weight: bold;">

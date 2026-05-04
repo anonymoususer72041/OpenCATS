@@ -18,7 +18,7 @@
                     </td>
                     <td><h2>Contacts: Home</h2></td>
                     <td align="right">
-                        <form name="contactsViewSelectorForm" id="contactsViewSelectorForm" action="<?php echo(CATSUtility::getIndexName()); ?>" method="get">
+                        <form name="contactsViewSelectorForm" id="contactsViewSelectorForm" action="<?php echo((new CATSUtility())->getIndexName()); ?>" method="get">
                             <input type="hidden" name="m" value="contacts" />
                             <input type="hidden" name="a" value="listByView" />
 
@@ -99,7 +99,7 @@
                     Add contacts to keep track of people you work with.
                     </div>
 
-                    <a href="<?php echo CATSUtility::getIndexName(); ?>?m=contacts&amp;a=add">
+                    <a href="<?php echo (new CATSUtility())->getIndexName(); ?>?m=contacts&amp;a=add">
                     <div class="addContactsButton">&nbsp;</div>
                     </a>
                 </td>

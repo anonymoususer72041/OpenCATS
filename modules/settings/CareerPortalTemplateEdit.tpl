@@ -48,7 +48,7 @@
             can include a keyword which gets replaced with a table of search results or job openings.
             A button is included on these areas to insert the associated keywords.<br />
 
-            <form name="careerPortalSettingsForm" id="careerPortalSettingsForm" action="<?php echo(CATSUtility::getIndexName()); ?>?m=settings&amp;a=careerPortalTemplateEdit" method="post">
+            <form name="careerPortalSettingsForm" id="careerPortalSettingsForm" action="<?php echo((new CATSUtility())->getIndexName()); ?>?m=settings&amp;a=careerPortalTemplateEdit" method="post">
                 <input type="hidden" name="postback" value="postback" />
                 <input type="hidden" name="templateName" value="<?php $this->_($this->templateName); ?>" />
                 <input type="hidden" name="continueEdit" id="continueEdit" value="0" />

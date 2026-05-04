@@ -32,11 +32,11 @@ $optionalComponents['usZipCodes']['description'] = 'This contains cities, states
 $optionalComponents['usZipCodes']['installCode'] = '
     $schema = @file_get_contents(\'db/upgrade-zipcodes.sql\');
     MySQLQueryMultiple($schema);
-    CATSUtility::changeConfigSetting(\'US_ZIPS_ENABLED\', "true");
+    (new CATSUtility())->changeConfigSetting(\'US_ZIPS_ENABLED\', "true");
 ';
 $optionalComponents['usZipCodes']['removeCode'] = '
     MySQLQuery(\'DELETE FROM zipcodes\');
-    CATSUtility::changeConfigSetting(\'US_ZIPS_ENABLED\', "false");
+    (new CATSUtility())->changeConfigSetting(\'US_ZIPS_ENABLED\', "false");
 ';
 $optionalComponents['usZipCodes']['detectCode'] = '
     $rs = MySQLQuery(\'SELECT * FROM zipcodes\');

@@ -276,7 +276,7 @@ class CareersUI extends UserInterface
             $content = sprintf(
                 '<form name="updateForm" id="updateForm" enctype="multipart/form-data" method="post" '
                 . 'action="%s?m=careers&p=onRegisteredCandidateProfile">',
-                CATSUtility::getIndexName()
+                (new CATSUtility())->getIndexName()
             ) . '<input type="hidden" name="attachmentID" value="' . $attachmentIDValue . '" />'
             . $content . '</form>'
             . (isset($_GET[$id='isPostBack']) && !strcmp($_GET[$id], 'yes') ? '<script language="javascript" type="text/javascript">setTimeout(\'alert("Your changes have been saved!")\',25);</script>' : '');
@@ -395,7 +395,7 @@ class CareersUI extends UserInterface
             @setcookie($this->getCareerPortalCookieName($siteID), $storedVal, time()+60*60*24*7*2);
 
             $template['Content'] = '<div id="careerContent"><br /><br /><h1>Please wait while you are redirected to your updated profile...</h1></div>';
-            CATSUtility::transferRelativeURI('m=careers&p=showAll&pa=updateProfile&isPostBack=yes');
+            (new CATSUtility())->transferRelativeURI('m=careers&p=showAll&pa=updateProfile&isPostBack=yes');
         }
         else if ($p == 'candidateRegistration' && $isRegistrationEnabled)
         {
@@ -444,7 +444,7 @@ class CareersUI extends UserInterface
                 . 'action="%s?m=careers&p=applyToJob&ID=%d">'
                 . '<input type="hidden" name="applyToJobSubAction" value="processLogin" />',
                 $js,
-                CATSUtility::getIndexName(),
+                (new CATSUtility())->getIndexName(),
                 $jobID
             ) . $content . '<script>enableFormFields(false); ' . ($js != '' ? 'populateSavedFields();' : '')
             . '</script></form>';
@@ -761,7 +761,7 @@ class CareersUI extends UserInterface
             {
                 $template['Content'] = $startTD . "\n" . $validator . "\n"
                     . '<form name="applyToJobForm" id="applyToJobForm" action="'
-                    . CATSUtility::getIndexName()
+                    . (new CATSUtility())->getIndexName()
                     . '?m=careers&amp;p=onApplyToJobOrder" '
                     . 'enctype="multipart/form-data" method="post" onsubmit="return applyValidate();">'
                     . '<input type="hidden" name="ID" value="' . $jobID . '">'
@@ -772,7 +772,7 @@ class CareersUI extends UserInterface
             {
                 $template['Content'] = $startTD . "\n" . $validator . "\n" .
                     str_replace('<catsform>', '<form name="applyToJobForm" id="applyToJobForm" action="'
-                        . CATSUtility::getIndexName()
+                        . (new CATSUtility())->getIndexName()
                         . '?m=careers&amp;p=onApplyToJobOrder" '
                         . 'enctype="multipart/form-data" method="post" onsubmit="return applyValidate();">'
                         . '<input type="hidden" name="ID" value="' . $jobID . '">'
@@ -828,7 +828,7 @@ class CareersUI extends UserInterface
 
                 $template['Content'] = $template['Content - Thanks for your Submission'];
                 $jobTitleEscaped = htmlspecialchars((string) $jobOrderData['title'], ENT_QUOTES | ENT_SUBSTITUTE, HTML_ENCODING);
-                $jobDetailsUrl = CATSUtility::getIndexName() . '?m=careers'
+                $jobDetailsUrl = (new CATSUtility())->getIndexName() . '?m=careers'
                     . (isset($_GET['templateName']) ? '&templateName=' . urlencode($_GET['templateName']) : '')
                     . '&p=showJob&ID=' . (string) $_POST['ID'];
                 $jobDetailsUrl = (string) $jobDetailsUrl;
@@ -862,7 +862,7 @@ class CareersUI extends UserInterface
 
                 $formData = '<form name="postQuestionnaire" id="postQuestionnaire" '
                     . 'enctype="multipart/form-data" method="post" action="'
-                    . CATSUtility::getIndexName() . '?m=careers&p=onApplyToJobOrder'
+                    . (new CATSUtility())->getIndexName() . '?m=careers&p=onApplyToJobOrder'
                     . '&questionnairePostBack=1">' . "\n"
                     . $this->capturePostData($siteID);
 
@@ -936,7 +936,7 @@ class CareersUI extends UserInterface
             // If candidate registration is enabled, ask them if they would like to log in first
             if ($isRegistrationEnabled && !$isRegistered)
             {
-                $applyToJobUrl = CATSUtility::getIndexName() . '?m=careers'
+                $applyToJobUrl = (new CATSUtility())->getIndexName() . '?m=careers'
                     . (isset($_GET['templateName']) ? '&templateName=' . urlencode($_GET['templateName']) : '')
                     . '&p=candidateRegistration&ID=' . (string) $jobID;
                 $applyToJobUrl = (string) $applyToJobUrl;
@@ -953,7 +953,7 @@ class CareersUI extends UserInterface
             }
             else
             {
-                $applyToJobUrl = CATSUtility::getIndexName() . '?m=careers'
+                $applyToJobUrl = (new CATSUtility())->getIndexName() . '?m=careers'
                     . (isset($_GET['templateName']) ? '&templateName=' . urlencode($_GET['templateName']) : '')
                     . '&p=applyToJob&ID=' . (string) $jobID;
                 $applyToJobUrl = (string) $applyToJobUrl;
@@ -1035,7 +1035,7 @@ class CareersUI extends UserInterface
                     $content = sprintf(
                         '<form name="login" id="login" method="post" onsubmit="return validateCandidateRegistration()" '
                         . 'action="%s?postback=yes">',
-                        CATSUtility::getIndexName()
+                        (new CATSUtility())->getIndexName()
                     ) . $content . '<script>enableFormFields(true);</script></form>';
 
                     $template['Content'] = str_replace('<registeredLogin>', $content, $template['Content']);
@@ -1056,7 +1056,7 @@ class CareersUI extends UserInterface
 
         }
 
-        $indexName = CATSUtility::getIndexName();
+        $indexName = (new CATSUtility())->getIndexName();
         foreach ($template as $index => $data)
         {
             $linkMainUrl = $indexName . '?m=careers' . (isset($_GET['templateName']) ? '&templateName=' . urlencode($_GET['templateName']) : '');
@@ -1474,7 +1474,7 @@ class CareersUI extends UserInterface
             }
 
             $html .= '<td>';
-            $html .= '<a href="' . CATSUtility::getIndexName() . '?m=careers' . (isset($_GET['templateName']) ? '&amp;templateName=' . urlencode($_GET['templateName']) : '').'&amp;p=showJob&amp;ID=' . $line['jobOrderID'] . '">';
+            $html .= '<a href="' . (new CATSUtility())->getIndexName() . '?m=careers' . (isset($_GET['templateName']) ? '&amp;templateName=' . urlencode($_GET['templateName']) : '').'&amp;p=showJob&amp;ID=' . $line['jobOrderID'] . '">';
             $html .= htmlspecialchars((string) $line['title'], ENT_QUOTES | ENT_SUBSTITUTE, HTML_ENCODING);
             $html .= '</a>';
             $html .= '</td>';
@@ -2118,7 +2118,7 @@ class CareersUI extends UserInterface
                 . '&nbsp;&nbsp;Need to update your information? <a href="javascript:void(0);" onclick="document.getElementById(\'pa\').value=\'updateProfile\'; '
                 . 'document.logout.submit();">Update Profile</a>.'
                 . '</h3></div>',
-                CATSUtility::getIndexName(),
+                (new CATSUtility())->getIndexName(),
                 $_SERVER['QUERY_STRING'] != '' ? '?' . $_SERVER['QUERY_STRING'] : '',
                 $this->capturePostData($siteID, array('pa')),
                 $candidate['firstName'],

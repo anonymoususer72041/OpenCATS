@@ -17,7 +17,7 @@
         this candidate as a duplicate to them.</p>
 
         <table class="searchTable">
-            <form id="searchByCandidateNameForm" name="searchByJobTitleForm" action="<?php echo(CATSUtility::getIndexName()); ?>?m=candidates&amp;a=linkDuplicate" method="post">
+            <form id="searchByCandidateNameForm" name="searchByJobTitleForm" action="<?php echo((new CATSUtility())->getIndexName()); ?>?m=candidates&amp;a=linkDuplicate" method="post">
                 <input type="hidden" name="postback" id="postback" value="postback" />
                 <input type="hidden" id="mode_candidateName" name="mode" value="searchByCandidateName" />
                 <input type="hidden" id="candidateID" name="candidateID" value=<?php echo($this->duplicateCandidateID)?> />
@@ -63,7 +63,7 @@
                         <tr class="<?php TemplateUtility::printAlternatingRowClass($rowNumber); ?>">
                             <td align="left" valign="top">
                                 <?php if (!$data['linked']): ?>
-                                    <form method="post" action="<?php echo(CATSUtility::getIndexName()); ?>?m=candidates&amp;a=addDuplicates&amp;getback=getback" style="display:inline;">
+                                    <form method="post" action="<?php echo((new CATSUtility())->getIndexName()); ?>?m=candidates&amp;a=addDuplicates&amp;getback=getback" style="display:inline;">
                                         <input type="hidden" name="postback" value="postback" />
                                         <input type="hidden" name="candidateID" value="<?php $this->_($data['candidateID']); ?>" />
                                         <input type="hidden" name="duplicateCandidateID" value="<?php $this->_($data['duplicateCandidateID']); ?>" />
@@ -77,7 +77,7 @@
                             </td>
                             <td align="left" valign="top">
                                 <?php if (!$data['linked']): ?>
-                                    <form method="post" action="<?php echo(CATSUtility::getIndexName()); ?>?m=candidates&amp;a=addDuplicates&amp;getback=getback" style="display:inline;">
+                                    <form method="post" action="<?php echo((new CATSUtility())->getIndexName()); ?>?m=candidates&amp;a=addDuplicates&amp;getback=getback" style="display:inline;">
                                         <input type="hidden" name="postback" value="postback" />
                                         <input type="hidden" name="candidateID" value="<?php $this->_($data['candidateID']); ?>" />
                                         <input type="hidden" name="duplicateCandidateID" value="<?php $this->_($data['duplicateCandidateID']); ?>" />
@@ -95,7 +95,7 @@
                             <td align="left" valign="top"><?php $this->_($data['state']); ?></td>
                             <td align="left" valign="top" nowrap="nowrap"><?php $this->_($data['ownerFirstName'])." ".$this->_($data['ownerLastName']); ?></td>
                             <td align="center" nowrap="nowrap">
-                                <a href="#" title="Show Candidate" onclick="javascript:openCenteredPopup('<?php echo(CATSUtility::getIndexName()); ?>?m=candidates&amp;a=show&amp;display=popup&amp;candidateID=<?php $this->_($data['candidateID']); ?>', 'viewCandidateDetails', 1000, 675, true); return false;">
+                                <a href="#" title="Show Candidate" onclick="javascript:openCenteredPopup('<?php echo((new CATSUtility())->getIndexName()); ?>?m=candidates&amp;a=show&amp;display=popup&amp;candidateID=<?php $this->_($data['candidateID']); ?>', 'viewCandidateDetails', 1000, 675, true); return false;">
                                     <img src="images/new_browser_inline.gif" alt="consider" width="16" height="16" border="0" class="absmiddle" />
                                 </a>
                             </td>
@@ -126,7 +126,7 @@
                         <tr class="<?php TemplateUtility::printAlternatingRowClass($rowNumber); ?>">
                             <td align="left" valign="top">
                                 <?php if (!$data['linked']): ?>
-                                    <form method="post" action="<?php echo(CATSUtility::getIndexName()); ?>?m=candidates&amp;a=addDuplicates&amp;getback=getback" style="display:inline;">
+                                    <form method="post" action="<?php echo((new CATSUtility())->getIndexName()); ?>?m=candidates&amp;a=addDuplicates&amp;getback=getback" style="display:inline;">
                                         <input type="hidden" name="postback" value="postback" />
                                         <input type="hidden" name="candidateID" value="<?php $this->_($data['candidateID']); ?>" />
                                         <input type="hidden" name="duplicateCandidateID" value="<?php $this->_($data['duplicateCandidateID']); ?>" />
@@ -140,7 +140,7 @@
                             </td>
                             <td align="left" valign="top">
                                 <?php if (!$data['linked']): ?>
-                                    <form method="post" action="<?php echo(CATSUtility::getIndexName()); ?>?m=candidates&amp;a=addDuplicates&amp;getback=getback" style="display:inline;">
+                                    <form method="post" action="<?php echo((new CATSUtility())->getIndexName()); ?>?m=candidates&amp;a=addDuplicates&amp;getback=getback" style="display:inline;">
                                         <input type="hidden" name="postback" value="postback" />
                                         <input type="hidden" name="candidateID" value="<?php $this->_($data['candidateID']); ?>" />
                                         <input type="hidden" name="duplicateCandidateID" value="<?php $this->_($data['duplicateCandidateID']); ?>" />
@@ -158,7 +158,7 @@
                             <td align="left" valign="top"><?php $this->_($data['state']); ?></td>
                             <td align="left" valign="top" nowrap="nowrap"><?php $this->_($data['ownerFirstName'])." ".$this->_($data['ownerLastName']); ?></td>
                             <td align="center" nowrap="nowrap">
-                                <a href="#" title="Show Candidate" onclick="javascript:openCenteredPopup('<?php echo(CATSUtility::getIndexName()); ?>?m=candidates&amp;a=show&amp;display=popup&amp;candidateID=<?php $this->_($data['candidateID']); ?>', 'viewCandidateDetails', 1000, 675, true); return false;">
+                                <a href="#" title="Show Candidate" onclick="javascript:openCenteredPopup('<?php echo((new CATSUtility())->getIndexName()); ?>?m=candidates&amp;a=show&amp;display=popup&amp;candidateID=<?php $this->_($data['candidateID']); ?>', 'viewCandidateDetails', 1000, 675, true); return false;">
                                     <img src="images/new_browser_inline.gif" alt="consider" width="16" height="16" border="0" class="absmiddle" />
                                 </a>
                             </td>
@@ -172,7 +172,7 @@
     <?php else: ?>
         <p>This candidate has been successfully added as a duplicate for the selected candidate.</p>
 
-        <form method="get" action="<?php echo(CATSUtility::getIndexName()); ?>">
+        <form method="get" action="<?php echo((new CATSUtility())->getIndexName()); ?>">
             <input type="button" name="close" value="Close" onclick="parentHidePopWinRefresh();" />
         </form>
     <?php endif; ?>

@@ -184,7 +184,7 @@ class Graphs
     // FIXME: Document me.
     private function _getGraphHTML($graphName, $width, $height, $params = array(), $borderStyle = "none")
     {
-        $indexName = CATSUtility::getIndexName();
+        $indexName = (new CATSUtility())->getIndexName();
 
         $newWindowImage = sprintf(
             '%s?m=graphs&a=%s&width=640&height=480',
@@ -253,7 +253,7 @@ class Graphs
 
         $wordVerifyID = $db->getLastInsertID();
 
-        $HTML = '<img src="' . CATSUtility::getIndexName() . '?m=graphs&amp;a=wordVerify&amp;wordVerifyID=' . $wordVerifyID . '" alt="Graph" />';
+        $HTML = '<img src="' . (new CATSUtility())->getIndexName() . '?m=graphs&amp;a=wordVerify&amp;wordVerifyID=' . $wordVerifyID . '" alt="Graph" />';
         $HTML .= '<input type="hidden" name="wordVerifyID" id="wordVerifyID" value="' . $wordVerifyID . '" />';
         return $HTML;
     }

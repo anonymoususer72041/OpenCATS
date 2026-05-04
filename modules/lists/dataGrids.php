@@ -74,7 +74,7 @@ class ListsDataGrid extends DataGrid
                                       'filter'          => 'number_entries',
                                       'filterTypes'     => '===>=<'),
             'Description' =>   array('select'         => '', 
-                                      'pagerRender'    => 'return \'<a href="'.CATSUtility::getIndexName().'?m=lists&amp;a=showList&amp;savedListID=\'.$rsData[\'savedListID\'].\'">\'.htmlspecialchars($rsData[\'description\']).\'</a>\';',
+                                      'pagerRender'    => 'return \'<a href="'.(new CATSUtility())->getIndexName().'?m=lists&amp;a=showList&amp;savedListID=\'.$rsData[\'savedListID\'].\'">\'.htmlspecialchars($rsData[\'description\']).\'</a>\';',
                                       'sortableColumn' => 'description',
                                       'pagerWidth'     => 355,
                                       'pagerOptional'  => false,
@@ -185,7 +185,7 @@ class ListsDataGrid extends DataGrid
 
         $html .= sprintf(
             '<a href="javascript:void(0);" onclick="window.location.href=\'%s?m=export&amp;a=exportByDataGrid&amp;i=%s&amp;p=%s&amp;&dynamicArgument%s=\' + serializeArray(exportArray%s);">Export Selected</a><br />',
-            CATSUtility::getIndexName(),
+            (new CATSUtility())->getIndexName(),
             urlencode($this->_instanceName),
             urlencode(json_encode($newParameterArray)),
             urlencode($this->_instanceName),

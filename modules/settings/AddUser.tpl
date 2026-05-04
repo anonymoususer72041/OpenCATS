@@ -17,10 +17,10 @@
 
             <p class="note">
                 <span style="float: left;">Add Site User</span>
-                <span style="float: right;"><a href='<?php echo(CATSUtility::getIndexName()); ?>?m=settings&amp;a=manageUsers'>Back to User Management</a></span>&nbsp;
+                <span style="float: right;"><a href='<?php echo((new CATSUtility())->getIndexName()); ?>?m=settings&amp;a=manageUsers'>Back to User Management</a></span>&nbsp;
             </p>
 
-            <form name="addUserForm" id="addUserForm" action="<?php echo(CATSUtility::getIndexName()); ?>?m=settings&amp;a=addUser" method="post" onsubmit="return checkAddUserForm(document.addUserForm);" autocomplete="off">
+            <form name="addUserForm" id="addUserForm" action="<?php echo((new CATSUtility())->getIndexName()); ?>?m=settings&amp;a=addUser" method="post" onsubmit="return checkAddUserForm(document.addUserForm);" autocomplete="off">
                 <input type="hidden" name="postback" id="postback" value="postback" />
 
                 <table width="930">
@@ -178,7 +178,7 @@
 
                 <input type="submit" class="button" name="submit" id="submit" value="Add User" />&nbsp;
                 <input type="reset"  class="button" name="reset"  id="reset"  value="Reset" onclick="document.getElementById('userAccessStatus').innerHTML='Delete - All lower access, plus the ability to delete information on the system.'" />&nbsp;
-                <input type="button" class="button" name="back"   id="back"   value="Cancel" onclick="javascript:goToURL('<?php echo(CATSUtility::getIndexName()); ?>?m=settings&amp;a=manageUsers');" />
+                <input type="button" class="button" name="back"   id="back"   value="Cancel" onclick="javascript:goToURL('<?php echo((new CATSUtility())->getIndexName()); ?>?m=settings&amp;a=manageUsers');" />
             </form>
         </div>
     </div>

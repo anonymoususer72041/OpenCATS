@@ -76,7 +76,7 @@ class XmlUI extends UserInterface
         /* XML Headers */
         header('Content-type: text/xml');
 
-        $link = CATSUtility::getAbsoluteURI('../careers/');
+        $link = (new CATSUtility())->getAbsoluteURI('../careers/');
         echo sprintf(
             "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
             . "<rss version=\"2.0\">\n"
@@ -122,7 +122,7 @@ class XmlUI extends UserInterface
         /* XML Headers */
         header('Content-type: text/xml');
 
-        $indexName = CATSUtility::getIndexName();
+        $indexName = (new CATSUtility())->getIndexName();
 
         $availTemplates = XmlTemplate::getTemplates();
 
@@ -168,7 +168,7 @@ class XmlUI extends UserInterface
                 case 'siteURL':
                     $templateHeader = XmlTemplate::replaceTemplateTags(
                         $tag,
-                        CATSUtility::getAbsoluteURI(''),
+                        (new CATSUtility())->getAbsoluteURI(''),
                         $templateHeader
                     );
                     break;
@@ -181,7 +181,7 @@ class XmlUI extends UserInterface
         $careerPortalSettings = new CareerPortalSettings($careerPortalSiteID);
         $settings = $careerPortalSettings->getAll();
 
-        $url = CATSUtility::getAbsoluteURI();
+        $url = (new CATSUtility())->getAbsoluteURI();
         if(strrpos($url, 'xml') == (strlen($url) - 4))
         {
             $url = substr($url, 0, -4);

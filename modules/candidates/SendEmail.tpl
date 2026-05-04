@@ -66,7 +66,7 @@
             <table class="editTable" width="100%">
                 <tr>
                     <td>
-                        <form name="emailForm" id="emailForm" action="<?php echo(CATSUtility::getIndexName()); ?>?m=candidates&amp;a=emailCandidates" method="post" onsubmit="return checkEmailForm(document.emailForm);" autocomplete="off" enctype="multipart/form-data">
+                        <form name="emailForm" id="emailForm" action="<?php echo((new CATSUtility())->getIndexName()); ?>?m=candidates&amp;a=emailCandidates" method="post" onsubmit="return checkEmailForm(document.emailForm);" autocomplete="off" enctype="multipart/form-data">
                         <input type="hidden" name="postback" id="postback" value="postback" />
                         <?php foreach($this->recipients as $data): ?>
                             <input type="hidden" name="candidateID[]" value="<?php echo($data['email1'].'='.$data['candidate_id'])?>" />

@@ -51,7 +51,7 @@
                     <tr>
                         <td>
                             You have recently imported CSV data.  You can click here to review or delete the imported data.<br />
-                            <input type="button" onclick="document.location.href='<?php echo(CATSUtility::getIndexName()); ?>?m=import&amp;a=viewpending';" value="View Recent Imports" class="button" />
+                            <input type="button" onclick="document.location.href='<?php echo((new CATSUtility())->getIndexName()); ?>?m=import&amp;a=viewpending';" value="View Recent Imports" class="button" />
                         </td>
                     </tr>
                 </table>
@@ -75,7 +75,7 @@
             <br />
             <?php endif; ?>
 
-            <form name="importDataForm" id="importDataForm" action="<?php echo(CATSUtility::getIndexName()); ?>?m=import&amp;a=importUploadFile" enctype="multipart/form-data" method="post" autocomplete="off" onsubmit="document.getElementById('nextSpan').style.display='none'; document.getElementById('uploadingSpan').style.display='';">
+            <form name="importDataForm" id="importDataForm" action="<?php echo((new CATSUtility())->getIndexName()); ?>?m=import&amp;a=importUploadFile" enctype="multipart/form-data" method="post" autocomplete="off" onsubmit="document.getElementById('nextSpan').style.display='none'; document.getElementById('uploadingSpan').style.display='';">
                 <table class="searchTable" width="740" id="importHide3" width="100%">
                     <tr>
                         <td class="tdVertical">

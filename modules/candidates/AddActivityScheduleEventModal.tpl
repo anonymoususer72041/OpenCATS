@@ -15,7 +15,7 @@
     window.CATSUserDateFormat = '<?php echo($_SESSION['CATS']->isDateDMY() ? 'DD-MM-YY' : 'MM-DD-YY'); ?>';
 </script>
 
-    <form name="logActivityForm" id="logActivityForm" action="<?php echo(CATSUtility::getIndexName()); ?>?m=<?php if ($this->isJobOrdersMode): ?>joborders<?php else: ?>candidates<?php endif; ?>&amp;a=addActivity<?php if ($this->onlyScheduleEvent): ?>&amp;onlyScheduleEvent=true<?php endif; ?>" method="post" onsubmit="return checkActivityForm(document.logActivityForm);" autocomplete="off">
+    <form name="logActivityForm" id="logActivityForm" action="<?php echo((new CATSUtility())->getIndexName()); ?>?m=<?php if ($this->isJobOrdersMode): ?>joborders<?php else: ?>candidates<?php endif; ?>&amp;a=addActivity<?php if ($this->onlyScheduleEvent): ?>&amp;onlyScheduleEvent=true<?php endif; ?>" method="post" onsubmit="return checkActivityForm(document.logActivityForm);" autocomplete="off">
         <input type="hidden" name="postback" id="postback" value="postback" />
         <input type="hidden" id="candidateID" name="candidateID" value="<?php echo($this->candidateID); ?>" />
 <?php if ($this->isJobOrdersMode): ?>
@@ -178,9 +178,9 @@
         </table>
         <input type="submit" class="button" name="submit" id="submit" value="Save" />&nbsp;
 <?php if ($this->isJobOrdersMode): ?>
-        <input type="button" class="button" name="close" value="Cancel" onclick="parentGoToURL(<?php echo Template::escapeJsAttr(CATSUtility::getIndexName() . '?m=joborders&a=show&jobOrderID=' . $this->selectedJobOrderID); ?>);" />
+        <input type="button" class="button" name="close" value="Cancel" onclick="parentGoToURL(<?php echo Template::escapeJsAttr((new CATSUtility())->getIndexName() . '?m=joborders&a=show&jobOrderID=' . $this->selectedJobOrderID); ?>);" />
 <?php else: ?>
-        <input type="button" class="button" name="close" value="Cancel" onclick="parentGoToURL(<?php echo Template::escapeJsAttr(CATSUtility::getIndexName() . '?m=candidates&a=show&candidateID=' . $this->candidateID); ?>);" />
+        <input type="button" class="button" name="close" value="Cancel" onclick="parentGoToURL(<?php echo Template::escapeJsAttr((new CATSUtility())->getIndexName() . '?m=candidates&a=show&candidateID=' . $this->candidateID); ?>);" />
 <?php endif; ?>
     </form>
 
@@ -212,9 +212,9 @@
 
     <form>
 <?php if ($this->isJobOrdersMode): ?>
-        <input type="button" name="close" class="button" value="Close" onclick="parentGoToURL(<?php echo Template::escapeJsAttr(CATSUtility::getIndexName() . '?m=joborders&a=show&jobOrderID=' . $this->regardingID); ?>);" />
+        <input type="button" name="close" class="button" value="Close" onclick="parentGoToURL(<?php echo Template::escapeJsAttr((new CATSUtility())->getIndexName() . '?m=joborders&a=show&jobOrderID=' . $this->regardingID); ?>);" />
 <?php else: ?>
-        <input type="button" name="close" class="button" value="Close" onclick="parentGoToURL(<?php echo Template::escapeJsAttr(CATSUtility::getIndexName() . '?m=candidates&a=show&candidateID=' . $this->candidateID); ?>);" />
+        <input type="button" name="close" class="button" value="Close" onclick="parentGoToURL(<?php echo Template::escapeJsAttr((new CATSUtility())->getIndexName() . '?m=candidates&a=show&candidateID=' . $this->candidateID); ?>);" />
 <?php endif; ?>
     </form>
 <?php endif; ?>

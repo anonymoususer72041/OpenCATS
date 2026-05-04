@@ -74,7 +74,7 @@
             <table style="width:850px;" class="searchTable">
                 <tr>
                     <td>
-                        <form method="post" action="<?php echo(CATSUtility::getIndexName()); ?>?m=settings&amp;a=addEmailTemplate" style="display:inline;">
+                        <form method="post" action="<?php echo((new CATSUtility())->getIndexName()); ?>?m=settings&amp;a=addEmailTemplate" style="display:inline;">
                             <input type="hidden" name="postback" value="postback" />
                             <input type="submit" class="button" value="Add a Template" />
                         </form>
@@ -113,7 +113,7 @@
                     <td>
 
                         <?php foreach ($this->emailTemplatesRS as $index => $data): ?>
-                            <form action="<?php echo(CATSUtility::getIndexName()); ?>?m=settings&amp;a=emailTemplates" method="post">
+                            <form action="<?php echo((new CATSUtility())->getIndexName()); ?>?m=settings&amp;a=emailTemplates" method="post">
                                 <input type="hidden" name="postback" value="postback" />
                                 <input type="hidden" name="templateID"  value="<?php echo($data['emailTemplateID']); ?>" />
                                 <table id="editTable<?php echo($data['emailTemplateID']); ?>" class="editTable" width="850" <?php if ($index != 0): ?>style="display:none;"<?php endif; ?>>
@@ -136,7 +136,7 @@
                                                     <td>
                                                         <input type="text" name="emailTemplateTitle" value="<?php echo($data['emailTemplateTitle']); ?>"/>
                                                         <input type="hidden" name="id" value="<?php echo $data['emailTemplateID']?>"/>
-                                                        <input type="submit" value="Delete Template" onclick="if (!confirm('Delete this template?')) { return false; } this.form.action='<?php echo(CATSUtility::getIndexName()); ?>?m=settings&amp;a=deleteEmailTemplate';" />
+                                                        <input type="submit" value="Delete Template" onclick="if (!confirm('Delete this template?')) { return false; } this.form.action='<?php echo((new CATSUtility())->getIndexName()); ?>?m=settings&amp;a=deleteEmailTemplate';" />
                                                     </td>
                                                 </tr>
                                                 <?php endif; ?>

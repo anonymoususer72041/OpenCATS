@@ -19,7 +19,7 @@
             <table>
                 <tr>
                     <td>
-                        <form name="editCalendarForm" id="editCalendarForm" action="<?php echo(CATSUtility::getIndexName()); ?>?m=settings&amp;a=customizeCalendar" method="post">
+                        <form name="editCalendarForm" id="editCalendarForm" action="<?php echo((new CATSUtility())->getIndexName()); ?>?m=settings&amp;a=customizeCalendar" method="post">
                             <input type="hidden" name="postback" value="postback" />
                             <table class="editTable" width="700">
                                 <tr>

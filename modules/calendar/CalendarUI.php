@@ -502,7 +502,7 @@ class CalendarUI extends UserInterface
 
         if (!eval(Hooks::get('CALENDAR_ADD_POST'))) return;
 
-        CATSUtility::transferRelativeURI(implode('&', $newParams));
+        (new CATSUtility())->transferRelativeURI(implode('&', $newParams));
     }
 
 
@@ -691,7 +691,7 @@ class CalendarUI extends UserInterface
             $newParams[] = urlencode($name) . '=' . urlencode($value);
         }
 
-        CATSUtility::transferRelativeURI(implode('&', $newParams));
+        (new CATSUtility())->transferRelativeURI(implode('&', $newParams));
     }
 
     /*
@@ -731,7 +731,7 @@ class CalendarUI extends UserInterface
             $newParams[] = urlencode($name).'='.urlencode($value);
         }
 
-        CATSUtility::transferRelativeURI(implode('&', $newParams));
+        (new CATSUtility())->transferRelativeURI(implode('&', $newParams));
     }
 
     // TODO: Document me.

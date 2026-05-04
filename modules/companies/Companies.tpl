@@ -17,7 +17,7 @@
                     </td>
                     <td><h2>Companies: Home</h2></td>
                     <td align="right">
-                        <form name="companiesViewSelectorForm" id="companiesViewSelectorForm" action="<?php echo(CATSUtility::getIndexName()); ?>" method="get">
+                        <form name="companiesViewSelectorForm" id="companiesViewSelectorForm" action="<?php echo((new CATSUtility())->getIndexName()); ?>" method="get">
                             <input type="hidden" name="m" value="companies" />
                             <input type="hidden" name="a" value="listByView" />
                             <table class="viewSelector">

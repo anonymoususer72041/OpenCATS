@@ -15,7 +15,7 @@
     <?php if (!$this->isFinishedMode): ?>
 
         <table class="searchTable">
-            <form id="chooseMergeInformation" name="chooseMergeInformationForm" action="<?php echo(CATSUtility::getIndexName()); ?>?m=candidates&amp;a=mergeInfo" method="post">
+            <form id="chooseMergeInformation" name="chooseMergeInformationForm" action="<?php echo((new CATSUtility())->getIndexName()); ?>?m=candidates&amp;a=mergeInfo" method="post">
                 <input type="hidden" name="postback" value="postback" />
                 <input type="hidden" id="oldCandidateID" name="oldCandidateID" value="<?php echo $this->oldCandidateID; ?>" />
                 <input type="hidden" id="newCandidateID" name="newCandidateID" value="<?php echo $this->newCandidateID; ?>" />
@@ -152,7 +152,7 @@
     <?php else: ?>
         <p>These candidates have been successfully merged.</p>
 
-        <form method="get" action="<?php echo(CATSUtility::getIndexName()); ?>">
+        <form method="get" action="<?php echo((new CATSUtility())->getIndexName()); ?>">
             <input type="button" name="close" value="Close" onclick="parentHidePopWinRefresh();" />
         </form>
     <?php endif; ?>

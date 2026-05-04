@@ -915,7 +915,7 @@ class JobOrdersDataGrid extends DataGrid
                                         'filterTypes'   => '===>=<'),
 
             'Title' =>       array('select'         => 'joborder.title AS title',
-                                      'pagerRender'    => 'if ($rsData[\'isHot\'] == 1) $className =  \'jobLinkHot\'; else $className = \'jobLinkCold\'; return \'<a href="'.CATSUtility::getIndexName().'?m=joborders&amp;a=show&amp;jobOrderID=\'.$rsData[\'jobOrderID\'].\'" class="\'.$className.\'">\'.htmlspecialchars($rsData[\'title\']).\'</a>\';',
+                                      'pagerRender'    => 'if ($rsData[\'isHot\'] == 1) $className =  \'jobLinkHot\'; else $className = \'jobLinkCold\'; return \'<a href="'.(new CATSUtility())->getIndexName().'?m=joborders&amp;a=show&amp;jobOrderID=\'.$rsData[\'jobOrderID\'].\'" class="\'.$className.\'">\'.htmlspecialchars($rsData[\'title\']).\'</a>\';',
                                       'sortableColumn' => 'title',
                                       'pagerWidth'     => 165,
                                       'pagerOptional'  => false,
@@ -924,7 +924,7 @@ class JobOrdersDataGrid extends DataGrid
 
             'Company' =>       array('select'         => 'company.name AS companyName,
                                                           company.company_id AS companyID',
-                                      'pagerRender'    => 'return \'<a href="'.CATSUtility::getIndexName().'?m=companies&amp;a=show&amp;companyID=\'.$rsData[\'companyID\'].\'">\'.htmlspecialchars($rsData[\'companyName\']).\'</a>\';',
+                                      'pagerRender'    => 'return \'<a href="'.(new CATSUtility())->getIndexName().'?m=companies&amp;a=show&amp;companyID=\'.$rsData[\'companyID\'].\'">\'.htmlspecialchars($rsData[\'companyName\']).\'</a>\';',
                                       'sortableColumn' => 'companyName',
                                       'pagerWidth'     => 125,
                                       'pagerOptional'  => true,
@@ -1096,7 +1096,7 @@ class JobOrdersDataGrid extends DataGrid
                                                    'contact.last_name AS contactLastName,' .
                                                    'CONCAT(contact.last_name, contact.first_name) AS contactSort,' .
                                                    'contact.contact_id AS contactID',
-                                     'pagerRender'      => 'return \'<a href="'.CATSUtility::getIndexName().'?m=contacts&amp;a=show&amp;contactID=\'.$rsData[\'contactID\'].\'">\'.(new StringUtility())->makeInitialName($rsData[\'contactFirstName\'], $rsData[\'contactLastName\'], false, LAST_NAME_MAXLEN).\'</a>\';',
+                                     'pagerRender'      => 'return \'<a href="'.(new CATSUtility())->getIndexName().'?m=contacts&amp;a=show&amp;contactID=\'.$rsData[\'contactID\'].\'">\'.(new StringUtility())->makeInitialName($rsData[\'contactFirstName\'], $rsData[\'contactLastName\'], false, LAST_NAME_MAXLEN).\'</a>\';',
                                      'exportRender'     => 'return $rsData[\'contactFirstName\'] . " " .$rsData[\'contactLastName\'];',
                                      'sortableColumn'     => 'contactSort',
                                      'pagerWidth'    => 75,

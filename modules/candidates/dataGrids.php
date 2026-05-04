@@ -53,18 +53,18 @@ class candidatesListByViewDataGrid extends CandidatesDataGrid
         //  - Mass set rank (depends on each candidate having their own personal rank - are we going to do this?)
         $html = '';
 
-        $html .= $this->getInnerActionAreaItemPopup('Add To List', CATSUtility::getIndexName().'?m=lists&amp;a=addToListFromDatagridModal&amp;dataItemType='.DATA_ITEM_CANDIDATE, 450, 350);
+        $html .= $this->getInnerActionAreaItemPopup('Add To List', (new CATSUtility())->getIndexName().'?m=lists&amp;a=addToListFromDatagridModal&amp;dataItemType='.DATA_ITEM_CANDIDATE, 450, 350);
         
         if($_SESSION['CATS']->getAccessLevel('pipelines.addToPipeline') >= ACCESS_LEVEL_EDIT) 
         {
-            $html .= $this->getInnerActionAreaItemPopup('Add To Job Order', CATSUtility::getIndexName().'?m=candidates&amp;a=considerForJobSearch', 750, 460);
+            $html .= $this->getInnerActionAreaItemPopup('Add To Job Order', (new CATSUtility())->getIndexName().'?m=candidates&amp;a=considerForJobSearch', 750, 460);
         }
         
         if(MAIL_MAILER != 0 && $_SESSION['CATS']->getAccessLevel('candidates.emailCandidates') >= ACCESS_LEVEL_SA)
         {
-            $html .= $this->getInnerActionAreaItem('Send E-Mail', CATSUtility::getIndexName().'?m=candidates&amp;a=emailCandidates');
+            $html .= $this->getInnerActionAreaItem('Send E-Mail', (new CATSUtility())->getIndexName().'?m=candidates&amp;a=emailCandidates');
         }
-        $html .= $this->getInnerActionAreaItem('Export', CATSUtility::getIndexName().'?m=export&amp;a=exportByDataGrid');
+        $html .= $this->getInnerActionAreaItem('Export', (new CATSUtility())->getIndexName().'?m=export&amp;a=exportByDataGrid');
 
         $html .= parent::getInnerActionArea();
 
@@ -118,13 +118,13 @@ class candidatesSavedListByViewDataGrid extends CandidatesDataGrid
         //  - Mass set rank (depends on each candidate having their own personal rank - are we going to do this?)
         $html = '';
 
-        $html .= $this->getInnerActionAreaItemPost('Remove From This List', CATSUtility::getIndexName().'?m=lists&amp;a=removeFromListDatagrid&amp;dataItemType='.DATA_ITEM_CANDIDATE.'&amp;savedListID='.$this->getMiscArgument(), false);
-        $html .= $this->getInnerActionAreaItemPopup('Add To Job Order', CATSUtility::getIndexName().'?m=candidates&amp;a=considerForJobSearch', 750, 460);
+        $html .= $this->getInnerActionAreaItemPost('Remove From This List', (new CATSUtility())->getIndexName().'?m=lists&amp;a=removeFromListDatagrid&amp;dataItemType='.DATA_ITEM_CANDIDATE.'&amp;savedListID='.$this->getMiscArgument(), false);
+        $html .= $this->getInnerActionAreaItemPopup('Add To Job Order', (new CATSUtility())->getIndexName().'?m=candidates&amp;a=considerForJobSearch', 750, 460);
         if(MAIL_MAILER != 0 && $_SESSION['CATS']->getAccessLevel('candidates.emailCandidates') >= ACCESS_LEVEL_SA)
         {
-            $html .= $this->getInnerActionAreaItem('Send E-Mail', CATSUtility::getIndexName().'?m=candidates&amp;a=emailCandidates');
+            $html .= $this->getInnerActionAreaItem('Send E-Mail', (new CATSUtility())->getIndexName().'?m=candidates&amp;a=emailCandidates');
         }
-        $html .= $this->getInnerActionAreaItem('Export', CATSUtility::getIndexName().'?m=export&amp;a=exportByDataGrid');
+        $html .= $this->getInnerActionAreaItem('Export', (new CATSUtility())->getIndexName().'?m=export&amp;a=exportByDataGrid');
 
         $html .= parent::getInnerActionArea();
 

@@ -35,12 +35,12 @@
                     <?php foreach ($this->jobOrdersRS as $rowNumber => $jobOrdersData): ?>
                         <tr class="<?php TemplateUtility::printAlternatingRowClass($rowNumber); ?>">
                             <td valign="top">
-                                <a href="<?php echo(CATSUtility::getIndexName()); ?>?m=joborders&amp;a=show&amp;jobOrderID=<?php $this->_($jobOrdersData['jobOrderID']) ?>" class="<?php $this->_($jobOrdersData['linkClass']) ?>">
+                                <a href="<?php echo((new CATSUtility())->getIndexName()); ?>?m=joborders&amp;a=show&amp;jobOrderID=<?php $this->_($jobOrdersData['jobOrderID']) ?>" class="<?php $this->_($jobOrdersData['linkClass']) ?>">
                                     <?php $this->_($jobOrdersData['title']) ?>
                                 </a>
                             </td>
                             <td valign="top">
-                                <a href="<?php echo(CATSUtility::getIndexName()); ?>?m=companies&amp;a=show&amp;companyID=<?php $this->_($jobOrdersData['companyID']) ?>">
+                                <a href="<?php echo((new CATSUtility())->getIndexName()); ?>?m=companies&amp;a=show&amp;companyID=<?php $this->_($jobOrdersData['companyID']) ?>">
                                     <?php $this->_($jobOrdersData['companyName']) ?>
                                 </a>
                             </td>
@@ -78,12 +78,12 @@
                     <?php foreach ($this->candidatesRS as $rowNumber => $candidatesData): ?>
                         <tr class="<?php TemplateUtility::printAlternatingRowClass($rowNumber); ?>">
                             <td>
-                                <a href="<?php echo(CATSUtility::getIndexName()); ?>?m=candidates&amp;a=show&amp;candidateID=<?php $this->_($candidatesData['candidateID']) ?>">
+                                <a href="<?php echo((new CATSUtility())->getIndexName()); ?>?m=candidates&amp;a=show&amp;candidateID=<?php $this->_($candidatesData['candidateID']) ?>">
                                     <?php $this->_($candidatesData['firstName']) ?>
                                 </a>
                             </td>
                             <td>
-                                <a href="<?php echo(CATSUtility::getIndexName()); ?>?m=candidates&amp;a=show&amp;candidateID=<?php $this->_($candidatesData['candidateID']) ?>">
+                                <a href="<?php echo((new CATSUtility())->getIndexName()); ?>?m=candidates&amp;a=show&amp;candidateID=<?php $this->_($candidatesData['candidateID']) ?>">
                                     <?php $this->_($candidatesData['lastName']) ?>
                                 </a>
                             </td>
@@ -118,7 +118,7 @@
                     <?php foreach ($this->companiesRS as $rowNumber => $companiesData): ?>
                         <tr class="<?php TemplateUtility::printAlternatingRowClass($rowNumber); ?>">
                             <td valign="top" align="left">
-                                <a href="<?php echo(CATSUtility::getIndexName()); ?>?m=companies&amp;a=show&amp;companyID=<?php $this->_($companiesData['companyID']) ?>">
+                                <a href="<?php echo((new CATSUtility())->getIndexName()); ?>?m=companies&amp;a=show&amp;companyID=<?php $this->_($companiesData['companyID']) ?>">
                                     <?php $this->_($companiesData['name']) ?>
                                 </a>
                             </td>
@@ -155,18 +155,18 @@
                     <?php foreach ($this->contactsRS as $rowNumber => $contactsData): ?>
                         <tr class="<?php TemplateUtility::printAlternatingRowClass($rowNumber); ?>">
                             <td valign="top" align="left">
-                                <a href="<?php echo(CATSUtility::getIndexName()); ?>?m=contacts&amp;a=show&amp;contactID=<?php $this->_($contactsData['contactID']) ?>" class="<?php $this->_($contactsData['linkClassContact']); ?>">
+                                <a href="<?php echo((new CATSUtility())->getIndexName()); ?>?m=contacts&amp;a=show&amp;contactID=<?php $this->_($contactsData['contactID']) ?>" class="<?php $this->_($contactsData['linkClassContact']); ?>">
                                     <?php $this->_($contactsData['firstName']) ?>
                                 </a>
                             </td>
                             <td valign="top" align="left">
-                                <a href="<?php echo(CATSUtility::getIndexName()); ?>?m=contacts&amp;a=show&amp;contactID=<?php $this->_($contactsData['contactID']) ?>" class="<?php $this->_($contactsData['linkClassContact']); ?>">
+                                <a href="<?php echo((new CATSUtility())->getIndexName()); ?>?m=contacts&amp;a=show&amp;contactID=<?php $this->_($contactsData['contactID']) ?>" class="<?php $this->_($contactsData['linkClassContact']); ?>">
                                     <?php $this->_($contactsData['lastName']) ?>
                                 </a>
                             </td>
                             <td valign="top" align="left"><?php $this->_($contactsData['title']) ?></td>
                             <td valign="top" align="left">
-                                <a href="<?php echo(CATSUtility::getIndexName()); ?>?m=companies&amp;a=show&amp;companyID=<?php $this->_($contactsData['companyID']) ?>" class="<?php $this->_($contactsData['linkClassCompany']); ?>">
+                                <a href="<?php echo((new CATSUtility())->getIndexName()); ?>?m=companies&amp;a=show&amp;companyID=<?php $this->_($contactsData['companyID']) ?>" class="<?php $this->_($contactsData['linkClassCompany']); ?>">
                                     <?php $this->_($contactsData['companyName']) ?>
                                 </a>
                             </td>

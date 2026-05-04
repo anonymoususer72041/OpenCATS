@@ -51,7 +51,7 @@
                     <tr>
                         <td>
                             You have recently imported CSV data.  You can click here to review or delete the imported data.<br />
-                            <input type="button" onclick="document.location.href='<?php echo(CATSUtility::getIndexName()); ?>?m=import&amp;a=viewpending';" value="View Recent Imports" class="button" />
+                            <input type="button" onclick="document.location.href='<?php echo((new CATSUtility())->getIndexName()); ?>?m=import&amp;a=viewpending';" value="View Recent Imports" class="button" />
                         </td>
                     </tr>
                 </table>
@@ -76,7 +76,7 @@
                 <tr>
                     <td>What would you like to import?<br />
                     <br />
-                    <form name="importDataForm" id="importDataForm" action="<?php echo(CATSUtility::getIndexName()); ?>" method="get" autocomplete="off">
+                    <form name="importDataForm" id="importDataForm" action="<?php echo((new CATSUtility())->getIndexName()); ?>" method="get" autocomplete="off">
                         <input type="hidden" name="m" value="import">
                         <input type="hidden" name="a" value="importSelectType">
 
@@ -104,13 +104,13 @@
                 <table cellpadding="0" cellspacing="0" border="0">
                     <tr>
                         <td style="padding-right: 10px;">
-                            <form method="post" action="<?php echo CATSUtility::getIndexName(); ?>?m=import&amp;a=importBulkResumes" style="display:inline;">
+                            <form method="post" action="<?php echo (new CATSUtility())->getIndexName(); ?>?m=import&amp;a=importBulkResumes" style="display:inline;">
                                 <input type="hidden" name="postback" value="postback" />
                                 <input type="submit" value="Rescan Documents" name="rescan" id="rescanButton" class="button" />
                             </form>
                         </td>
                         <td>
-                            <form method="post" action="<?php echo CATSUtility::getIndexName(); ?>?m=import&amp;a=deleteBulkResumes" style="display:inline;" onsubmit="return confirm('This will delete all searchable attachments that have not been associated with candidates. This action cannot be undone. Are you sure you want to continue?');">
+                            <form method="post" action="<?php echo (new CATSUtility())->getIndexName(); ?>?m=import&amp;a=deleteBulkResumes" style="display:inline;" onsubmit="return confirm('This will delete all searchable attachments that have not been associated with candidates. This action cannot be undone. Are you sure you want to continue?');">
                                 <input type="hidden" name="postback" value="postback" />
                                 <input type="submit" value="Delete Documents" name="delete" id="deleteButton" class="button" />
                             </form>

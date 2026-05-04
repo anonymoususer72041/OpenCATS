@@ -17,7 +17,7 @@
 
             <p class="note">Customize Extra Fields</p>
 
-            <form name="editSettingsForm" id="editSettingsForm" action="<?php echo(CATSUtility::getIndexName()); ?>?m=settings&amp;a=customizeExtraFields" method="post">
+            <form name="editSettingsForm" id="editSettingsForm" action="<?php echo((new CATSUtility())->getIndexName()); ?>?m=settings&amp;a=customizeExtraFields" method="post">
               <input type="hidden" name="postback" value="postback" />
               <table class="sortable" width="920">
                 <div id="changedDiv" style="display:none;">
@@ -533,7 +533,7 @@
                     
                 </table>
                 <input type="submit" class="button" value="Save" style="display:none;" id="buttonSave" />
-                <input type="button" name="back" class = "button" value="Done" id="buttonDone"  onclick="document.location.href='<?php echo(CATSUtility::getIndexName()); ?>?m=settings&amp;a=administration';" />
+                <input type="button" name="back" class = "button" value="Done" id="buttonDone"  onclick="document.location.href='<?php echo((new CATSUtility())->getIndexName()); ?>?m=settings&amp;a=administration';" />
             </form>
         </div>
     </div>

@@ -67,9 +67,9 @@ class ContactsUI extends UserInterface
         $this->_moduleName = 'contacts';
         $this->_moduleTabText = 'Contacts';
         $this->_subTabs = array(
-            'Add Contact'     => CATSUtility::getIndexName() . '?m=contacts&amp;a=add*al=' . ACCESS_LEVEL_EDIT . '@contacts.add',
-            'Search Contacts' => CATSUtility::getIndexName() . '?m=contacts&amp;a=search',
-            'Cold Call List'  => CATSUtility::getIndexName() . '?m=contacts&amp;a=showColdCallList'
+            'Add Contact'     => (new CATSUtility())->getIndexName() . '?m=contacts&amp;a=add*al=' . ACCESS_LEVEL_EDIT . '@contacts.add',
+            'Search Contacts' => (new CATSUtility())->getIndexName() . '?m=contacts&amp;a=search',
+            'Cold Call List'  => (new CATSUtility())->getIndexName() . '?m=contacts&amp;a=showColdCallList'
         );
     }
 
@@ -580,13 +580,13 @@ class ContactsUI extends UserInterface
 
         if (isset($_GET['v']) && $_GET['v'] != -1)
         {
-            CATSUtility::transferRelativeURI(
+            (new CATSUtility())->transferRelativeURI(
                 'm=companies&a=show&companyID=' . $_GET['v']
             );
         }
         else
         {
-            CATSUtility::transferRelativeURI(
+            (new CATSUtility())->transferRelativeURI(
                 'm=contacts&a=show&contactID=' . $contactID
             );
         }
@@ -863,7 +863,7 @@ class ContactsUI extends UserInterface
 
         if (!eval(Hooks::get('CONTACTS_ON_EDIT_POST'))) return;
 
-        CATSUtility::transferRelativeURI(
+        (new CATSUtility())->transferRelativeURI(
             'm=contacts&a=show&contactID=' . $contactID
         );
     }
@@ -894,7 +894,7 @@ class ContactsUI extends UserInterface
 
         if (!eval(Hooks::get('CONTACTS_DELETE_POST'))) return;
 
-        CATSUtility::transferRelativeURI('m=contacts&a=listByView');
+        (new CATSUtility())->transferRelativeURI('m=contacts&a=listByView');
     }
 
     /*
@@ -970,7 +970,7 @@ class ContactsUI extends UserInterface
             $sortDirection = 'ASC';
         }
 
-        $baseURL = CATSUtility::getFilteredGET(
+        $baseURL = (new CATSUtility())->getFilteredGET(
             array('sortBy', 'sortDirection', 'page'), '&amp;'
         );
         $searchPager->setSortByParameters($baseURL, $sortBy, $sortDirection);

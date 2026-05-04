@@ -51,7 +51,7 @@
                     <tr>
                         <td>
                             You have recently imported CSV data.  You can click here to review or delete the imported data.<br />
-                            <input type="button" onclick="document.location.href='<?php echo(CATSUtility::getIndexName()); ?>?m=import&amp;a=viewpending';" value="View Recent Imports" class="button" />
+                            <input type="button" onclick="document.location.href='<?php echo((new CATSUtility())->getIndexName()); ?>?m=import&amp;a=viewpending';" value="View Recent Imports" class="button" />
                         </td>
                     </tr>
                 </table>
@@ -87,7 +87,7 @@
 
             <p class="note" id="importHide2">Import Data</p>
 
-            <form name="importDataForm" id="importDataForm" action="<?php echo(CATSUtility::getIndexName()); ?>?m=import&amp;a=import&amp;#step2" enctype="multipart/form-data" method="post" autocomplete="off" <?php if (isset($this->contactsUploadNotice) && $this->contactsUploadNotice): ?> onsubmit="return checkField(<?php echo(count($this->theFields)); ?>, 'company_id', 'You must have 1 field set as Company.') && showLoading();"<?php else: ?> onsubmit="return showLoading();"<?php endif; ?>>
+            <form name="importDataForm" id="importDataForm" action="<?php echo((new CATSUtility())->getIndexName()); ?>?m=import&amp;a=import&amp;#step2" enctype="multipart/form-data" method="post" autocomplete="off" <?php if (isset($this->contactsUploadNotice) && $this->contactsUploadNotice): ?> onsubmit="return checkField(<?php echo(count($this->theFields)); ?>, 'company_id', 'You must have 1 field set as Company.') && showLoading();"<?php else: ?> onsubmit="return showLoading();"<?php endif; ?>>
                 <input type="hidden" name="postback" id="postback" value="postback" />
                 <input type="hidden" id="fileName" name="fileName" value="<?php echo($this->fileName); ?>" />
                 <input type="hidden" id="dataContaining" name="dataContaining" value="<?php echo($this->dataContaining) ?>" />
@@ -127,7 +127,7 @@
                     </tr>
                 </table>
 
-                    <input type="reset"  class="button" name="reset" id="importHide4" value="Reset" onclick="document.location.href='<?php echo(CATSUtility::getIndexName()); ?>?m=import&amp;a=import';" />&nbsp;
+                    <input type="reset"  class="button" name="reset" id="importHide4" value="Reset" onclick="document.location.href='<?php echo((new CATSUtility())->getIndexName()); ?>?m=import&amp;a=import';" />&nbsp;
 
             <br />
             <br />

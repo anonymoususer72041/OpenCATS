@@ -289,7 +289,7 @@ class ActivityUI extends UserInterface
 
         $baseURL = sprintf(
             '%s?m=activity&amp;a=viewByDate&amp;getback=getback',
-            CATSUtility::getIndexName()
+            (new CATSUtility())->getIndexName()
         );
 
         $quickLinks[0] = sprintf(

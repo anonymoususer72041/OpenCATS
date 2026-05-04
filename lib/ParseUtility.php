@@ -131,7 +131,7 @@ class ParseUtility
 
     public function status($key)
     {
-        if (!CATSUtility::isSOAPEnabled()) return false;
+        if (!(new CATSUtility())->isSOAPEnabled()) return false;
         $client = new SoapClient('wsdl/status.wsdl');
         if (!defined('CATS_TEST_MODE') || !CATS_TEST_MODE)
         {

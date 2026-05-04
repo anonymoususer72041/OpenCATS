@@ -21,7 +21,7 @@
                     </td>
                     <td><h2>Candidates: Home</h2></td>
                     <td align="right">
-                        <form name="candidatesViewSelectorForm" id="candidatesViewSelectorForm" action="<?php echo(CATSUtility::getIndexName()); ?>" method="get">
+                        <form name="candidatesViewSelectorForm" id="candidatesViewSelectorForm" action="<?php echo((new CATSUtility())->getIndexName()); ?>" method="get">
                             <input type="hidden" name="m" value="candidates" />
                             <input type="hidden" name="a" value="listByView" />
 
@@ -149,12 +149,12 @@
                     <table cellpadding="10" cellspacing="0" border="0">
                         <tr>
                             <td style="padding-right: 20px;">
-                                <a href="<?php echo CATSUtility::getIndexName(); ?>?m=candidates&amp;a=add">
+                                <a href="<?php echo (new CATSUtility())->getIndexName(); ?>?m=candidates&amp;a=add">
                                 <div class="addCandidateButton">&nbsp;</div>
                                 </a>
                             </td>
                             <td>
-                                <a href="<?php echo CATSUtility::getIndexName(); ?>?m=import&amp;a=massImport">
+                                <a href="<?php echo (new CATSUtility())->getIndexName(); ?>?m=import&amp;a=massImport">
                                 <div class="addMassImportButton">&nbsp;</div>
                                 </a>
                             </td>
