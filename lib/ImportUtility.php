@@ -38,7 +38,7 @@
 class ImportUtility
 {
     // FIXME: Document me.
-    public static function getDirectoryFiles($dirName)
+    public function getDirectoryFiles($dirName)
     {
         $files = array();
         
@@ -55,7 +55,7 @@ class ImportUtility
 
             if (is_dir($fileName))
             {
-                $mp = self::getDirectoryFiles($fileName);
+                $mp = $this->getDirectoryFiles($fileName);
                 $tmp = array_merge($files, $mp);
                 $files = $tmp;
             }

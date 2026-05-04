@@ -50,7 +50,7 @@ class ExportUtility
      * @param integer number of pixles right the export box should be displayed
      * @return array containing parts of html code for the export form.
      */
-    public static function getForm($dataItemType, $IDs, $popUpOffset = 35, $linkOffset = 5)
+    public function getForm($dataItemType, $IDs, $popUpOffset = 35, $linkOffset = 5)
     {
         $indexName = (new CATSUtility())->getIndexName();
 

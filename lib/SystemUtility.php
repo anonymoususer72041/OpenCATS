@@ -45,7 +45,7 @@ class SystemUtility
      *
      * @return boolean True if running on Windows; false otherwise.
      */
-    public static function isWindows()
+    public function isWindows()
     {
         /* Check for either Windows, WinNT, or Win32. */
         if (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN')
@@ -61,7 +61,7 @@ class SystemUtility
      *
      * @return boolean True if running on Mac OS X; false otherwise.
      */
-    public static function isMacOSX()
+    public function isMacOSX()
     {
         if (PHP_OS == 'Darwin')
         {
@@ -78,7 +78,7 @@ class SystemUtility
      * @return boolean Is the Asynchronous Queue Processor is enabled and
      *                 functioning properly?
      */
-    public static function isSchedulerEnabled()
+    public function isSchedulerEnabled()
     {
         return QueueProcessor::isActive();
     }

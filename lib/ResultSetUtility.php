@@ -49,7 +49,7 @@ class ResultSetUtility
      * @param integer number of matches to skip before returning a match
      * @return mixed integer row index if found, boolean false otherwise
      */
-    public static function findRowByColumnValue($resultSet, $columnName,
+    public function findRowByColumnValue($resultSet, $columnName,
         $value, $skip = 0)
     {
         /* If the column name doesn't exist, fail. */
@@ -86,7 +86,7 @@ class ResultSetUtility
      * @param integer number of matches to skip before returning a match
      * @return mixed integer row index if found, boolean false otherwise
      */
-    public static function findRowByColumnValueStrict($resultSet, $columnName,
+    public function findRowByColumnValueStrict($resultSet, $columnName,
         $value, $skip = 0)
     {
         /* If the column name doesn't exist, fail. */
@@ -136,7 +136,7 @@ class ResultSetUtility
      * @param string column name
      * @return array column values
      */
-    public static function getColumnValues($resultSet, $columnName)
+    public function getColumnValues($resultSet, $columnName)
     {
         $outputArray = array();
 
@@ -167,7 +167,7 @@ class ResultSetUtility
      * @param string return column name
      * @return mixed return column value
      */
-    public static function getColumnValueByIDValue($resultSet, $IDColumnName,
+    public function getColumnValueByIDValue($resultSet, $IDColumnName,
         $IDValue, $returnColumnName)
     {
         /* If the ID column or return column name doesn't exist, fail. */
@@ -200,7 +200,7 @@ class ResultSetUtility
      * @param string sort-by column name
      * @return array sorted result set or false on failure
      */
-    public static function sortByColumn($resultSet, $columnName)
+    public function sortByColumn($resultSet, $columnName)
     {
         /* If the sort-by column name doesn't exist, fail. */
         if (!isset($resultSet[0][$columnName]))

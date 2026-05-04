@@ -54,9 +54,9 @@ class FileUtility
      * @param string MIME content type.
      * @return flag Document type flag.
      */
-    public static function getDocumentType($filename, $contentType = false)
+    public function getDocumentType($filename, $contentType = false)
     {
-        $fileExtension = self::getFileExtension($filename);
+        $fileExtension = $this->getFileExtension($filename);
 
         if ($contentType === 'text/plain' || $fileExtension == 'txt')
         {
@@ -107,7 +107,7 @@ class FileUtility
      * @param directory name
      * @return true on success; false otherwise
      */
-    public static function recursivelyRemoveDirectory($directoryName)
+    public function recursivelyRemoveDirectory($directoryName)
     {
         $exceptions = array('.', '..');
 
@@ -159,7 +159,7 @@ class FileUtility
      *                text?
      * @return string Safe filename.
      */
-    public static function makeSafeFilename($filename)
+    public function makeSafeFilename($filename)
     {
         /* Strip out *nix directories. */
         $filenameParts = explode('/', $filename);
@@ -179,7 +179,7 @@ class FileUtility
         }
 
         /* Is the file extension safe? */
-        $fileExtension = self::getFileExtension($filename);
+        $fileExtension = $this->getFileExtension($filename);
         
         /* Use a whitelist instead of a blacklist to prevent possible bypasses */
 /*
@@ -204,7 +204,7 @@ class FileUtility
      *
      * @return string filename
      */
-    public static function makeRandomTemporaryFilePath()
+    public function makeRandomTemporaryFilePath()
     {
         /* Even though the possibility of generating a filename that
          * already exists is small, we need to handle it just in case.
@@ -227,7 +227,7 @@ class FileUtility
      * @param string Extra data to include in the MD5 hash.
      * @return string Ranom unique 32-character directory name.
      */
-    public static function getUniqueDirectory($basePath, $extraData = '')
+    public function getUniqueDirectory($basePath, $extraData = '')
     {
         if (!empty($basePath) && substr($basePath, -1, 1) != '/')
         {
@@ -252,7 +252,7 @@ class FileUtility
      *
      * @return string filename
      */
-    public static function makeRandomFilename($padding = '')
+    public function makeRandomFilename($padding = '')
     {
         return md5($padding . time() . mt_rand()) . mt_rand(0, 9);
     }
@@ -263,7 +263,7 @@ class FileUtility
      * @param string directory to test writability
      * @return boolean directory writable
      */
-    public static function isDirectoryWritable($directory)
+    public function isDirectoryWritable($directory)
     {
         if (substr($directory, -1, 1) != '/')
         {
@@ -271,7 +271,7 @@ class FileUtility
         }
 
         /* Create temp file name. */
-        $path = $directory . self::makeRandomFilename() . '.tmp';
+        $path = $directory . $this->makeRandomFilename() . '.tmp';
 
         $file = @fopen($path, 'w+');
         if (!$file)
@@ -293,7 +293,7 @@ class FileUtility
      * @param string path
      * @return string octal permissions string
      */
-    public static function getOctalPermissions($path)
+    public function getOctalPermissions($path)
     {
         return substr(sprintf('%o', fileperms($path)), -4);
     }
@@ -304,7 +304,7 @@ class FileUtility
      * @param string filename
      * @return string title
      */
-    public static function getFileWithoutExtension($filename,
+    public function getFileWithoutExtension($filename,
         $baseNameOnly = false)
     {
         if ($baseNameOnly)
@@ -321,7 +321,7 @@ class FileUtility
      * @param string filename
      * @return string extension
      */
-    public static function getFileExtension($filename)
+    public function getFileExtension($filename)
     {
         $lastDotPosition = strrpos($filename, '.');
 
@@ -340,9 +340,9 @@ class FileUtility
      * @param string filename
      * @return string attachment icon filename
      */
-    public static function getAttachmentIcon($filename)
+    public function getAttachmentIcon($filename)
     {
-        $fileExtension = strtolower(self::getFileExtension($filename));
+        $fileExtension = strtolower($this->getFileExtension($filename));
 
         //FIXME: need to handle more extension types
         switch ($fileExtension)
@@ -391,7 +391,7 @@ class FileUtility
      * @param integer error code (check constants.php)
      * @return string error message
      */
-    public static function getErrorMessage($errorCode)
+    public function getErrorMessage($errorCode)
     {
         switch ($errorCode)
         {
@@ -433,7 +433,7 @@ class FileUtility
      * @param integer file size in bytes
      * @return string human-readable file size
      */
-    public static function sizeToHuman($size, $round = 2, $skipUnits = 0)
+    public function sizeToHuman($size, $round = 2, $skipUnits = 0)
     {
         $units = array('B', 'KB', 'MB', 'GB', 'TB', 'PB');
         $unitIndex = 0;
@@ -469,7 +469,7 @@ class FileUtility
      * @param string a subdirectory of their upload folder (if necessary)
      * @return string Upload directory path (relative to root directory).
      */
-    public static function getUploadPath($siteID, $subDirectory = '')
+    public function getUploadPath($siteID, $subDirectory = '')
     {
         $uploadPath = sprintf('upload%s',
             !empty($subDirectory) ? '/' . $subDirectory : ''
@@ -505,7 +505,7 @@ class FileUtility
      * @param string name of the file to be checked
      * @return boolean true or false
      */
-    public static function isUploadFileSafe($siteID, $subDirectory, $fileName)
+    public function isUploadFileSafe($siteID, $subDirectory, $fileName)
     {
         if (($uploadPath = (new FileUtility())->getUploadPath($siteID, $subDirectory)) === false)
         {
@@ -538,16 +538,16 @@ class FileUtility
      * @param string Optional sub-directory, use blank string for root
      * @param string Full filesystem path to the file or boolean false
      */
-    public static function getUploadFilePath($siteID, $subDirectory, $uploadFileName)
+    public function getUploadFilePath($siteID, $subDirectory, $uploadFileName)
     {
-        if (($uploadPath = self::getUploadPath($siteID, $subDirectory)) === false)
+        if (($uploadPath = $this->getUploadPath($siteID, $subDirectory)) === false)
         {
             return false;
         }
 
         $filePath = sprintf('%s/%s', $uploadPath, $uploadFileName);
 
-        if (!self::isUploadFileSafe($siteID, $subDirectory, $filePath))
+        if (!$this->isUploadFileSafe($siteID, $subDirectory, $filePath))
         {
             return false;
         }
@@ -564,7 +564,7 @@ class FileUtility
      * @param string Index of the $_FILES array (name from the <input> tag)
      * @return string Complete name of the file (not including path)
      */
-    public static function getUploadFileFromPost($siteID, $subDirectory, $id)
+    public function getUploadFileFromPost($siteID, $subDirectory, $id)
     {
         if (isset($_FILES[$id]))
         {

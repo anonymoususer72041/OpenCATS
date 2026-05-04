@@ -47,7 +47,7 @@ class ArrayUtility
      * @param integer Last index of pieces in range to join
      * @return string Imploded string.
      */
-    public static function implodeRange($glue, $pieces, $firstOffset, $lastOffset)
+    public function implodeRange($glue, $pieces, $firstOffset, $lastOffset)
     {
         $slicedArray = array();
 
@@ -87,7 +87,7 @@ class ArrayUtility
      * @param array Array to process.
      * @return array Processed array.
      */    
-    public static function arrayMapKeys($function, $array)
+    public function arrayMapKeys($function, $array)
     {
         $returnArray = array();
         
