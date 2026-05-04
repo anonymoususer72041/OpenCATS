@@ -1,9 +1,10 @@
+<?php $catsUtility = new CATSUtility(); $templateUtility = new TemplateUtility(); ?>
 <?php /* $Id: Reports.tpl 3304 2007-10-25 17:31:55Z will $ */ ?>
-<?php (new TemplateUtility())->printHeader('Reports'); ?>
-<?php (new TemplateUtility())->printHeaderBlock(); ?>
-<?php (new TemplateUtility())->printTabs($this->active); ?>
+<?php $templateUtility->printHeader('Reports'); ?>
+<?php $templateUtility->printHeaderBlock(); ?>
+<?php $templateUtility->printTabs($this->active); ?>
     <div id="main">
-        <?php (new TemplateUtility())->printQuickSearch(); ?>
+        <?php $templateUtility->printQuickSearch(); ?>
 
         <div id="contents">
             <table>
@@ -41,14 +42,14 @@
                             </tr>
                             <tr class="oddTableRow">
                                 <td align="left">
-                                    <a href="<?php echo((new CATSUtility())->getIndexName()); ?>?m=reports&amp;a=showSubmissionReport&amp;period=today" target="_blank">New Submissions</a>
+                                    <a href="<?php echo($catsUtility->getIndexName()); ?>?m=reports&amp;a=showSubmissionReport&amp;period=today" target="_blank">New Submissions</a>
                                 </td>
                                 <td align="right"><?php $this->_($this->statisticsData['submissionsToday']); ?>&nbsp;&nbsp;</td>
                             </tr>
 
 							<tr class="evenTableRow">
                                 <td align="left">
-                                    <a href="<?php echo((new CATSUtility())->getIndexName()); ?>?m=reports&amp;a=showPlacementReport&amp;period=today" target="_blank">New Placements</a>
+                                    <a href="<?php echo($catsUtility->getIndexName()); ?>?m=reports&amp;a=showPlacementReport&amp;period=today" target="_blank">New Placements</a>
                                 </td>
                                 <td align="right"><?php $this->_($this->statisticsData['placementsToday']); ?>&nbsp;&nbsp;</td>
                             </tr>
@@ -81,14 +82,14 @@
                             </tr>
                             <tr class="oddTableRow">
                                 <td align="left">
-                                    <a href="<?php echo((new CATSUtility())->getIndexName()); ?>?m=reports&amp;a=showSubmissionReport&amp;period=yesterday" target="_blank">New Submissions</a>
+                                    <a href="<?php echo($catsUtility->getIndexName()); ?>?m=reports&amp;a=showSubmissionReport&amp;period=yesterday" target="_blank">New Submissions</a>
                                 </td>
                                 <td align="right"><?php $this->_($this->statisticsData['submissionsYesterday']); ?>&nbsp;&nbsp;</td>
                             </tr>
 
 							<tr class="evenTableRow">
                                 <td align="left">
-                                    <a href="<?php echo((new CATSUtility())->getIndexName()); ?>?m=reports&amp;a=showPlacementReport&amp;period=yesterday" target="_blank">New Placements</a>
+                                    <a href="<?php echo($catsUtility->getIndexName()); ?>?m=reports&amp;a=showPlacementReport&amp;period=yesterday" target="_blank">New Placements</a>
                                 </td>
                                 <td align="right"><?php $this->_($this->statisticsData['placementsYesterday']); ?>&nbsp;&nbsp;</td>
                             </tr>
@@ -121,14 +122,14 @@
                             </tr>
                             <tr class="oddTableRow">
                                 <td align="left">
-                                    <a href="<?php echo((new CATSUtility())->getIndexName()); ?>?m=reports&amp;a=showSubmissionReport&amp;period=thisWeek" target="_blank">New Submissions</a>
+                                    <a href="<?php echo($catsUtility->getIndexName()); ?>?m=reports&amp;a=showSubmissionReport&amp;period=thisWeek" target="_blank">New Submissions</a>
                                 </td>
                                 <td align="right"><?php $this->_($this->statisticsData['submissionsThisWeek']); ?>&nbsp;&nbsp;</td>
                             </tr>
 
 							<tr class="evenTableRow">
                                 <td align="left">
-                                    <a href="<?php echo((new CATSUtility())->getIndexName()); ?>?m=reports&amp;a=showPlacementReport&amp;period=thisWeek" target="_blank">New Placements</a>
+                                    <a href="<?php echo($catsUtility->getIndexName()); ?>?m=reports&amp;a=showPlacementReport&amp;period=thisWeek" target="_blank">New Placements</a>
                                 </td>
                                 <td align="right"><?php $this->_($this->statisticsData['placementsThisWeek']); ?>&nbsp;&nbsp;</td>
                             </tr>
@@ -163,14 +164,14 @@
                             </tr>
                             <tr class="oddTableRow">
                                 <td align="left">
-                                    <a href="<?php echo((new CATSUtility())->getIndexName()); ?>?m=reports&amp;a=showSubmissionReport&amp;period=lastWeek" target="_blank">New Submissions</a>
+                                    <a href="<?php echo($catsUtility->getIndexName()); ?>?m=reports&amp;a=showSubmissionReport&amp;period=lastWeek" target="_blank">New Submissions</a>
                                 </td>
                                 <td align="right"><?php $this->_($this->statisticsData['submissionsLastWeek']); ?>&nbsp;&nbsp;</td>
                             </tr>
 
 							<tr class="evenTableRow">
                                 <td align="left">
-                                    <a href="<?php echo((new CATSUtility())->getIndexName()); ?>?m=reports&amp;a=showPlacementReport&amp;period=lastWeek" target="_blank">New Placements</a>
+                                    <a href="<?php echo($catsUtility->getIndexName()); ?>?m=reports&amp;a=showPlacementReport&amp;period=lastWeek" target="_blank">New Placements</a>
                                 </td>
                                 <td align="right"><?php $this->_($this->statisticsData['placementsLastWeek']); ?>&nbsp;&nbsp;</td>
                             </tr>
@@ -203,14 +204,14 @@
                             </tr>
                             <tr class="oddTableRow">
                                 <td align="left">
-                                    <a href="<?php echo((new CATSUtility())->getIndexName()); ?>?m=reports&amp;a=showSubmissionReport&amp;period=thisMonth" target="_blank">New Submissions</a>
+                                    <a href="<?php echo($catsUtility->getIndexName()); ?>?m=reports&amp;a=showSubmissionReport&amp;period=thisMonth" target="_blank">New Submissions</a>
                                 </td>
                                 <td align="right"><?php $this->_($this->statisticsData['submissionsThisMonth']); ?>&nbsp;&nbsp;</td>
                             </tr>
 
 							<tr class="evenTableRow">
                                 <td align="left">
-                                    <a href="<?php echo((new CATSUtility())->getIndexName()); ?>?m=reports&amp;a=showPlacementReport&amp;period=thisMonth" target="_blank">New Placements</a>
+                                    <a href="<?php echo($catsUtility->getIndexName()); ?>?m=reports&amp;a=showPlacementReport&amp;period=thisMonth" target="_blank">New Placements</a>
                                 </td>
                                 <td align="right"><?php $this->_($this->statisticsData['placementsThisMonth']); ?>&nbsp;&nbsp;</td>
                             </tr>
@@ -243,14 +244,14 @@
                             </tr>
                             <tr class="oddTableRow">
                                 <td align="left">
-                                    <a href="<?php echo((new CATSUtility())->getIndexName()); ?>?m=reports&amp;a=showSubmissionReport&amp;period=lastMonth" target="_blank">New Submissions</a>
+                                    <a href="<?php echo($catsUtility->getIndexName()); ?>?m=reports&amp;a=showSubmissionReport&amp;period=lastMonth" target="_blank">New Submissions</a>
                                 </td>
                                 <td align="right"><?php $this->_($this->statisticsData['submissionsLastMonth']); ?>&nbsp;&nbsp;</td>
                             </tr>
 
 							<tr class="evenTableRow">
                                 <td align="left">
-                                    <a href="<?php echo((new CATSUtility())->getIndexName()); ?>?m=reports&amp;a=showPlacementReport&amp;period=lastMonth" target="_blank">New Placements</a>
+                                    <a href="<?php echo($catsUtility->getIndexName()); ?>?m=reports&amp;a=showPlacementReport&amp;period=lastMonth" target="_blank">New Placements</a>
                                 </td>
                                 <td align="right"><?php $this->_($this->statisticsData['placementsLastMonth']); ?>&nbsp;&nbsp;</td>
                             </tr>
@@ -285,14 +286,14 @@
                             </tr>
                             <tr class="oddTableRow">
                                 <td align="left">
-                                    <a href="<?php echo((new CATSUtility())->getIndexName()); ?>?m=reports&amp;a=showSubmissionReport&amp;period=thisYear" target="_blank">New Submissions</a>
+                                    <a href="<?php echo($catsUtility->getIndexName()); ?>?m=reports&amp;a=showSubmissionReport&amp;period=thisYear" target="_blank">New Submissions</a>
                                 </td>
                                 <td align="right"><?php $this->_($this->statisticsData['submissionsThisYear']); ?>&nbsp;&nbsp;</td>
                             </tr>
 
 							<tr class="evenTableRow">
                                 <td align="left">
-                                    <a href="<?php echo((new CATSUtility())->getIndexName()); ?>?m=reports&amp;a=showPlacementReport&amp;period=thisYear" target="_blank">New Placements</a>
+                                    <a href="<?php echo($catsUtility->getIndexName()); ?>?m=reports&amp;a=showPlacementReport&amp;period=thisYear" target="_blank">New Placements</a>
                                 </td>
                                 <td align="right"><?php $this->_($this->statisticsData['placementsThisYear']); ?>&nbsp;&nbsp;</td>
                             </tr>
@@ -325,14 +326,14 @@
                             </tr>
                             <tr class="oddTableRow">
                                 <td align="left">
-                                    <a href="<?php echo((new CATSUtility())->getIndexName()); ?>?m=reports&amp;a=showSubmissionReport&amp;period=lastYear" target="_blank">New Submissions</a>
+                                    <a href="<?php echo($catsUtility->getIndexName()); ?>?m=reports&amp;a=showSubmissionReport&amp;period=lastYear" target="_blank">New Submissions</a>
                                 </td>
                                 <td align="right"><?php $this->_($this->statisticsData['submissionsLastYear']); ?>&nbsp;&nbsp;</td>
                             </tr>
 
 							<tr class="evenTableRow">
                                 <td align="left">
-                                    <a href="<?php echo((new CATSUtility())->getIndexName()); ?>?m=reports&amp;a=showPlacementReport&amp;period=lastYear" target="_blank">New Placements</a>
+                                    <a href="<?php echo($catsUtility->getIndexName()); ?>?m=reports&amp;a=showPlacementReport&amp;period=lastYear" target="_blank">New Placements</a>
                                 </td>
                                 <td align="right"><?php $this->_($this->statisticsData['placementsLastYear']); ?>&nbsp;&nbsp;</td>
                             </tr>
@@ -365,14 +366,14 @@
                             </tr>
                             <tr class="oddTableRow">
                                 <td align="left">
-                                    <a href="<?php echo((new CATSUtility())->getIndexName()); ?>?m=reports&amp;a=showSubmissionReport&amp;period=toDate" target="_blank">Total Submissions</a>
+                                    <a href="<?php echo($catsUtility->getIndexName()); ?>?m=reports&amp;a=showSubmissionReport&amp;period=toDate" target="_blank">Total Submissions</a>
                                 </td>
                                 <td align="right"><?php $this->_($this->statisticsData['totalSubmissions']); ?>&nbsp;&nbsp;</td>
                             </tr>
 
 							<tr class="evenTableRow">
                                 <td align="left">
-                                    <a href="<?php echo((new CATSUtility())->getIndexName()); ?>?m=reports&amp;a=showPlacementReport&amp;period=toDate" target="_blank">New Placements</a>
+                                    <a href="<?php echo($catsUtility->getIndexName()); ?>?m=reports&amp;a=showPlacementReport&amp;period=toDate" target="_blank">New Placements</a>
                                 </td>
                                 <td align="right"><?php $this->_($this->statisticsData['totalPlacements']); ?>&nbsp;&nbsp;</td>
                             </tr>
@@ -386,4 +387,4 @@
             </table>
         </div>
     </div>
-<?php (new TemplateUtility())->printFooter(); ?>
+<?php $templateUtility->printFooter(); ?>

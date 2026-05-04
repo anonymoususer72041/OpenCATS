@@ -31,6 +31,8 @@ include_once('./config.php');
 include_once(LEGACY_ROOT . '/lib/InstallationTests.php');
 include_once(LEGACY_ROOT . '/lib/CATSUtility.php');
 
+$catsUtility = new CATSUtility();
+
 if( ini_get('safe_mode') )
 {
 	//don't do anything in safe mode
@@ -124,22 +126,22 @@ switch ($action)
         {
             if (isset($_REQUEST['user']) && !empty($_REQUEST['user']))
             {
-                (new CATSUtility())->changeConfigSetting('DATABASE_USER', var_export($_REQUEST['user'], true));
+                $catsUtility->changeConfigSetting('DATABASE_USER', var_export($_REQUEST['user'], true));
             }
 
             if (isset($_REQUEST['pass']) && $_REQUEST['pass'] !== '')
             {
-                (new CATSUtility())->changeConfigSetting('DATABASE_PASS', var_export($_REQUEST['pass'], true));
+                $catsUtility->changeConfigSetting('DATABASE_PASS', var_export($_REQUEST['pass'], true));
             }
 
             if (isset($_REQUEST['host']) && !empty($_REQUEST['host']))
             {
-                (new CATSUtility())->changeConfigSetting('DATABASE_HOST', var_export($_REQUEST['host'], true));
+                $catsUtility->changeConfigSetting('DATABASE_HOST', var_export($_REQUEST['host'], true));
             }
 
             if (isset($_REQUEST['name']) && !empty($_REQUEST['name']))
             {
-                (new CATSUtility())->changeConfigSetting('DATABASE_NAME', var_export($_REQUEST['name'], true));
+                $catsUtility->changeConfigSetting('DATABASE_NAME', var_export($_REQUEST['name'], true));
             }
 
             echo '
@@ -235,20 +237,20 @@ switch ($action)
 
             if ($mailSupport == 4)
             {
-                (new CATSUtility())->changeConfigSetting('MAIL_MAILER', '3');
-                (new CATSUtility())->changeConfigSetting('MAIL_SMTP_AUTH', 'true');
+                $catsUtility->changeConfigSetting('MAIL_MAILER', '3');
+                $catsUtility->changeConfigSetting('MAIL_SMTP_AUTH', 'true');
             }
             else
             {
-                (new CATSUtility())->changeConfigSetting('MAIL_MAILER', sprintf('%d', $mailSupport));
-                (new CATSUtility())->changeConfigSetting('MAIL_SMTP_AUTH', 'false');
+                $catsUtility->changeConfigSetting('MAIL_MAILER', sprintf('%d', $mailSupport));
+                $catsUtility->changeConfigSetting('MAIL_SMTP_AUTH', 'false');
             }
 
-            (new CATSUtility())->changeConfigSetting('MAIL_SENDMAIL_PATH', var_export($mailSendmailPath, true));
-            (new CATSUtility())->changeConfigSetting('MAIL_SMTP_HOST', var_export($mailSmtpHost, true));
-            (new CATSUtility())->changeConfigSetting('MAIL_SMTP_PORT', sprintf('%d', $mailSmtpPort));
-            (new CATSUtility())->changeConfigSetting('MAIL_SMTP_USER', var_export($mailSmtpUsername, true));
-            (new CATSUtility())->changeConfigSetting('MAIL_SMTP_PASS', var_export($mailSmtpPassword, true));
+            $catsUtility->changeConfigSetting('MAIL_SENDMAIL_PATH', var_export($mailSendmailPath, true));
+            $catsUtility->changeConfigSetting('MAIL_SMTP_HOST', var_export($mailSmtpHost, true));
+            $catsUtility->changeConfigSetting('MAIL_SMTP_PORT', sprintf('%d', $mailSmtpPort));
+            $catsUtility->changeConfigSetting('MAIL_SMTP_USER', var_export($mailSmtpUsername, true));
+            $catsUtility->changeConfigSetting('MAIL_SMTP_PASS', var_export($mailSmtpPassword, true));
 
             @session_name(CATS_SESSION_NAME);
             session_start();
@@ -288,6 +290,8 @@ switch ($action)
 
     case 'resumeParsing':
         echo '<script type="text/javascript">setActiveStep(4);</script>';
+        include_once ('lib/SystemUtility.php');
+        $systemUtility = new SystemUtility();
 
         if (ANTIWORD_PATH == '')
         {
@@ -303,9 +307,8 @@ switch ($action)
         {
             $antiwordWithSlashes = str_replace('\\', '\\\\', ANTIWORD_PATH);
 
-            include_once ('lib/SystemUtility.php');
             /* Change Windows default command to UNIX default command hack. */
-            if (strpos(strtolower($antiwordWithSlashes), "c:\\") === 0 && !(new SystemUtility())->isWindows())
+            if (strpos(strtolower($antiwordWithSlashes), "c:\\") === 0 && !$systemUtility->isWindows())
             {
                 $antiwordWithSlashes = '/usr/bin/antiword';
             }
@@ -333,9 +336,8 @@ switch ($action)
         {
             $pdftotextWithSlashes = str_replace('\\', '\\\\', PDFTOTEXT_PATH);
 
-            include_once ('lib/SystemUtility.php');
             /* Change Windows default command to UNIX default command hack. */
-            if (strpos(strtolower($pdftotextWithSlashes), "c:\\") === 0 && !(new SystemUtility())->isWindows())
+            if (strpos(strtolower($pdftotextWithSlashes), "c:\\") === 0 && !$systemUtility->isWindows())
             {
                 $pdftotextWithSlashes = '/usr/bin/pdftotext';
             }
@@ -363,9 +365,8 @@ switch ($action)
         {
             $html2textWithSlashes = str_replace('\\', '\\\\', HTML2TEXT_PATH);
 
-            include_once ('lib/SystemUtility.php');
             /* Change Windows default command to UNIX default command hack. */
-            if (strpos(strtolower($html2textWithSlashes), "c:\\") === 0 && !(new SystemUtility())->isWindows())
+            if (strpos(strtolower($html2textWithSlashes), "c:\\") === 0 && !$systemUtility->isWindows())
             {
                 $html2textWithSlashes = '/usr/bin/html2text';
             }
@@ -393,9 +394,8 @@ switch ($action)
         {
             $unrtfWithSlashes = str_replace('\\', '\\\\', UNRTF_PATH);
 
-            include_once ('lib/SystemUtility.php');
             /* Change Windows default command to UNIX default command hack. */
-            if (strpos(strtolower($unrtfWithSlashes), "c:\\") === 0 && !(new SystemUtility())->isWindows())
+            if (strpos(strtolower($unrtfWithSlashes), "c:\\") === 0 && !$systemUtility->isWindows())
             {
                 $unrtfWithSlashes = '/usr/bin/unrtf';
             }
@@ -420,16 +420,16 @@ switch ($action)
             </script>';
 
         $antiwordPath = $_REQUEST['docExecutable'];
-        (new CATSUtility())->changeConfigSetting('ANTIWORD_PATH', var_export($antiwordPath, true));
+        $catsUtility->changeConfigSetting('ANTIWORD_PATH', var_export($antiwordPath, true));
 
         $pdftotextPath = $_REQUEST['pdfExecutable'];
-        (new CATSUtility())->changeConfigSetting('PDFTOTEXT_PATH', var_export($pdftotextPath, true));
+        $catsUtility->changeConfigSetting('PDFTOTEXT_PATH', var_export($pdftotextPath, true));
 
         $html2textPath = $_REQUEST['htmlExecutable'];
-        (new CATSUtility())->changeConfigSetting('HTML2TEXT_PATH', var_export($html2textPath, true));
+        $catsUtility->changeConfigSetting('HTML2TEXT_PATH', var_export($html2textPath, true));
 
         $unrtfPath = $_REQUEST['rtfExecutable'];
-        (new CATSUtility())->changeConfigSetting('UNRTF_PATH', var_export($unrtfPath, true));
+        $catsUtility->changeConfigSetting('UNRTF_PATH', var_export($unrtfPath, true));
 
         break;
 
@@ -533,7 +533,7 @@ switch ($action)
 
         // FIXME: Input validation.
         $timeZone = $_REQUEST['timeZone'];
-        (new CATSUtility())->changeConfigSetting('OFFSET_GMT', ($timeZone));
+        $catsUtility->changeConfigSetting('OFFSET_GMT', ($timeZone));
 
         $dateFormat = $_REQUEST['dateFormat'];
 
@@ -729,7 +729,7 @@ switch ($action)
         MySQLConnect();
         $extractor = new ZipFileExtractor('./restore/catsbackup.bak');
 
-        (new CATSUtility())->changeConfigSetting('ENABLE_DEMO_MODE', 'false');
+        $catsUtility->changeConfigSetting('ENABLE_DEMO_MODE', 'false');
 
         /* Extract the file.  This command also executes all sql commands in the file. */
         /* Normally, we could just do the following lines, but we want a custom extractor
@@ -791,7 +791,7 @@ switch ($action)
     case 'doInstallEmptyDatabase':
         MySQLConnect();
 
-        (new CATSUtility())->changeConfigSetting('ENABLE_DEMO_MODE', 'false');
+        $catsUtility->changeConfigSetting('ENABLE_DEMO_MODE', 'false');
 
         $schema = file_get_contents('db/cats_schema.sql');
         MySQLQueryMultiple($schema, ";\n");
@@ -815,7 +815,7 @@ switch ($action)
         break;
 
     case 'onLoadDemoData':
-        (new CATSUtility())->changeConfigSetting('ENABLE_DEMO_MODE', 'true');
+        $catsUtility->changeConfigSetting('ENABLE_DEMO_MODE', 'true');
 
         include_once(LEGACY_ROOT . '/lib/FileCompressor.php');
         MySQLConnect();

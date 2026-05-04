@@ -1,6 +1,7 @@
+<?php $catsUtility = new CATSUtility(); $templateUtility = new TemplateUtility(); ?>
 <?php /* $Id: Administration.tpl 3722 2007-11-27 21:49:36Z andrew $ */ ?>
-<?php (new TemplateUtility())->printHeader('Settings', array('modules/settings/validator.js')); ?>
-<?php (new TemplateUtility())->printHeaderBlock(); ?>
+<?php $templateUtility->printHeader('Settings', array('modules/settings/validator.js')); ?>
+<?php $templateUtility->printHeaderBlock(); ?>
 <style>
 #profButton {
     background: #E7EFFF url(images/profButton.jpg);
@@ -13,9 +14,9 @@
     background: #E7EFFF url(images/profButton-o.jpg);
 }
 </style>
-<?php (new TemplateUtility())->printTabs($this->active, $this->subActive); ?>
+<?php $templateUtility->printTabs($this->active, $this->subActive); ?>
     <div id="main">
-        <?php (new TemplateUtility())->printQuickSearch(); ?>
+        <?php $templateUtility->printQuickSearch(); ?>
 
         <div id="contents">
             <table>
@@ -34,7 +35,7 @@
                                 <td width="230">
                                     <img src="images/bullet_black.gif" alt="" />
                                     <?php if ($this->careerPortalUnlock): ?>
-                                    <a href="<?php echo((new CATSUtility())->getIndexName()); ?>?m=settings&amp;a=careerPortalSettings">Careers Website</a>
+                                    <a href="<?php echo($catsUtility->getIndexName()); ?>?m=settings&amp;a=careerPortalSettings">Careers Website</a>
                                     <?php else: ?>
                                     <a href="http://www.catsone.com/?a=careerswebsite"><b>Careers Website</b></a>
                                     <?php endif; ?>
@@ -46,7 +47,7 @@
                            <tr>
                                 <td width="230">
                                     <img src="images/bullet_black.gif" alt="" />
-                                    <a href="<?php echo((new CATSUtility())->getIndexName()); ?>?m=settings&amp;a=administration&amp;s=siteName">
+                                    <a href="<?php echo($catsUtility->getIndexName()); ?>?m=settings&amp;a=administration&amp;s=siteName">
                                         Change Site Details
                                     </a>
                                 </td>
@@ -57,7 +58,7 @@
                             <tr>
                                 <td>
                                     <img src="images/bullet_black.gif" alt="" />
-                                    <a href="<?php echo((new CATSUtility())->getIndexName()); ?>?m=settings&amp;a=manageUsers">
+                                    <a href="<?php echo($catsUtility->getIndexName()); ?>?m=settings&amp;a=manageUsers">
                                         User Management
                                     </a>
                                 </td>
@@ -68,7 +69,7 @@
                             <tr>
                                 <td>
                                     <img src="images/bullet_black.gif" alt="" />
-                                    <a href="<?php echo((new CATSUtility())->getIndexName()); ?>?m=settings&amp;a=loginActivity">
+                                    <a href="<?php echo($catsUtility->getIndexName()); ?>?m=settings&amp;a=loginActivity">
                                         Login Activity
                                     </a>
                                 </td>
@@ -79,7 +80,7 @@
                             <tr>
                                 <td>
                                     <img src="images/bullet_black.gif" alt="" />
-                                    <a href="<?php echo((new CATSUtility())->getIndexName()); ?>?m=settings&amp;a=emailSettings">
+                                    <a href="<?php echo($catsUtility->getIndexName()); ?>?m=settings&amp;a=emailSettings">
                                         General E-Mail Configuration
                                     </a>
                                 </td>
@@ -90,7 +91,7 @@
                             <tr>
                                 <td>
                                     <img src="images/bullet_black.gif" alt="" />
-                                    <a href="<?php echo((new CATSUtility())->getIndexName()); ?>?m=settings&amp;a=emailTemplates">
+                                    <a href="<?php echo($catsUtility->getIndexName()); ?>?m=settings&amp;a=emailTemplates">
                                         E-Mail Template Configuration
                                     </a>
                                 </td>
@@ -101,7 +102,7 @@
                             <tr>
                                 <td>
                                     <img src="images/bullet_black.gif" alt="" />
-                                    <a href="<?php echo((new CATSUtility())->getIndexName()); ?>?m=settings&amp;a=administration&amp;s=localization">
+                                    <a href="<?php echo($catsUtility->getIndexName()); ?>?m=settings&amp;a=administration&amp;s=localization">
                                         Localization
                                     </a>
                                 </td>
@@ -112,7 +113,7 @@
                             <tr <?php if (!$this->totalCandidates): ?>style="background-color: #DAE3F7;"<?php endif; ?>>
                                 <td>
                                     <img src="images/bullet_black.gif" alt="" />
-                                    <a href="<?php echo((new CATSUtility())->getIndexName()); ?>?m=import">
+                                    <a href="<?php echo($catsUtility->getIndexName()); ?>?m=import">
                                         <?php if (!$this->totalCandidates): ?><b><?php endif; ?>Data Import<?php if (!$this->totalCandidates): ?></b><?php endif; ?>
                                     </a>
                                 </td>
@@ -123,7 +124,7 @@
                             <tr>
                                 <td>
                                     <img src="images/bullet_black.gif" alt="" />
-                                    <a href="<?php echo((new CATSUtility())->getIndexName()); ?>?m=settings&amp;a=createBackup">
+                                    <a href="<?php echo($catsUtility->getIndexName()); ?>?m=settings&amp;a=createBackup">
                                         Site Backup
                                     </a>
                                 </td>
@@ -140,7 +141,7 @@
                             <!--<tr>
                                 <td width="230">
                                     <img src="images/bullet_black.gif" alt="" />
-                                    <a href="<?php echo((new CATSUtility())->getIndexName()); ?>?m=settings&amp;a=reports">
+                                    <a href="<?php echo($catsUtility->getIndexName()); ?>?m=settings&amp;a=reports">
                                         Reports
                                     </a>
                                 </td>
@@ -151,7 +152,7 @@
                             <tr>
                                 <td>
                                     <img src="images/bullet_black.gif" alt="" />
-                                    <a href="<?php echo((new CATSUtility())->getIndexName()); ?>?m=settings&amp;a=eeo">
+                                    <a href="<?php echo($catsUtility->getIndexName()); ?>?m=settings&amp;a=eeo">
                                         EEO / EOC Support
                                     </a>
                                 </td>
@@ -162,7 +163,7 @@
                             <tr>
                                 <td>
                                     <img src="images/bullet_black.gif" alt="" />
-                                    <a href="<?php echo((new CATSUtility())->getIndexName()); ?>?m=settings&amp;a=tags">
+                                    <a href="<?php echo($catsUtility->getIndexName()); ?>?m=settings&amp;a=tags">
                                         Configure Tags
                                     </a>
                                 </td>
@@ -179,7 +180,7 @@
                             <tr>
                                 <td>
                                     <img src="images/bullet_black.gif" alt="" />
-                                    <a href="<?php echo((new CATSUtility())->getIndexName()); ?>?m=settings&amp;a=customizeCalendar">
+                                    <a href="<?php echo($catsUtility->getIndexName()); ?>?m=settings&amp;a=customizeCalendar">
                                         Customize Calendar
                                     </a>
                                 </td>
@@ -190,7 +191,7 @@
                             <tr>
                                 <td>
                                     <img src="images/bullet_black.gif" alt="" />
-                                    <a href="<?php echo((new CATSUtility())->getIndexName()); ?>?m=settings&amp;a=customizeExtraFields">
+                                    <a href="<?php echo($catsUtility->getIndexName()); ?>?m=settings&amp;a=customizeExtraFields">
                                         Customize Extra Fields
                                     </a>
                                 </td>
@@ -217,7 +218,7 @@
                                 <tr>
                                     <td width="230">
                                     <img src="images/bullet_black.gif" alt="" />
-                                        <a href="<?php echo((new CATSUtility())->getIndexName()); ?>?m=settings&amp;a=administration&amp;s=passwords">
+                                        <a href="<?php echo($catsUtility->getIndexName()); ?>?m=settings&amp;a=administration&amp;s=passwords">
                                             Passwords
                                         </a>
                                     </td>
@@ -228,7 +229,7 @@
                                 <tr>
                                     <td width="230">
                                     <img src="images/bullet_black.gif" alt="" />
-                                        <a href="<?php echo((new CATSUtility())->getIndexName()); ?>?m=settings&amp;a=administration&amp;s=newVersionCheck">
+                                        <a href="<?php echo($catsUtility->getIndexName()); ?>?m=settings&amp;a=administration&amp;s=newVersionCheck">
                                             New Version Check
                                         </a>
                                     </td>
@@ -239,7 +240,7 @@
                                 <tr>
                                     <td width="230">
                                     <img src="images/bullet_black.gif" alt="" />
-                                        <a href="<?php echo((new CATSUtility())->getIndexName()); ?>?m=settings&amp;a=administration&amp;s=systemInformation">
+                                        <a href="<?php echo($catsUtility->getIndexName()); ?>?m=settings&amp;a=administration&amp;s=systemInformation">
                                             System Information
                                         </a>
                                     </td>
@@ -275,4 +276,4 @@
             </table>
         </div>
     </div>
-<?php (new TemplateUtility())->printFooter(); ?>
+<?php $templateUtility->printFooter(); ?>
