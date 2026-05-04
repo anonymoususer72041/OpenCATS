@@ -190,6 +190,8 @@ class GraphsUI extends UserInterface
 
     private function activity()
     {
+        $dateUtility = new DateUtility();
+
         /* Grab an instance of Statistics. */
         $statistics = new Statistics($this->_siteID);
         $RS = $statistics->getActivitiesByPeriod(TIME_PERIOD_LASTTWOWEEKS);
@@ -199,9 +201,9 @@ class GraphsUI extends UserInterface
             0,
             0,
             0,
-            (new DateUtility())->getAdjustedDate('m'),
-            (new DateUtility())->getAdjustedDate('d') - (new DateUtility())->getAdjustedDate('w') - 7,
-            (new DateUtility())->getAdjustedDate('Y')
+            $dateUtility->getAdjustedDate('m'),
+            $dateUtility->getAdjustedDate('d') - $dateUtility->getAdjustedDate('w') - 7,
+            $dateUtility->getAdjustedDate('Y')
         );
 
         /* Get Labels. */
@@ -227,7 +229,7 @@ class GraphsUI extends UserInterface
         {
             $thisDay = mktime(0, 0, 0, $lineRS['month'], $lineRS['day'], $lineRS['year']);
             $dayOfWeek = (int) date('w', $thisDay);
-            if ((new DateUtility())->getWeekNumber($thisDay) != (new DateUtility())->getWeekNumber())
+            if ($dateUtility->getWeekNumber($thisDay) != $dateUtility->getWeekNumber())
             {
                 $x[$dayOfWeek]++;
             }
@@ -247,6 +249,8 @@ class GraphsUI extends UserInterface
 
     private function newCandidates()
     {
+        $dateUtility = new DateUtility();
+
         /* Grab an instance of Statistics. */
         $statistics = new Statistics($this->_siteID);
         $RS = $statistics->getCandidatesByPeriod(TIME_PERIOD_LASTTWOWEEKS);
@@ -256,9 +260,9 @@ class GraphsUI extends UserInterface
             0,
             0,
             0,
-            (new DateUtility())->getAdjustedDate('m'),
-            (new DateUtility())->getAdjustedDate('d') - (new DateUtility())->getAdjustedDate('w') - 7,
-            (new DateUtility())->getAdjustedDate('Y')
+            $dateUtility->getAdjustedDate('m'),
+            $dateUtility->getAdjustedDate('d') - $dateUtility->getAdjustedDate('w') - 7,
+            $dateUtility->getAdjustedDate('Y')
         );
 
         /* Get labels. */
@@ -282,7 +286,7 @@ class GraphsUI extends UserInterface
         {
             $thisDay = mktime(0, 0, 0, $lineRS['month'], $lineRS['day'], $lineRS['year']);
             $dayOfWeek = (int) date('w', $thisDay);
-            if ((new DateUtility())->getWeekNumber($thisDay) != (new DateUtility())->getWeekNumber())
+            if ($dateUtility->getWeekNumber($thisDay) != $dateUtility->getWeekNumber())
             {
                 $x[$dayOfWeek]++;
             }
@@ -302,6 +306,8 @@ class GraphsUI extends UserInterface
 
     private function newJobOrders()
     {
+        $dateUtility = new DateUtility();
+
         /* Grab an instance of Statistics. */
         $statistics = new Statistics($this->_siteID);
         $RS = $statistics->getJobOrdersByPeriod(TIME_PERIOD_LASTTWOWEEKS);
@@ -311,9 +317,9 @@ class GraphsUI extends UserInterface
             0,
             0,
             0,
-            (new DateUtility())->getAdjustedDate('m'),
-            (new DateUtility())->getAdjustedDate('d') - (new DateUtility())->getAdjustedDate('w') - 7,
-            (new DateUtility())->getAdjustedDate('Y')
+            $dateUtility->getAdjustedDate('m'),
+            $dateUtility->getAdjustedDate('d') - $dateUtility->getAdjustedDate('w') - 7,
+            $dateUtility->getAdjustedDate('Y')
         );
 
         $y = array();
@@ -336,7 +342,7 @@ class GraphsUI extends UserInterface
         {
             $thisDay = mktime(0, 0, 0, $lineRS['month'], $lineRS['day'], $lineRS['year']);
             $dayOfWeek = (int) date('w', $thisDay);
-            if ((new DateUtility())->getWeekNumber($thisDay) != (new DateUtility())->getWeekNumber())
+            if ($dateUtility->getWeekNumber($thisDay) != $dateUtility->getWeekNumber())
             {
                 $x[$dayOfWeek]++;
             }
@@ -536,6 +542,8 @@ class GraphsUI extends UserInterface
  
     private function newSubmissions()
     {
+        $dateUtility = new DateUtility();
+
         /* Grab an instance of Statistics. */
         $statistics = new Statistics($this->_siteID);
         $RS = $statistics->getSubmissionsByPeriod(TIME_PERIOD_LASTTWOWEEKS);
@@ -545,9 +553,9 @@ class GraphsUI extends UserInterface
             0,
             0,
             0,
-            (new DateUtility())->getAdjustedDate('m'),
-            (new DateUtility())->getAdjustedDate('d') - (new DateUtility())->getAdjustedDate('w') - 7,
-            (new DateUtility())->getAdjustedDate('Y')
+            $dateUtility->getAdjustedDate('m'),
+            $dateUtility->getAdjustedDate('d') - $dateUtility->getAdjustedDate('w') - 7,
+            $dateUtility->getAdjustedDate('Y')
         );
 
         $y = array();
@@ -570,7 +578,7 @@ class GraphsUI extends UserInterface
         {
             $thisDay = mktime(0, 0, 0, $lineRS['month'], $lineRS['day'], $lineRS['year']);
             $dayOfWeek = (int) date('w', $thisDay);
-            if ((new DateUtility())->getWeekNumber($thisDay) != (new DateUtility())->getWeekNumber())
+            if ($dateUtility->getWeekNumber($thisDay) != $dateUtility->getWeekNumber())
             {
                 $x[$dayOfWeek]++;
             }

@@ -99,14 +99,16 @@ class CalendarUI extends UserInterface
      */
     private function showCalendar()
     {
-        $currentHour     = (new DateUtility())->getAdjustedDate('H');
-        $currentDay      = (new DateUtility())->getAdjustedDate('j');
-        $currentMonth    = (new DateUtility())->getAdjustedDate('n');
-        $currentYear     = (new DateUtility())->getAdjustedDate('Y');
-        $currentUnixTime = (new DateUtility())->getAdjustedDate();
-        $currentDateMDY  = (new DateUtility())->getAdjustedDate('m-d-y');
+        $dateUtility = new DateUtility();
 
-        $currentWeek  = (new DateUtility())->getWeekNumber($currentUnixTime) - (new DateUtility())->getWeekNumber(
+        $currentHour     = $dateUtility->getAdjustedDate('H');
+        $currentDay      = $dateUtility->getAdjustedDate('j');
+        $currentMonth    = $dateUtility->getAdjustedDate('n');
+        $currentYear     = $dateUtility->getAdjustedDate('Y');
+        $currentUnixTime = $dateUtility->getAdjustedDate();
+        $currentDateMDY  = $dateUtility->getAdjustedDate('m-d-y');
+
+        $currentWeek  = $dateUtility->getWeekNumber($currentUnixTime) - $dateUtility->getWeekNumber(
             mktime(0, 0, 0, $currentMonth, 1, $currentYear)
         );
 
@@ -187,8 +189,8 @@ class CalendarUI extends UserInterface
             $superUserActive = false;
         }
 
-        $startingWeekday = (new DateUtility())->getStartingWeekday($month, $year);
-        $daysInMonth     = (new DateUtility())->getDaysInMonth($month, $year);
+        $startingWeekday = $dateUtility->getStartingWeekday($month, $year);
+        $daysInMonth     = $dateUtility->getDaysInMonth($month, $year);
 
         $calendar = new Calendar($this->_siteID);
 

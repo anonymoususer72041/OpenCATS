@@ -68,6 +68,8 @@ class RssUI extends UserInterface
 
     private function outputRSSError($title, $errorMessage)
     {
+        $dateUtility = new DateUtility();
+
         /* XML Headers */
         header('Content-type: text/xml');
 
@@ -90,7 +92,7 @@ class RssUI extends UserInterface
             . "</rss>\n",
             $title,
             $link,
-            (new DateUtility())->getRSSDate(),
+            $dateUtility->getRSSDate(),
             $errorMessage,
             $link
         );
@@ -98,6 +100,8 @@ class RssUI extends UserInterface
 
     private function displayPublicJobOrders()
     {
+        $dateUtility = new DateUtility();
+
         $site = new Site(-1);
 
         $careerPortalSiteID = $site->getFirstSiteID();
@@ -121,7 +125,7 @@ class RssUI extends UserInterface
             . "<link>%s</link>\n"
             . "<pubDate>%s</pubDate>\n",
             (new CATSUtility())->getAbsoluteURI(),
-            (new DateUtility())->getRSSDate()
+            $dateUtility->getRSSDate()
         );
 
         foreach ($rs as $rowIndex => $row)

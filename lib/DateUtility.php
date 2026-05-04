@@ -46,7 +46,7 @@ class DateUtility
      * @param integer year
      * @return integer days in month
      */
-    public static function getDaysInMonth($month, $year)
+    public function getDaysInMonth($month, $year)
     {
         return (int) date('t', mktime(0, 0, 0, $month, 1, $year));
     }
@@ -59,7 +59,7 @@ class DateUtility
      * @param integer year
      * @return flag / integer starting weekday
      */
-    public static function getStartingWeekday($month, $year)
+    public function getStartingWeekday($month, $year)
     {
         /* Add 1 to the value returned by date('w', ...); to get the weekday
          * flag value.
@@ -73,7 +73,7 @@ class DateUtility
      * @param flag / integer month
      * @return string month name
      */
-    public static function getMonthName($month)
+    public function getMonthName($month)
     {
         return date('F', mktime(0, 0, 0, $month, 1, 2000));
     }
@@ -86,7 +86,7 @@ class DateUtility
      * @param convert-to integer/flag date format
      * @return string date in $toFormat format
      */
-    public static function convert($separator, $date, $fromFormat, $toFormat)
+    public function convert($separator, $date, $fromFormat, $toFormat)
     {
         /* Extract the three date fields. */
         $dateFields = explode($separator, $date);
@@ -102,7 +102,7 @@ class DateUtility
             return '00-00-00';
         }
 
-        $dateFields = self::_removeLeadingZeros($dateFields);
+        $dateFields = $this->_removeLeadingZeros($dateFields);
 
         switch ($fromFormat)
         {
@@ -154,7 +154,7 @@ class DateUtility
      * @param integer/flag date format
      * @return boolean valid
      */
-    public static function validate($separator, $dateString, $format)
+    public function validate($separator, $dateString, $format)
     {
         /* Make sure the string is numeric except for separators. */
         if (!ctype_digit((string) str_replace($separator, '', $dateString)))
@@ -198,7 +198,7 @@ class DateUtility
         }
 
         /* Remove leading '0's from fields. */
-        $dateFields = self::_removeLeadingZeros($dateFields);
+        $dateFields = $this->_removeLeadingZeros($dateFields);
 
         /* Extract ields. */
         switch ($format)
@@ -224,7 +224,7 @@ class DateUtility
 
         /* Validate day and month numbers. */
         if ($month < 1 || $month > 12 || $day < 1 ||
-            $day > self::getDaysInMonth($month, $year))
+            $day > $this->getDaysInMonth($month, $year))
         {
             return false;
         }
@@ -241,7 +241,7 @@ class DateUtility
      * @param string zero-date replacement string (optional)
      * @return fixed date string
      */
-    public static function fixZeroDate($date, $replacement = '')
+    public function fixZeroDate($date, $replacement = '')
     {
         if (empty($date) || $date == '00-00-00' || $date == '0000-00-00' ||
             $date == '00-00-00 (12:00 AM)')
@@ -273,9 +273,9 @@ class DateUtility
      * @param integer number of days to subtract
      * @return integer calculated past timestamp
      */
-    public static function subtractDaysFromDate($startDate, $daysToSubtract)
+    public function subtractDaysFromDate($startDate, $daysToSubtract)
     {
-        return self::addDaysToDate($startDate, ($daysToSubtract * -1));
+        return $this->addDaysToDate($startDate, ($daysToSubtract * -1));
     }
 
     /**
@@ -285,7 +285,7 @@ class DateUtility
      * @param integer number of days to add
      * @return integer calculated future timestamp
      */
-    public static function addDaysToDate($startDate, $daysToAdd)
+    public function addDaysToDate($startDate, $daysToAdd)
     {
         return mktime(
             0,
@@ -305,7 +305,7 @@ class DateUtility
      * @param integer date timestamp (optional)
      * @return integer week number
      */
-    public static function getWeekNumber($date = false)
+    public function getWeekNumber($date = false)
     {
         if ($date === false)
         {
@@ -331,7 +331,7 @@ class DateUtility
          * find the starting-on-Monday week number of the day after the
          * specified date instead.
          */
-        return date('W', self::addDaysToDate($date, 1));
+        return date('W', $this->addDaysToDate($date, 1));
     }
 
     /**
@@ -343,7 +343,7 @@ class DateUtility
      * @param integer UNIX time (optional)
      * @return string RSS format date
      */
-    static public function getRSSDate($unixTime = false)
+    public function getRSSDate($unixTime = false)
     {
         if ($unixTime === false)
         {
@@ -365,7 +365,7 @@ class DateUtility
      * @param integer UNIX time (optional)
      * @return integer UNIX time
      */
-    public static function getAdjustedDate($format = 'U', $date = false)
+    public function getAdjustedDate($format = 'U', $date = false)
     {
         if ($date === false)
         {
@@ -392,7 +392,7 @@ class DateUtility
      * @param boolean round results?
      * @return string human readable time
      */
-    public static function getFormattedDuration($seconds, $short = false, $round = false)
+    public function getFormattedDuration($seconds, $short = false, $round = false)
     {
         $abbreviations = array(
             'year'   => 'yr',
@@ -517,7 +517,7 @@ class DateUtility
         switch ($period)
         {
             case TIME_PERIOD_TODAY:
-                $startDate = self::getFormattedDate($currentUnixTime, $dateFormat);
+                $startDate = $this->getFormattedDate($currentUnixTime, $dateFormat);
                 $endDate   = $startDate;
                 break;
 
@@ -531,7 +531,7 @@ class DateUtility
                     date('Y', $currentUnixTime)
                 );
                 
-                $startDate = self::getFormattedDate($startUnixTime, $dateFormat);
+                $startDate = $this->getFormattedDate($startUnixTime, $dateFormat);
                 $endDate   = $startDate;
                 break;
 
@@ -555,8 +555,8 @@ class DateUtility
                     date('Y', $currentUnixTime)
                 );
                 
-                $startDate = self::getFormattedDate($startUnixTime, $dateFormat);
-                $endDate   = self::getFormattedDate($endUnixTime, $dateFormat);
+                $startDate = $this->getFormattedDate($startUnixTime, $dateFormat);
+                $endDate   = $this->getFormattedDate($endUnixTime, $dateFormat);
                 break;
 
             case TIME_PERIOD_LASTWEEK:
@@ -579,8 +579,8 @@ class DateUtility
                     date('Y', $currentUnixTime)
                 );
                 
-                $startDate = self::getFormattedDate($startUnixTime, $dateFormat);
-                $endDate   = self::getFormattedDate($endUnixTime, $dateFormat);
+                $startDate = $this->getFormattedDate($startUnixTime, $dateFormat);
+                $endDate   = $this->getFormattedDate($endUnixTime, $dateFormat);
                 break;
 
             case TIME_PERIOD_LASTTWOWEEKS:
@@ -603,8 +603,8 @@ class DateUtility
                     date('Y', $currentUnixTime)
                 );
                 
-                $startDate = self::getFormattedDate($startUnixTime, $dateFormat);
-                $endDate   = self::getFormattedDate($endUnixTime, $dateFormat);
+                $startDate = $this->getFormattedDate($startUnixTime, $dateFormat);
+                $endDate   = $this->getFormattedDate($endUnixTime, $dateFormat);
                 break;
 
             case TIME_PERIOD_THISMONTH:
@@ -617,7 +617,7 @@ class DateUtility
                     date('Y', $currentUnixTime)
                 );
                 
-                $lastDayOfMonth = self::getDaysInMonth(
+                $lastDayOfMonth = $this->getDaysInMonth(
                     $currentMonth,
                     $currentYear
                 );
@@ -630,8 +630,8 @@ class DateUtility
                     date('Y', $currentUnixTime)
                 );
                 
-                $startDate = self::getFormattedDate($startUnixTime, $dateFormat);
-                $endDate   = self::getFormattedDate($endUnixTime, $dateFormat);
+                $startDate = $this->getFormattedDate($startUnixTime, $dateFormat);
+                $endDate   = $this->getFormattedDate($endUnixTime, $dateFormat);
                 break;
 
             case TIME_PERIOD_LASTMONTH:
@@ -646,7 +646,7 @@ class DateUtility
                 );
                 
                 /* The last day of 1 month ago. */
-                $lastDayOfMonth = self::getDaysInMonth(
+                $lastDayOfMonth = $this->getDaysInMonth(
                     date('m', $startUnixTime),
                     date('Y', $startUnixTime)
                 );
@@ -659,8 +659,8 @@ class DateUtility
                     date('Y', $currentUnixTime)
                 );
                 
-                $startDate = self::getFormattedDate($startUnixTime, $dateFormat);
-                $endDate   = self::getFormattedDate($endUnixTime, $dateFormat);
+                $startDate = $this->getFormattedDate($startUnixTime, $dateFormat);
+                $endDate   = $this->getFormattedDate($endUnixTime, $dateFormat);
                 break;
 
             case TIME_PERIOD_THISYEAR:
@@ -684,8 +684,8 @@ class DateUtility
                     date('Y', $currentUnixTime)
                 );
                 
-                $startDate = self::getFormattedDate($startUnixTime, $dateFormat);
-                $endDate   = self::getFormattedDate($endUnixTime, $dateFormat);
+                $startDate = $this->getFormattedDate($startUnixTime, $dateFormat);
+                $endDate   = $this->getFormattedDate($endUnixTime, $dateFormat);
                 break;
 
             case TIME_PERIOD_LASTYEAR:
@@ -709,8 +709,8 @@ class DateUtility
                     date('Y', $currentUnixTime) - 1
                 );
                 
-                $startDate = self::getFormattedDate($startUnixTime, $dateFormat);
-                $endDate   = self::getFormattedDate($endUnixTime, $dateFormat);
+                $startDate = $this->getFormattedDate($startUnixTime, $dateFormat);
+                $endDate   = $this->getFormattedDate($endUnixTime, $dateFormat);
                 break;
 
             case TIME_PERIOD_TODATE:
@@ -726,7 +726,7 @@ class DateUtility
         );
     }
 
-    private static function _removeLeadingZeros($array)
+    private function _removeLeadingZeros($array)
     {
         foreach ($array as $key => $value)
         {
