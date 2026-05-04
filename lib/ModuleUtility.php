@@ -44,9 +44,9 @@ class ModuleUtility
      * @param string module name
      * @return void
      */
-    public static function loadModule($moduleName)
+    public function loadModule($moduleName)
     {
-        $modules = self::getModules();
+        $modules = $this->getModules();
 
         if (!isset($modules[$moduleName]))
         {
@@ -79,9 +79,9 @@ class ModuleUtility
      * Check each module for a tasks directory which contains events that need
      * to be registered with the Asychroneous Queue Processor.
      */
-    public static function registerModuleTasks()
+    public function registerModuleTasks()
     {
-        $modules = self::getModules();
+        $modules = $this->getModules();
 
         foreach ($modules as $moduleName => $moduleData)
         {
@@ -102,14 +102,14 @@ class ModuleUtility
      * @param string module name
      * @return boolean requires authentication
      */
-    public static function moduleRequiresAuthentication($moduleName)
+    public function moduleRequiresAuthentication($moduleName)
     {
-        $modules = self::getModules();
+        $modules = $this->getModules();
 
         if (!isset($modules[$moduleName]))
         {
             /* Module doesn't exist; take them to the login page if not
-             * logged in. If they are logged in, self::loadModule will throw
+             * logged in. If they are logged in, $this->loadModule will throw
              * an invalid module error.
              */
             return true;
@@ -140,21 +140,21 @@ class ModuleUtility
      *
      * @return array modules array (indexed by module name)
      */
-    public static function getModules()
+    public function getModules()
     {
         /* Should already be in the session, if not rescan modules dir and add to
          * current session.
          */
         if (!isset($_SESSION['modules']) || empty($_SESSION['modules']))
         {
-            $modules = self::_refreshModuleList();
+            $modules = $this->_refreshModuleList();
             $_SESSION['modules'] = $modules;
         }
 
         /* This shouldn't happen... sanity check. */
         if (empty($_SESSION['modules']))
         {
-            self::_fatal('No modules found.');
+            $this->_fatal('No modules found.');
         }
 
         return $_SESSION['modules'];
@@ -166,9 +166,9 @@ class ModuleUtility
      * @param string module name
      * @return boolean module exists
      */
-    public static function moduleExists($moduleName)
+    public function moduleExists($moduleName)
     {
-        $modules = self::getModules();
+        $modules = $this->getModules();
 
         foreach ($modules as $name => $data)
         {
@@ -186,7 +186,7 @@ class ModuleUtility
      *
      * @return array modules array (indexed by module name)
      */
-    private static function _refreshModuleList()
+    private function _refreshModuleList()
     {
         /* Modules array looks like this:
          *
@@ -213,7 +213,7 @@ class ModuleUtility
         $moduleDirectories = array();
         $hooks = array();
 
-        $directory = @opendir(MODULES_PATH) or self::_fatal(
+        $directory = @opendir(MODULES_PATH) or $this->_fatal(
             sprintf("Unable to open '%s'.", MODULES_PATH)
         );
 
@@ -240,7 +240,7 @@ class ModuleUtility
         /* FIXME: There has to be a better way to locate the UI filename. */
         foreach ($moduleDirectories as $directoryName)
         {
-            $directory = @opendir($directoryName) or self::_fatal(
+            $directory = @opendir($directoryName) or $this->_fatal(
                 sprintf("Unable to open '%s'.", $directoryName)
             );
 
@@ -274,7 +274,7 @@ class ModuleUtility
                     $hooks[$name][] = $data;
                 }
 
-                self::processModuleSchema($moduleName, $module->getSchema());
+                $this->processModuleSchema($moduleName, $module->getSchema());
             }
 
             closedir($directory);
@@ -291,10 +291,10 @@ class ModuleUtility
         $_SESSION['hooks'] = $hooks;
 
         /* Sort the modules. */
-        uksort($modules , array('self', '_sortModules'));
+        uksort($modules , array($this, '_sortModules'));
 
         /* Verify that core modules are present. */
-        self::_checkCoreModules($modules);
+        $this->_checkCoreModules($modules);
 
         /* Try to store the modules for future use. */
         if (CACHE_MODULES)
@@ -313,7 +313,7 @@ class ModuleUtility
      * @param array detected modules
      * @return void
      */
-    private static function _checkCoreModules($modules)
+    private function _checkCoreModules($modules)
     {
         $missing = array();
 
@@ -334,7 +334,7 @@ class ModuleUtility
                 $error .= 'Module "' . $module . '" not found.<br />';
             }
 
-            self::_fatal($error);
+            $this->_fatal($error);
         }
     }
 
@@ -344,7 +344,7 @@ class ModuleUtility
      * @param string error message
      * @return void
      */
-    private static function _fatal($error)
+    private function _fatal($error)
     {
         $template = new Template();
 
@@ -374,7 +374,7 @@ class ModuleUtility
      * @param module B name
      * @return sort order for uksort
      */
-    private static function _sortModules($a, $b)
+    private function _sortModules($a, $b)
     {
         if (!eval(Hooks::get('SORT_MODULES_RETURN_POS'))) return 1;
         if (!eval(Hooks::get('SORT_MODULES_RETURN_NEG'))) return -1;
@@ -409,7 +409,7 @@ class ModuleUtility
      * @return array Multi-dimensional associative result set array of
      *               schema versions data.
      */
-    public static function getModuleSchemaVersions()
+    public function getModuleSchemaVersions()
     {
         $db = DatabaseConnection::getInstance();
 
@@ -435,7 +435,7 @@ class ModuleUtility
      * @param array Module schema updates array.
      * @return void
      */
-    private static function processModuleSchema($moduleName, $schema)
+    private function processModuleSchema($moduleName, $schema)
     {
         if( ini_get('safe_mode') )
         {

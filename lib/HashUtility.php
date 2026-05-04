@@ -105,7 +105,7 @@ class HashUtility
             $bytesLeftToRead -= $maxBytesToRead;
             if ($bytesLeftToRead)
             {
-                $crc32String = self::crc32Reverse($crc32);
+                $crc32String = $this->crc32Reverse($crc32);
             }
         }
         
@@ -114,7 +114,7 @@ class HashUtility
         return $crc32;
    }
     
-    private static function crc32Reverse($crc)
+    private function crc32Reverse($crc)
     {
         $crc ^= self::CRC32_INITXOR;
 

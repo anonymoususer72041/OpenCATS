@@ -89,7 +89,7 @@ class ParseUtility
         {
             try
             {
-                $res = $this->_client->DocumentParse(LICENSE_KEY, $name, $size, $mimeType, self::cleanText($contents));
+                $res = $this->_client->DocumentParse(LICENSE_KEY, $name, $size, $mimeType, $this->cleanText($contents));
             }
             catch (SoapFault $exception)
             {
@@ -98,7 +98,7 @@ class ParseUtility
         }
         else
         {
-            $res = $this->_client->DocumentParse(LICENSE_KEY, $name, $size, $mimeType, self::cleanText($contents));
+            $res = $this->_client->DocumentParse(LICENSE_KEY, $name, $size, $mimeType, $this->cleanText($contents));
         }
 
         switch($res->message)
@@ -174,7 +174,7 @@ class ParseUtility
 
 
     // Destroy unicode before it contaminates our soap, what's next? our children and our candy?
-    public static function cleanText($txt)
+    public function cleanText($txt)
     {
         for ($i=0; $i<strlen($txt); $i++)
         {
