@@ -3289,7 +3289,7 @@ class CandidatesUI extends UserInterface
             }
             else
             {
-                $eventJobOrderID = -1;
+                $eventJobOrderID = null;
             }
 
             $calendar = new Calendar($this->_siteID);
