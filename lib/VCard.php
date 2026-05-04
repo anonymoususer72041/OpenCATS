@@ -382,7 +382,7 @@ class VCard
     private function _encode($string)
     {
         return str_replace(
-            ';', '\;', StringUtility::quotedPrintableEncode($string)
+            ';', '\;', (new StringUtility())->quotedPrintableEncode($string)
         );
     }
 }

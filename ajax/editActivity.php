@@ -117,7 +117,7 @@ if (strpos($activityNote, 'Status change: ') === 0)
     $statusRS = $pipelines->getStatusesForPicking();
     foreach ($statusRS as $data)
     {
-        $activityNote = StringUtility::replaceOnce(
+        $activityNote = (new StringUtility())->replaceOnce(
             $data['status'],
             '<span style="color: #ff6c00;">' . $data['status'] . '</span>',
             $activityNote

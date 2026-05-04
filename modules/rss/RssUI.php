@@ -145,7 +145,7 @@ class RssUI extends UserInterface
                 "</item>\n",
                 $row['title'],
                 $jobOrders->typeCodeToString($row['type']),
-                StringUtility::makeCityStateString($row['city'], $row['state']),
+                (new StringUtility())->makeCityStateString($row['city'], $row['state']),
                 $uri
             );
         }

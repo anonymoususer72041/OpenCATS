@@ -228,7 +228,7 @@ class HomeUI extends UserInterface
             {
                 if (!empty($candidatesRS[$rowIndex]['ownerFirstName']))
                 {
-                    $candidatesRS[$rowIndex]['ownerAbbrName'] = StringUtility::makeInitialName(
+                    $candidatesRS[$rowIndex]['ownerAbbrName'] = (new StringUtility())->makeInitialName(
                         $candidatesRS[$rowIndex]['ownerFirstName'],
                         $candidatesRS[$rowIndex]['ownerLastName'],
                         false,
@@ -258,7 +258,7 @@ class HomeUI extends UserInterface
             {
                 if (!empty($companiesRS[$rowIndex]['ownerFirstName']))
                 {
-                    $companiesRS[$rowIndex]['ownerAbbrName'] = StringUtility::makeInitialName(
+                    $companiesRS[$rowIndex]['ownerAbbrName'] = (new StringUtility())->makeInitialName(
                         $companiesRS[$rowIndex]['ownerFirstName'],
                         $companiesRS[$rowIndex]['ownerLastName'],
                         false,
@@ -306,7 +306,7 @@ class HomeUI extends UserInterface
 
                 if (!empty($contactsRS[$rowIndex]['ownerFirstName']))
                 {
-                    $contactsRS[$rowIndex]['ownerAbbrName'] = StringUtility::makeInitialName(
+                    $contactsRS[$rowIndex]['ownerAbbrName'] = (new StringUtility())->makeInitialName(
                         $contactsRS[$rowIndex]['ownerFirstName'],
                         $contactsRS[$rowIndex]['ownerLastName'],
                         false,
@@ -350,7 +350,7 @@ class HomeUI extends UserInterface
 
                 if (!empty($jobOrdersRS[$rowIndex]['recruiterAbbrName']))
                 {
-                    $jobOrdersRS[$rowIndex]['recruiterAbbrName'] = StringUtility::makeInitialName(
+                    $jobOrdersRS[$rowIndex]['recruiterAbbrName'] = (new StringUtility())->makeInitialName(
                         $jobOrdersRS[$rowIndex]['recruiterFirstName'],
                         $jobOrdersRS[$rowIndex]['recruiterLastName'],
                         false,
@@ -364,7 +364,7 @@ class HomeUI extends UserInterface
 
                 if (!empty($jobOrdersRS[$rowIndex]['ownerFirstName']))
                 {
-                    $jobOrdersRS[$rowIndex]['ownerAbbrName'] = StringUtility::makeInitialName(
+                    $jobOrdersRS[$rowIndex]['ownerAbbrName'] = (new StringUtility())->makeInitialName(
                         $jobOrdersRS[$rowIndex]['ownerFirstName'],
                         $jobOrdersRS[$rowIndex]['ownerLastName'],
                         false,

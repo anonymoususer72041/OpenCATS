@@ -74,22 +74,22 @@ class ListEditor
         while (strpos($string, '"') !== false)
         {
             $pos = strpos($string, '"');
-            $string = StringUtility::JSSubString($string, 0, $pos) . '^'
-                . StringUtility::JSSubString($string, ($pos + 1), strlen($string));
+            $string = (new StringUtility())->JSSubString($string, 0, $pos) . '^'
+                . (new StringUtility())->JSSubString($string, ($pos + 1), strlen($string));
 
             $pos2 = strpos($string, '"');
             if ($pos2 !== false)
             {
-                $string = StringUtility::JSSubString($string, 0, $pos) . '^'
-                    . StringUtility::JSSubString($string, ($pos + 1), strlen($string));
+                $string = (new StringUtility())->JSSubString($string, 0, $pos) . '^'
+                    . (new StringUtility())->JSSubString($string, ($pos + 1), strlen($string));
 
-                $stringSub = StringUtility::JSSubString($string, $pos + 1, $pos2);
+                $stringSub = (new StringUtility())->JSSubString($string, $pos + 1, $pos2);
 
                 $stringSub = str_replace(',', '!!COMMA!!', $stringSub);
 
-                $string = StringUtility::JSSubString($string, 0, $pos)
+                $string = (new StringUtility())->JSSubString($string, 0, $pos)
                     . '^' . $stringSub . '^'
-                    . StringUtility::JSSubString($string, ($pos2 + 1), strlen($string));
+                    . (new StringUtility())->JSSubString($string, ($pos2 + 1), strlen($string));
             }
         }
 
@@ -175,12 +175,12 @@ class ListEditor
         {
             if (strpos($theArray[$i], '!!EDIT!!') === 0)
             {
-                $from = StringUtility::JSSubString(
+                $from = (new StringUtility())->JSSubString(
                     $theArray[$i],
                     8,
                     strpos($theArray[$i], '!!INTO!!')
                 );
-                $into = StringUtility::JSSubString(
+                $into = (new StringUtility())->JSSubString(
                     $theArray[$i],
                     strpos($theArray[$i], '!!INTO!!') + 8,
                     strlen($theArray[$i])

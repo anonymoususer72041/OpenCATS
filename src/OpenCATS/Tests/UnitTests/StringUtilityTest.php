@@ -37,7 +37,7 @@ class StringUtilityTest extends TestCase
         foreach ($validURLs as $key => $value)
         {
             $this->assertTrue(
-                StringUtility::isURL($value),
+                (new StringUtility())->isURL($value),
                 sprintf("'%s' should be recognized as a URL", $value)
                 );
         }
@@ -45,7 +45,7 @@ class StringUtilityTest extends TestCase
         foreach ($invalidURLs as $key => $value)
         {
             $this->assertFalse(
-                StringUtility::isURL($value),
+                (new StringUtility())->isURL($value),
                 sprintf("'%s' should not be recognized as a URL", $value)
                 );
         }
@@ -75,7 +75,7 @@ class StringUtilityTest extends TestCase
 
         foreach ($URLsToExtract as $key => $value)
         {
-            $formattedURL = StringUtility::extractURL($value[0]);
+            $formattedURL = (new StringUtility())->extractURL($value[0]);
             $this->assertTrue(
                 $formattedURL === $value[1],
                 sprintf("Extracting URL from '%s' should result in '%s'", $value[0], $value[1])
@@ -127,7 +127,7 @@ class StringUtilityTest extends TestCase
         foreach ($validPhoneNumbers as $key => $value)
         {
             $this->assertTrue(
-                StringUtility::isPhoneNumber($value),
+                (new StringUtility())->isPhoneNumber($value),
                 sprintf("'%s' should be recognized as a phone number", $value)
                 );
         }
@@ -135,7 +135,7 @@ class StringUtilityTest extends TestCase
         foreach ($invalidPhoneNumbers as $key => $value)
         {
             $this->assertFalse(
-                StringUtility::isPhoneNumber($value),
+                (new StringUtility())->isPhoneNumber($value),
                 sprintf("'%s' should not be recognized as a phone number", $value)
                 );
         }
@@ -159,7 +159,7 @@ class StringUtilityTest extends TestCase
         foreach ($validStrings as $key => $value)
         {
             $this->assertTrue(
-                StringUtility::containsPhoneNumber($value),
+                (new StringUtility())->containsPhoneNumber($value),
                 sprintf("'%s' should be recognized as containing a phone number", $value)
                 );
         }
@@ -167,7 +167,7 @@ class StringUtilityTest extends TestCase
         foreach ($invalidStrings as $key => $value)
         {
             $this->assertFalse(
-                StringUtility::containsPhoneNumber($value),
+                (new StringUtility())->containsPhoneNumber($value),
                 sprintf("'%s' should not be recognized as containing a phone number", $value)
                 );
         }
@@ -176,7 +176,7 @@ class StringUtilityTest extends TestCase
         $fairyTale = implode('', file('./src/OpenCATS/Tests/Fixtures/SampleText.txt'));
 
         /* I can assure you that none of Grimm's fairy tales contain phone numbers. */
-        $this->assertFalse(StringUtility::containsPhoneNumber($fairyTale));
+        $this->assertFalse((new StringUtility())->containsPhoneNumber($fairyTale));
     }
 
     function testExtractPhoneNumber()
@@ -226,7 +226,7 @@ class StringUtilityTest extends TestCase
 
         foreach ($phoneNumbersToExtract as $key => $value)
         {
-            $formattedPhoneNumber = StringUtility::extractPhoneNumber($value[0]);
+            $formattedPhoneNumber = (new StringUtility())->extractPhoneNumber($value[0]);
             $this->assertTrue(
                 $formattedPhoneNumber === $value[1],
                 sprintf("Extracting phone number from '%s' should result in '%s'", $value[0], $value[1])
@@ -257,7 +257,7 @@ class StringUtilityTest extends TestCase
         foreach ($validEmails as $key => $value)
         {
             $this->assertTrue(
-                StringUtility::isEmailAddress($value),
+                (new StringUtility())->isEmailAddress($value),
                 sprintf("'%s' should be recognized as an e-mail address", $value)
                 );
         }
@@ -265,7 +265,7 @@ class StringUtilityTest extends TestCase
         foreach ($invalidEmails as $key => $value)
         {
             $this->assertFalse(
-                StringUtility::isEmailAddress($value),
+                (new StringUtility())->isEmailAddress($value),
                 sprintf("'%s' should not be recognized as an e-mail address", $value)
                 );
         }
@@ -290,7 +290,7 @@ class StringUtilityTest extends TestCase
         foreach ($validStrings as $key => $value)
         {
             $this->assertTrue(
-                StringUtility::containsEmailAddress($value),
+                (new StringUtility())->containsEmailAddress($value),
                 sprintf("'%s' should be recognized as containing an e-mail address", $value)
                 );
         }
@@ -298,7 +298,7 @@ class StringUtilityTest extends TestCase
         foreach ($invalidStrings as $key => $value)
         {
             $this->assertFalse(
-                StringUtility::containsEmailAddress($value),
+                (new StringUtility())->containsEmailAddress($value),
                 sprintf("'%s' should not be recognized as containing an e-mail address", $value)
                 );
         }
@@ -307,7 +307,7 @@ class StringUtilityTest extends TestCase
         $fairyTale = implode('', file('./src/OpenCATS/Tests/Fixtures/SampleText.txt'));
 
         /* I can assure you that none of Grimm's fairy tales contain e-mail addresses. */
-        $this->assertFalse(StringUtility::containsEmailAddress($fairyTale));
+        $this->assertFalse((new StringUtility())->containsEmailAddress($fairyTale));
     }
 
     /* Tests for extractEmailAddress(). */
@@ -354,7 +354,7 @@ class StringUtilityTest extends TestCase
 
         foreach ($emailAddressesToExtract as $key => $value)
         {
-            $formattedEmailAddress = StringUtility::extractEmailAddress($value[0]);
+            $formattedEmailAddress = (new StringUtility())->extractEmailAddress($value[0]);
             $this->assertTrue(
                 $formattedEmailAddress === $value[1],
                 sprintf("Extracting e-mail address from '%s' should result in '%s'", $value[0], $value[1])
@@ -366,41 +366,41 @@ class StringUtilityTest extends TestCase
     function testRemoveEmailAddress()
     {
         $this->assertSame(
-            StringUtility::removeEmailAddress('wcc@nospammonkeys.org', true),
+            (new StringUtility())->removeEmailAddress('wcc@nospammonkeys.org', true),
             ''
             );
 
         $this->assertSame(
-            StringUtility::removeEmailAddress('wcc@nospammonkeys.org', false),
+            (new StringUtility())->removeEmailAddress('wcc@nospammonkeys.org', false),
             ''
             );
 
         $this->assertSame(
-            StringUtility::removeEmailAddress('Will Buckner wcc@nospammonkeys.org', true),
+            (new StringUtility())->removeEmailAddress('Will Buckner wcc@nospammonkeys.org', true),
             'Will Buckner'
             );
 
         $this->assertSame(
-            StringUtility::removeEmailAddress('Will Buckner wcc@nospammonkeys.org', false),
+            (new StringUtility())->removeEmailAddress('Will Buckner wcc@nospammonkeys.org', false),
             'Will Buckner '
             );
 
         $this->assertSame(
-            StringUtility::removeEmailAddress('Will Buckner wcc@nospammonkeys.org 770.223.0123   ', true),
+            (new StringUtility())->removeEmailAddress('Will Buckner wcc@nospammonkeys.org 770.223.0123   ', true),
             'Will Buckner  770.223.0123'
             );
 
         $this->assertSame(
-            StringUtility::removeEmailAddress('Will Buckner wcc@nospammonkeys.org 770.223.0123   ', false),
+            (new StringUtility())->removeEmailAddress('Will Buckner wcc@nospammonkeys.org 770.223.0123   ', false),
             'Will Buckner  770.223.0123   '
             );
 
         $this->assertNotSame(
-            StringUtility::removeEmailAddress('wcc@nospammonkeys.org ', false),
+            (new StringUtility())->removeEmailAddress('wcc@nospammonkeys.org ', false),
             ''
             );
         $this->assertNotSame(
-            StringUtility::removeEmailAddress(' wcc@nospammonkeys.org    ', true),
+            (new StringUtility())->removeEmailAddress(' wcc@nospammonkeys.org    ', true),
             '     '
             );
     }
@@ -433,7 +433,7 @@ class StringUtilityTest extends TestCase
         foreach ($validCityStateZips as $key => $value)
         {
             $this->assertTrue(
-                StringUtility::isCityStateZip($value),
+                (new StringUtility())->isCityStateZip($value),
                 sprintf("'%s' should be recognized as a 'City, State, Zip' combination", $value)
                 );
         }
@@ -441,7 +441,7 @@ class StringUtilityTest extends TestCase
         foreach ($invalidCityStateZips as $key => $value)
         {
             $this->assertFalse(
-                StringUtility::isCityStateZip($value),
+                (new StringUtility())->isCityStateZip($value),
                 sprintf("'%s' should not be recognized as a 'City, State, Zip' combination", $value)
                 );
         }
@@ -451,26 +451,26 @@ class StringUtilityTest extends TestCase
     function testRemoveEmptyLines()
     {
         $this->assertSame(
-            StringUtility::removeEmptyLines(
+            (new StringUtility())->removeEmptyLines(
                 "  	\n				\r\n		\r\n	\n                    "
                 ),
             ''
             );
 
         $this->assertSame(
-            StringUtility::removeEmptyLines(
+            (new StringUtility())->removeEmptyLines(
                 "  	\n			Will Buckner	\r\n		\r\n	\n                    "
                 ),
             'Will Buckner'
             );
 
         $this->assertSame(
-            StringUtility::removeEmptyLines("\n\r\n\r\n\n"),
+            (new StringUtility())->removeEmptyLines("\n\r\n\r\n\n"),
             ''
             );
 
         $this->assertNotSame(
-            StringUtility::removeEmptyLines("\n\ra\n\r\n\n"),
+            (new StringUtility())->removeEmptyLines("\n\ra\n\r\n\n"),
             ''
             );
     }
@@ -479,19 +479,19 @@ class StringUtilityTest extends TestCase
     function testCountTokens()
     {
         $this->assertSame(
-            StringUtility::countTokens(',', '1,2,3,4,5'),
+            (new StringUtility())->countTokens(',', '1,2,3,4,5'),
             5
             );
         $this->assertSame(
-            StringUtility::countTokens(' ', '1 2 3 4 5'),
+            (new StringUtility())->countTokens(' ', '1 2 3 4 5'),
             5
             );
         $this->assertSame(
-            StringUtility::countTokens(', -/', '1 2-3,4/5'),
+            (new StringUtility())->countTokens(', -/', '1 2-3,4/5'),
             5
             );
         $this->assertSame(
-            StringUtility::countTokens('*%', '*One%Two**Three%%Four*Five*'),
+            (new StringUtility())->countTokens('*%', '*One%Two**Three%%Four*Five*'),
             5
             );
     }
@@ -509,24 +509,24 @@ class StringUtilityTest extends TestCase
         );
 
         $this->assertSame(
-            StringUtility::tokenize(', -/', 'Zero  One Two-Three,Four/ Five'),
+            (new StringUtility())->tokenize(', -/', 'Zero  One Two-Three,Four/ Five'),
             $output
             );
         $this->assertSame(
-            StringUtility::tokenize(', ', 'Zero, One, Two, Three, Four, Five'),
+            (new StringUtility())->tokenize(', ', 'Zero, One, Two, Three, Four, Five'),
             $output
             );
         $this->assertSame(
-            StringUtility::tokenize('!', 'Zero!!!!!!One!Two!Three!!Four!Five'),
+            (new StringUtility())->tokenize('!', 'Zero!!!!!!One!Two!Three!!Four!Five'),
             $output
             );
         $this->assertSame(
-            StringUtility::tokenize('*%', '*Zero*One%Two**Three%%Four*Five*'),
+            (new StringUtility())->tokenize('*%', '*Zero*One%Two**Three%%Four*Five*'),
             $output
             );
 
         $this->assertSame(
-            StringUtility::tokenize('*%', 'Test'),
+            (new StringUtility())->tokenize('*%', 'Test'),
             array('Test')
             );
     }
@@ -535,23 +535,23 @@ class StringUtilityTest extends TestCase
     function testMakeFirstInitialName()
     {
         $this->assertSame(
-            StringUtility::makeInitialName('Michael', 'Zimmermann', true),
+            (new StringUtility())->makeInitialName('Michael', 'Zimmermann', true),
             'Zimmermann, M.'
             );
         $this->assertSame(
-            StringUtility::makeInitialName('Michael', 'Zimmermann', true, 50),
+            (new StringUtility())->makeInitialName('Michael', 'Zimmermann', true, 50),
             'Zimmermann, M.'
             );
         $this->assertSame(
-            StringUtility::makeInitialName('Michael', 'Zimmermann', true, 10),
+            (new StringUtility())->makeInitialName('Michael', 'Zimmermann', true, 10),
             'Zimmermann, M.'
             );
         $this->assertSame(
-            StringUtility::makeInitialName('Michael', 'Zimmermann',  true, 9),
+            (new StringUtility())->makeInitialName('Michael', 'Zimmermann',  true, 9),
             'Zimmerman, M.'
             );
         $this->assertSame(
-            StringUtility::makeInitialName('Michael', 'Zimmermann',  true, 1),
+            (new StringUtility())->makeInitialName('Michael', 'Zimmermann',  true, 1),
             'Z, M.'
             );
     }
@@ -560,17 +560,17 @@ class StringUtilityTest extends TestCase
     function testEscapeSingleQuotes()
     {
         $this->assertSame(
-            StringUtility::escapeSingleQuotes('Test'),
+            (new StringUtility())->escapeSingleQuotes('Test'),
             'Test'
             );
 
         $this->assertSame(
-            StringUtility::escapeSingleQuotes("'Test'"),
+            (new StringUtility())->escapeSingleQuotes("'Test'"),
             "\\'Test\\'"
             );
 
         $this->assertSame(
-            StringUtility::escapeSingleQuotes("'Test ' String'"),
+            (new StringUtility())->escapeSingleQuotes("'Test ' String'"),
             "\\'Test \\' String\\'"
             );
     }

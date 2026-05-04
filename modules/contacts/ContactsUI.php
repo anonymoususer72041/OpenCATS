@@ -259,7 +259,7 @@ class ContactsUI extends UserInterface
         /* We want to handle formatting the city and state here instead
          * of in the template.
          */
-        $data['cityAndState'] = StringUtility::makeCityStateString(
+        $data['cityAndState'] = (new StringUtility())->makeCityStateString(
             $data['city'], $data['state']
         );
 
@@ -330,14 +330,14 @@ class ContactsUI extends UserInterface
                     $jobOrdersRS[$rowIndex]['linkClass'] = 'jobLinkCold';
                 }
 
-                $jobOrdersRS[$rowIndex]['recruiterAbbrName'] = StringUtility::makeInitialName(
+                $jobOrdersRS[$rowIndex]['recruiterAbbrName'] = (new StringUtility())->makeInitialName(
                     $jobOrdersRS[$rowIndex]['recruiterFirstName'],
                     $jobOrdersRS[$rowIndex]['recruiterLastName'],
                     false,
                     LAST_NAME_MAXLEN
                 );
 
-                $jobOrdersRS[$rowIndex]['ownerAbbrName'] = StringUtility::makeInitialName(
+                $jobOrdersRS[$rowIndex]['ownerAbbrName'] = (new StringUtility())->makeInitialName(
                     $jobOrdersRS[$rowIndex]['ownerFirstName'],
                     $jobOrdersRS[$rowIndex]['ownerLastName'],
                     false,
@@ -363,7 +363,7 @@ class ContactsUI extends UserInterface
                     $activityRS[$rowIndex]['regarding'] = 'General';
                 }
 
-                $activityRS[$rowIndex]['enteredByAbbrName'] = StringUtility::makeInitialName(
+                $activityRS[$rowIndex]['enteredByAbbrName'] = (new StringUtility())->makeInitialName(
                     $activityRS[$rowIndex]['enteredByFirstName'],
                     $activityRS[$rowIndex]['enteredByLastName'],
                     false,
@@ -378,7 +378,7 @@ class ContactsUI extends UserInterface
         {
             foreach ($calendarRS as $rowIndex => $row)
             {
-                $calendarRS[$rowIndex]['enteredByAbbrName'] = StringUtility::makeInitialName(
+                $calendarRS[$rowIndex]['enteredByAbbrName'] = (new StringUtility())->makeInitialName(
                     $calendarRS[$rowIndex]['enteredByFirstName'],
                     $calendarRS[$rowIndex]['enteredByLastName'],
                     false,
@@ -487,7 +487,7 @@ class ContactsUI extends UserInterface
             CommonErrors::fatal(COMMONERROR_BADINDEX, $this, 'Invalid company ID.');
         }
 
-        $formattedPhoneWork = StringUtility::extractPhoneNumber(
+        $formattedPhoneWork = (new StringUtility())->extractPhoneNumber(
             $this->getTrimmedInput('phoneWork', $_POST)
         );
         if (!empty($formattedPhoneWork))
@@ -499,7 +499,7 @@ class ContactsUI extends UserInterface
             $phoneWork = $this->getTrimmedInput('phoneWork', $_POST);
         }
 
-        $formattedPhoneCell = StringUtility::extractPhoneNumber(
+        $formattedPhoneCell = (new StringUtility())->extractPhoneNumber(
             $this->getTrimmedInput('phoneCell', $_POST)
         );
         if (!empty($formattedPhoneCell))
@@ -511,7 +511,7 @@ class ContactsUI extends UserInterface
             $phoneCell = $this->getTrimmedInput('phoneCell', $_POST);
         }
 
-        $formattedPhoneOther = StringUtility::extractPhoneNumber(
+        $formattedPhoneOther = (new StringUtility())->extractPhoneNumber(
             $this->getTrimmedInput('phoneOther', $_POST)
         );
         if (!empty($formattedPhoneOther))
@@ -714,7 +714,7 @@ class ContactsUI extends UserInterface
         $companyID  = $_POST['companyID'];
         $owner      = $_POST['owner'];
 
-        $formattedPhoneWork = StringUtility::extractPhoneNumber(
+        $formattedPhoneWork = (new StringUtility())->extractPhoneNumber(
             $this->getTrimmedInput('phoneWork', $_POST)
         );
         if (!empty($formattedPhoneWork))
@@ -726,7 +726,7 @@ class ContactsUI extends UserInterface
             $phoneWork = $this->getTrimmedInput('phoneWork', $_POST);
         }
 
-        $formattedPhoneCell = StringUtility::extractPhoneNumber(
+        $formattedPhoneCell = (new StringUtility())->extractPhoneNumber(
             $this->getTrimmedInput('phoneCell', $_POST)
         );
         if (!empty($formattedPhoneCell))
@@ -738,7 +738,7 @@ class ContactsUI extends UserInterface
             $phoneCell = $this->getTrimmedInput('phoneCell', $_POST);
         }
 
-        $formattedPhoneOther = StringUtility::extractPhoneNumber(
+        $formattedPhoneOther = (new StringUtility())->extractPhoneNumber(
             $this->getTrimmedInput('phoneOther', $_POST)
         );
         if (!empty($formattedPhoneOther))
@@ -1028,7 +1028,7 @@ class ContactsUI extends UserInterface
 
             if (!empty($row['ownerFirstName']))
             {
-                $rs[$rowIndex]['ownerAbbrName'] = StringUtility::makeInitialName(
+                $rs[$rowIndex]['ownerAbbrName'] = (new StringUtility())->makeInitialName(
                     $row['ownerFirstName'],
                     $row['ownerLastName'],
                     false,
@@ -1250,7 +1250,7 @@ class ContactsUI extends UserInterface
         {
             if (!empty($resultSet[$rowIndex]['ownerFirstName']))
             {
-                $resultSet[$rowIndex]['ownerAbbrName'] = StringUtility::makeInitialName(
+                $resultSet[$rowIndex]['ownerAbbrName'] = (new StringUtility())->makeInitialName(
                     $resultSet[$rowIndex]['ownerFirstName'],
                     $resultSet[$rowIndex]['ownerLastName'],
                     false,

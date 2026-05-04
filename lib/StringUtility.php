@@ -720,59 +720,59 @@ class StringUtility
         {
             $val = '';
             $z = $x - ($y*1000000);
-            if ($z > 0) $val = ' ' . StringUtility::cardinal($z);
-            return StringUtility::cardinal($y) . ' million' . $val;
+            if ($z > 0) $val = ' ' . (new StringUtility())->cardinal($z);
+            return (new StringUtility())->cardinal($y) . ' million' . $val;
         }
 
         if (($y=floor($x/1000)) > 0 && $y <= 999)
         {
             $val = '';
             $z = $x - ($y*1000);
-            if ($z > 0) $val = ' ' . StringUtility::cardinal($z);
-            return StringUtility::cardinal($y) . ' thousand' . $val;
+            if ($z > 0) $val = ' ' . (new StringUtility())->cardinal($z);
+            return (new StringUtility())->cardinal($y) . ' thousand' . $val;
         }
 
         if (($y=floor($x/100)) > 0 && $y <= 9)
         {
             $val = '';
             $z = $x - ($y*100);
-            if ($z > 0) $val = ' and ' . StringUtility::cardinal($z);
-            return StringUtility::cardinal($y) . ' hundred' . $val;
+            if ($z > 0) $val = ' and ' . (new StringUtility())->cardinal($z);
+            return (new StringUtility())->cardinal($y) . ' hundred' . $val;
         }
 
         switch($y=floor($x/10))
         {
             case 2:
                 $val = 'twenty';
-                if (($z = $x % ($y*10)) > 0 && $z <= 9) $val .= ' ' . StringUtility::cardinal($z);
+                if (($z = $x % ($y*10)) > 0 && $z <= 9) $val .= ' ' . (new StringUtility())->cardinal($z);
                 return $val;
             case 3:
                 $val = 'thirty';
-                if (($z = $x % ($y*10)) > 0 && $z <= 9) $val .= ' ' . StringUtility::cardinal($z);
+                if (($z = $x % ($y*10)) > 0 && $z <= 9) $val .= ' ' . (new StringUtility())->cardinal($z);
                 return $val;
             case 4:
                 $val = 'fourty';
-                if (($z = $x % ($y*10)) > 0 && $z <= 9) $val .= ' ' . StringUtility::cardinal($z);
+                if (($z = $x % ($y*10)) > 0 && $z <= 9) $val .= ' ' . (new StringUtility())->cardinal($z);
                 return $val;
             case 5:
                 $val = 'fifty';
-                if (($z = $x % ($y*10)) > 0 && $z <= 9) $val .= ' ' . StringUtility::cardinal($z);
+                if (($z = $x % ($y*10)) > 0 && $z <= 9) $val .= ' ' . (new StringUtility())->cardinal($z);
                 return $val;
             case 6:
                 $val = 'sixty';
-                if (($z = $x % ($y*10)) > 0 && $z <= 9) $val .= ' ' . StringUtility::cardinal($z);
+                if (($z = $x % ($y*10)) > 0 && $z <= 9) $val .= ' ' . (new StringUtility())->cardinal($z);
                 return $val;
             case 7:
                 $val = 'seventy';
-                if (($z = $x % ($y*10)) > 0 && $z <= 9) $val .= ' ' . StringUtility::cardinal($z);
+                if (($z = $x % ($y*10)) > 0 && $z <= 9) $val .= ' ' . (new StringUtility())->cardinal($z);
                 return $val;
             case 8:
                 $val = 'eighty';
-                if (($z = $x % ($y*10)) > 0 && $z <= 9) $val .= ' ' . StringUtility::cardinal($z);
+                if (($z = $x % ($y*10)) > 0 && $z <= 9) $val .= ' ' . (new StringUtility())->cardinal($z);
                 return $val;
             case 9:
                 $val = 'ninety';
-                if (($z = $x % ($y*10)) > 0 && $z <= 9) $val .= ' ' . StringUtility::cardinal($z);
+                if (($z = $x % ($y*10)) > 0 && $z <= 9) $val .= ' ' . (new StringUtility())->cardinal($z);
                 return $val;
         }
 

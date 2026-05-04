@@ -440,7 +440,7 @@ class JobOrdersUI extends UserInterface
         /* We want to handle formatting the city and state here instead of in
          * the template.
          */
-        $data['cityAndState'] = StringUtility::makeCityStateString(
+        $data['cityAndState'] = (new StringUtility())->makeCityStateString(
             $data['city'], $data['state']
         );
 
@@ -1295,7 +1295,7 @@ class JobOrdersUI extends UserInterface
                 $rs[$rowIndex]['inPipeline'] = false;
             }
 
-            $rs[$rowIndex]['ownerAbbrName'] = StringUtility::makeInitialName(
+            $rs[$rowIndex]['ownerAbbrName'] = (new StringUtility())->makeInitialName(
                 $row['ownerFirstName'],
                 $row['ownerLastName'],
                 false,
@@ -1821,14 +1821,14 @@ class JobOrdersUI extends UserInterface
                 $rs[$rowIndex]['linkClass'] = 'jobLinkCold';
             }
 
-            $rs[$rowIndex]['recruiterAbbrName'] = StringUtility::makeInitialName(
+            $rs[$rowIndex]['recruiterAbbrName'] = (new StringUtility())->makeInitialName(
                 $row['recruiterFirstName'],
                 $row['recruiterLastName'],
                 false,
                 LAST_NAME_MAXLEN
             );
 
-            $rs[$rowIndex]['ownerAbbrName'] = StringUtility::makeInitialName(
+            $rs[$rowIndex]['ownerAbbrName'] = (new StringUtility())->makeInitialName(
                 $row['ownerFirstName'],
                 $row['ownerLastName'],
                 false,
@@ -2055,14 +2055,14 @@ class JobOrdersUI extends UserInterface
                 $resultSet[$rowIndex]['linkClass'] = 'jobLinkCold';
             }
 
-            $resultSet[$rowIndex]['recruiterAbbrName'] = StringUtility::makeInitialName(
+            $resultSet[$rowIndex]['recruiterAbbrName'] = (new StringUtility())->makeInitialName(
                 $resultSet[$rowIndex]['recruiterFirstName'],
                 $resultSet[$rowIndex]['recruiterLastName'],
                 false,
                 LAST_NAME_MAXLEN
             );
 
-            $resultSet[$rowIndex]['ownerAbbrName'] = StringUtility::makeInitialName(
+            $resultSet[$rowIndex]['ownerAbbrName'] = (new StringUtility())->makeInitialName(
                 $resultSet[$rowIndex]['ownerFirstName'],
                 $resultSet[$rowIndex]['ownerLastName'],
                 false,

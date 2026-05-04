@@ -1074,7 +1074,7 @@ class JobOrdersDataGrid extends DataGrid
                                                    'owner_user.last_name AS ownerLastName,' .
                                                    'CONCAT(owner_user.last_name, owner_user.first_name) AS ownerSort',
                                      'join'     => 'LEFT JOIN user AS owner_user ON joborder.owner = owner_user.user_id',
-                                     'pagerRender'      => 'return StringUtility::makeInitialName($rsData[\'ownerFirstName\'], $rsData[\'ownerLastName\'], false, LAST_NAME_MAXLEN);',
+                                     'pagerRender'      => 'return (new StringUtility())->makeInitialName($rsData[\'ownerFirstName\'], $rsData[\'ownerLastName\'], false, LAST_NAME_MAXLEN);',
                                      'exportRender'     => 'return $rsData[\'ownerFirstName\'] . " " .$rsData[\'ownerLastName\'];',
                                      'sortableColumn'     => 'ownerSort',
                                      'pagerWidth'    => 75,
@@ -1085,7 +1085,7 @@ class JobOrdersDataGrid extends DataGrid
                                                    'recruiter_user.last_name AS recruiterLastName,' .
                                                    'CONCAT(recruiter_user.last_name, recruiter_user.first_name) AS recruiterSort',
                                      'join'     => 'LEFT JOIN user AS recruiter_user ON joborder.recruiter = recruiter_user.user_id',
-                                     'pagerRender'      => 'return StringUtility::makeInitialName($rsData[\'recruiterFirstName\'], $rsData[\'recruiterLastName\'], false, LAST_NAME_MAXLEN);',
+                                     'pagerRender'      => 'return (new StringUtility())->makeInitialName($rsData[\'recruiterFirstName\'], $rsData[\'recruiterLastName\'], false, LAST_NAME_MAXLEN);',
                                      'exportRender'     => 'return $rsData[\'recruiterFirstName\'] . " " .$rsData[\'recruiterLastName\'];',
                                      'sortableColumn'     => 'recruiterSort',
                                      'pagerWidth'    => 75,
@@ -1096,7 +1096,7 @@ class JobOrdersDataGrid extends DataGrid
                                                    'contact.last_name AS contactLastName,' .
                                                    'CONCAT(contact.last_name, contact.first_name) AS contactSort,' .
                                                    'contact.contact_id AS contactID',
-                                     'pagerRender'      => 'return \'<a href="'.CATSUtility::getIndexName().'?m=contacts&amp;a=show&amp;contactID=\'.$rsData[\'contactID\'].\'">\'.StringUtility::makeInitialName($rsData[\'contactFirstName\'], $rsData[\'contactLastName\'], false, LAST_NAME_MAXLEN).\'</a>\';',
+                                     'pagerRender'      => 'return \'<a href="'.CATSUtility::getIndexName().'?m=contacts&amp;a=show&amp;contactID=\'.$rsData[\'contactID\'].\'">\'.(new StringUtility())->makeInitialName($rsData[\'contactFirstName\'], $rsData[\'contactLastName\'], false, LAST_NAME_MAXLEN).\'</a>\';',
                                      'exportRender'     => 'return $rsData[\'contactFirstName\'] . " " .$rsData[\'contactLastName\'];',
                                      'sortableColumn'     => 'contactSort',
                                      'pagerWidth'    => 75,

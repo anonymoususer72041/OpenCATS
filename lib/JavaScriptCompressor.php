@@ -102,7 +102,7 @@ class JavaScriptCompressor
         );
 
         /* Remove any blank lines from the string. */
-        $string = StringUtility::removeEmptyLines($string);
+        $string = (new StringUtility())->removeEmptyLines($string);
 
         /* "Safe" newline removal. This should work with just about any code
          * that a browser's JavaScript implementation can understand.

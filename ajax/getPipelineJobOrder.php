@@ -81,7 +81,7 @@ foreach ($pipelinesRS as $rowIndex => $row)
         $pipelinesRS[$rowIndex]['highlightStyle'] = 'jobLinkCold';
     }
 
-    $pipelinesRS[$rowIndex]['addedByAbbrName'] = StringUtility::makeInitialName(
+    $pipelinesRS[$rowIndex]['addedByAbbrName'] = (new StringUtility())->makeInitialName(
         $pipelinesRS[$rowIndex]['addedByFirstName'],
         $pipelinesRS[$rowIndex]['addedByLastName'],
         LAST_NAME_MAXLEN

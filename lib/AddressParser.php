@@ -216,7 +216,7 @@ class AddressParser
         $this->_addressBlock = array();
 
         /* Remove blank or space-only lines from address block. */
-        $addressBlock = StringUtility::removeEmptyLines($addressBlock);
+        $addressBlock = (new StringUtility())->removeEmptyLines($addressBlock);
 
         /* Split address block into an array indexed by line number. */
         $addressBlockArray = explode("\n", $addressBlock);
@@ -238,7 +238,7 @@ class AddressParser
          * a phone number. We do this to rule out other parts of an address
          * block that start with numbers.
          */
-        if (StringUtility::containsPhoneNumber($string))
+        if ((new StringUtility())->containsPhoneNumber($string))
         {
             return false;
         }
@@ -360,7 +360,7 @@ class AddressParser
             return $fullNameArray;
         }
 
-        if (($addressOneLineOffset - 2) >= 0 && StringUtility::isEmailAddress(
+        if (($addressOneLineOffset - 2) >= 0 && (new StringUtility())->isEmailAddress(
             $this->_addressBlock[$addressOneLineOffset - 1]))
         {
             $possibleFirstName = $this->_addressBlock[$addressOneLineOffset - 2];
@@ -393,13 +393,13 @@ class AddressParser
         }
 
         /* Count the number of "words" / tokens in the name. */
-        $tokenCount = StringUtility::countTokens(", \t", $fullName);
+        $tokenCount = (new StringUtility())->countTokens(", \t", $fullName);
         if (!$tokenCount)
         {
             return $fullNameArray;
         }
 
-        $tokens = StringUtility::tokenize(", \t", $fullName);
+        $tokens = (new StringUtility())->tokenize(", \t", $fullName);
         switch ($tokenCount)
         {
             case '2':
@@ -423,7 +423,7 @@ class AddressParser
                     /* Assume that the first token is the last name, the last token
                      * is the middle name, and the tokens inbetween are the first name.
                      */
-                    $fullNameArray['firstName']  = ArrayUtility::implodeRange(
+                    $fullNameArray['firstName']  = (new ArrayUtility())->implodeRange(
                         ' ', $tokens, 1, ($tokenCount - 2)
                     );
                     $fullNameArray['middleName'] = $tokens[$tokenCount - 1];
@@ -435,7 +435,7 @@ class AddressParser
                      * the last token is the middle name, and all other preceding
                      * tokens are part of the first name.
                      */
-                    $fullNameArray['firstName']  = ArrayUtility::implodeRange(
+                    $fullNameArray['firstName']  = (new ArrayUtility())->implodeRange(
                         ' ', $tokens, 0, ($tokenCount - 3)
                     );
                     $fullNameArray['middleName'] = $tokens[$tokenCount - 2];
@@ -456,14 +456,14 @@ class AddressParser
         $zip   = '';
         
         /* Count the number of "words" / tokens in the line. */
-        $tokenCount = StringUtility::countTokens(";, \t", $cityStateZipLine);
+        $tokenCount = (new StringUtility())->countTokens(";, \t", $cityStateZipLine);
         if ($tokenCount < 2)
         {
             return array('city' => '', 'state' => '', 'zip' => '');
         }
         
         /* Split the string into an array of tokens. */
-        $tokens = StringUtility::tokenize(";, \t", $cityStateZipLine);
+        $tokens = (new StringUtility())->tokenize(";, \t", $cityStateZipLine);
         if ($tokenCount == 3)
         {
             $city  = $tokens[0];
@@ -473,10 +473,10 @@ class AddressParser
         else
         {
             /* If we have a known two- or three-word state, recognize it. */
-            $twoWordState = ArrayUtility::implodeRange(
+            $twoWordState = (new ArrayUtility())->implodeRange(
                 ' ', $tokens, ($tokenCount - 3), ($tokenCount - 2)
             );
-            $threeWordState = ArrayUtility::implodeRange(
+            $threeWordState = (new ArrayUtility())->implodeRange(
                 ' ', $tokens, ($tokenCount - 4), ($tokenCount - 2)
             );
             
@@ -519,7 +519,7 @@ class AddressParser
                  * proceeding tokens before are part of the state, and all
                  * other preceding tokens are part of the city.
                  */
-                $city  = ArrayUtility::implodeRange(
+                $city  = (new ArrayUtility())->implodeRange(
                     ' ', $tokens, 0, ($tokenCount - 4)
                 );
                 $state = $twoWordState;
@@ -536,7 +536,7 @@ class AddressParser
                  * three proceeding tokens before are part of the state,
                  * and all other preceding tokens are part of the city.
                  */
-                $city  = ArrayUtility::implodeRange(
+                $city  = (new ArrayUtility())->implodeRange(
                     ' ', $tokens, 0, ($tokenCount - 5)
                 );
                 $state = $threeWordState;
@@ -552,7 +552,7 @@ class AddressParser
                  * the last token is the state, and all other preceding tokens
                  * are part of the city.
                  */
-                $city  = ArrayUtility::implodeRange(
+                $city  = (new ArrayUtility())->implodeRange(
                     ' ', $tokens, 0, ($tokenCount - 3)
                 );
                 $state = $tokens[$tokenCount - 2];
@@ -603,20 +603,20 @@ class AddressParser
     {
         foreach ($this->_addressBlock as $lineNumber => $line)
         {
-            if (!StringUtility::containsEmailAddress($line))
+            if (!(new StringUtility())->containsEmailAddress($line))
             {
                 continue;
             }
 
             /* Extract and properly format the e-mail address. */
-            $emailAddress = StringUtility::extractEmailAddress($line);
+            $emailAddress = (new StringUtility())->extractEmailAddress($line);
 
             /* If there is more on this line, remove the e-mail address from
              * the line. Otherwise, just delete the line.
              */
-            if (!StringUtility::isEmailAddress($line))
+            if (!(new StringUtility())->isEmailAddress($line))
             {
-                $line = StringUtility::removeEmailAddress($line, true);
+                $line = (new StringUtility())->removeEmailAddress($line, true);
                 $this->_addressBlock[$lineNumber] = $line;
             }
             else
@@ -653,7 +653,7 @@ class AddressParser
         foreach ($this->_addressBlock as $lineNumber => $line)
         {
             /* Skip lines that don't contain phone numbers. */
-            if (!StringUtility::containsPhoneNumber($line))
+            if (!(new StringUtility())->containsPhoneNumber($line))
             {
                 continue;
             }
@@ -676,21 +676,21 @@ class AddressParser
             if (preg_match($cell, $line))
             {
                 $numbers[] = array(
-                    'number' => StringUtility::extractPhoneNumber($line),
+                    'number' => (new StringUtility())->extractPhoneNumber($line),
                     'type'   => 'cell'
                 );
             }
             else if (preg_match($home, $line))
             {
                 $numbers[] = array(
-                    'number' => StringUtility::extractPhoneNumber($line),
+                    'number' => (new StringUtility())->extractPhoneNumber($line),
                     'type'   => 'home'
                 );
             }
             else if (preg_match($work, $line))
             {
                 $numbers[] = array(
-                    'number' => StringUtility::extractPhoneNumber($line),
+                    'number' => (new StringUtility())->extractPhoneNumber($line),
                     'type'   => 'work'
                 );
             }
@@ -698,12 +698,12 @@ class AddressParser
             {
                 if ($this->_mode != ADDRESSPARSER_MODE_COMPANY)
                 {
-                    $unknownNumbers[] = StringUtility::extractPhoneNumber($line);
+                    $unknownNumbers[] = (new StringUtility())->extractPhoneNumber($line);
                 }
                 else
                 {
                     $numbers[] = array(
-                        'number' => StringUtility::extractPhoneNumber($line),
+                        'number' => (new StringUtility())->extractPhoneNumber($line),
                         'type'   => 'general'
                     );
                 }
@@ -711,37 +711,37 @@ class AddressParser
             else if (preg_match($fax, $line))
             {
                 $numbers[] = array(
-                    'number' => StringUtility::extractPhoneNumber($line),
+                    'number' => (new StringUtility())->extractPhoneNumber($line),
                     'type'   => 'fax'
                 );
             }
             else if (preg_match($tty, $line))
             {
                 $numbers[] = array(
-                    'number' => StringUtility::extractPhoneNumber($line),
+                    'number' => (new StringUtility())->extractPhoneNumber($line),
                     'type'   => 'tty'
                 );
             }
             else if (preg_match($pager, $line))
             {
                 $numbers[] = array(
-                    'number' => StringUtility::extractPhoneNumber($line),
+                    'number' => (new StringUtility())->extractPhoneNumber($line),
                     'type'   => 'pager'
                 );
             }
-            else if (StringUtility::isPhoneNumber($line))
+            else if ((new StringUtility())->isPhoneNumber($line))
             {
                 /* In this case, the line contains only a phone number, and is
                  * truely unknown.
                  */
-                $unknownNumbers[] = StringUtility::extractPhoneNumber($line);
+                $unknownNumbers[] = (new StringUtility())->extractPhoneNumber($line);
             }
             else
             {
                 /* In this case, the line contains other data besides just a
                  * phone number. We just can't identify it as anything.
                  */
-                $unknownNumbers[] = StringUtility::extractPhoneNumber($line);
+                $unknownNumbers[] = (new StringUtility())->extractPhoneNumber($line);
             }
         }
 

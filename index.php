@@ -103,9 +103,9 @@ if (get_magic_quotes_gpc())
     $_GET     = array_map('stripslashes_deep', $_GET);
     $_POST    = array_map('stripslashes_deep', $_POST);
     $_REQUEST = array_map('stripslashes_deep', $_REQUEST);
-    $_GET     = ArrayUtility::arrayMapKeys('stripslashes_deep', $_GET);
-    $_POST    = ArrayUtility::arrayMapKeys('stripslashes_deep', $_POST);
-    $_REQUEST = ArrayUtility::arrayMapKeys('stripslashes_deep', $_REQUEST);
+    $_GET     = (new ArrayUtility())->arrayMapKeys('stripslashes_deep', $_GET);
+    $_POST    = (new ArrayUtility())->arrayMapKeys('stripslashes_deep', $_POST);
+    $_REQUEST = (new ArrayUtility())->arrayMapKeys('stripslashes_deep', $_REQUEST);
 }
 
 /* Objects can't be stored in the session if session.auto_start is enabled. */

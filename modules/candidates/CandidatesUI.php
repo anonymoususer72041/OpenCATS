@@ -620,7 +620,7 @@ class CandidatesUI extends UserInterface
         /* We want to handle formatting the city and state here instead
          * of in the template.
          */
-        $data['cityAndState'] = StringUtility::makeCityStateString(
+        $data['cityAndState'] = (new StringUtility())->makeCityStateString(
             $data['city'], $data['state']
         );
 
@@ -721,14 +721,14 @@ class CandidatesUI extends UserInterface
                 $pipelinesRS[$rowIndex]['linkClass'] = 'jobLinkCold';
             }
 
-            $pipelinesRS[$rowIndex]['ownerAbbrName'] = StringUtility::makeInitialName(
+            $pipelinesRS[$rowIndex]['ownerAbbrName'] = (new StringUtility())->makeInitialName(
                 $pipelinesRS[$rowIndex]['ownerFirstName'],
                 $pipelinesRS[$rowIndex]['ownerLastName'],
                 false,
                 LAST_NAME_MAXLEN
             );
 
-            $pipelinesRS[$rowIndex]['addedByAbbrName'] = StringUtility::makeInitialName(
+            $pipelinesRS[$rowIndex]['addedByAbbrName'] = (new StringUtility())->makeInitialName(
                 $pipelinesRS[$rowIndex]['addedByFirstName'],
                 $pipelinesRS[$rowIndex]['addedByLastName'],
                 false,
@@ -759,7 +759,7 @@ class CandidatesUI extends UserInterface
                     $activityRS[$rowIndex]['regarding'] = 'General';
                 }
 
-                $activityRS[$rowIndex]['enteredByAbbrName'] = StringUtility::makeInitialName(
+                $activityRS[$rowIndex]['enteredByAbbrName'] = (new StringUtility())->makeInitialName(
                     $activityRS[$rowIndex]['enteredByFirstName'],
                     $activityRS[$rowIndex]['enteredByLastName'],
                     false,
@@ -774,7 +774,7 @@ class CandidatesUI extends UserInterface
         {
             foreach ($calendarRS as $rowIndex => $row)
             {
-                $calendarRS[$rowIndex]['enteredByAbbrName'] = StringUtility::makeInitialName(
+                $calendarRS[$rowIndex]['enteredByAbbrName'] = (new StringUtility())->makeInitialName(
                     $calendarRS[$rowIndex]['enteredByFirstName'],
                     $calendarRS[$rowIndex]['enteredByLastName'],
                     false,
@@ -1317,7 +1317,7 @@ class CandidatesUI extends UserInterface
             );
         }
 
-        $formattedPhoneHome = StringUtility::extractPhoneNumber(
+        $formattedPhoneHome = (new StringUtility())->extractPhoneNumber(
             $this->getTrimmedInput('phoneHome', $_POST)
         );
         if (!empty($formattedPhoneHome))
@@ -1329,7 +1329,7 @@ class CandidatesUI extends UserInterface
             $phoneHome = $this->getTrimmedInput('phoneHome', $_POST);
         }
 
-        $formattedPhoneCell = StringUtility::extractPhoneNumber(
+        $formattedPhoneCell = (new StringUtility())->extractPhoneNumber(
             $this->getTrimmedInput('phoneCell', $_POST)
         );
         if (!empty($formattedPhoneCell))
@@ -1341,7 +1341,7 @@ class CandidatesUI extends UserInterface
             $phoneCell = $this->getTrimmedInput('phoneCell', $_POST);
         }
 
-        $formattedPhoneWork = StringUtility::extractPhoneNumber(
+        $formattedPhoneWork = (new StringUtility())->extractPhoneNumber(
             $this->getTrimmedInput('phoneWork', $_POST)
         );
         if (!empty($formattedPhoneWork))
@@ -1644,14 +1644,14 @@ class CandidatesUI extends UserInterface
                 $rs[$rowIndex]['linkClass'] = 'jobLinkCold';
             }
 
-            $rs[$rowIndex]['recruiterAbbrName'] = StringUtility::makeInitialName(
+            $rs[$rowIndex]['recruiterAbbrName'] = (new StringUtility())->makeInitialName(
                 $row['recruiterFirstName'],
                 $row['recruiterLastName'],
                 false,
                 LAST_NAME_MAXLEN
             );
 
-            $rs[$rowIndex]['ownerAbbrName'] = StringUtility::makeInitialName(
+            $rs[$rowIndex]['ownerAbbrName'] = (new StringUtility())->makeInitialName(
                 $row['ownerFirstName'],
                 $row['ownerLastName'],
                 false,
@@ -2193,7 +2193,7 @@ class CandidatesUI extends UserInterface
                 {
                     if (!empty($row['ownerFirstName']))
                     {
-                        $rs[$rowIndex]['ownerAbbrName'] = StringUtility::makeInitialName(
+                        $rs[$rowIndex]['ownerAbbrName'] = (new StringUtility())->makeInitialName(
                             $row['ownerFirstName'],
                             $row['ownerLastName'],
                             false,
@@ -2224,7 +2224,7 @@ class CandidatesUI extends UserInterface
                 {
                     if (!empty($row['ownerFirstName']))
                     {
-                        $rs[$rowIndex]['ownerAbbrName'] = StringUtility::makeInitialName(
+                        $rs[$rowIndex]['ownerAbbrName'] = (new StringUtility())->makeInitialName(
                             $row['ownerFirstName'],
                             $row['ownerLastName'],
                             false,
@@ -2291,7 +2291,7 @@ class CandidatesUI extends UserInterface
 
                     if (!empty($row['ownerFirstName']))
                     {
-                        $rs[$rowIndex]['ownerAbbrName'] = StringUtility::makeInitialName(
+                        $rs[$rowIndex]['ownerAbbrName'] = (new StringUtility())->makeInitialName(
                             $row['ownerFirstName'],
                             $row['ownerLastName'],
                             false,
@@ -2323,7 +2323,7 @@ class CandidatesUI extends UserInterface
                 {
                     if (!empty($row['ownerFirstName']))
                     {
-                        $rs[$rowIndex]['ownerAbbrName'] = StringUtility::makeInitialName(
+                        $rs[$rowIndex]['ownerAbbrName'] = (new StringUtility())->makeInitialName(
                             $row['ownerFirstName'],
                             $row['ownerLastName'],
                             false,
@@ -2354,7 +2354,7 @@ class CandidatesUI extends UserInterface
                 {
                     if (!empty($row['ownerFirstName']))
                     {
-                        $rs[$rowIndex]['ownerAbbrName'] = StringUtility::makeInitialName(
+                        $rs[$rowIndex]['ownerAbbrName'] = (new StringUtility())->makeInitialName(
                             $row['ownerFirstName'],
                             $row['ownerLastName'],
                             false,
@@ -2685,7 +2685,7 @@ class CandidatesUI extends UserInterface
 
             if (!empty($resultSet[$rowIndex]['ownerFirstName']))
             {
-                $resultSet[$rowIndex]['ownerAbbrName'] = StringUtility::makeInitialName(
+                $resultSet[$rowIndex]['ownerAbbrName'] = (new StringUtility())->makeInitialName(
                     $resultSet[$rowIndex]['ownerFirstName'],
                     $resultSet[$rowIndex]['ownerLastName'],
                     false,
@@ -2790,7 +2790,7 @@ class CandidatesUI extends UserInterface
             );
         }
 
-        $formattedPhoneHome = StringUtility::extractPhoneNumber(
+        $formattedPhoneHome = (new StringUtility())->extractPhoneNumber(
             $this->getTrimmedInput('phoneHome', $_POST)
         );
         if (!empty($formattedPhoneHome))
@@ -2802,7 +2802,7 @@ class CandidatesUI extends UserInterface
             $phoneHome = $this->getTrimmedInput('phoneHome', $_POST);
         }
 
-        $formattedPhoneCell = StringUtility::extractPhoneNumber(
+        $formattedPhoneCell = (new StringUtility())->extractPhoneNumber(
             $this->getTrimmedInput('phoneCell', $_POST)
         );
         if (!empty($formattedPhoneCell))
@@ -2814,7 +2814,7 @@ class CandidatesUI extends UserInterface
             $phoneCell = $this->getTrimmedInput('phoneCell', $_POST);
         }
 
-        $formattedPhoneWork = StringUtility::extractPhoneNumber(
+        $formattedPhoneWork = (new StringUtility())->extractPhoneNumber(
             $this->getTrimmedInput('phoneWork', $_POST)
         );
         if (!empty($formattedPhoneWork))
