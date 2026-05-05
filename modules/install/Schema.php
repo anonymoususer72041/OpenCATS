@@ -1447,6 +1447,10 @@ class CATSSchema
                 SET short_description = \'Not reached\'
                 WHERE activity_type_id = 100;
             ',
+            '377' => '
+                DROP TABLE IF EXISTS `candidate_jobordrer_status_type`;
+                DROP TABLE IF EXISTS `candidate_joborder_status_type`;
+            ',
 
         );
     }
