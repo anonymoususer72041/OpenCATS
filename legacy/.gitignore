@@ -6,6 +6,8 @@ docker/data/*
 docker/persist/*
 vendor/*
 attachments/*
+!attachments/.htaccess
+!attachments/index.php
 temp/*
 !temp/.htaccess
 uploads/*
