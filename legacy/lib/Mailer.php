@@ -39,8 +39,8 @@
  use PHPMailer\PHPMailer\PHPMailer;
  use PHPMailer\PHPMailer\Exception;
 
- // Load Composer's autoloader
- require './vendor/autoload.php';
+ // Load Composer's autoloader from the wrapper root
+ require __DIR__ . '/../../vendor/autoload.php';
 
 // FIXME: Remove this dependency! Bad bad bad!
 include_once(LEGACY_ROOT . '/lib/Pipelines.php');
