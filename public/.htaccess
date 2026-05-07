@@ -1,3 +1,16 @@
+# Legacy OpenCATS compatibility headers
+# These mirror the legacy .htaccess behavior while requests enter through public/
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=(), usb=()"
+    Header always set X-Frame-Options "SAMEORIGIN"
+
+    # The Career Portal may be embedded into external websites using an iframe.
+    SetEnvIf Request_URI "^/careers(/|$)" OPENCATS_CAREERS_PORTAL
+    Header always unset X-Frame-Options env=OPENCATS_CAREERS_PORTAL
+</IfModule>
+
 <IfModule mod_rewrite.c>
     <IfModule mod_negotiation.c>
         Options -MultiViews -Indexes
