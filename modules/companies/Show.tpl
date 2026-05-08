@@ -461,6 +461,14 @@ use OpenCATS\UI\QuickActionMenu;
                     </tr>
                 <?php endforeach; ?>
             </table>
+            <div id="addActivityDiv">
+                <?php if ($this->getUserAccessLevel('companies.editActivity') >= ACCESS_LEVEL_EDIT): ?>
+                    <a href="#" id="addActivityLink" title="Log an Activity / Schedule Event" onclick="showPopWin(<?php echo Template::escapeJsAttr(CATSUtility::getIndexName() . '?m=companies&a=addActivityScheduleEvent&companyID=' . $this->companyID); ?>, 600, 420, null); return false;">
+                        <img src="images/new_activity_inline.gif" width="16" height="16" class="absmiddle" title="Log an Activity / Schedule Event" alt="Log an Activity / Schedule Event" border="0" />&nbsp;Log an Activity / Schedule Event
+                    </a>
+                <?php endif; ?>
+                <img src="images/indicator2.gif" id="addActivityIndicator" alt="" style="visibility: hidden; margin-left: 5px;" height="16" width="16" />
+            </div>
         </div>
     </div>
 

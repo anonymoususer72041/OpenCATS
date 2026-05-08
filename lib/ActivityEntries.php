@@ -83,14 +83,21 @@ class ActivityEntries
      * @param integer Entered-by user ID.
      * @param integer Job Order ID; -1 for general (stored as NULL).
      * @param string Date created timestamp (YYYY-MM-DD HH:MM:SS); false for NOW().
+     * @param integer Contact ID; invalid values are stored as NULL.
      * @return integer New Activity ID; -1 on failure.
      */
     public function add($dataItemID, $dataItemType, $activityType,
-        $activityNotes, $enteredBy, $jobOrderID = -1, $dateCreated = false)
+        $activityNotes, $enteredBy, $jobOrderID = -1, $dateCreated = false,
+        $contactID = false)
     {
         if (!ctype_digit((string) $jobOrderID) || (int) $jobOrderID <= 0)
         {
             $jobOrderID = -1;
+        }
+
+        if (!ctype_digit((string) $contactID) || (int) $contactID <= 0)
+        {
+            $contactID = -1;
         }
 
         if (is_string($dateCreated) &&
@@ -107,6 +114,7 @@ class ActivityEntries
             "INSERT INTO activity (
                 data_item_id,
                 data_item_type,
+                contact_id,
                 joborder_id,
                 entered_by,
                 type,
@@ -128,6 +136,7 @@ class ActivityEntries
             )",
             $this->_db->makeQueryInteger($dataItemID),
             $this->_db->makeQueryInteger($dataItemType),
+            $this->_db->makeQueryIntegerOrNULL($contactID),
             $this->_db->makeQueryIntegerOrNULL($jobOrderID),
             $this->_db->makeQueryInteger($enteredBy),
             $this->_db->makeQueryInteger($activityType),
