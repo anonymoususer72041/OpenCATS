@@ -292,7 +292,7 @@ use OpenCATS\UI\QuickActionMenu;
                         <td align="left" valign="top"><?php $this->_($activityData['enteredByAbbrName']) ?></td>
                         <td align="center" >
                             <?php if ($this->getUserAccessLevel('contacts.editActivity') >= ACCESS_LEVEL_EDIT): ?>
-                                <a href="#" id="editActivity<?php echo Template::escapeAttr($activityData['activityID']); ?>" onclick="Activity_editEntry(<?php echo (int) $activityData['activityID']; ?>, <?php echo (int) $this->contactID; ?>, <?php echo (int) DATA_ITEM_CONTACT; ?>, <?php echo Template::escapeJsAttr($this->sessionCookie); ?>); return false;">
+                                <a href="#" id="editActivity<?php echo Template::escapeAttr($activityData['activityID']); ?>" onclick="Activity_editEntry(<?php echo (int) $activityData['activityID']; ?>, <?php echo (int) $activityData['dataItemID']; ?>, <?php echo (int) $activityData['dataItemType']; ?>, <?php echo Template::escapeJsAttr($this->sessionCookie); ?>); return false;">
                                     <img src="images/actions/edit.gif" width="16" height="16" alt="" class="absmiddle" border="0" title="Edit"/>
                                 </a>
                             <?php endif; ?>

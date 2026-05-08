@@ -460,7 +460,11 @@ class CompaniesUI extends UserInterface
                     $activityRS[$rowIndex]['contactLastName']
                 );
 
-                if ($activityRS[$rowIndex]['contactFullName'] == '')
+                if (empty($activityRS[$rowIndex]['contactID']))
+                {
+                    $activityRS[$rowIndex]['contactFullName'] = 'None';
+                }
+                else if ($activityRS[$rowIndex]['contactFullName'] == '')
                 {
                     $activityRS[$rowIndex]['contactFullName'] = '(Unknown Contact)';
                 }
