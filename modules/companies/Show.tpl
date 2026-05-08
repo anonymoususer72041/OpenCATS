@@ -447,12 +447,12 @@ use OpenCATS\UI\QuickActionMenu;
                         <td align="left" valign="top" id="activityRegarding<?php echo Template::escapeAttr($activityData['activityID']); ?>" data-joborder-id="<?php echo Template::escapeAttr(isset($activityData['jobOrderID']) ? $activityData['jobOrderID'] : ''); ?>"><?php $this->_($activityData['regarding']); ?></td>
                         <td align="left" valign="top" id="activityNotes<?php echo Template::escapeAttr($activityData['activityID']); ?>"><?php echo nl2br(Template::escapeHtml($activityData['notes'])); ?></td>
                         <td align="center">
-                            <?php if ($this->getUserAccessLevel('contacts.editActivity') >= ACCESS_LEVEL_EDIT): ?>
+                            <?php if ($this->getUserAccessLevel('companies.editActivity') >= ACCESS_LEVEL_EDIT): ?>
                                 <a href="#" id="editActivity<?php echo Template::escapeAttr($activityData['activityID']); ?>" onclick="Activity_editEntry(<?php echo (int) $activityData['activityID']; ?>, <?php echo (int) $activityData['dataItemID']; ?>, <?php echo (int) $activityData['dataItemType']; ?>, <?php echo Template::escapeJsAttr($this->sessionCookie); ?>); return false;">
                                     <img src="images/actions/edit.gif" width="16" height="16" alt="" class="absmiddle" border="0" title="Edit"/>
                                 </a>
                             <?php endif; ?>
-                            <?php if ($this->getUserAccessLevel('contacts.deleteActivity') >= ACCESS_LEVEL_EDIT): ?>
+                            <?php if ($this->getUserAccessLevel('companies.deleteActivity') >= ACCESS_LEVEL_EDIT): ?>
                                 <a href="#" id="deleteActivity<?php echo Template::escapeAttr($activityData['activityID']); ?>" onclick="Activity_deleteEntry(<?php echo (int) $activityData['activityID']; ?>, <?php echo Template::escapeJsAttr($this->sessionCookie); ?>); return false;">
                                     <img src="images/actions/delete.gif" width="16" height="16" alt="" class="absmiddle" border="0" title="Delete"/>
                                 </a>
