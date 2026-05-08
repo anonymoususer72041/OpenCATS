@@ -1455,6 +1455,41 @@ class CATSSchema
                 ALTER TABLE `activity`
                 ADD KEY `IDX_site_contact_id` (`site_id`,`contact_id`);
             ',
+            '378' => '
+                /* Convert legacy contact activities to company activities while preserving the contact reference. */
+                UPDATE `activity`
+                INNER JOIN `contact`
+                    ON `activity`.`data_item_id` = `contact`.`contact_id`
+                    AND `activity`.`site_id` = `contact`.`site_id`
+                INNER JOIN `company`
+                    ON `contact`.`company_id` = `company`.`company_id`
+                    AND `contact`.`site_id` = `company`.`site_id`
+                SET
+                    `activity`.`contact_id` = `contact`.`contact_id`,
+                    `activity`.`data_item_id` = `contact`.`company_id`,
+                    `activity`.`data_item_type` = 200
+                WHERE
+                    `activity`.`data_item_type` = 300
+                    AND `activity`.`contact_id` IS NULL;
+
+                /* Remove legacy contact activities that could not be converted to valid company activities. */
+                DELETE `activity`
+                FROM `activity`
+                LEFT JOIN `contact`
+                    ON `activity`.`data_item_id` = `contact`.`contact_id`
+                    AND `activity`.`site_id` = `contact`.`site_id`
+                LEFT JOIN `company`
+                    ON `contact`.`company_id` = `company`.`company_id`
+                    AND `contact`.`site_id` = `company`.`site_id`
+                WHERE
+                    `activity`.`data_item_type` = 300
+                    AND `activity`.`contact_id` IS NULL
+                    AND (
+                        `contact`.`contact_id` IS NULL
+                        OR `contact`.`company_id` IN (0, -1)
+                        OR `company`.`company_id` IS NULL
+                    );
+            ',
 
         );
     }
