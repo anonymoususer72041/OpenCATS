@@ -1447,6 +1447,11 @@ class CATSSchema
                 SET short_description = \'Not reached\'
                 WHERE activity_type_id = 100;
             ',
+            '377' => '
+                ALTER TABLE `activity`
+                MODIFY COLUMN `data_item_type` int(11) NOT NULL DEFAULT \'0\'
+                AFTER `activity_id`;
+            ',
 
         );
     }
