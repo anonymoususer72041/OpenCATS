@@ -520,7 +520,7 @@ class ActivityEntries
     }
 
     /**
-     * Returns all activity entries for contacts belonging to a company.
+     * Returns all company activity entries, including optional contact data.
      *
      * @param integer Company ID.
      * @return resultset Activity entries data.
@@ -531,6 +531,7 @@ class ActivityEntries
             "SELECT
                 activity.activity_id AS activityID,
                 activity.data_item_id AS dataItemID,
+                activity.data_item_type AS dataItemType,
                 activity.joborder_id AS jobOrderID,
                 activity.notes AS notes,
                 DATE_FORMAT(
@@ -561,22 +562,91 @@ class ActivityEntries
                 ON activity.joborder_id = joborder.joborder_id
             LEFT JOIN company
                 ON joborder.company_id = company.company_id
-            INNER JOIN contact
-                ON activity.data_item_id = contact.contact_id
+            LEFT JOIN contact
+                ON activity.contact_id = contact.contact_id
+                AND activity.site_id = contact.site_id
             WHERE
-                contact.company_id = %s
+                activity.data_item_id = %s
             AND
                 activity.data_item_type = %s
             AND
                 activity.site_id = %s
-            AND
-                contact.site_id = %s
             ORDER BY
                 dateCreatedSort DESC,
                 activity.activity_id DESC",
             $this->_db->makeQueryInteger($companyID),
+            $this->_db->makeQueryInteger(DATA_ITEM_COMPANY),
+            $this->_db->makeQueryInteger($this->_siteID)
+        );
+
+        return $this->_db->getAllAssoc($sql);
+    }
+
+    /**
+     * Returns all activity entries for a contact, including company-parent
+     * activities and legacy contact-parent activities.
+     *
+     * @param integer Contact ID.
+     * @return resultset Activity entries data.
+     */
+    public function getAllByContact($contactID)
+    {
+        $sql = sprintf(
+            "SELECT
+                activity.activity_id AS activityID,
+                activity.data_item_id AS dataItemID,
+                activity.data_item_type AS dataItemType,
+                activity.joborder_id AS jobOrderID,
+                activity.notes AS notes,
+                DATE_FORMAT(
+                    activity.date_created, '%%m-%%d-%%y (%%h:%%i %%p)'
+                ) AS dateCreated,
+                activity.date_created AS dateCreatedSort,
+                activity.type AS type,
+                activity_type.short_description AS typeDescription,
+                entered_by_user.first_name AS enteredByFirstName,
+                entered_by_user.last_name AS enteredByLastName,
+                IFNULL(activity.contact_id, activity.data_item_id) AS contactID,
+                IF(
+                    ISNULL(joborder.title),
+                    'General',
+                    CONCAT(joborder.title, ' (', company.name, ')')
+                ) AS regarding,
+                joborder.title AS regardingJobTitle,
+                company.name AS regardingCompanyName
+            FROM
+                activity
+            LEFT JOIN user AS entered_by_user
+                ON activity.entered_by = entered_by_user.user_id
+            LEFT JOIN activity_type
+                ON activity.type = activity_type.activity_type_id
+            LEFT JOIN joborder
+                ON activity.joborder_id = joborder.joborder_id
+            LEFT JOIN company
+                ON joborder.company_id = company.company_id
+            WHERE
+                (
+                    (
+                        activity.contact_id = %s
+                    AND
+                        activity.data_item_type = %s
+                    )
+                OR
+                    (
+                        activity.data_item_id = %s
+                    AND
+                        activity.data_item_type = %s
+                    )
+                )
+            AND
+                activity.site_id = %s
+            ORDER BY
+                dateCreatedSort DESC,
+                activity.activity_id DESC",
+            $this->_db->makeQueryInteger($contactID),
+            $this->_db->makeQueryInteger(DATA_ITEM_COMPANY),
+            $this->_db->makeQueryInteger($contactID),
             $this->_db->makeQueryInteger(DATA_ITEM_CONTACT),
-            $this->_db->makeQueryInteger($this->_siteID),
             $this->_db->makeQueryInteger($this->_siteID)
         );
 
