@@ -34,8 +34,8 @@ insert  into `access_level`(`access_level_id`,`short_description`,`long_descript
 
 CREATE TABLE `activity` (
   `activity_id` int(11) NOT NULL AUTO_INCREMENT,
-  `data_item_id` int(11) NOT NULL DEFAULT '0',
   `data_item_type` int(11) NOT NULL DEFAULT '0',
+  `data_item_id` int(11) NOT NULL DEFAULT '0',
   `joborder_id` int(11) DEFAULT NULL,
   `site_id` int(11) NOT NULL DEFAULT '0',
   `entered_by` int(11) NOT NULL DEFAULT '0',
