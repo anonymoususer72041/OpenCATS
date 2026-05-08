@@ -347,7 +347,7 @@ class ContactsUI extends UserInterface
         }
 
         $activityEntries = new ActivityEntries($this->_siteID);
-        $activityRS = $activityEntries->getAllByDataItem($contactID, DATA_ITEM_CONTACT);
+        $activityRS = $activityEntries->getAllByContact($contactID);
         if (!empty($activityRS))
         {
             foreach ($activityRS as $rowIndex => $row)
