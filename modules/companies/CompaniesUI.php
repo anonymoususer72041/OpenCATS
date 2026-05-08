@@ -39,6 +39,7 @@ include_once(LEGACY_ROOT . '/lib/Export.php');
 include_once(LEGACY_ROOT . '/lib/ListEditor.php');
 include_once(LEGACY_ROOT . '/lib/FileUtility.php');
 include_once(LEGACY_ROOT . '/lib/ExtraFields.php');
+include_once(LEGACY_ROOT . '/lib/Calendar.php');
 include_once(LEGACY_ROOT . '/lib/CommonErrors.php');
 
 class CompaniesUI extends UserInterface
@@ -171,6 +172,21 @@ class CompaniesUI extends UserInterface
                     $this->createAttachment();
                 }
 
+                break;
+
+            case 'addActivityScheduleEvent':
+                if ($this->getUserAccessLevel('companies.editActivity') < ACCESS_LEVEL_EDIT)
+                {
+                    CommonErrors::fatal(COMMONERROR_PERMISSION, $this, 'Invalid user level for action.');
+                }
+                if ($this->isPostBack())
+                {
+                    $this->onAddActivityScheduleEvent();
+                }
+                else
+                {
+                    $this->addActivityScheduleEvent();
+                }
                 break;
 
             /* Delete an attachment */
@@ -1235,6 +1251,346 @@ class CompaniesUI extends UserInterface
 
         CATSUtility::transferRelativeURI(
             'm=companies&a=show&companyID=' . $companyID
+        );
+    }
+
+    private function addActivityScheduleEvent()
+    {
+        if (!$this->isRequiredIDValid('companyID', $_GET))
+        {
+            CommonErrors::fatalModal(COMMONERROR_BADINDEX, $this, 'Invalid company ID.');
+        }
+
+        $companyID = $_GET['companyID'];
+
+        $companies = new Companies($this->_siteID);
+        $companyData = $companies->get($companyID);
+        if (empty($companyData))
+        {
+            CommonErrors::fatalModal(COMMONERROR_BADINDEX, $this, 'The specified company ID could not be found.');
+        }
+
+        $regardingRS = $companies->getNonClosedJobOrdersArray($companyID);
+
+        $contacts = new Contacts($this->_siteID);
+        $contactsRS = $contacts->getAll(-1, $companyID);
+
+        $calendar = new Calendar($this->_siteID);
+        $calendarEventTypes = $calendar->getAllEventTypes();
+
+        $onlyScheduleEvent = $this->isChecked('onlyScheduleEvent', $_GET);
+
+        if (SystemUtility::isSchedulerEnabled() && !$_SESSION['CATS']->isDemo())
+        {
+            $allowEventReminders = true;
+        }
+        else
+        {
+            $allowEventReminders = false;
+        }
+
+        $this->_template->assign('companyID', $companyID);
+        $this->_template->assign('contactsRS', $contactsRS);
+        $this->_template->assign('regardingRS', $regardingRS);
+        $this->_template->assign('allowEventReminders', $allowEventReminders);
+        $this->_template->assign('userEmail', $_SESSION['CATS']->getEmail());
+        $this->_template->assign('onlyScheduleEvent', $onlyScheduleEvent);
+        $this->_template->assign('calendarEventTypes', $calendarEventTypes);
+        $this->_template->assign('isFinishedMode', false);
+        $this->_template->display(
+            './modules/companies/AddActivityScheduleEventModal.tpl'
+        );
+    }
+
+    private function onAddActivityScheduleEvent()
+    {
+        if (!$this->isOptionalIDValid('regardingID', $_POST))
+        {
+            CommonErrors::fatalModal(COMMONERROR_BADINDEX, $this, 'Invalid job order ID.');
+        }
+
+        $regardingID = $_POST['regardingID'];
+
+        if (!$this->isRequiredIDValid('companyID', $_POST))
+        {
+            CommonErrors::fatalModal(COMMONERROR_BADINDEX, $this, 'Invalid company ID.');
+        }
+
+        if (!$this->isOptionalIDValid('contactID', $_POST))
+        {
+            CommonErrors::fatalModal(COMMONERROR_BADINDEX, $this, 'Invalid contact ID.');
+        }
+
+        $companyID = (int) $_POST['companyID'];
+        $contactID = (int) $_POST['contactID'];
+
+        $companies = new Companies($this->_siteID);
+        $companyData = $companies->get($companyID);
+        if (empty($companyData))
+        {
+            CommonErrors::fatalModal(COMMONERROR_BADINDEX, $this, 'The specified company ID could not be found.');
+        }
+
+        if ($contactID > 0)
+        {
+            $contacts = new Contacts($this->_siteID);
+            $contactData = $contacts->get($contactID);
+            if (empty($contactData) || (int) $contactData['companyID'] !== $companyID)
+            {
+                CommonErrors::fatalModal(COMMONERROR_BADINDEX, $this, 'Invalid contact ID.');
+            }
+        }
+        else
+        {
+            $contactID = -1;
+        }
+
+        if ($this->isChecked('addActivity', $_POST))
+        {
+            if (!$this->isRequiredIDValid('activityTypeID', $_POST))
+            {
+                $this->fatalModal('You must select an activity type.');
+            }
+
+            $activityTypeID = (int) $_POST['activityTypeID'];
+            $activityEntries = new ActivityEntries($this->_siteID);
+            $activityTypes = $activityEntries->getTypes();
+            if (ResultSetUtility::findRowByColumnValue(
+                $activityTypes, 'typeID', $activityTypeID
+            ) === false)
+            {
+                CommonErrors::fatalModal(COMMONERROR_BADINDEX, $this, 'Invalid activity type ID.');
+            }
+
+            $activityNote = $this->getTrimmedInput('activityNote', $_POST);
+
+            $activityDateOccurred = false;
+            $dateFormatFlag = $_SESSION['CATS']->isDateDMY()
+                ? DATE_FORMAT_DDMMYY
+                : DATE_FORMAT_MMDDYY;
+            $activityDate = $this->getTrimmedInput('activityDate', $_POST);
+            if (!empty($activityDate) &&
+                DateUtility::validate('-', $activityDate, $dateFormatFlag) &&
+                isset($_POST['activityHour']) && isset($_POST['activityMinute']) &&
+                isset($_POST['activityMeridiem']) &&
+                ctype_digit((string) $_POST['activityHour']) &&
+                ctype_digit((string) $_POST['activityMinute']) &&
+                ($_POST['activityMeridiem'] == 'AM' || $_POST['activityMeridiem'] == 'PM'))
+            {
+                $activityHour = (int) $_POST['activityHour'];
+                $activityMinute = (int) $_POST['activityMinute'];
+
+                if ($activityHour >= 1 && $activityHour <= 12 &&
+                    $activityMinute >= 0 && $activityMinute <= 59)
+                {
+                    $activityHour = $activityHour % 12;
+                    if ($_POST['activityMeridiem'] == 'PM')
+                    {
+                        $activityHour += 12;
+                    }
+
+                    $activityDateOccurred = sprintf(
+                        '%s %02d:%02d:00',
+                        DateUtility::convert(
+                            '-',
+                            $activityDate,
+                            $dateFormatFlag,
+                            DATE_FORMAT_YYYYMMDD
+                        ),
+                        $activityHour,
+                        $activityMinute
+                    );
+                }
+            }
+
+            $activityEntries->add(
+                $companyID,
+                DATA_ITEM_COMPANY,
+                $activityTypeID,
+                $activityNote,
+                $this->_userID,
+                $regardingID,
+                $activityDateOccurred,
+                $contactID
+            );
+            $activityTypeDescription = ResultSetUtility::getColumnValueByIDValue(
+                $activityTypes, 'typeID', $activityTypeID, 'type'
+            );
+
+            $activityAdded = true;
+        }
+        else
+        {
+            $activityAdded = false;
+            $activityNote = '';
+            $activityTypeDescription = '';
+        }
+
+        if ($this->isChecked('scheduleEvent', $_POST))
+        {
+            $trimmedDate = $this->getTrimmedInput('dateAdd', $_POST);
+            $dateFormatFlag = $_SESSION['CATS']->isDateDMY()
+                ? DATE_FORMAT_DDMMYY
+                : DATE_FORMAT_MMDDYY;
+            if (empty($trimmedDate) ||
+                !DateUtility::validate('-', $trimmedDate, $dateFormatFlag))
+            {
+                CommonErrors::fatalModal(COMMONERROR_MISSINGFIELDS, $this, 'Invalid date.');
+            }
+
+            if (!$this->isRequiredIDValid('eventTypeID', $_POST))
+            {
+                CommonErrors::fatalModal(COMMONERROR_BADINDEX, $this, 'Invalid event type ID.');
+            }
+
+            if (!isset($_POST['allDay']) ||
+                ($_POST['allDay'] != '0' && $_POST['allDay'] != '1'))
+            {
+                CommonErrors::fatalModal(COMMONERROR_MISSINGFIELDS, $this, 'Invalid time format ID.');
+            }
+
+            $eventTypeID = $_POST['eventTypeID'];
+
+            if ($_POST['allDay'] == 1)
+            {
+                $allDay = true;
+            }
+            else
+            {
+                $allDay = false;
+            }
+
+            $publicEntry = $this->isChecked('publicEntry', $_POST);
+
+            $reminderEnabled = $this->isChecked('reminderToggle', $_POST);
+            $reminderEmail = $this->getTrimmedInput('sendEmail', $_POST);
+            $reminderTime  = $this->getTrimmedInput('reminderTime', $_POST);
+
+            $duration = -1;
+
+            if ($allDay)
+            {
+                $date = DateUtility::convert(
+                    '-', $trimmedDate, $dateFormatFlag, DATE_FORMAT_YYYYMMDD
+                );
+
+                $hour = 12;
+                $minute = 0;
+                $meridiem = 'AM';
+            }
+            else
+            {
+                if (!isset($_POST['hour']) || !ctype_digit((string) $_POST['hour']) ||
+                    !isset($_POST['minute']) || !ctype_digit((string) $_POST['minute']) ||
+                    !isset($_POST['meridiem']) ||
+                    ($_POST['meridiem'] != 'AM' && $_POST['meridiem'] != 'PM'))
+                {
+                    CommonErrors::fatalModal(COMMONERROR_MISSINGFIELDS, $this, 'Invalid meridiem value.');
+                }
+
+                $hour     = $_POST['hour'];
+                $minute   = $_POST['minute'];
+                $meridiem = $_POST['meridiem'];
+
+                $time = strtotime(
+                    sprintf('%s:%s %s', $hour, $minute, $meridiem)
+                );
+
+                $date = sprintf(
+                    '%s %s',
+                    DateUtility::convert(
+                        '-',
+                        $trimmedDate,
+                        $dateFormatFlag,
+                        DATE_FORMAT_YYYYMMDD
+                    ),
+                    date('H:i:00', $time)
+                );
+            }
+
+            $description = $this->getTrimmedInput('description', $_POST);
+            $title       = $this->getTrimmedInput('title', $_POST);
+
+            if (empty($title))
+            {
+                CommonErrors::fatalModal(COMMONERROR_MISSINGFIELDS, $this, 'Required fields are missing.');
+            }
+
+            if ($regardingID > 0)
+            {
+                $eventJobOrderID = $regardingID;
+            }
+            else
+            {
+                $eventJobOrderID = null;
+            }
+
+            $calendar = new Calendar($this->_siteID);
+            $eventID = $calendar->addEvent(
+                $eventTypeID, $date, $description, $allDay, $this->_userID,
+                $companyID, DATA_ITEM_COMPANY, $eventJobOrderID, $title,
+                $duration, $reminderEnabled, $reminderEmail, $reminderTime,
+                $publicEntry, $_SESSION['CATS']->getTimeZoneOffset()
+            );
+
+            if ($eventID <= 0)
+            {
+                CommonErrors::fatalModal(COMMONERROR_RECORDERROR, $this, 'Failed to add calendar event.');
+            }
+
+            $parsedDate = strtotime($date);
+            $formattedDate = date('l, F jS, Y', $parsedDate);
+
+            $calendar = new Calendar($this->_siteID);
+            $calendarEventTypes = $calendar->getAllEventTypes();
+
+            $eventTypeDescription = ResultSetUtility::getColumnValueByIDValue(
+                $calendarEventTypes, 'typeID', $eventTypeID, 'description'
+            );
+
+            $eventHTML = sprintf(
+                '<p>An event of type <span class="bold">%s</span> has been scheduled on <span class="bold">%s</span>.</p>',
+                htmlspecialchars($eventTypeDescription),
+                htmlspecialchars($formattedDate)
+            );
+            $eventScheduled = true;
+        }
+        else
+        {
+            $eventHTML = '<p>No event has been scheduled.</p>';
+            $eventScheduled = false;
+        }
+
+        if (isset($_GET['onlyScheduleEvent']))
+        {
+            $onlyScheduleEvent = true;
+        }
+        else
+        {
+            $onlyScheduleEvent = false;
+        }
+
+        if (!$activityAdded && !$eventScheduled)
+        {
+            $changesMade = false;
+        }
+        else
+        {
+            $changesMade = true;
+        }
+
+        $this->_template->assign('companyID', $companyID);
+        $this->_template->assign('regardingID', $regardingID);
+        $this->_template->assign('activityAdded', $activityAdded);
+        $this->_template->assign('activityDescription', $activityNote);
+        $this->_template->assign('activityType', $activityTypeDescription);
+        $this->_template->assign('eventScheduled', $eventScheduled);
+        $this->_template->assign('onlyScheduleEvent', $onlyScheduleEvent);
+        $this->_template->assign('eventHTML', $eventHTML);
+        $this->_template->assign('changesMade', $changesMade);
+        $this->_template->assign('isFinishedMode', true);
+        $this->_template->display(
+            './modules/companies/AddActivityScheduleEventModal.tpl'
         );
     }
 

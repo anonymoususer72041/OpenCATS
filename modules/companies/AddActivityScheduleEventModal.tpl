@@ -1,9 +1,9 @@
-<?php /* $Id: AddActivityScheduleEventModal.tpl 3093 2007-09-24 21:09:45Z brian $ */ ?>
+<?php /* $Id: AddActivityScheduleEventModal.tpl 1 2026-05-08 00:00:00Z codex $ */ ?>
 
 <?php if(!$this->onlyScheduleEvent): ?>
-<?php TemplateUtility::printModalHeader('Contacts', array('modules/contacts/activityvalidator.js', 'js/activity.js'), 'Contacts: Log Activity'); ?>
+<?php TemplateUtility::printModalHeader('Companies', array('modules/contacts/activityvalidator.js', 'js/activity.js'), 'Companies: Log Activity'); ?>
 <?php else: ?>
-<?php TemplateUtility::printModalHeader('Contacts', array('modules/contacts/activityvalidator.js', 'js/activity.js'), 'Contacts: Schedule Event'); ?>
+<?php TemplateUtility::printModalHeader('Companies', array('modules/contacts/activityvalidator.js', 'js/activity.js'), 'Companies: Schedule Event'); ?>
 <?php endif; ?>
 
 <?php if (!$this->isFinishedMode): ?>
@@ -12,9 +12,9 @@
     window.CATSUserDateFormat = '<?php echo($_SESSION['CATS']->isDateDMY() ? 'DD-MM-YY' : 'MM-DD-YY'); ?>';
 </script>
 
-    <form name="logActivityForm" id="logActivityForm" action="<?php echo(CATSUtility::getIndexName()); ?>?m=contacts&amp;a=addActivityScheduleEvent<?php if($this->onlyScheduleEvent): ?>&amp;onlyScheduleEvent=true<?php endif; ?>" method="post" onsubmit="return checkActivityForm(document.logActivityForm);" autocomplete="off">
+    <form name="logActivityForm" id="logActivityForm" action="<?php echo(CATSUtility::getIndexName()); ?>?m=companies&amp;a=addActivityScheduleEvent<?php if($this->onlyScheduleEvent): ?>&amp;onlyScheduleEvent=true<?php endif; ?>" method="post" onsubmit="return checkActivityForm(document.logActivityForm);" autocomplete="off">
         <input type="hidden" name="postback" id="postback" value="postback" />
-        <input type="hidden" id="contactID" name="contactID" value="<?php echo($this->contactID); ?>" />
+        <input type="hidden" id="companyID" name="companyID" value="<?php echo($this->companyID); ?>" />
 
         <table class="editTable" width="560">
             <?php if(!$this->onlyScheduleEvent): ?>
@@ -62,6 +62,22 @@
 
                         <?php foreach ($this->regardingRS as $rowNumber => $regardingData): ?>
                             <option value="<?php $this->_($regardingData['jobOrderID']) ?>"><?php $this->_($regardingData['title']) ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </td>
+            </tr>
+
+            <tr id="contactTR" <?php if($this->onlyScheduleEvent): ?>style="display:none;"<?php endif; ?>>
+                <td class="tdVertical">
+                    <label id="contactIDLabel" for="contactID">Contact:</label>
+                </td>
+                <td class="tdData">
+                    <select id="contactID" name="contactID" class="inputbox" style="width: 200px;">
+                        <option value="-1">None</option>
+                        <?php foreach ($this->contactsRS as $rowNumber => $contactData): ?>
+                            <option value="<?php echo (int) $contactData['contactID']; ?>">
+                                <?php $this->_($contactData['lastName']); ?>, <?php $this->_($contactData['firstName']); ?>
+                            </option>
                         <?php endforeach; ?>
                     </select>
                 </td>
@@ -151,11 +167,11 @@
                                         <label id="descriptionLabel" for="description">Description</label><br />
                                         <textarea name="description" id="description" cols="20" class="inputbox" style="width: 150px"></textarea>
                                     </div>
-                                    
+
                                     <div <?php if (!$this->allowEventReminders): ?>style="display:none;"<?php endif; ?>>
                                         <input type="checkbox" name="reminderToggle" onclick="if (this.checked) document.getElementById('reminderArea').style.display = ''; else document.getElementById('reminderArea').style.display = '';">&nbsp;<label>Set Reminder</label><br />
                                     </div>
-                                    
+
                                     <div style="display:none;" id="reminderArea">
                                         <div>
                                             <label>Email To:</label><br />
@@ -172,7 +188,7 @@
                                                 <option value="1440">1 day early</option>
                                             </select>
                                         </div>
-                                    </div>                               
+                                    </div>
                                 </td>
                             </tr>
                         </table>
@@ -182,7 +198,7 @@
 
         </table>
         <input type="submit" class="button" name="submit" id="submit" value="Save" />&nbsp;
-        <input type="button" class="button" name="close" value="Cancel" onclick="parentGoToURL(<?php echo Template::escapeJsAttr(CATSUtility::getIndexName() . '?m=contacts&a=show&contactID=' . $this->contactID); ?>);" />
+        <input type="button" class="button" name="close" value="Cancel" onclick="parentGoToURL(<?php echo Template::escapeJsAttr(CATSUtility::getIndexName() . '?m=companies&a=show&companyID=' . $this->companyID); ?>);" />
     </form>
 
     <script type="text/javascript">
@@ -223,9 +239,9 @@
     <?php endif; ?>
 
     <?php echo($this->eventHTML); ?>
-    
+
     <form>
-        <input type="button" name="close" class="button" value="Close" onclick="parentGoToURL(<?php echo Template::escapeJsAttr(CATSUtility::getIndexName() . '?m=contacts&a=show&contactID=' . $this->contactID); ?>);" />
+        <input type="button" name="close" class="button" value="Close" onclick="parentGoToURL(<?php echo Template::escapeJsAttr(CATSUtility::getIndexName() . '?m=companies&a=show&companyID=' . $this->companyID); ?>);" />
     </form>
 <?php endif; ?>
 

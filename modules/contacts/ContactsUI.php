@@ -1353,6 +1353,25 @@ class ContactsUI extends UserInterface
         }
 
         $contactID = $_POST['contactID'];
+        $contacts = new Contacts($this->_siteID);
+        $contactData = $contacts->get($contactID);
+        if (empty($contactData))
+        {
+            CommonErrors::fatalModal(COMMONERROR_BADINDEX, $this, 'The specified contact ID could not be found.');
+        }
+
+        $companyID = (int) $contactData['companyID'];
+        if ($companyID <= 0)
+        {
+            CommonErrors::fatalModal(COMMONERROR_RECORDERROR, $this, 'This contact is not associated with a valid company.');
+        }
+
+        $companies = new Companies($this->_siteID);
+        $companyData = $companies->get($companyID);
+        if (empty($companyData))
+        {
+            CommonErrors::fatalModal(COMMONERROR_RECORDERROR, $this, 'This contact is not associated with a valid company.');
+        }
 
         //if (!eval(Hooks::get('CONTACT_ON_ADD_ACTIVITY_SCHEDULE_EVENT_PRE'))) return;
 
@@ -1416,13 +1435,14 @@ class ContactsUI extends UserInterface
 
             /* Add the activity entry. */
             $activityID = $activityEntries->add(
-                $contactID,
-                DATA_ITEM_CONTACT,
+                $companyID,
+                DATA_ITEM_COMPANY,
                 $activityTypeID,
                 $activityNote,
                 $this->_userID,
                 $regardingID,
-                $activityDateOccurred
+                $activityDateOccurred,
+                $contactID
             );
             $activityTypeDescription = ResultSetUtility::getColumnValueByIDValue(
                 $activityTypes, 'typeID', $activityTypeID, 'type'

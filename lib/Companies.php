@@ -40,6 +40,7 @@ include_once(LEGACY_ROOT . '/lib/ListEditor.php');
 include_once(LEGACY_ROOT . '/lib/EmailTemplates.php');
 include_once(LEGACY_ROOT . '/lib/Attachments.php');
 include_once(LEGACY_ROOT . '/lib/JobOrders.php');
+include_once(LEGACY_ROOT . '/lib/JobOrderStatuses.php');
 include_once(LEGACY_ROOT . '/lib/Contacts.php');
 
 
@@ -604,6 +605,40 @@ class Companies
                 title ASC",
             $this->_db->makeQueryInteger($companyID),
             $this->_siteID
+        );
+
+        return $this->_db->getAllAssoc($sql);
+     }
+
+    /**
+     * Returns an array of non-closed job orders data (jobOrderID, title, companyName)
+     * for the specified company ID.
+     *
+     * @param integer Company ID
+     * @return array Job Orders data
+     */
+    public function getNonClosedJobOrdersArray($companyID)
+    {
+        $sql = sprintf(
+            "SELECT
+                joborder.joborder_id AS jobOrderID,
+                joborder.title AS title,
+                company.name AS companyName
+            FROM
+                joborder
+            LEFT JOIN company
+                ON joborder.company_id = company.company_id
+            WHERE
+                joborder.company_id = %s
+            AND
+                joborder.site_id = %s
+            AND
+                joborder.status NOT IN %s
+            ORDER BY
+                title ASC",
+            $this->_db->makeQueryInteger($companyID),
+            $this->_siteID,
+            JobOrderStatuses::getClosedStatusSQL()
         );
 
         return $this->_db->getAllAssoc($sql);
