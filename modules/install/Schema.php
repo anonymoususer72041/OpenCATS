@@ -1447,6 +1447,14 @@ class CATSSchema
                 SET short_description = \'Not reached\'
                 WHERE activity_type_id = 100;
             ',
+            '377' => '
+                ALTER TABLE `activity`
+                ADD COLUMN `contact_id` int(11) DEFAULT NULL AFTER `data_item_type`;
+                ALTER TABLE `activity`
+                ADD KEY `IDX_contact_id` (`contact_id`);
+                ALTER TABLE `activity`
+                ADD KEY `IDX_site_contact_id` (`site_id`,`contact_id`);
+            ',
 
         );
     }
