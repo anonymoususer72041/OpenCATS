@@ -15,7 +15,6 @@ function checkAddForm(form)
     errorMessage += checkFirstName();
     errorMessage += checkLastName();
     errorMessage += checkCompany();
-    errorMessage += checkTitle();
 
     if (errorMessage != "")
     {
@@ -33,7 +32,6 @@ function checkEditForm(form)
     errorMessage += checkFirstName();
     errorMessage += checkLastName();
     errorMessage += checkCompany();
-    errorMessage += checkTitle();
 
     if (errorMessage != "")
     {
