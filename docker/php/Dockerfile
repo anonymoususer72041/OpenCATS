@@ -1,4 +1,4 @@
-FROM php:7.4-fpm-alpine
+FROM php:8.5-fpm-alpine
 
 # Runtime/system packages required by OpenCATS and helper tools.
 RUN apk add --no-cache \
@@ -27,6 +27,7 @@ RUN cd /tmp && \
   wget https://ftp.gnu.org/gnu/unrtf/unrtf-0.21.10.tar.gz && \
   tar xzvf unrtf-0.21.10.tar.gz && \
   cd unrtf-0.21.10/ && \
+  export CFLAGS="-D_GNU_SOURCE -std=gnu89 -Wno-error=implicit-int -Wno-error=implicit-function-declaration" && \
   ./bootstrap && \
   ./configure && \
   make && \
