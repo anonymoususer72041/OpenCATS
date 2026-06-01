@@ -82,7 +82,7 @@ class License
             return true;
         }
 
-        $this->_expirationDate = (integer) $value;
+        $this->_expirationDate = (int) $value;
         return true;
     }
 
@@ -305,7 +305,7 @@ class License
     // FIXME: Document me!
     protected function scrambleByteString($byteString, $scramble)
     {
-        $bit = (integer) $scramble[0];
+        $bit = (int) $scramble[0];
 
         for ($i = 0; $i < LICENSE_STRING_SIZE; $i++)
         {
