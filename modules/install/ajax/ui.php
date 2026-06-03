@@ -817,64 +817,18 @@ switch ($action)
     case 'onLoadDemoData':
         CATSUtility::changeConfigSetting('ENABLE_DEMO_MODE', 'true');
 
-        include_once(LEGACY_ROOT . '/lib/FileCompressor.php');
         MySQLConnect();
-        $extractor = new ZipFileExtractor('./db/cats_testdata.bak');
+        /* Demo mode installs the current schema and then demo-only seed data. */
+        $schema = file_get_contents('db/cats_schema.sql');
+        MySQLQueryMultiple($schema, ";\n");
 
-        /* Extract the file.  This command also executes all sql commands in the file. */
-        /* Normally, we could just do the following lines, but we want a custom extractor
-           that ignores the file 'database', and executes all of the catsbackup.sql.xxx
-           files rather than extracting them. */
-        /*
-            if (!$extractor->open() || !$extractor->extractAll())
-            {
-                echo($extractor->getErrorMessage());
-            }
-        */
-
-        if (!$extractor->open())
-        {
-            echo($extractor->getErrorMessage());
-        }
-
-        $metaData = $extractor->getMetaData();
-
-        foreach ($metaData['centralDirectory'] as $index => $data)
-        {
-            $fileName = $data['filename'];
-
-            /* Execute all sql files */
-            if (strpos($fileName, 'db/catsbackup.sql.') === 0)
-            {
-                $fileContents = $extractor->getFile($index);
-                MySQLQueryMultiple($fileContents, '((ENDOFQUERY))');
-            }
-            /* Extract everything else but ./database */
-            else if ($fileName != 'database')
-            {
-                if (strpos($fileName, '/') !== false)
-                {
-                    $directorySplit = explode('/', $fileName);
-                    unset($directorySplit[count($directorySplit)-1]);
-                    $directory = implode('/', $directorySplit);
-                    @mkdir($directory, 0777, true);
-                }
-
-                $fileContents = $extractor->getFile($index);
-
-                if ($fileContents === false)
-                {
-                    /* Report error? */
-                }
-
-                file_put_contents ($fileName, $fileContents);
-            }
-        }
+        $demoData = file_get_contents('db/cats_demo_data.sql');
+        MySQLQueryMultiple($demoData, ";\n");
 
         echo '
             <script type="text/javascript">
                 showTextBlock(\'installingComponents\');
-                Installpage_populate(\'a=upgradeCats\');
+                Installpage_populate(\'a=resumeParsing\');
             </script>';
         break;
 
