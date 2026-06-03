@@ -12,6 +12,12 @@ default:
                 - SecurityContext
             filters:
                 tags: "@security"
+        installer:
+            paths: [ "%paths.base%/features/installer" ]
+            contexts:
+                - InstallerContext
+            filters:
+                tags: "@installer"
     extensions:
         OpenCATS\Tests\Behat\ServiceContainer\MinkExtension:
             base_url: http://opencats
