@@ -39,6 +39,30 @@ To mirror the CI environment on your machine:
    * **PHPUnit Integration Tests:** `docker compose -f docker-compose-test.yml exec php ./vendor/bin/phpunit --testsuite IntegrationTests`
    * **Behat:** `docker compose -f docker-compose-test.yml exec php ./vendor/bin/behat -c ./test/behat.yml`
 
+### Installer Behat Suite
+The installer suite is isolated from the normal Behat suites because the installer rewrites `config.php`, creates `INSTALL_BLOCK`, and changes database state. The installer context backs up and restores those files around each scenario and resets a dedicated installer database.
+
+Run it from the `docker/` directory with Selenium and the test containers started:
+
+```bash
+docker compose -f docker-compose-test.yml exec php ./vendor/bin/behat -c ./test/behat.yml --suite=installer
+```
+
+By default the suite uses the `opencatsdb` test container and the database `cats_installer_test`. Override these settings only when needed:
+
+* `OPENCATS_INSTALLER_DB_HOST` - installer database host.
+* `OPENCATS_INSTALLER_DB_PORT` - installer database port.
+* `OPENCATS_INSTALLER_DB_USER` - installer database user.
+* `OPENCATS_INSTALLER_DB_PASSWORD` - installer database password. Falls back to `OPENCATS_INSTALLER_DB_PASS`.
+* `OPENCATS_INSTALLER_DB_NAME` - installer database name. It must contain `installer`.
+* `OPENCATS_INSTALLER_DEFAULT_PHONE_COUNTRY_CODE` - default phone country code selected during installation.
+* `OPENCATS_INSTALLER_DB_ADMIN_HOST` - database host used for reset/setup. Defaults to `OPENCATS_INSTALLER_DB_HOST`.
+* `OPENCATS_INSTALLER_DB_ADMIN_USER` - database user used for reset/setup.
+* `OPENCATS_INSTALLER_DB_ADMIN_PASS` - database password used for reset/setup.
+* `OPENCATS_INSTALLER_MAIL_FROM` - mail sender address used when disabling mail support.
+
+The first installer scenario covers a fresh empty-database installation with resume indexing skipped and mail support disabled.
+
 ---
 
 ## Troubleshooting
