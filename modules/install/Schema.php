@@ -1417,36 +1417,6 @@ class CATSSchema
                 include_once(\'modules/install/scripts/372.php\');
                 update_372($db);
             ',
-            '373' => '
-                INSERT IGNORE INTO `activity_type` (`activity_type_id`, `short_description`) VALUES (800, \'Status Change\');
-            ',
-            '374' => '
-                UPDATE `activity`
-                SET `joborder_id` = NULL
-                WHERE `joborder_id` IN (0, -1);
-            ',
-            '375' => 'PHP:
-                $rs = $db->getAllAssoc(
-                    "SELECT
-                        TABLE_NAME AS table_name
-                     FROM
-                        information_schema.TABLES
-                     WHERE
-                        TABLE_SCHEMA = DATABASE()
-                        AND TABLE_TYPE = \'BASE TABLE\'
-                        AND ENGINE = \'MyISAM\'"
-                );
-
-                foreach ($rs as $rowIndex => $row)
-                {
-                    $db->query("ALTER TABLE `".$row[\'table_name\']."` ENGINE=InnoDB");
-                }
-            ',
-            '376' => '
-                UPDATE activity_type
-                SET short_description = \'Not reached\'
-                WHERE activity_type_id = 100;
-            ',
             '377' => 'PHP:
                 $lastActivityID = 0;
                 $batchSize = 200;
