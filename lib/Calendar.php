@@ -242,7 +242,7 @@ class Calendar
             WHERE
                 calendar_event.reminder_enabled = 1
             AND
-                DATE_ADD(NOW(), INTERVAL calendar_event.reminder_time MINUTE) >= calendar_event.date"
+                DATE_ADD(UTC_TIMESTAMP(), INTERVAL calendar_event.reminder_time MINUTE) >= calendar_event.date"
         );
 
         return $this->_db->getAllAssoc($sql);
@@ -325,6 +325,15 @@ class Calendar
         $reminderEnabled, $reminderEmail, $reminderTime, $isPublic,
         $timeZoneOffset)
     {
+        if (strlen($date) === 10)
+        {
+            $date .= ' 00:00:00';
+        }
+        $date = DateUtility::convertLocalDateTimeToUtc(
+            $date,
+            OFFSET_GMT + (int) $timeZoneOffset
+        );
+
         if ($jobOrderID === null)
         {
             $jobOrderIDSQL = 'NULL';
@@ -356,7 +365,6 @@ class Calendar
             )
             VALUES (
                 %s,
-                DATE_SUB(%s, INTERVAL %s HOUR),
                 %s,
                 %s,
                 %s,
@@ -364,8 +372,9 @@ class Calendar
                 %s,
                 %s,
                 %s,
-                NOW(),
-                NOW(),
+                %s,
+                UTC_TIMESTAMP(),
+                UTC_TIMESTAMP(),
                 %s,
                 %s,
                 %s,
@@ -375,7 +384,6 @@ class Calendar
             )",
             $this->_db->makeQueryInteger($type),
             $this->_db->makeQueryString($date),
-            $this->_db->makeQueryInteger($timeZoneOffset),
             $this->_db->makeQueryString($description),
             ($allDay ? '1' : '0'),
             $this->_db->makeQueryInteger($enteredBy),
@@ -429,6 +437,15 @@ class Calendar
         $reminderEnabled, $reminderEmail, $reminderTime, $isPublic,
         $timeZoneOffset)
     {
+        if (strlen($date) === 10)
+        {
+            $date .= ' 00:00:00';
+        }
+        $date = DateUtility::convertLocalDateTimeToUtc(
+            $date,
+            OFFSET_GMT + (int) $timeZoneOffset
+        );
+
         if ($jobOrderID === null)
         {
             $jobOrderIDSQL = 'NULL';
@@ -443,13 +460,13 @@ class Calendar
                 calendar_event
             SET
                 type             = %s,
-                date             = DATE_SUB(%s, INTERVAL %s HOUR),
+                date             = %s,
                 description      = %s,
                 all_day          = %s,
                 data_item_id     = %s,
                 data_item_type   = %s,
                 joborder_id      = %s,
-                date_modified    = NOW(),
+                date_modified    = UTC_TIMESTAMP(),
                 title            = %s,
                 duration         = %s,
                 reminder_enabled = %s,
@@ -462,7 +479,6 @@ class Calendar
                 site_id = %s",
             $this->_db->makeQueryInteger($type),
             $this->_db->makeQueryString($date),
-            $this->_db->makeQueryInteger($timeZoneOffset),
             $this->_db->makeQueryString($description),
             ($allDay ? '1' : '0'),
             $this->_db->makeQueryInteger($dataItemID),
@@ -737,7 +753,7 @@ class Calendar
             LEFT JOIN user AS entered_by_user
                 ON calendar_event.entered_by = entered_by_user.user_id
             WHERE
-                TO_DAYS(NOW()) = TO_DAYS(calendar_event.date)
+                TO_DAYS(UTC_TIMESTAMP()) = TO_DAYS(calendar_event.date)
             AND
                 calendar_event.site_id = %s
             AND
@@ -789,7 +805,7 @@ class Calendar
             WHERE
                 DATE(calendar_event.date) > CURDATE()
             AND
-                TO_DAYS(NOW()) != TO_DAYS(calendar_event.date)
+                TO_DAYS(UTC_TIMESTAMP()) != TO_DAYS(calendar_event.date)
             AND
                 calendar_event.site_id = %s
             AND

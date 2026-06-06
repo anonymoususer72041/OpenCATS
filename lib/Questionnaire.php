@@ -559,7 +559,7 @@ class Questionnaire
                     answer,
                     date
                 )
-             VALUES ( %d, %s, %s, %s, %s, %s, NOW() )",
+             VALUES ( %d, %s, %s, %s, %s, %s, UTC_TIMESTAMP() )",
             $this->_siteID,
             $this->_db->makeQueryInteger($candidateID),
             $this->_db->makeQueryString($title),

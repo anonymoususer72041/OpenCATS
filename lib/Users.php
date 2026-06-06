@@ -999,9 +999,9 @@ class Users
                     %s,
                     %s,
                     %s,
-                    NOW(),
+                    UTC_TIMESTAMP(),
                     %s,
-                    NOW()
+                    UTC_TIMESTAMP()
                     )",
             $userID,
             $siteID,
@@ -1034,7 +1034,7 @@ class Users
                 "UPDATE
                 user_login
                 SET
-                date_refreshed = NOW()
+                date_refreshed = UTC_TIMESTAMP()
                 WHERE
                 user_login_id = %s
                 AND
@@ -1074,7 +1074,7 @@ class Users
                 COUNT(DISTINCT user_login.user_id) AS loggedInUsers,
                 COUNT(
                     DISTINCT IF(
-                        date_refreshed > DATE_SUB(NOW(), INTERVAL 20 SECOND),
+                        date_refreshed > DATE_SUB(UTC_TIMESTAMP(), INTERVAL 20 SECOND),
                         user_login.user_id,
                         NULL
                         )
@@ -1082,7 +1082,7 @@ class Users
                 FROM
                 user_login
                 WHERE
-                date_refreshed > DATE_SUB(NOW(), INTERVAL 10 MINUTE)"
+                date_refreshed > DATE_SUB(UTC_TIMESTAMP(), INTERVAL 10 MINUTE)"
                 );
 
         $rs = $this->_db->getAssoc($sql);
@@ -1115,7 +1115,7 @@ class Users
                 FROM
                 user_login
                 WHERE
-                date_refreshed > DATE_SUB(NOW(), INTERVAL 14 DAY)"
+                date_refreshed > DATE_SUB(UTC_TIMESTAMP(), INTERVAL 14 DAY)"
                 );
 
         $rs = $this->_db->getAssoc($sql);
@@ -1172,7 +1172,7 @@ class Users
                     user_login.date_refreshed, '%%h:%%i %%p'
                     ) AS lastRefresh,
                 IF(
-                    user_login.date_refreshed > DATE_SUB(NOW(), INTERVAL 20 SECOND),
+                    user_login.date_refreshed > DATE_SUB(UTC_TIMESTAMP(), INTERVAL 20 SECOND),
                     1,
                     0
                   ) AS active
@@ -1183,7 +1183,7 @@ class Users
                 LEFT JOIN site
                 ON site.site_id = user.site_id
                 WHERE
-                user_login.date_refreshed > DATE_SUB(NOW(), INTERVAL 10 MINUTE)
+                user_login.date_refreshed > DATE_SUB(UTC_TIMESTAMP(), INTERVAL 10 MINUTE)
                 %s
                 GROUP BY
                 user_login.user_login_id

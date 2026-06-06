@@ -39,6 +39,8 @@ define('ACTIVITY_CALL_LVM',    600);
 define('ACTIVITY_CALL_MISSED', 700);
 define('ACTIVITY_STATUS_CHANGE', 800);
 
+include_once(LEGACY_ROOT . '/lib/DateUtility.php');
+
 /**
  * Candidates library.
  */
@@ -82,7 +84,7 @@ class ActivityEntries
      * @param string Activity notes.
      * @param integer Entered-by user ID.
      * @param integer Job Order ID; -1 for general (stored as NULL).
-     * @param string Date occurred timestamp (YYYY-MM-DD HH:MM:SS); false for NOW().
+     * @param string Date occurred timestamp (YYYY-MM-DD HH:MM:SS); false for current UTC time.
      * @return integer New Activity ID; -1 on failure.
      */
     public function add($dataItemID, $dataItemType, $activityType,
@@ -96,11 +98,13 @@ class ActivityEntries
         if (is_string($dateOccurred) &&
             preg_match('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/', $dateOccurred))
         {
-            $dateOccurredSQL = $this->_db->makeQueryString($dateOccurred);
+            $dateOccurredSQL = $this->_db->makeQueryString(
+                DateUtility::convertLocalDateTimeToUtc($dateOccurred)
+            );
         }
         else
         {
-            $dateOccurredSQL = 'NOW()';
+            $dateOccurredSQL = 'UTC_TIMESTAMP()';
         }
 
         $sql = sprintf(
@@ -125,8 +129,8 @@ class ActivityEntries
                 %s,
                 %s,
                 %s,
-                NOW(),
-                NOW()
+                UTC_TIMESTAMP(),
+                UTC_TIMESTAMP()
             )",
             $this->_db->makeQueryInteger($dataItemID),
             $this->_db->makeQueryInteger($dataItemType),
@@ -236,7 +240,7 @@ class ActivityEntries
                 type          = %s,
                 notes         = %s,
                 joborder_id   = %s,
-                date_modified = NOW()
+                date_modified = UTC_TIMESTAMP()
             WHERE
                 activity_id = %s
             AND
@@ -255,14 +259,18 @@ class ActivityEntries
                 "UPDATE
                     activity
                 SET
-                    date_occurred = DATE_SUB(%s, INTERVAL %s HOUR),
-                    date_modified = NOW()
+                    date_occurred = %s,
+                    date_modified = UTC_TIMESTAMP()
                 WHERE
                     activity_id = %s
                 AND
                     site_id = %s",
-                $this->_db->makeQueryString($date),
-                $this->_db->makeQueryInteger($timezoneOffset),
+                $this->_db->makeQueryString(
+                    DateUtility::convertLocalDateTimeToUtc(
+                        $date,
+                        OFFSET_GMT + (int) $timezoneOffset
+                    )
+                ),
                 $this->_db->makeQueryInteger($activityID),
                 $this->_siteID
             );

@@ -2080,7 +2080,7 @@ class SavedSearches
                 %s,
                 %s,
                 %s,
-                NOW()
+                UTC_TIMESTAMP()
             )",
             $this->_siteID,
             $this->_userID,

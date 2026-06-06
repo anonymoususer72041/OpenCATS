@@ -59,7 +59,7 @@ class Import
                 '%s',
                 0,
                 %s,
-				NOW()
+				UTC_TIMESTAMP()
             )",
             $table,
             $this->_siteID
@@ -185,7 +185,7 @@ class Import
             WHERE
                 import.site_id = %s
 			AND
-				TO_DAYS(date_created) > TO_DAYS(DATE_SUB(NOW(), INTERVAL 7 DAY))",
+				TO_DAYS(date_created) > TO_DAYS(DATE_SUB(UTC_TIMESTAMP(), INTERVAL 7 DAY))",
             $this->_siteID
         );
         $rs = $this->_db->getAllAssoc($sql);
@@ -296,7 +296,7 @@ class Import
                  VALUES (
                     %s,
                     %s,
-                    NOW(),
+                    UTC_TIMESTAMP(),
                     %s,
                     %s
                  )",
@@ -452,8 +452,8 @@ class JobOrdersImport
                 %s,
                 %s,
                 %s,
-                NOW(),
-                NOW(),
+                UTC_TIMESTAMP(),
+                UTC_TIMESTAMP(),
                 %s,
                 %s,
                 %s,

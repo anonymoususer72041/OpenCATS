@@ -71,8 +71,8 @@ class JobOrderRepository
                 %s,
                 %s,
                 %s,
-                NOW(),
-                NOW(),
+                UTC_TIMESTAMP(),
+                UTC_TIMESTAMP(),
                 %s,
                 %s
             )",

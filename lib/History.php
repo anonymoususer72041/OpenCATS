@@ -100,7 +100,7 @@ class History
         {
             /*NOTE:  Store strings (value value value value) for implode()ing later. */
             $changedHistoryValues[] = sprintf(
-                "(%s, %s, %s, %s, %s, %s, NOW(), %s, %s)",
+                "(%s, %s, %s, %s, %s, %s, UTC_TIMESTAMP(), %s, %s)",
                 $dataItemType,
                 $dataItemID,
                 $this->_db->makeQueryStringOrNULL($field),
@@ -145,7 +145,7 @@ class History
         $description = '(USER) deleted entry.';
 
         $changedHistoryValues[] = sprintf(
-            "(%s, %s, %s, NULL, NULL, %s, NOW(), %s, %s)",
+            "(%s, %s, %s, NULL, NULL, %s, UTC_TIMESTAMP(), %s, %s)",
             $dataItemType,
             $dataItemID,
             $this->_db->makeQueryString('(DELETED)'),
@@ -172,7 +172,7 @@ class History
         $category, $description)
     {
         $changedHistoryValues[] = sprintf(
-            "(%s, %s, %s, NULL, NULL, %s, NOW(), %s, %s)",
+            "(%s, %s, %s, NULL, NULL, %s, UTC_TIMESTAMP(), %s, %s)",
             $dataItemType,
             $dataItemID,
             $this->_db->makeQueryStringOrNULL($category),
@@ -204,7 +204,7 @@ class History
         $before, $after, $description)
     {
         $changedHistoryValues[] = sprintf(
-            "(%s, %s, %s, %s, %s, %s, NOW(), %s, %s)",
+            "(%s, %s, %s, %s, %s, %s, UTC_TIMESTAMP(), %s, %s)",
             $dataItemType,
             $dataItemID,
             $this->_db->makeQueryStringOrNULL($category),
@@ -235,7 +235,7 @@ class History
         $description)
     {
         $changedHistoryValues[] = sprintf(
-            "(%s, %s, NULL, NULL, NULL, %s, NOW(), %s, %s)",
+            "(%s, %s, NULL, NULL, NULL, %s, UTC_TIMESTAMP(), %s, %s)",
             $dataItemType,
             $dataItemID,
             $this->_db->makeQueryStringOrNULL($description),

@@ -115,7 +115,7 @@ class Dashboard
         {
             $firstDayMonday = true;
             $firstDayModifierPlus = ' + 1';
-            $dateNowForWeeks = 'DATE_SUB(NOW(), INTERVAL 1 DAY)';
+            $dateNowForWeeks = 'DATE_SUB(UTC_TIMESTAMP(), INTERVAL 1 DAY)';
             $dateEventForWeeks = 'DATE_SUB(candidate_joborder_status_history.date, INTERVAL 1 DAY)';
         }
         else
@@ -123,7 +123,7 @@ class Dashboard
             $firstDayMonday = false;
             $firstDayModifierPlus = '';
             $firstDayModifierMinus = '';
-            $dateNowForWeeks = 'NOW()';
+            $dateNowForWeeks = 'UTC_TIMESTAMP()';
             $dateEventForWeeks = 'candidate_joborder_status_history.date';
         }        
         
@@ -178,19 +178,19 @@ class Dashboard
         /* Gets some numbers as to what week and month MySQL thinks it is. */ 
         $sql = sprintf(
             "SELECT 
-                YEAR(NOW()) as currentYearNumber,
+                YEAR(UTC_TIMESTAMP()) as currentYearNumber,
                 UNIX_TIMESTAMP(FROM_DAYS(TO_DAYS(%s) - DAYOFWEEK(%s) + 1 %s)) as currentWeekNumber,
                 UNIX_TIMESTAMP(FROM_DAYS(TO_DAYS(DATE_SUB(%s, INTERVAL 7 DAY)) - DAYOFWEEK(DATE_SUB(%s, INTERVAL 7 DAY)) + 1 %s)) as oneWeekAgoNumber,
                 UNIX_TIMESTAMP(FROM_DAYS(TO_DAYS(DATE_SUB(%s, INTERVAL 14 DAY)) - DAYOFWEEK(DATE_SUB(%s, INTERVAL 14 DAY)) + 1 %s)) as twoWeekAgoNumber,
                 UNIX_TIMESTAMP(FROM_DAYS(TO_DAYS(DATE_SUB(%s, INTERVAL 21 DAY)) - DAYOFWEEK(DATE_SUB(%s, INTERVAL 21 DAY)) + 1 %s)) as threeWeekAgoNumber,
-                UNIX_TIMESTAMP(FROM_DAYS(TO_DAYS(NOW()) - DAYOFMONTH(NOW()) + 1)) as currentMonthNumber,
-                UNIX_TIMESTAMP(FROM_DAYS(TO_DAYS(DATE_SUB(NOW(), INTERVAL 1 MONTH)) - DAYOFMONTH(DATE_SUB(NOW(), INTERVAL 1 MONTH)) + 1)) as oneMonthAgoNumber,
-                UNIX_TIMESTAMP(FROM_DAYS(TO_DAYS(DATE_SUB(NOW(), INTERVAL 2 MONTH)) - DAYOFMONTH(DATE_SUB(NOW(), INTERVAL 2 MONTH)) + 1)) as twoMonthAgoNumber,
-                UNIX_TIMESTAMP(FROM_DAYS(TO_DAYS(DATE_SUB(NOW(), INTERVAL 3 MONTH)) - DAYOFMONTH(DATE_SUB(NOW(), INTERVAL 3 MONTH)) + 1)) as threeMonthAgoNumber,
-                MONTHNAME(NOW()) as currentMonthName,
-                MONTHNAME(DATE_SUB(NOW(), INTERVAL 1 MONTH)) as oneMonthAgoName,
-                MONTHNAME(DATE_SUB(NOW(), INTERVAL 2 MONTH)) as twoMonthAgoName,
-                MONTHNAME(DATE_SUB(NOW(), INTERVAL 3 MONTH)) as threeMonthAgoName
+                UNIX_TIMESTAMP(FROM_DAYS(TO_DAYS(UTC_TIMESTAMP()) - DAYOFMONTH(UTC_TIMESTAMP()) + 1)) as currentMonthNumber,
+                UNIX_TIMESTAMP(FROM_DAYS(TO_DAYS(DATE_SUB(UTC_TIMESTAMP(), INTERVAL 1 MONTH)) - DAYOFMONTH(DATE_SUB(UTC_TIMESTAMP(), INTERVAL 1 MONTH)) + 1)) as oneMonthAgoNumber,
+                UNIX_TIMESTAMP(FROM_DAYS(TO_DAYS(DATE_SUB(UTC_TIMESTAMP(), INTERVAL 2 MONTH)) - DAYOFMONTH(DATE_SUB(UTC_TIMESTAMP(), INTERVAL 2 MONTH)) + 1)) as twoMonthAgoNumber,
+                UNIX_TIMESTAMP(FROM_DAYS(TO_DAYS(DATE_SUB(UTC_TIMESTAMP(), INTERVAL 3 MONTH)) - DAYOFMONTH(DATE_SUB(UTC_TIMESTAMP(), INTERVAL 3 MONTH)) + 1)) as threeMonthAgoNumber,
+                MONTHNAME(UTC_TIMESTAMP()) as currentMonthName,
+                MONTHNAME(DATE_SUB(UTC_TIMESTAMP(), INTERVAL 1 MONTH)) as oneMonthAgoName,
+                MONTHNAME(DATE_SUB(UTC_TIMESTAMP(), INTERVAL 2 MONTH)) as twoMonthAgoName,
+                MONTHNAME(DATE_SUB(UTC_TIMESTAMP(), INTERVAL 3 MONTH)) as threeMonthAgoName
             ",
             $dateNowForWeeks,
             $dateNowForWeeks,

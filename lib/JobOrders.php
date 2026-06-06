@@ -199,7 +199,7 @@ class JobOrders
                 recruiter          = %s,
                 owner              = %s,
                 public             = %s,
-                date_modified      = NOW(),
+                date_modified      = UTC_TIMESTAMP(),
                 questionnaire_id   = %s
             WHERE
                 joborder_id = %s
@@ -433,7 +433,7 @@ class JobOrders
                     joborder.start_date, '%%m-%%d-%%y'
                 ) AS startDate,
                 DATEDIFF(
-                    NOW(), joborder.date_created
+                    UTC_TIMESTAMP(), joborder.date_created
                 ) AS daysOld,
                 DATE_FORMAT(
                     joborder.date_created, '%%m-%%d-%%y (%%h:%%i %%p)'
@@ -674,7 +674,7 @@ class JobOrders
                     joborder.date_modified, '%%m-%%d-%%y'
                 ) AS dateModified,
                 DATEDIFF(
-                    NOW(), joborder.date_created
+                    UTC_TIMESTAMP(), joborder.date_created
                 ) AS daysOld,
                 COUNT(
                     candidate_joborder.joborder_id
@@ -756,7 +756,7 @@ class JobOrders
             "UPDATE
                 joborder
             SET
-                date_modified = NOW()
+                date_modified = UTC_TIMESTAMP()
             WHERE
                 joborder_id = %s
             AND
@@ -973,7 +973,7 @@ class JobOrdersDataGrid extends DataGrid
                                       'alphaNavigation'=> false,
                                       'filter'         => 'joborder.status'),
 
-            'Age' =>            array('select'         => 'DATEDIFF(NOW(), joborder.date_created) AS daysOld',
+            'Age' =>            array('select'         => 'DATEDIFF(UTC_TIMESTAMP(), joborder.date_created) AS daysOld',
                                       'pagerRender'    => 'return $rsData[\'daysOld\'];',
                                       'sortableColumn' => 'daysOld',
                                       'pagerWidth'     => 45,

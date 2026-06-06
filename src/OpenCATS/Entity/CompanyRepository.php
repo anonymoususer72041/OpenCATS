@@ -53,8 +53,8 @@ class CompanyRepository
                 %s,
                 %s,
                 %s,
-                NOW(),
-                NOW()
+                UTC_TIMESTAMP(),
+                UTC_TIMESTAMP()
             )",
             $this->databaseConnection->makeQueryString($company->getName()),
             $this->databaseConnection->makeQueryString($company->getAddress()),

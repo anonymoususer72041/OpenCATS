@@ -40,6 +40,7 @@ include_once(LEGACY_ROOT . '/lib/ExtraFields.php');
 include_once(LEGACY_ROOT . '/lib/Attachments.php');
 include_once(LEGACY_ROOT . '/lib/ParseUtility.php');
 include_once(LEGACY_ROOT . '/lib/ImportUtility.php');
+include_once(LEGACY_ROOT . '/lib/DateUtility.php');
 include_once(LEGACY_ROOT . '/lib/CandidatesImport.php');
 include_once(LEGACY_ROOT . '/lib/CompaniesImport.php');
 include_once(LEGACY_ROOT . '/lib/ContactsImport.php');
@@ -1826,7 +1827,9 @@ class ImportUI extends UserInterface
                             // set the date created to the file modification date
                             $db->query(sprintf('UPDATE candidate SET date_created = "%s", date_modified = "%s" '
                                 . 'WHERE candidate_id = %d AND site_id = %d',
-                                date('c', $doc['cTime']), date('c', $doc['cTime']), $candidateID, $siteID
+                                gmdate(DateUtility::DATABASE_DATETIME_FORMAT, $doc['cTime']),
+                                gmdate(DateUtility::DATABASE_DATETIME_FORMAT, $doc['cTime']),
+                                $candidateID, $siteID
                             ));
 
                             // Success, attach resume to candidate as attachment

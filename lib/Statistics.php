@@ -983,7 +983,7 @@ class Statistics
 
             case TIME_PERIOD_THISWEEK:
                 $criteria = sprintf(
-                    'AND %s > \'1900-01-01\' AND YEARWEEK(%s) = YEARWEEK(NOW())',
+                    'AND %s > \'1900-01-01\' AND YEARWEEK(%s) = YEARWEEK(UTC_TIMESTAMP())',
                     $dateField,
                     $dateField
                 );
@@ -999,7 +999,7 @@ class Statistics
 
             case TIME_PERIOD_LASTTWOWEEKS:
                 $criteria =sprintf(
-                    'AND %s > \'1900-01-01\' AND (YEARWEEK(%s) = YEARWEEK(NOW()) OR YEARWEEK(%s) = YEARWEEK(NOW() - INTERVAL 7 DAY))',
+                    'AND %s > \'1900-01-01\' AND (YEARWEEK(%s) = YEARWEEK(UTC_TIMESTAMP()) OR YEARWEEK(%s) = YEARWEEK(UTC_TIMESTAMP() - INTERVAL 7 DAY))',
                     $dateField,
                     $dateField,
                     $dateField
@@ -1024,7 +1024,7 @@ class Statistics
 
             case TIME_PERIOD_THISYEAR:
                 $criteria = sprintf(
-                    'AND %s > \'1900-01-01\' AND YEAR(%s) = YEAR(NOW())',
+                    'AND %s > \'1900-01-01\' AND YEAR(%s) = YEAR(UTC_TIMESTAMP())',
                     $dateField,
                     $dateField
                 );
@@ -1047,7 +1047,7 @@ class Statistics
         if ($this->_timeZoneOffset != 0)
         {
             $criteria = str_replace('CURDATE()', 'DATE_ADD(CURDATE(), INTERVAL ' . $this->_timeZoneOffset . ' HOUR)', $criteria);
-            $criteria = str_replace('NOW()', 'DATE_ADD(NOW(), INTERVAL ' . $this->_timeZoneOffset . ' HOUR)', $criteria);
+            $criteria = str_replace('UTC_TIMESTAMP()', 'DATE_ADD(UTC_TIMESTAMP(), INTERVAL ' . $this->_timeZoneOffset . ' HOUR)', $criteria);
             $criteria = str_replace($dateField, 'DATE_ADD(' . $dateField . ', INTERVAL ' . $this->_timeZoneOffset . ' HOUR)', $criteria);
         }
 

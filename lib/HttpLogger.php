@@ -30,6 +30,8 @@
  * @version    $Id: HttpLogger.php 3587 2007-11-13 03:55:57Z will $
  */
 
+include_once(LEGACY_ROOT . '/lib/DateUtility.php');
+
  /**
  *	HTTPLogger Library
  *	@package    CATS
@@ -88,7 +90,7 @@ class HTTPLogger
             $db->makeQueryString(@$_SERVER['SCRIPT_NAME']),
             $db->makeQueryInteger($type),
             $db->makeQueryInteger($siteID),
-            $db->makeQueryString(date("Y-m-d H:i:s"))
+            $db->makeQueryString(DateUtility::getCurrentUtcDateTime())
         );
         
         return (boolean) $db->query($sql);

@@ -36,8 +36,8 @@ class ContactImport extends ImportableEntity
                 %s,
                 %s,
                 %s,
-                NOW(),
-                NOW(),
+                UTC_TIMESTAMP(),
+                UTC_TIMESTAMP(),
                 %s
             )",
             implode(",\n", $data['dataColumns']),

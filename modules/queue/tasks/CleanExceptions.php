@@ -64,7 +64,7 @@ class CleanExceptions extends Task
             "DELETE FROM
                 exceptions
              WHERE
-                DATEDIFF(NOW(), exceptions.date) > %s",
+                DATEDIFF(UTC_TIMESTAMP(), exceptions.date) > %s",
             EXCEPTIONS_TTL_DAYS
         );
 

@@ -38,6 +38,7 @@
  */
 
 include_once(LEGACY_ROOT . '/modules/queue/constants.php');
+include_once(LEGACY_ROOT . '/lib/DateUtility.php');
 
 /**
  *	Asynchroneous Queue Processor Library
@@ -100,7 +101,10 @@ class QueueProcessor
     {
         $db = DatabaseConnection::getInstance();
 
-        $completedTxt = date('c', ($completedTime ? $completedTime : time()));
+        $completedTxt = gmdate(
+            DateUtility::DATABASE_DATETIME_FORMAT,
+            ($completedTime ? $completedTime : time())
+        );
 
         $sql = sprintf(
             "UPDATE
@@ -279,7 +283,10 @@ class QueueProcessor
     {
         $db = DatabaseConnection::getInstance();
 
-        $timeoutDate = date('c', time()+(DEFAULT_QUEUE_TIMEOUT_MINUTES * 60));
+        $timeoutDate = gmdate(
+            DateUtility::DATABASE_DATETIME_FORMAT,
+            time() + (DEFAULT_QUEUE_TIMEOUT_MINUTES * 60)
+        );
 
         $sql = sprintf(
             "INSERT INTO
@@ -290,7 +297,7 @@ class QueueProcessor
             $db->makeQueryString($taskPath),
             $db->makeQueryString(serialize($args)),
             $db->makeQueryInteger($priority),
-            $db->makeQueryString(date('c')),
+            $db->makeQueryString(DateUtility::getCurrentUtcDateTime()),
             $db->makeQueryString($timeoutDate)
         );
 
@@ -452,7 +459,7 @@ class QueueProcessor
             "DELETE FROM
                 queue
              WHERE
-                (TO_DAYS(NOW()) - TO_DAYS(date_completed)) > %s
+                (TO_DAYS(UTC_TIMESTAMP()) - TO_DAYS(date_completed)) > %s
              AND
                 locked = 0
              AND
@@ -479,7 +486,7 @@ class QueueProcessor
              WHERE
                 locked = 1
              AND
-                date_timeout <= NOW()"
+                date_timeout <= UTC_TIMESTAMP()"
         );
 
         $db->query($sql);
