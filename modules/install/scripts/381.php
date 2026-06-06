@@ -4,6 +4,33 @@ include_once(LEGACY_ROOT . '/lib/DateUtility.php');
 
 function update_381($db)
 {
+    $defaultTimeZone = 'UTC';
+    if (defined('APPLICATION_TIME_ZONE'))
+    {
+        $configuredTimeZone = DateUtility::getApplicationTimeZone(
+            APPLICATION_TIME_ZONE
+        )->getName();
+        if ($configuredTimeZone === APPLICATION_TIME_ZONE)
+        {
+            $defaultTimeZone = $configuredTimeZone;
+        }
+    }
+
+    if (!columnExists_381($db, 'site', 'application_time_zone'))
+    {
+        $db->query(
+            "ALTER TABLE `site`
+             ADD COLUMN `application_time_zone` varchar(64)
+             NOT NULL DEFAULT 'UTC'
+             AFTER `time_zone`"
+        );
+        $db->query(
+            "UPDATE `site`
+             SET `application_time_zone` = " .
+                $db->makeQueryString($defaultTimeZone)
+        );
+    }
+
     $dateTimeColumns = array(
         'activity' => array(
             'primaryKey' => 'activity_id',
@@ -115,11 +142,22 @@ function update_381($db)
         )
     );
 
-    /* Legacy DATETIME values used the configured server GMT offset. OpenCATS
-     * has no IANA timezone setting, so historical DST conversion is not
-     * possible without reinterpreting existing data.
+    /* Numeric offsets are ambiguous and cannot preserve historical daylight
+     * saving behavior. Existing sites therefore use UTC unless an explicit
+     * APPLICATION_TIME_ZONE IANA identifier was configured before upgrade.
      */
-    $applicationTimeZone = DateUtility::getApplicationTimeZone(OFFSET_GMT);
+    $siteTimeZones = array();
+    $sites = $db->getAllAssoc(
+        "SELECT site_id, application_time_zone
+         FROM site"
+    );
+    foreach ($sites as $site)
+    {
+        $siteTimeZones[(int) $site['site_id']] =
+            DateUtility::getApplicationTimeZone(
+                $site['application_time_zone']
+            );
+    }
 
     foreach ($dateTimeColumns as $table => $definition)
     {
@@ -130,7 +168,7 @@ function update_381($db)
                 $table,
                 $definition['primaryKey'],
                 $column,
-                $applicationTimeZone
+                $siteTimeZones
             );
         }
     }
@@ -141,33 +179,32 @@ function convertDateTimeColumnToUtc_381(
     $table,
     $primaryKey,
     $column,
-    $applicationTimeZone
+    $siteTimeZones
 )
 {
-    $columnExists = $db->getAssoc(
-        "SELECT COLUMN_NAME
-         FROM information_schema.COLUMNS
-         WHERE TABLE_SCHEMA = DATABASE()
-           AND TABLE_NAME = " . $db->makeQueryString($table) . "
-           AND COLUMN_NAME = " . $db->makeQueryString($column)
-           AND DATA_TYPE = 'datetime'
-    );
-
-    if (empty($columnExists))
+    if (!columnExists_381($db, $table, $primaryKey) ||
+        !dateTimeColumnExists_381($db, $table, $column))
     {
         return;
     }
 
+    $hasSiteID = columnExists_381($db, $table, 'site_id');
+    $siteSelect = $hasSiteID ? ', `site_id` AS site_id' : '';
+    $additionalCriteria = $table === 'calendar_event' && $column === 'date'
+        ? ' AND `all_day` = 0'
+        : '';
     $lastPrimaryKey = -1;
     $batchSize = 200;
 
     while (true)
     {
         $rows = $db->getAllAssoc(
-            "SELECT `" . $primaryKey . "` AS primary_key, `" . $column . "` AS date_value
+            "SELECT `" . $primaryKey . "` AS primary_key,
+                    `" . $column . "` AS date_value" . $siteSelect . "
              FROM `" . $table . "`
              WHERE `" . $primaryKey . "` > " . (int) $lastPrimaryKey . "
                AND `" . $column . "` IS NOT NULL
+               " . $additionalCriteria . "
              ORDER BY `" . $primaryKey . "` ASC
              LIMIT " . (int) $batchSize
         );
@@ -180,6 +217,12 @@ function convertDateTimeColumnToUtc_381(
         foreach ($rows as $row)
         {
             $lastPrimaryKey = (int) $row['primary_key'];
+            $siteID = $table === 'site'
+                ? $lastPrimaryKey
+                : ($hasSiteID ? (int) $row['site_id'] : 0);
+            $applicationTimeZone = isset($siteTimeZones[$siteID])
+                ? $siteTimeZones[$siteID]
+                : new DateTimeZone('UTC');
             $utcValue = DateUtility::convertLocalDateTimeToUtc(
                 $row['date_value'],
                 $applicationTimeZone
@@ -197,6 +240,33 @@ function convertDateTimeColumnToUtc_381(
             );
         }
     }
+}
+
+function columnExists_381($db, $table, $column)
+{
+    $columnData = $db->getAssoc(
+        "SELECT COLUMN_NAME
+         FROM information_schema.COLUMNS
+         WHERE TABLE_SCHEMA = DATABASE()
+           AND TABLE_NAME = " . $db->makeQueryString($table) . "
+           AND COLUMN_NAME = " . $db->makeQueryString($column)
+    );
+
+    return !empty($columnData);
+}
+
+function dateTimeColumnExists_381($db, $table, $column)
+{
+    $columnData = $db->getAssoc(
+        "SELECT COLUMN_NAME
+         FROM information_schema.COLUMNS
+         WHERE TABLE_SCHEMA = DATABASE()
+           AND TABLE_NAME = " . $db->makeQueryString($table) . "
+           AND COLUMN_NAME = " . $db->makeQueryString($column) . "
+           AND DATA_TYPE = 'datetime'"
+    );
+
+    return !empty($columnData);
 }
 
 ?>

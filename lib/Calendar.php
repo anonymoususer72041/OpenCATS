@@ -82,8 +82,29 @@ class Calendar
      */
     public function getEventArray($month, $year)
     {
-        // FIXME: Rewrite this query to use date ranges in WHERE, so that
-        //        indexes can be used.
+        $timeZone = DateUtility::getApplicationTimeZone();
+        $monthStart = DateTime::createFromFormat(
+            '!Y-n-j',
+            $year . '-' . $month . '-1',
+            $timeZone
+        );
+        $nextMonthStart = clone $monthStart;
+        $nextMonthStart->modify('+1 month');
+        $monthStartLocal = $monthStart->format(
+            DateUtility::DATABASE_DATETIME_FORMAT
+        );
+        $nextMonthStartLocal = $nextMonthStart->format(
+            DateUtility::DATABASE_DATETIME_FORMAT
+        );
+        $monthStartUtc = DateUtility::convertLocalDateTimeToUtc(
+            $monthStartLocal,
+            $timeZone
+        );
+        $nextMonthStartUtc = DateUtility::convertLocalDateTimeToUtc(
+            $nextMonthStartLocal,
+            $timeZone
+        );
+
         $sql = sprintf(
             "SELECT
                 calendar_event.calendar_event_id AS eventID,
@@ -135,15 +156,27 @@ class Calendar
             LEFT JOIN user AS entered_by_user
                 ON calendar_event.entered_by = entered_by_user.user_id
             WHERE
-                DATE_FORMAT(calendar_event.date, '%%c') = %s
-            AND
-                DATE_FORMAT(calendar_event.date, '%%Y') = %s
+            (
+                (
+                    calendar_event.all_day = 1
+                    AND calendar_event.date >= %s
+                    AND calendar_event.date < %s
+                )
+                OR
+                (
+                    calendar_event.all_day = 0
+                    AND calendar_event.date >= %s
+                    AND calendar_event.date < %s
+                )
+            )
             AND
                 calendar_event.site_id = %s
             ORDER BY
                 dateSort ASC",
-            $month,
-            $year,
+            $this->_db->makeQueryString($monthStartLocal),
+            $this->_db->makeQueryString($nextMonthStartLocal),
+            $this->_db->makeQueryString($monthStartUtc),
+            $this->_db->makeQueryString($nextMonthStartUtc),
             $this->_siteID
         );
 
@@ -329,10 +362,10 @@ class Calendar
         {
             $date .= ' 00:00:00';
         }
-        $date = DateUtility::convertLocalDateTimeToUtc(
-            $date,
-            OFFSET_GMT + (int) $timeZoneOffset
-        );
+        if (!$allDay)
+        {
+            $date = DateUtility::convertLocalDateTimeToUtc($date);
+        }
 
         if ($jobOrderID === null)
         {
@@ -441,10 +474,10 @@ class Calendar
         {
             $date .= ' 00:00:00';
         }
-        $date = DateUtility::convertLocalDateTimeToUtc(
-            $date,
-            OFFSET_GMT + (int) $timeZoneOffset
-        );
+        if (!$allDay)
+        {
+            $date = DateUtility::convertLocalDateTimeToUtc($date);
+        }
 
         if ($jobOrderID === null)
         {
@@ -632,8 +665,10 @@ class Calendar
      */
     public function getUpcomingEventsByDataItem($dataItemType, $dataItemID)
     {
-        $currentDateForMySQL = DateUtility::convertLocalDateTimeToUtc(
-            date('Y-m-d') . ' 00:00:00'
+        $today = new DateTime('today', DateUtility::getApplicationTimeZone());
+        $todayLocal = $today->format(DateUtility::DATABASE_DATETIME_FORMAT);
+        $todayUtc = DateUtility::convertLocalDateTimeToUtc(
+            $todayLocal
         );
 
         $sql = sprintf(
@@ -670,7 +705,11 @@ class Calendar
             WHERE
                 calendar_event.site_id = %s
             AND
-                calendar_event.date >= %s
+            (
+                (calendar_event.all_day = 1 AND calendar_event.date >= %s)
+                OR
+                (calendar_event.all_day = 0 AND calendar_event.date >= %s)
+            )
             AND
             (
                 calendar_event.public = 1
@@ -683,7 +722,8 @@ class Calendar
             ORDER BY
                 dateSort ASC",
             $this->_siteID,
-            $this->_db->makeQueryString($currentDateForMySQL),
+            $this->_db->makeQueryString($todayLocal),
+            $this->_db->makeQueryString($todayUtc),
             $this->_userID,
             $this->_db->makeQueryInteger($dataItemType),
             $this->_db->makeQueryInteger($dataItemID)
@@ -726,6 +766,12 @@ class Calendar
         $today = new DateTime('today', DateUtility::getApplicationTimeZone());
         $tomorrow = clone $today;
         $tomorrow->modify('+1 day');
+        $todayStartLocal = $today->format(
+            DateUtility::DATABASE_DATETIME_FORMAT
+        );
+        $tomorrowStartLocal = $tomorrow->format(
+            DateUtility::DATABASE_DATETIME_FORMAT
+        );
         $todayStartUtc = DateUtility::convertLocalDateTimeToUtc(
             $today->format(DateUtility::DATABASE_DATETIME_FORMAT)
         );
@@ -765,9 +811,19 @@ class Calendar
             LEFT JOIN user AS entered_by_user
                 ON calendar_event.entered_by = entered_by_user.user_id
             WHERE
-                calendar_event.date >= %s
-            AND
-                calendar_event.date < %s
+            (
+                (
+                    calendar_event.all_day = 1
+                    AND calendar_event.date >= %s
+                    AND calendar_event.date < %s
+                )
+                OR
+                (
+                    calendar_event.all_day = 0
+                    AND calendar_event.date >= %s
+                    AND calendar_event.date < %s
+                )
+            )
             AND
                 calendar_event.site_id = %s
             AND
@@ -778,6 +834,8 @@ class Calendar
             %s
             ORDER BY
                 dateSort ASC",
+            $this->_db->makeQueryString($todayStartLocal),
+            $this->_db->makeQueryString($tomorrowStartLocal),
             $this->_db->makeQueryString($todayStartUtc),
             $this->_db->makeQueryString($tomorrowStartUtc),
             $this->_siteID,
@@ -819,7 +877,11 @@ class Calendar
             LEFT JOIN user AS entered_by_user
                 ON calendar_event.entered_by = entered_by_user.user_id
             WHERE
-                calendar_event.date >= %s
+            (
+                (calendar_event.all_day = 1 AND calendar_event.date >= %s)
+                OR
+                (calendar_event.all_day = 0 AND calendar_event.date >= %s)
+            )
             AND
                 calendar_event.site_id = %s
             AND
@@ -832,6 +894,7 @@ class Calendar
                 dateSort ASC
             LIMIT
                 0, %s",
+            $this->_db->makeQueryString($tomorrowStartLocal),
             $this->_db->makeQueryString($tomorrowStartUtc),
             $this->_siteID,
             $this->_userID,

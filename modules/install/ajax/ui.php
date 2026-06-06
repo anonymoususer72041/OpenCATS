@@ -504,6 +504,7 @@ switch ($action)
             $onClick .= htmlspecialchars($index) . ',\' + encodeURIComponent(getCheckedValue(document.getElementsByName(\'' . htmlspecialchars($index) . '\'))) + \',';
         }
         $onClick .= '&timeZone=\' + encodeURIComponent(document.getElementById(\'timeZone\').value) + \'';
+        $onClick .= '&applicationTimeZone=\' + encodeURIComponent(document.getElementById(\'applicationTimeZone\').value) + \'';
         $onClick .= '&dateFormat=\' + encodeURIComponent(document.getElementById(\'dateFormat\').value) + \'';
         $onClick .= '&defaultPhoneCountryCodeDigits=\' + encodeURIComponent(document.getElementById(\'defaultPhoneCountryCodeDigits\').value));';
 
@@ -534,10 +535,16 @@ switch ($action)
         // FIXME: Input validation.
         $timeZone = $_REQUEST['timeZone'];
         CATSUtility::changeConfigSetting('OFFSET_GMT', ($timeZone));
+        $applicationTimeZone = $_REQUEST['applicationTimeZone'];
+        CATSUtility::changeConfigSetting(
+            'APPLICATION_TIME_ZONE',
+            "'" . addslashes($applicationTimeZone) . "'"
+        );
 
         $dateFormat = $_REQUEST['dateFormat'];
 
         $_SESSION['timeZoneInstaller'] = $timeZone;
+        $_SESSION['applicationTimeZoneInstaller'] = $applicationTimeZone;
         $_SESSION['dateFormatInstaller'] = $dateFormat;
 
         // Default phone country calling code collected in the installer.
@@ -1052,8 +1059,13 @@ switch ($action)
         }
 
         $timeZone = $_SESSION['timeZoneInstaller'];
+        $applicationTimeZone = $_SESSION['applicationTimeZoneInstaller'];
 
-        MySQLQuery(sprintf("UPDATE site SET time_zone = %s", $timeZone));
+        MySQLQuery(sprintf(
+            "UPDATE site SET time_zone = %s, application_time_zone = '%s'",
+            $timeZone,
+            mysqli_real_escape_string($mySQLConnection, $applicationTimeZone)
+        ));
 
         if (isset($_SESSION['defaultPhoneCountryCodeInstaller'])
             && $_SESSION['defaultPhoneCountryCodeInstaller'] !== '')

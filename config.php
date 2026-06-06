@@ -168,6 +168,12 @@ define('ENABLE_DEMO_MODE', false);
 /* Offset to GMT Time. */
 define('OFFSET_GMT', 2);
 
+/* IANA timezone used before site login and as the revision 381 migration
+ * default. Existing installations should set this before upgrading when
+ * historical local datetimes must be preserved.
+ */
+define('APPLICATION_TIME_ZONE', 'UTC');
+
 /* Should we enforce only one session per user (excluding demo)? */
 define('ENABLE_SINGLE_SESSION', false);
 

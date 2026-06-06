@@ -169,6 +169,9 @@ define('ENABLE_DEMO_MODE', false);
 /* Offset to GMT Time. */
 define('OFFSET_GMT', 2);
 
+/* IANA timezone used before site login and during schema migration. */
+define('APPLICATION_TIME_ZONE', 'UTC');
+
 /* Should we enforce only one session per user (excluding demo)? */
 define('ENABLE_SINGLE_SESSION', false);
 

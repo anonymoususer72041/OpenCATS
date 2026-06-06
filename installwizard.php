@@ -476,6 +476,12 @@
                                                 <tr>
                                                     <td style="padding-bottom: 10px;"><?php if (!isset($php4)) TemplateUtility::printTimeZoneSelect('timeZone', 'width: 420px;', '', OFFSET_GMT); ?></td>
                                                 </tr>
+                                                <tr>
+                                                    <td>Please choose the site timezone used for stored timestamps.</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="padding-bottom: 10px;"><?php if (!isset($php4)) TemplateUtility::printIANATimeZoneSelect('applicationTimeZone', 'width: 420px;', '', APPLICATION_TIME_ZONE); ?></td>
+                                                </tr>
 
                                                 <tr>
                                                     <td>Please choose your preferred date format.</td>

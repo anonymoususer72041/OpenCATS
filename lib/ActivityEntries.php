@@ -266,10 +266,7 @@ class ActivityEntries
                 AND
                     site_id = %s",
                 $this->_db->makeQueryString(
-                    DateUtility::convertLocalDateTimeToUtc(
-                        $date,
-                        OFFSET_GMT + (int) $timezoneOffset
-                    )
+                    DateUtility::convertLocalDateTimeToUtc($date)
                 ),
                 $this->_db->makeQueryInteger($activityID),
                 $this->_siteID

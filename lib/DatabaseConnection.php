@@ -35,13 +35,15 @@
  *	@package    CATS
  *	@subpackage Library
  */
+include_once(LEGACY_ROOT . '/lib/DateUtility.php');
+
 class DatabaseConnection
 {
     static private $_instance;
     private $_connection = null;
     private $_queryResult = null;
-    private $_timeZone;
     private $_dateDMY;
+    private $_dateFormats = array();
     private $_inTransaction;
 
 
@@ -62,12 +64,10 @@ class DatabaseConnection
         // FIXME: Remove Session tight-coupling here.
         if (isset($_SESSION['CATS']) && $_SESSION['CATS']->isLoggedIn())
         {
-            self::$_instance->_timeZone = $_SESSION['CATS']->getTimeZone();
             self::$_instance->_dateDMY = $_SESSION['CATS']->isDateDMY();
         }
         else
         {
-            self::$_instance->_timeZone = OFFSET_GMT;
             self::$_instance->_dateDMY = false;
         }
 
@@ -324,6 +324,10 @@ class DatabaseConnection
         {
             $recordSet = array();
         }
+        else
+        {
+            $recordSet = $this->_formatUtcDateTimes($recordSet);
+        }
 
         return $recordSet;
     }
@@ -368,7 +372,7 @@ class DatabaseConnection
             /* Store all rows in $recordSetArray; */
             while (($recordSet = mysqli_fetch_assoc($this->_queryResult)))
             {
-                $recordSetArray[] = $recordSet;
+                $recordSetArray[] = $this->_formatUtcDateTimes($recordSet);
             }
         }
 
@@ -647,70 +651,114 @@ class DatabaseConnection
     // FIXME: Document me.
     private function _localizationFilter($query)
     {
-        /* OpenCATS stores fixed GMT offsets, so visible SQL dates are adjusted
-         * by the site's configured offset. This does not apply DST rules.
-         */
+        $this->_dateFormats = array();
         if (strpos($query , 'SELECT') !== 0)
         {
             return $query;
         }
 
-        // FIXME: This could probably be done better with regexes.
-        // FIXME: D M Y support.
-        // FIXME: Document this. Any string-manipulation things like this can
-        //        get fairly confusing if not documented.
-        $newQuery = '';
-        while ($query != '')
+        return preg_replace_callback(
+            "/DATE_FORMAT\\s*\\(\\s*([`a-zA-Z0-9_.]+)\\s*,\\s*'([^']+)'\\s*\\)" .
+            "\\s+AS\\s+([`a-zA-Z0-9_]+)/i",
+            array($this, '_replaceUtcDateFormat'),
+            $query
+        );
+    }
+
+    private function _replaceUtcDateFormat($matches)
+    {
+        if (!$this->_isUtcDateTimeExpression($matches[1]))
         {
-            /* Does the query contain a DATE_FORMAT()? */
-            $dateFormatPosition = strpos($query, 'DATE_FORMAT(');
-            if ($dateFormatPosition === false)
-            {
-                $newQuery .= $query;
-                $query = '';
-                continue;
-            }
-
-            if ($dateFormatPosition > 0)
-            {
-                $newQuery .= substr($query, 0, strpos($query, 'DATE_FORMAT('));
-                $query = substr($query, strpos($query, 'DATE_FORMAT('));
-            }
-
-            $working = substr($query, 0, strpos($query, ','));
-            $query = substr($query, strpos($query, ','));
-            if (strpos(substr($working, 13), '(') === false)
-            {
-                /* Add or subtract time before the date format depeidng on the
-                 * time zone offset. We don't have to do any replacement if the
-                 * offset is 0.
-                 */
-                if ($this->_timeZone > 0)
-                {
-                    $working = str_replace('DATE_FORMAT(', 'DATE_FORMAT(DATE_ADD(', $working);
-                    $working .= ', INTERVAL ' . $this->_timeZone . ' HOUR)';
-                }
-                else if ($this->_timeZone < 0)
-                {
-                    $working = str_replace('DATE_FORMAT(', 'DATE_FORMAT(DATE_SUB(', $working);
-                    $working .= ', INTERVAL ' . ($this->_timeZone * -1) . ' HOUR)';
-                }
-            }
-            $newQuery .= $working;
+            return $matches[0];
         }
 
-        $query = $newQuery;
-
-        /* Replace m-d-y dates with d-m-y dates if we're in dmy mode. */
+        $alias = trim($matches[3], '`');
+        $format = $matches[2];
         if ($this->_dateDMY)
         {
-            $query = str_replace('%m-%d-%y', '%d-%m-%y', $query);
-            $query = str_replace('%m-%d-%Y', '%d-%m-%Y', $query);
-            $query = str_replace('%m/%d/%Y', '%d/%m/%Y', $query);
-            $query = str_replace('%m/%d/%y', '%d/%m/%y', $query);
+            $format = str_replace(
+                array('%m-%d-%y', '%m-%d-%Y', '%m/%d/%Y', '%m/%d/%y'),
+                array('%d-%m-%y', '%d-%m-%Y', '%d/%m/%Y', '%d/%m/%y'),
+                $format
+            );
+        }
+        $this->_dateFormats[$alias] = array(
+            'format' => $this->_convertMySQLDateFormat($format),
+            'expression' => strtolower(str_replace('`', '', $matches[1]))
+        );
+
+        return $matches[1] . ' AS ' . $matches[3];
+    }
+
+    private function _isUtcDateTimeExpression($expression)
+    {
+        $expression = strtolower(str_replace('`', '', $expression));
+        $column = strpos($expression, '.') === false
+            ? $expression
+            : substr($expression, strrpos($expression, '.') + 1);
+
+        if (in_array($column, array(
+            'date_created', 'date_modified', 'date_occurred',
+            'date_submitted', 'date_refreshed', 'date_timeout',
+            'date_completed', 'set_date'
+        ), true))
+        {
+            return true;
         }
 
-        return $query;
+        return in_array($expression, array(
+            'calendar_event.date',
+            'candidate_joborder_status_history.date',
+            'career_portal_questionnaire_history.date',
+            'email_history.date',
+            'http_log.date',
+            'user_login.date'
+        ), true);
+    }
+
+    private function _convertMySQLDateFormat($format)
+    {
+        return strtr($format, array(
+            '%Y' => 'Y', '%y' => 'y', '%m' => 'm', '%c' => 'n',
+            '%d' => 'd', '%e' => 'j', '%H' => 'H', '%k' => 'G',
+            '%h' => 'h', '%I' => 'h', '%l' => 'g', '%i' => 'i',
+            '%s' => 's', '%S' => 's', '%p' => 'A', '%%' => '%'
+        ));
+    }
+
+    private function _formatUtcDateTimes($recordSet)
+    {
+        foreach ($this->_dateFormats as $alias => $dateFormat)
+        {
+            if (array_key_exists($alias, $recordSet))
+            {
+                if ($dateFormat['expression'] === 'calendar_event.date' &&
+                    isset($recordSet['allDay']) &&
+                    $recordSet['allDay'] == '1')
+                {
+                    $date = DateTime::createFromFormat(
+                        '!' . DateUtility::DATABASE_DATETIME_FORMAT,
+                        $recordSet[$alias],
+                        new DateTimeZone('UTC')
+                    );
+                    if ($date !== false)
+                    {
+                        $recordSet[$alias] = $date->format(
+                            $dateFormat['format']
+                        );
+                    }
+                }
+                else
+                {
+                    $recordSet[$alias] = DateUtility::formatUtcDateTime(
+                        $recordSet[$alias],
+                        $dateFormat['format']
+                    );
+                }
+            }
+        }
+
+        return $recordSet;
     }
 
     /**

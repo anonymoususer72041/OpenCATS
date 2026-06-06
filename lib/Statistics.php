@@ -32,6 +32,7 @@
 
 include_once(LEGACY_ROOT . '/lib/Pipelines.php');
 include_once(LEGACY_ROOT . '/lib/JobOrderStatuses.php');
+include_once(LEGACY_ROOT . '/lib/DateUtility.php');
 
 /**
  *	Statistics Library
@@ -42,7 +43,6 @@ class Statistics
 {
     private $_db;
     private $_siteID;
-    private $_timeZoneOffset;
 
 
     public function __construct($siteID)
@@ -50,8 +50,6 @@ class Statistics
         $this->_siteID = $siteID;
         $this->_db = DatabaseConnection::getInstance();
 
-        // FIXME: Session coupling. The site timezone is a fixed GMT offset.
-        $this->_timeZoneOffset = $_SESSION['CATS']->getTimeZone();
     }
 
 
@@ -696,11 +694,19 @@ class Statistics
         switch ($modePeriod)
         {
             case 'month':
-                $periodChriterion = 'AND TO_DAYS(candidate.date_modified) >= TO_DAYS(DATE_SUB(CURDATE(), INTERVAL 1 MONTH))';
+                $periodChriterion =
+                    'AND candidate.date_modified >= ' .
+                    $this->_db->makeQueryString(
+                        DateUtility::getUtcRelativeDayBoundary('-1 month')
+                    );
                 break;
                 
             case 'week':
-                $periodChriterion = 'AND TO_DAYS(candidate.date_modified) >= TO_DAYS(DATE_SUB(CURDATE(), INTERVAL 7 DAY))';
+                $periodChriterion =
+                    'AND candidate.date_modified >= ' .
+                    $this->_db->makeQueryString(
+                        DateUtility::getUtcRelativeDayBoundary('-1 week')
+                    );
                 break;
             
             default:
@@ -962,109 +968,21 @@ class Statistics
          * column. MySQL can then build the entire result set without scanning
          * any rows.
          */
-        $criteria = '';
-        switch ($period)
+        if ($period == TIME_PERIOD_TODATE)
         {
-            case TIME_PERIOD_TODAY:
-                $criteria = sprintf(
-                    'AND %s > \'1900-01-01\' AND DATE(%s) = CURDATE()',
-                    $dateField,
-                    $dateField
-                );
-                break;
-
-            case TIME_PERIOD_YESTERDAY:
-                $criteria = sprintf(
-                    'AND %s > \'1900-01-01\' AND DATE(%s) = DATE_SUB(CURDATE(), INTERVAL 1 DAY)',
-                    $dateField,
-                    $dateField
-                );
-                break;
-
-            case TIME_PERIOD_THISWEEK:
-                $criteria = sprintf(
-                    'AND %s > \'1900-01-01\' AND YEARWEEK(%s) = YEARWEEK(UTC_TIMESTAMP())',
-                    $dateField,
-                    $dateField
-                );
-                break;
-
-            case TIME_PERIOD_LASTWEEK:
-                $criteria = sprintf(
-                    'AND %s > \'1900-01-01\' AND YEARWEEK(%s) = YEARWEEK(DATE_SUB(CURDATE(), INTERVAL 7 DAY))',
-                    $dateField,
-                    $dateField
-                );
-                break;
-
-            case TIME_PERIOD_LASTTWOWEEKS:
-                $criteria =sprintf(
-                    'AND %s > \'1900-01-01\' AND (YEARWEEK(%s) = YEARWEEK(UTC_TIMESTAMP()) OR YEARWEEK(%s) = YEARWEEK(UTC_TIMESTAMP() - INTERVAL 7 DAY))',
-                    $dateField,
-                    $dateField,
-                    $dateField
-                );
-                break;
-
-            case TIME_PERIOD_THISMONTH:
-                $criteria = sprintf(
-                    'AND %s > \'1900-01-01\' AND EXTRACT(YEAR_MONTH FROM %s) = EXTRACT(YEAR_MONTH FROM CURDATE())',
-                    $dateField,
-                    $dateField
-                );
-                break;
-
-            case TIME_PERIOD_LASTMONTH:
-                $criteria = sprintf(
-                    'AND %s > \'1900-01-01\' AND EXTRACT(YEAR_MONTH FROM %s) = EXTRACT(YEAR_MONTH FROM DATE_SUB(CURDATE(), INTERVAL 1 MONTH))',
-                    $dateField,
-                    $dateField
-                );
-                break;
-
-            case TIME_PERIOD_THISYEAR:
-                $criteria = sprintf(
-                    'AND %s > \'1900-01-01\' AND YEAR(%s) = YEAR(UTC_TIMESTAMP())',
-                    $dateField,
-                    $dateField
-                );
-                break;
-
-            case TIME_PERIOD_LASTYEAR:
-                $criteria = sprintf(
-                    'AND %s > \'1900-01-01\' AND YEAR(%s) = YEAR(DATE_SUB(CURDATE(), INTERVAL 1 YEAR))',
-                    $dateField,
-                    $dateField
-                );
-                break;
-
-            case TIME_PERIOD_TODATE:
-            default:
-                return sprintf('AND %s > \'1900-01-01\'', $dateField);
-                break;
+            return sprintf('AND %s > \'1900-01-01\'', $dateField);
         }
 
-        if ($this->_timeZoneOffset != 0)
-        {
-            $criteria = str_replace(
-                'CURDATE()', '__CATS_LOCAL_CURRENT_DATE__', $criteria
-            );
-            $criteria = str_replace(
-                'UTC_TIMESTAMP()',
-                'DATE_ADD(UTC_TIMESTAMP(), INTERVAL ' .
-                    $this->_timeZoneOffset . ' HOUR)',
-                $criteria
-            );
-            $criteria = str_replace(
-                '__CATS_LOCAL_CURRENT_DATE__',
-                'DATE(DATE_ADD(UTC_TIMESTAMP(), INTERVAL ' .
-                    $this->_timeZoneOffset . ' HOUR))',
-                $criteria
-            );
-            $criteria = str_replace($dateField, 'DATE_ADD(' . $dateField . ', INTERVAL ' . $this->_timeZoneOffset . ' HOUR)', $criteria);
-        }
+        $boundaries = DateUtility::getUtcPeriodBoundaries($period);
 
-        return $criteria;
+        return sprintf(
+            "AND %s > '1900-01-01' AND %s >= %s AND %s < %s",
+            $dateField,
+            $dateField,
+            $this->_db->makeQueryString($boundaries['start']),
+            $dateField,
+            $this->_db->makeQueryString($boundaries['end'])
+        );
     }
 }
 

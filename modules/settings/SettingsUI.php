@@ -2472,6 +2472,10 @@ class SettingsUI extends UserInterface
                     }
 
                     $this->_template->assign('timeZone', $_SESSION['CATS']->getTimeZone());
+                    $this->_template->assign(
+                        'applicationTimeZone',
+                        $_SESSION['CATS']->getApplicationTimeZone()
+                    );
                     $this->_template->assign('isDateDMY', $_SESSION['CATS']->isDateDMY());
 
                     // Default phone country calling code for the localization settings page.
@@ -2631,6 +2635,7 @@ class SettingsUI extends UserInterface
                 }
                 //FIXME: Validation (escaped at lib level anyway)
                 $timeZone = $_POST['timeZone'];
+                $applicationTimeZone = $_POST['applicationTimeZone'];
                 $dateFormat = $_POST['dateFormat'];
                 if ($dateFormat == 'mdy')
                 {
@@ -2642,7 +2647,11 @@ class SettingsUI extends UserInterface
                 }
 
                 $site = new Site($this->_siteID);
-                $site->setLocalization($timeZone, $isDMY);
+                $site->setLocalization(
+                    $timeZone,
+                    $isDMY,
+                    $applicationTimeZone
+                );
 
                 // Default phone country calling code (E.164) for the site.
                 if (isset($_POST['defaultPhoneCountryCodeDigits']))
@@ -2685,6 +2694,9 @@ class SettingsUI extends UserInterface
         // FIXME: Input validation!
 
         $timeZone = $_POST['timeZone'];
+        $applicationTimeZone = isset($_POST['applicationTimeZone'])
+            ? $_POST['applicationTimeZone']
+            : 'UTC';
         $dateFormat = $_POST['dateFormat'];
         if ($dateFormat == 'mdy')
         {
@@ -2696,10 +2708,14 @@ class SettingsUI extends UserInterface
         }
 
         $site = new Site($this->_siteID);
-        $site->setLocalization($timeZone, $dateFormat);
+        $site->setLocalization($timeZone, $dateFormat, $applicationTimeZone);
 
         /* Reload the new data for the session. */
-        $_SESSION['CATS']->setTimeDateLocalization($timeZone, $isDMY);
+        $_SESSION['CATS']->setTimeDateLocalization(
+            $timeZone,
+            $isDMY,
+            $applicationTimeZone
+        );
 
         $this->_template->assign('inputType', 'conclusion');
         $this->_template->assign('title', 'Localization Settings Saved!');
@@ -3271,6 +3287,9 @@ class SettingsUI extends UserInterface
         }
 
         $timeZone = $_GET['timeZone'];
+        $applicationTimeZone = isset($_GET['applicationTimeZone'])
+            ? $_GET['applicationTimeZone']
+            : 'UTC';
         $dateFormat = $_GET['dateFormat'];
         if ($dateFormat == 'mdy')
         {
@@ -3282,7 +3301,7 @@ class SettingsUI extends UserInterface
         }
 
         $site = new Site($this->_siteID);
-        $site->setLocalization($timeZone, $isDMY);
+        $site->setLocalization($timeZone, $isDMY, $applicationTimeZone);
         $site->setLocalizationConfigured();
 
         echo 'Ok';

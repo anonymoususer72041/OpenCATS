@@ -33,6 +33,12 @@
                                 <tr>
                                     <td style="padding-bottom: 10px;"><?php TemplateUtility::printTimeZoneSelect('timeZone', 'width: 420px;', '', $this->timeZone); ?></td>
                                 </tr>
+                                <tr>
+                                    <td>Please choose the site timezone used for stored timestamps.</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding-bottom: 10px;"><?php TemplateUtility::printIANATimeZoneSelect('applicationTimeZone', 'width: 420px;', '', $this->applicationTimeZone); ?></td>
+                                </tr>
 
                                 <tr>
                                     <td>Please choose your preferred date format.</td>

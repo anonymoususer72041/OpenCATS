@@ -44,38 +44,38 @@ include_once(LEGACY_ROOT . '/lib/DateUtility.php');   /* Depends on StringUtilit
 
 class DateUtilityTest extends TestCase
 {
-    function testConvertLocalDateTimeToUtcWithFixedOffset()
+    function testConvertLocalDateTimeToUtcWithIanaTimeZone()
     {
         $this->assertSame(
-            '2024-01-15 08:00:00',
+            '2024-01-15 09:00:00',
             DateUtility::convertLocalDateTimeToUtc(
                 '2024-01-15 10:00:00',
-                2
+                'Europe/Berlin'
             )
         );
         $this->assertSame(
             '2024-07-15 08:00:00',
             DateUtility::convertLocalDateTimeToUtc(
                 '2024-07-15 10:00:00',
-                2
+                'Europe/Berlin'
             )
         );
     }
 
-    function testConvertUtcDateTimeToLocalWithFixedOffset()
+    function testConvertUtcDateTimeToLocalWithIanaTimeZone()
     {
         $this->assertSame(
             '2024-01-15 10:00:00',
             DateUtility::convertUtcDateTimeToLocal(
-                '2024-01-15 08:00:00',
-                2
+                '2024-01-15 09:00:00',
+                'Europe/Berlin'
             )
         );
         $this->assertSame(
             '2024-07-15 10:00:00',
             DateUtility::convertUtcDateTimeToLocal(
                 '2024-07-15 08:00:00',
-                2
+                'Europe/Berlin'
             )
         );
     }
@@ -97,11 +97,17 @@ class DateUtilityTest extends TestCase
         {
             $this->assertSame(
                 $value,
-                DateUtility::convertLocalDateTimeToUtc($value, 2)
+                DateUtility::convertLocalDateTimeToUtc(
+                    $value,
+                    'Europe/Berlin'
+                )
             );
             $this->assertSame(
                 $value,
-                DateUtility::convertUtcDateTimeToLocal($value, 2)
+                DateUtility::convertUtcDateTimeToLocal(
+                    $value,
+                    'Europe/Berlin'
+                )
             );
         }
     }
@@ -109,12 +115,20 @@ class DateUtilityTest extends TestCase
     function testUtcDayBoundaryIncludesTheSelectedEndDay()
     {
         $this->assertSame(
-            '2024-01-14 22:00:00',
-            DateUtility::getUtcDayBoundary('2024-01-15', false, 2)
+            '2024-07-14 22:00:00',
+            DateUtility::getUtcDayBoundary(
+                '2024-07-15',
+                false,
+                'Europe/Berlin'
+            )
         );
         $this->assertSame(
-            '2024-01-15 22:00:00',
-            DateUtility::getUtcDayBoundary('2024-01-15', true, 2)
+            '2024-07-15 22:00:00',
+            DateUtility::getUtcDayBoundary(
+                '2024-07-15',
+                true,
+                'Europe/Berlin'
+            )
         );
     }
 
@@ -124,7 +138,7 @@ class DateUtilityTest extends TestCase
             '2024-06-14 22:00:00',
             DateUtility::getUtcRelativeDayBoundary(
                 '-1 month',
-                2,
+                'Europe/Berlin',
                 '2024-07-15'
             )
         );
@@ -133,13 +147,44 @@ class DateUtilityTest extends TestCase
     function testUtcRelativeMonthBoundaryClampsToLastValidDay()
     {
         $this->assertSame(
-            '2024-02-28 22:00:00',
+            '2024-02-28 23:00:00',
             DateUtility::getUtcRelativeDayBoundary(
                 '-1 month',
-                2,
+                'Europe/Berlin',
                 '2024-03-31'
             )
         );
+    }
+
+    function testInvalidApplicationTimeZoneFallsBackToUtc()
+    {
+        $this->assertSame(
+            'UTC',
+            DateUtility::getApplicationTimeZone('Invalid/TimeZone')->getName()
+        );
+        $this->assertSame(
+            'UTC',
+            DateUtility::getApplicationTimeZone(2)->getName()
+        );
+        $this->assertSame(
+            '2024-07-15 10:00:00',
+            DateUtility::convertLocalDateTimeToUtc(
+                '2024-07-15 10:00:00',
+                'Invalid/TimeZone'
+            )
+        );
+    }
+
+    function testUtcPeriodBoundariesApplyDaylightSavingRules()
+    {
+        $boundaries = DateUtility::getUtcPeriodBoundaries(
+            TIME_PERIOD_TODAY,
+            'Europe/Berlin',
+            '2024-03-31 12:00:00'
+        );
+
+        $this->assertSame('2024-03-30 23:00:00', $boundaries['start']);
+        $this->assertSame('2024-03-31 22:00:00', $boundaries['end']);
     }
 
     /* Tests for getStartingWeekday(). */

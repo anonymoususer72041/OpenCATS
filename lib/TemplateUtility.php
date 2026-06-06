@@ -258,6 +258,39 @@ class TemplateUtility
     }
 
     /**
+     * Prints an IANA timezone selector.
+     *
+     * @return void
+     */
+    public static function printIANATimeZoneSelect($selectID, $selectStyle,
+        $selectClass, $selectedTimeZone)
+    {
+        echo '<select id="', $selectID, '" name="', $selectID, '"';
+
+        if (!empty($selectClass))
+        {
+            echo ' class="', $selectClass, '"';
+        }
+
+        if (!empty($selectStyle))
+        {
+            echo ' style="', $selectStyle, '"';
+        }
+
+        echo '>';
+        foreach (timezone_identifiers_list() as $timeZone)
+        {
+            echo '<option value="', htmlspecialchars($timeZone), '"';
+            if ($timeZone === $selectedTimeZone)
+            {
+                echo ' selected="selected"';
+            }
+            echo '>', htmlspecialchars($timeZone), '</option>';
+        }
+        echo '</select>';
+    }
+
+    /**
      * Prints the Quick Search box and MRU list.
      *
      * @return void

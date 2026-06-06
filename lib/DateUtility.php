@@ -111,11 +111,11 @@ class DateUtility
     }
 
     /**
-     * Returns the configured fixed-offset application timezone.
+     * Returns the configured IANA application timezone.
      *
-     * OpenCATS stores numeric GMT offsets rather than IANA timezone names.
-     * Explicit DateTimeZone or IANA values are accepted for isolated callers,
-     * but the application configuration itself cannot apply DST rules.
+     * Existing installations without a valid IANA timezone use UTC. Numeric
+     * GMT offsets are intentionally not used because they cannot apply
+     * daylight saving rules to the datetime being converted.
      *
      * @param DateTimeZone|string|null Timezone override.
      * @return DateTimeZone Application timezone.
@@ -126,11 +126,11 @@ class DateUtility
         {
             if (isset($_SESSION['CATS']) && $_SESSION['CATS']->isLoggedIn())
             {
-                $timeZone = $_SESSION['CATS']->getTimeZone();
+                $timeZone = $_SESSION['CATS']->getApplicationTimeZone();
             }
-            else
+            else if (defined('APPLICATION_TIME_ZONE'))
             {
-                $timeZone = defined('OFFSET_GMT') ? OFFSET_GMT : 0;
+                $timeZone = APPLICATION_TIME_ZONE;
             }
         }
 
@@ -140,12 +140,9 @@ class DateUtility
     /**
      * Returns a local calendar-day boundary converted to UTC.
      *
-     * OpenCATS stores numeric GMT offsets, so these boundaries preserve the
-     * existing fixed-offset behavior and do not apply daylight saving rules.
-     *
      * @param string Local date in Y-m-d format.
      * @param boolean Return the start of the following day.
-     * @param DateTimeZone|string|integer|null Application timezone.
+     * @param DateTimeZone|string|null Application timezone.
      * @return string Original invalid value, or a UTC datetime.
      */
     public static function getUtcDayBoundary($value, $nextDay = false,
@@ -178,7 +175,7 @@ class DateUtility
      * Returns a relative local start-of-day boundary converted to UTC.
      *
      * @param string DateTime modify expression, for example "-1 month".
-     * @param DateTimeZone|string|integer|null Application timezone.
+     * @param DateTimeZone|string|null Application timezone.
      * @param string|null Local base date in Y-m-d format for tests.
      * @return string UTC datetime.
      */
@@ -220,6 +217,91 @@ class DateUtility
         $date->setTimezone(new DateTimeZone('UTC'));
 
         return $date->format(self::DATABASE_DATETIME_FORMAT);
+    }
+
+    /**
+     * Returns UTC boundaries for an application-local statistics period.
+     *
+     * @param integer Statistics period constant.
+     * @param DateTimeZone|string|null Application timezone.
+     * @param string|null Local current datetime for deterministic tests.
+     * @return array Start and exclusive end UTC datetimes.
+     */
+    public static function getUtcPeriodBoundaries($period, $timeZone = null,
+        $localNow = null)
+    {
+        $timeZone = self::getApplicationTimeZone($timeZone);
+        $now = new DateTime($localNow === null ? 'now' : $localNow, $timeZone);
+        $start = clone $now;
+        $start->setTime(0, 0, 0);
+        $end = clone $start;
+
+        switch ($period)
+        {
+            case TIME_PERIOD_TODAY:
+                $end->modify('+1 day');
+                break;
+
+            case TIME_PERIOD_YESTERDAY:
+                $start->modify('-1 day');
+                break;
+
+            case TIME_PERIOD_THISWEEK:
+                $start->modify('-' . $start->format('w') . ' days');
+                $end = clone $start;
+                $end->modify('+1 week');
+                break;
+
+            case TIME_PERIOD_LASTWEEK:
+                $start->modify('-' . $start->format('w') . ' days');
+                $end = clone $start;
+                $start->modify('-1 week');
+                break;
+
+            case TIME_PERIOD_LASTTWOWEEKS:
+                $start->modify('-' . $start->format('w') . ' days');
+                $end = clone $start;
+                $end->modify('+1 week');
+                $start->modify('-1 week');
+                break;
+
+            case TIME_PERIOD_THISMONTH:
+                $start->modify('first day of this month');
+                $end = clone $start;
+                $end->modify('+1 month');
+                break;
+
+            case TIME_PERIOD_LASTMONTH:
+                $start->modify('first day of last month');
+                $end = clone $start;
+                $end->modify('+1 month');
+                break;
+
+            case TIME_PERIOD_THISYEAR:
+                $start->setDate((int) $start->format('Y'), 1, 1);
+                $end = clone $start;
+                $end->modify('+1 year');
+                break;
+
+            case TIME_PERIOD_LASTYEAR:
+                $start->setDate((int) $start->format('Y') - 1, 1, 1);
+                $end = clone $start;
+                $end->modify('+1 year');
+                break;
+
+            case TIME_PERIOD_TODATE:
+            default:
+                return array('start' => null, 'end' => null);
+        }
+
+        $utc = new DateTimeZone('UTC');
+        $start->setTimezone($utc);
+        $end->setTimezone($utc);
+
+        return array(
+            'start' => $start->format(self::DATABASE_DATETIME_FORMAT),
+            'end' => $end->format(self::DATABASE_DATETIME_FORMAT)
+        );
     }
 
     private static function _convertDatabaseDateTime($value, $sourceTimeZone,
@@ -268,18 +350,8 @@ class DateUtility
             return $timeZone;
         }
 
-        if (is_int($timeZone) ||
-            (is_string($timeZone) &&
-             preg_match('/^[+-]?\d{1,2}$/', $timeZone)))
-        {
-            $offset = (int) $timeZone;
-            if ($offset >= -23 && $offset <= 23)
-            {
-                return new DateTimeZone(sprintf('%+03d:00', $offset));
-            }
-        }
-
-        if (!is_string($timeZone))
+        if (!is_string($timeZone) ||
+            !in_array($timeZone, timezone_identifiers_list(), true))
         {
             return new DateTimeZone('UTC');
         }
@@ -568,15 +640,12 @@ class DateUtility
         {
             if (isset($_SESSION['CATS']) && $_SESSION['CATS']->isLoggedIn())
             {
-                $timeZoneOffset = $_SESSION['CATS']->getTimeZoneOffset();
-                $date = mktime(
-                    date('H') + $timeZoneOffset,
-                    date('i'),
-                    date('s'),
-                    date('m'),
-                    date('d'),
-                    date('Y')
+                $localDate = new DateTime(
+                    'now',
+                    self::getApplicationTimeZone()
                 );
+                $localDate->modify('+1 day');
+                return (int) $localDate->format('W');
             }
             else
             {
@@ -629,16 +698,10 @@ class DateUtility
             $date = time();
         }
 
-        $unixTime = mktime(
-            date('H', $date) + $_SESSION['CATS']->getTimeZoneOffset(),
-            date('i', $date),
-            date('s', $date),
-            date('m', $date),
-            date('d', $date),
-            date('Y', $date)
-        );
+        $localDate = new DateTime('@' . $date);
+        $localDate->setTimezone(self::getApplicationTimeZone());
 
-        return date($format, $unixTime);
+        return $localDate->format($format);
     }
     
     /**
