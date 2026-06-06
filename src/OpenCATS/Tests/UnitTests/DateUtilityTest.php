@@ -44,6 +44,104 @@ include_once(LEGACY_ROOT . '/lib/DateUtility.php');   /* Depends on StringUtilit
 
 class DateUtilityTest extends TestCase
 {
+    function testConvertLocalDateTimeToUtcWithFixedOffset()
+    {
+        $this->assertSame(
+            '2024-01-15 08:00:00',
+            DateUtility::convertLocalDateTimeToUtc(
+                '2024-01-15 10:00:00',
+                2
+            )
+        );
+        $this->assertSame(
+            '2024-07-15 08:00:00',
+            DateUtility::convertLocalDateTimeToUtc(
+                '2024-07-15 10:00:00',
+                2
+            )
+        );
+    }
+
+    function testConvertUtcDateTimeToLocalWithFixedOffset()
+    {
+        $this->assertSame(
+            '2024-01-15 10:00:00',
+            DateUtility::convertUtcDateTimeToLocal(
+                '2024-01-15 08:00:00',
+                2
+            )
+        );
+        $this->assertSame(
+            '2024-07-15 10:00:00',
+            DateUtility::convertUtcDateTimeToLocal(
+                '2024-07-15 08:00:00',
+                2
+            )
+        );
+    }
+
+    function testUtcDateTimeConversionsPreserveUnsupportedValues()
+    {
+        $values = array(
+            null,
+            '',
+            0,
+            '0',
+            'invalid',
+            '0000-00-00 00:00:00',
+            '1000-01-01 00:00:00',
+            '2024-01-15'
+        );
+
+        foreach ($values as $value)
+        {
+            $this->assertSame(
+                $value,
+                DateUtility::convertLocalDateTimeToUtc($value, 2)
+            );
+            $this->assertSame(
+                $value,
+                DateUtility::convertUtcDateTimeToLocal($value, 2)
+            );
+        }
+    }
+
+    function testUtcDayBoundaryIncludesTheSelectedEndDay()
+    {
+        $this->assertSame(
+            '2024-01-14 22:00:00',
+            DateUtility::getUtcDayBoundary('2024-01-15', false, 2)
+        );
+        $this->assertSame(
+            '2024-01-15 22:00:00',
+            DateUtility::getUtcDayBoundary('2024-01-15', true, 2)
+        );
+    }
+
+    function testUtcRelativeDayBoundaryUsesLocalStartOfDay()
+    {
+        $this->assertSame(
+            '2024-06-14 22:00:00',
+            DateUtility::getUtcRelativeDayBoundary(
+                '-1 month',
+                2,
+                '2024-07-15'
+            )
+        );
+    }
+
+    function testUtcRelativeMonthBoundaryClampsToLastValidDay()
+    {
+        $this->assertSame(
+            '2024-02-28 22:00:00',
+            DateUtility::getUtcRelativeDayBoundary(
+                '-1 month',
+                2,
+                '2024-03-31'
+            )
+        );
+    }
+
     /* Tests for getStartingWeekday(). */
     function testGetStartingWeekday()
     {
