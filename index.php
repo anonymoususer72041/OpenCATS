@@ -166,6 +166,18 @@ if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST' &
 if (((isset($careerPage) && $careerPage) ||
     (isset($_GET['showCareerPortal']) && $_GET['showCareerPortal'] == '1')))
 {
+    if (SchemaMigrationStatus::hasPendingInstallMigrations())
+    {
+        header('HTTP/1.1 503 Service Unavailable');
+        header('Content-Type: text/html; charset=UTF-8');
+
+        echo '<!DOCTYPE html>',
+             '<html><head><title>Career Portal Maintenance</title></head><body>',
+             '<p>The career portal is temporarily unavailable while system maintenance is in progress. Please try again later.</p>',
+             '</body></html>';
+        die();
+    }
+
     ModuleUtility::loadModule('careers');
 }
 
