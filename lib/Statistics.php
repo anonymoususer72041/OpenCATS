@@ -50,8 +50,8 @@ class Statistics
         $this->_siteID = $siteID;
         $this->_db = DatabaseConnection::getInstance();
 
-        // FIXME: Session coupling...
-        $this->_timeZoneOffset = $_SESSION['CATS']->getTimeZoneOffset();
+        // FIXME: Session coupling. The site timezone is a fixed GMT offset.
+        $this->_timeZoneOffset = $_SESSION['CATS']->getTimeZone();
     }
 
 
@@ -1046,8 +1046,21 @@ class Statistics
 
         if ($this->_timeZoneOffset != 0)
         {
-            $criteria = str_replace('CURDATE()', 'DATE_ADD(CURDATE(), INTERVAL ' . $this->_timeZoneOffset . ' HOUR)', $criteria);
-            $criteria = str_replace('UTC_TIMESTAMP()', 'DATE_ADD(UTC_TIMESTAMP(), INTERVAL ' . $this->_timeZoneOffset . ' HOUR)', $criteria);
+            $criteria = str_replace(
+                'CURDATE()', '__CATS_LOCAL_CURRENT_DATE__', $criteria
+            );
+            $criteria = str_replace(
+                'UTC_TIMESTAMP()',
+                'DATE_ADD(UTC_TIMESTAMP(), INTERVAL ' .
+                    $this->_timeZoneOffset . ' HOUR)',
+                $criteria
+            );
+            $criteria = str_replace(
+                '__CATS_LOCAL_CURRENT_DATE__',
+                'DATE(DATE_ADD(UTC_TIMESTAMP(), INTERVAL ' .
+                    $this->_timeZoneOffset . ' HOUR))',
+                $criteria
+            );
             $criteria = str_replace($dateField, 'DATE_ADD(' . $dateField . ', INTERVAL ' . $this->_timeZoneOffset . ' HOUR)', $criteria);
         }
 

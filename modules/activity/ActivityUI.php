@@ -102,7 +102,8 @@ class ActivityUI extends UserInterface
         /* Only show a month of activities. */
         $dataGridProperties['startDate'] = '';
         $dataGridProperties['endDate'] = '';
-        $dataGridProperties['period'] = 'DATE_SUB(CURDATE(), INTERVAL 1 MONTH)';
+        $dataGridProperties['period'] =
+            DateUtility::getUtcRelativeDayBoundary('-1 month');
 
         $dataGrid = DataGrid::get("activity:ActivityDataGrid", $dataGridProperties);
 
@@ -147,19 +148,19 @@ class ActivityUI extends UserInterface
             switch ($periodString)
             {
                 case 'lastweek':
-                    $period = 'DATE_SUB(CURDATE(), INTERVAL 1 WEEK)';
+                    $period = DateUtility::getUtcRelativeDayBoundary('-1 week');
                     break;
 
                 case 'lastmonth':
-                    $period = 'DATE_SUB(CURDATE(), INTERVAL 1 MONTH)';
+                    $period = DateUtility::getUtcRelativeDayBoundary('-1 month');
                     break;
 
                 case 'lastsixmonths':
-                    $period = 'DATE_SUB(CURDATE(), INTERVAL 6 MONTH)';
+                    $period = DateUtility::getUtcRelativeDayBoundary('-6 months');
                     break;
 
                 case 'lastyear':
-                    $period = 'DATE_SUB(CURDATE(), INTERVAL 1 YEAR)';
+                    $period = DateUtility::getUtcRelativeDayBoundary('-1 year');
                     break;
 
                 case 'all':
@@ -207,7 +208,7 @@ class ActivityUI extends UserInterface
                 $_GET['startMonth'], $_GET['startDay'], $_GET['startYear']
             );
             $endDate = DateUtility::formatSearchDate(
-                $_GET['endMonth'], $_GET['endDay']+1, $_GET['endYear']
+                $_GET['endMonth'], $_GET['endDay'], $_GET['endYear']
             );
 
             $startDateURLString = sprintf(

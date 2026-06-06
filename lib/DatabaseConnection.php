@@ -62,12 +62,12 @@ class DatabaseConnection
         // FIXME: Remove Session tight-coupling here.
         if (isset($_SESSION['CATS']) && $_SESSION['CATS']->isLoggedIn())
         {
-            self::$_instance->_timeZone = $_SESSION['CATS']->getTimeZoneOffset();
+            self::$_instance->_timeZone = $_SESSION['CATS']->getTimeZone();
             self::$_instance->_dateDMY = $_SESSION['CATS']->isDateDMY();
         }
         else
         {
-            self::$_instance->_timeZone = OFFSET_GMT * -1;
+            self::$_instance->_timeZone = OFFSET_GMT;
             self::$_instance->_dateDMY = false;
         }
 
@@ -647,7 +647,9 @@ class DatabaseConnection
     // FIXME: Document me.
     private function _localizationFilter($query)
     {
-        /* Fix query to allow time results to be offset by $_timeZone. */
+        /* OpenCATS stores fixed GMT offsets, so visible SQL dates are adjusted
+         * by the site's configured offset. This does not apply DST rules.
+         */
         if (strpos($query , 'SELECT') !== 0)
         {
             return $query;

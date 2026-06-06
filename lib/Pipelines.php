@@ -625,7 +625,10 @@ class Pipelines
                 DATE_FORMAT(
                     candidate_joborder.date_created, '%%m-%%d-%%y'
                 ) AS dateCreated,
-                UNIX_TIMESTAMP(candidate_joborder.date_created) AS dateCreatedInt,
+                TIMESTAMPDIFF(
+                    SECOND, '1970-01-01 00:00:00',
+                    candidate_joborder.date_created
+                ) AS dateCreatedInt,
                 candidate_joborder_status.short_description AS status,
                 candidate_joborder.candidate_joborder_id AS candidateJobOrderID,
                 candidate_joborder.rating_value AS ratingValue,

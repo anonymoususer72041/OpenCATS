@@ -34,6 +34,7 @@
 include_once(LEGACY_ROOT . '/lib/Hooks.php');
 include_once(LEGACY_ROOT . '/lib/InfoString.php');
 include_once(LEGACY_ROOT . '/lib/Pipelines.php');
+include_once(LEGACY_ROOT . '/lib/DateUtility.php');
 include_once(LEGACY_ROOT . '/lib/Width.php');
 
 
@@ -223,18 +224,26 @@ class CallsDataGrid extends DataGrid
 
         if (isset($parameters['period']) && !empty($parameters['period']))
         {
-            $this->dateCriterion .= ' AND activity.date_occurred >= ' . $parameters['period'] . ' ';
+            $this->dateCriterion .= ' AND activity.date_occurred >= \'' .
+                $parameters['period'] . '\' ';
         }
         else
         {
             if (isset($parameters['startDate']) && !empty($parameters['startDate']))
             {
-                $this->dateCriterion .= ' AND activity.date_occurred >= \'' .$parameters['startDate'].'\' ';
+                $startDate = DateUtility::getUtcDayBoundary(
+                    $parameters['startDate']
+                );
+                $this->dateCriterion .= ' AND activity.date_occurred >= \'' . $startDate . '\' ';
             }
 
             if (isset($parameters['endDate']) && !empty($parameters['endDate']))
             {
-                $this->dateCriterion .= ' AND activity.date_occurred <= \''.$parameters['endDate'].'\' ';
+                $endDate = DateUtility::getUtcDayBoundary(
+                    $parameters['endDate'],
+                    true
+                );
+                $this->dateCriterion .= ' AND activity.date_occurred < \'' . $endDate . '\' ';
             }
         }
 

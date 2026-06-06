@@ -30,6 +30,7 @@
 include_once(LEGACY_ROOT . '/lib/NewVersionCheck.php');
 include_once(LEGACY_ROOT . '/lib/CommonErrors.php');
 include_once(LEGACY_ROOT . '/lib/Dashboard.php');
+include_once(LEGACY_ROOT . '/lib/DateUtility.php');
 
 class HomeUI extends UserInterface
 {
@@ -138,7 +139,8 @@ class HomeUI extends UserInterface
         /* Only show a month of activities. */
         $dataGridProperties['startDate'] = '';
         $dataGridProperties['endDate'] = '';
-        $dataGridProperties['period'] = 'DATE_SUB(CURDATE(), INTERVAL 1 MONTH)';
+        $dataGridProperties['period'] =
+            DateUtility::getUtcRelativeDayBoundary('-1 month');
 
         $dataGrid2 = DataGrid::get("home:CallsDataGrid", $dataGridProperties);
 

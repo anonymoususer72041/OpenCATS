@@ -632,7 +632,9 @@ class Calendar
      */
     public function getUpcomingEventsByDataItem($dataItemType, $dataItemID)
     {
-        $currentDateForMySQL = strftime('%Y-%m-%d 00:00:00', time());
+        $currentDateForMySQL = DateUtility::convertLocalDateTimeToUtc(
+            date('Y-m-d') . ' 00:00:00'
+        );
 
         $sql = sprintf(
             "SELECT
@@ -721,6 +723,16 @@ class Calendar
                 break;
         }
 
+        $today = new DateTime('today', DateUtility::getApplicationTimeZone());
+        $tomorrow = clone $today;
+        $tomorrow->modify('+1 day');
+        $todayStartUtc = DateUtility::convertLocalDateTimeToUtc(
+            $today->format(DateUtility::DATABASE_DATETIME_FORMAT)
+        );
+        $tomorrowStartUtc = DateUtility::convertLocalDateTimeToUtc(
+            $tomorrow->format(DateUtility::DATABASE_DATETIME_FORMAT)
+        );
+
         /* Get today's events. */
         $sql = sprintf(
             "SELECT
@@ -753,7 +765,9 @@ class Calendar
             LEFT JOIN user AS entered_by_user
                 ON calendar_event.entered_by = entered_by_user.user_id
             WHERE
-                TO_DAYS(UTC_TIMESTAMP()) = TO_DAYS(calendar_event.date)
+                calendar_event.date >= %s
+            AND
+                calendar_event.date < %s
             AND
                 calendar_event.site_id = %s
             AND
@@ -764,6 +778,8 @@ class Calendar
             %s
             ORDER BY
                 dateSort ASC",
+            $this->_db->makeQueryString($todayStartUtc),
+            $this->_db->makeQueryString($tomorrowStartUtc),
             $this->_siteID,
             ($flag == UPCOMING_FOR_CALENDAR ? 'calendar_event.public = 1' : 'false'),
             $this->_userID,
@@ -803,9 +819,7 @@ class Calendar
             LEFT JOIN user AS entered_by_user
                 ON calendar_event.entered_by = entered_by_user.user_id
             WHERE
-                DATE(calendar_event.date) > CURDATE()
-            AND
-                TO_DAYS(UTC_TIMESTAMP()) != TO_DAYS(calendar_event.date)
+                calendar_event.date >= %s
             AND
                 calendar_event.site_id = %s
             AND
@@ -818,6 +832,7 @@ class Calendar
                 dateSort ASC
             LIMIT
                 0, %s",
+            $this->_db->makeQueryString($tomorrowStartUtc),
             $this->_siteID,
             $this->_userID,
             $criteria,

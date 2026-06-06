@@ -110,31 +110,38 @@ class Dashboard
         
         $calendarSettings = new CalendarSettings($this->_siteID);
         $calendarSettingsRS = $calendarSettings->getAll();
+        /* The site timezone is a fixed GMT offset and cannot apply DST. */
+        $timeZoneOffset = $_SESSION['CATS']->getTimeZone();
+        $localNow = 'DATE_ADD(UTC_TIMESTAMP(), INTERVAL ' .
+            $timeZoneOffset . ' HOUR)';
+        $localEvent = 'DATE_ADD(candidate_joborder_status_history.date, INTERVAL ' .
+            $timeZoneOffset . ' HOUR)';
 
         if ($calendarSettingsRS['firstDayMonday'] == 1)
         {
             $firstDayMonday = true;
             $firstDayModifierPlus = ' + 1';
-            $dateNowForWeeks = 'DATE_SUB(UTC_TIMESTAMP(), INTERVAL 1 DAY)';
-            $dateEventForWeeks = 'DATE_SUB(candidate_joborder_status_history.date, INTERVAL 1 DAY)';
+            $dateNowForWeeks = 'DATE_SUB(' . $localNow . ', INTERVAL 1 DAY)';
+            $dateEventForWeeks = 'DATE_SUB(' . $localEvent . ', INTERVAL 1 DAY)';
         }
         else
         {
             $firstDayMonday = false;
             $firstDayModifierPlus = '';
             $firstDayModifierMinus = '';
-            $dateNowForWeeks = 'UTC_TIMESTAMP()';
-            $dateEventForWeeks = 'candidate_joborder_status_history.date';
+            $dateNowForWeeks = $localNow;
+            $dateEventForWeeks = $localEvent;
         }        
         
         switch ($view)
         {
             case DASHBOARD_GRAPH_YEARLY:
-                $select = 'YEAR(candidate_joborder_status_history.date) as unixdate';
+                $select = 'YEAR(' . $localEvent . ') as unixdate';
                 break;
 
             case DASHBOARD_GRAPH_MONTHLY:
-                $select = 'UNIX_TIMESTAMP(FROM_DAYS(TO_DAYS(candidate_joborder_status_history.date) - DAYOFMONTH(candidate_joborder_status_history.date) + 1)) as unixdate';
+                $select = 'UNIX_TIMESTAMP(FROM_DAYS(TO_DAYS(' . $localEvent .
+                    ') - DAYOFMONTH(' . $localEvent . ') + 1)) as unixdate';
                 break;
                 
             case DASHBOARD_GRAPH_WEEKLY:
@@ -178,20 +185,21 @@ class Dashboard
         /* Gets some numbers as to what week and month MySQL thinks it is. */ 
         $sql = sprintf(
             "SELECT 
-                YEAR(UTC_TIMESTAMP()) as currentYearNumber,
+                YEAR(%s) as currentYearNumber,
                 UNIX_TIMESTAMP(FROM_DAYS(TO_DAYS(%s) - DAYOFWEEK(%s) + 1 %s)) as currentWeekNumber,
                 UNIX_TIMESTAMP(FROM_DAYS(TO_DAYS(DATE_SUB(%s, INTERVAL 7 DAY)) - DAYOFWEEK(DATE_SUB(%s, INTERVAL 7 DAY)) + 1 %s)) as oneWeekAgoNumber,
                 UNIX_TIMESTAMP(FROM_DAYS(TO_DAYS(DATE_SUB(%s, INTERVAL 14 DAY)) - DAYOFWEEK(DATE_SUB(%s, INTERVAL 14 DAY)) + 1 %s)) as twoWeekAgoNumber,
                 UNIX_TIMESTAMP(FROM_DAYS(TO_DAYS(DATE_SUB(%s, INTERVAL 21 DAY)) - DAYOFWEEK(DATE_SUB(%s, INTERVAL 21 DAY)) + 1 %s)) as threeWeekAgoNumber,
-                UNIX_TIMESTAMP(FROM_DAYS(TO_DAYS(UTC_TIMESTAMP()) - DAYOFMONTH(UTC_TIMESTAMP()) + 1)) as currentMonthNumber,
-                UNIX_TIMESTAMP(FROM_DAYS(TO_DAYS(DATE_SUB(UTC_TIMESTAMP(), INTERVAL 1 MONTH)) - DAYOFMONTH(DATE_SUB(UTC_TIMESTAMP(), INTERVAL 1 MONTH)) + 1)) as oneMonthAgoNumber,
-                UNIX_TIMESTAMP(FROM_DAYS(TO_DAYS(DATE_SUB(UTC_TIMESTAMP(), INTERVAL 2 MONTH)) - DAYOFMONTH(DATE_SUB(UTC_TIMESTAMP(), INTERVAL 2 MONTH)) + 1)) as twoMonthAgoNumber,
-                UNIX_TIMESTAMP(FROM_DAYS(TO_DAYS(DATE_SUB(UTC_TIMESTAMP(), INTERVAL 3 MONTH)) - DAYOFMONTH(DATE_SUB(UTC_TIMESTAMP(), INTERVAL 3 MONTH)) + 1)) as threeMonthAgoNumber,
-                MONTHNAME(UTC_TIMESTAMP()) as currentMonthName,
-                MONTHNAME(DATE_SUB(UTC_TIMESTAMP(), INTERVAL 1 MONTH)) as oneMonthAgoName,
-                MONTHNAME(DATE_SUB(UTC_TIMESTAMP(), INTERVAL 2 MONTH)) as twoMonthAgoName,
-                MONTHNAME(DATE_SUB(UTC_TIMESTAMP(), INTERVAL 3 MONTH)) as threeMonthAgoName
+                UNIX_TIMESTAMP(FROM_DAYS(TO_DAYS(%s) - DAYOFMONTH(%s) + 1)) as currentMonthNumber,
+                UNIX_TIMESTAMP(FROM_DAYS(TO_DAYS(DATE_SUB(%s, INTERVAL 1 MONTH)) - DAYOFMONTH(DATE_SUB(%s, INTERVAL 1 MONTH)) + 1)) as oneMonthAgoNumber,
+                UNIX_TIMESTAMP(FROM_DAYS(TO_DAYS(DATE_SUB(%s, INTERVAL 2 MONTH)) - DAYOFMONTH(DATE_SUB(%s, INTERVAL 2 MONTH)) + 1)) as twoMonthAgoNumber,
+                UNIX_TIMESTAMP(FROM_DAYS(TO_DAYS(DATE_SUB(%s, INTERVAL 3 MONTH)) - DAYOFMONTH(DATE_SUB(%s, INTERVAL 3 MONTH)) + 1)) as threeMonthAgoNumber,
+                MONTHNAME(%s) as currentMonthName,
+                MONTHNAME(DATE_SUB(%s, INTERVAL 1 MONTH)) as oneMonthAgoName,
+                MONTHNAME(DATE_SUB(%s, INTERVAL 2 MONTH)) as twoMonthAgoName,
+                MONTHNAME(DATE_SUB(%s, INTERVAL 3 MONTH)) as threeMonthAgoName
             ",
+            $localNow,
             $dateNowForWeeks,
             $dateNowForWeeks,
             $firstDayModifierPlus,
@@ -203,7 +211,19 @@ class Dashboard
             $firstDayModifierPlus,
             $dateNowForWeeks,
             $dateNowForWeeks,
-            $firstDayModifierPlus
+            $firstDayModifierPlus,
+            $localNow,
+            $localNow,
+            $localNow,
+            $localNow,
+            $localNow,
+            $localNow,
+            $localNow,
+            $localNow,
+            $localNow,
+            $localNow,
+            $localNow,
+            $localNow
         );
         
         $rsCurrentTime = $this->_db->getAssoc($sql);
