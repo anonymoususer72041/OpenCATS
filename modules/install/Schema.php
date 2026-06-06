@@ -1425,6 +1425,10 @@ class CATSSchema
                 SET `joborder_id` = NULL
                 WHERE `joborder_id` IN (0, -1);
             ',
+            '375' => '
+                ALTER TABLE `joborder`
+                CHANGE `state` `state` VARCHAR(64) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL;
+            ',
 
         );
     }
