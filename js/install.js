@@ -28,6 +28,7 @@
 
 var response;
 var maxSteps;
+var maintenanceOnly = false;
 
 
 function setActiveStep(step)
@@ -119,9 +120,30 @@ function Installpage_maint()
 
         response = http.responseText;
 
+        if (maintenanceOnly &&
+            (http.status < 200 ||
+             http.status >= 300 ||
+             AJAX_isPHPError(response) ||
+             response.indexOf("<errorcode>-1</errorcode>") != -1 ||
+             response.indexOf("Query Error") != -1 ||
+             response.indexOf("Access denied.") != -1))
+        {
+            document.getElementById("maintenanceProgress").style.display = "none";
+            document.getElementById("maintenanceError").style.display = "";
+            document.getElementById("startMaintenance").disabled = false;
+            return;
+        }
+
         if (response.indexOf("setProgressUpdating") == -1)
- 		{	
-	        Installpage_populate("a=reindexResumes");
+        {
+            if (maintenanceOnly)
+            {
+                window.location = "index.php";
+            }
+            else
+            {
+                Installpage_populate("a=reindexResumes");
+            }
         }
         else
         {

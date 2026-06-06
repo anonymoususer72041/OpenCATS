@@ -162,6 +162,30 @@ if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST' &
     }
 }
 
+$isPublicRequest =
+    (isset($careerPage) && $careerPage) ||
+    (isset($_GET['showCareerPortal']) && $_GET['showCareerPortal'] == '1') ||
+    (isset($rssPage) && $rssPage) ||
+    (isset($xmlPage) && $xmlPage);
+$isMigrationGateExcluded =
+    (isset($_GET['m']) && $_GET['m'] === 'install' &&
+        isset($_GET['a']) && $_GET['a'] === 'maint') ||
+    (isset($_GET['m']) && ($_GET['m'] === 'login' || $_GET['m'] === 'logout'));
+
+if ($_SESSION['CATS']->isLoggedIn() &&
+    !$isPublicRequest &&
+    !$isMigrationGateExcluded &&
+    SchemaMigrationStatus::hasPendingInstallMigrations())
+{
+    $template = new Template();
+    $template->assign(
+        'isAdministrator',
+        $_SESSION['CATS']->getAccessLevel(ACL::SECOBJ_ROOT) >= ACCESS_LEVEL_SA
+    );
+    $template->display('./modules/login/PendingMigrations.tpl');
+    die();
+}
+
 /* Check to see if we are supposed to display the career page. */
 if (((isset($careerPage) && $careerPage) ||
     (isset($_GET['showCareerPortal']) && $_GET['showCareerPortal'] == '1')))
