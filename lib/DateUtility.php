@@ -37,9 +37,262 @@
  */
 class DateUtility
 {
+    const DATABASE_DATETIME_FORMAT = 'Y-m-d H:i:s';
+
     /* Prevent this class from being instantiated. */
     private function __construct() {}
     private function __clone() {}
+
+    /**
+     * Returns the current UTC datetime in the database format.
+     *
+     * @return string UTC datetime.
+     */
+    public static function getCurrentUtcDateTime()
+    {
+        $date = new DateTime('now', new DateTimeZone('UTC'));
+        return $date->format(self::DATABASE_DATETIME_FORMAT);
+    }
+
+    /**
+     * Converts an application-local database datetime to UTC.
+     *
+     * @param string|null Datetime value.
+     * @param DateTimeZone|string|null Application timezone.
+     * @return string|null Converted datetime, or the original invalid value.
+     */
+    public static function convertLocalDateTimeToUtc($value, $timeZone = null)
+    {
+        return self::_convertDatabaseDateTime(
+            $value,
+            self::getApplicationTimeZone($timeZone),
+            new DateTimeZone('UTC')
+        );
+    }
+
+    /**
+     * Converts a UTC database datetime to the application timezone.
+     *
+     * @param string|null Datetime value.
+     * @param DateTimeZone|string|null Application timezone.
+     * @return string|null Converted datetime, or the original invalid value.
+     */
+    public static function convertUtcDateTimeToLocal($value, $timeZone = null)
+    {
+        return self::_convertDatabaseDateTime(
+            $value,
+            new DateTimeZone('UTC'),
+            self::getApplicationTimeZone($timeZone)
+        );
+    }
+
+    /**
+     * Formats a UTC database datetime in the application timezone.
+     *
+     * @param string|null Datetime value.
+     * @param string DateTime format.
+     * @param DateTimeZone|string|null Application timezone.
+     * @return string|null Formatted datetime, or the original invalid value.
+     */
+    public static function formatUtcDateTime($value, $format, $timeZone = null)
+    {
+        $localValue = self::convertUtcDateTimeToLocal($value, $timeZone);
+        $date = self::_createDatabaseDateTime(
+            $localValue,
+            self::getApplicationTimeZone($timeZone)
+        );
+
+        if ($date === false)
+        {
+            return $localValue;
+        }
+
+        return $date->format($format);
+    }
+
+    /**
+     * Returns the configured fixed-offset application timezone.
+     *
+     * OpenCATS stores numeric GMT offsets rather than IANA timezone names.
+     * Explicit DateTimeZone or IANA values are accepted for isolated callers,
+     * but the application configuration itself cannot apply DST rules.
+     *
+     * @param DateTimeZone|string|null Timezone override.
+     * @return DateTimeZone Application timezone.
+     */
+    public static function getApplicationTimeZone($timeZone = null)
+    {
+        if ($timeZone === null)
+        {
+            if (isset($_SESSION['CATS']) && $_SESSION['CATS']->isLoggedIn())
+            {
+                $timeZone = $_SESSION['CATS']->getTimeZone();
+            }
+            else
+            {
+                $timeZone = defined('OFFSET_GMT') ? OFFSET_GMT : 0;
+            }
+        }
+
+        return self::_getTimeZone($timeZone);
+    }
+
+    /**
+     * Returns a local calendar-day boundary converted to UTC.
+     *
+     * OpenCATS stores numeric GMT offsets, so these boundaries preserve the
+     * existing fixed-offset behavior and do not apply daylight saving rules.
+     *
+     * @param string Local date in Y-m-d format.
+     * @param boolean Return the start of the following day.
+     * @param DateTimeZone|string|integer|null Application timezone.
+     * @return string Original invalid value, or a UTC datetime.
+     */
+    public static function getUtcDayBoundary($value, $nextDay = false,
+        $timeZone = null)
+    {
+        $date = DateTime::createFromFormat(
+            '!Y-m-d',
+            $value,
+            self::getApplicationTimeZone($timeZone)
+        );
+        $errors = DateTime::getLastErrors();
+
+        if ($date === false ||
+            ($errors !== false &&
+             ($errors['warning_count'] > 0 || $errors['error_count'] > 0)))
+        {
+            return $value;
+        }
+
+        if ($nextDay)
+        {
+            $date->modify('+1 day');
+        }
+
+        $date->setTimezone(new DateTimeZone('UTC'));
+        return $date->format(self::DATABASE_DATETIME_FORMAT);
+    }
+
+    /**
+     * Returns a relative local start-of-day boundary converted to UTC.
+     *
+     * @param string DateTime modify expression, for example "-1 month".
+     * @param DateTimeZone|string|integer|null Application timezone.
+     * @param string|null Local base date in Y-m-d format for tests.
+     * @return string UTC datetime.
+     */
+    public static function getUtcRelativeDayBoundary($modifier,
+        $timeZone = null, $baseDate = null)
+    {
+        $date = new DateTime(
+            $baseDate === null ? 'today' : $baseDate,
+            self::getApplicationTimeZone($timeZone)
+        );
+
+        if (preg_match(
+            '/^-(\d+) (month|months|year|years)$/',
+            $modifier,
+            $matches
+        ))
+        {
+            $months = (int) $matches[1];
+            if ($matches[2] === 'year' || $matches[2] === 'years')
+            {
+                $months *= 12;
+            }
+
+            $monthIndex = ((int) $date->format('Y') * 12) +
+                ((int) $date->format('n') - 1) - $months;
+            $year = (int) floor($monthIndex / 12);
+            $month = ($monthIndex % 12) + 1;
+            $day = min(
+                (int) $date->format('j'),
+                (int) date('t', mktime(0, 0, 0, $month, 1, $year))
+            );
+            $date->setDate($year, $month, $day);
+        }
+        else
+        {
+            $date->modify($modifier);
+        }
+
+        $date->setTimezone(new DateTimeZone('UTC'));
+
+        return $date->format(self::DATABASE_DATETIME_FORMAT);
+    }
+
+    private static function _convertDatabaseDateTime($value, $sourceTimeZone,
+        $targetTimeZone)
+    {
+        $date = self::_createDatabaseDateTime($value, $sourceTimeZone);
+        if ($date === false)
+        {
+            return $value;
+        }
+
+        $date->setTimezone($targetTimeZone);
+        return $date->format(self::DATABASE_DATETIME_FORMAT);
+    }
+
+    private static function _createDatabaseDateTime($value, $timeZone)
+    {
+        if ($value === null || $value === '' ||
+            $value === '0000-00-00 00:00:00' ||
+            $value === '1000-01-01 00:00:00')
+        {
+            return false;
+        }
+
+        $date = DateTime::createFromFormat(
+            '!' . self::DATABASE_DATETIME_FORMAT,
+            $value,
+            $timeZone
+        );
+        $errors = DateTime::getLastErrors();
+
+        if ($date === false ||
+            ($errors !== false &&
+             ($errors['warning_count'] > 0 || $errors['error_count'] > 0)))
+        {
+            return false;
+        }
+
+        return $date;
+    }
+
+    private static function _getTimeZone($timeZone = null)
+    {
+        if ($timeZone instanceof DateTimeZone)
+        {
+            return $timeZone;
+        }
+
+        if (is_int($timeZone) ||
+            (is_string($timeZone) &&
+             preg_match('/^[+-]?\d{1,2}$/', $timeZone)))
+        {
+            $offset = (int) $timeZone;
+            if ($offset >= -23 && $offset <= 23)
+            {
+                return new DateTimeZone(sprintf('%+03d:00', $offset));
+            }
+        }
+
+        if (!is_string($timeZone))
+        {
+            return new DateTimeZone('UTC');
+        }
+
+        try
+        {
+            return new DateTimeZone($timeZone);
+        }
+        catch (Exception $exception)
+        {
+            return new DateTimeZone('UTC');
+        }
+    }
 
 
     /**
