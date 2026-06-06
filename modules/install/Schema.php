@@ -1527,6 +1527,10 @@ class CATSSchema
                 CREATE INDEX `IDX_site_occurred` ON `activity` (`site_id`,`date_occurred`);
                 CREATE INDEX `IDX_activity_site_type_occurred_job` ON `activity` (`site_id`,`data_item_type`,`date_occurred`,`entered_by`,`joborder_id`);
             ',
+            '381' => 'PHP:
+                include_once(\'modules/install/scripts/381.php\');
+                update_381($db);
+            ',
 
         );
     }
