@@ -258,6 +258,49 @@ class TemplateUtility
     }
 
     /**
+     * Prints an IANA application time zone selection dropdown list.
+     *
+     * @param string ID and name attributes of the time zone select input
+     * @param string style attribute of the time zone select input
+     * @param string class attribute of the time zone select input
+     * @param string selected IANA time zone
+     * @return void
+     */
+    public static function printApplicationTimeZoneSelect($selectID, $selectStyle,
+        $selectClass, $selectedTimeZone)
+    {
+        $selectedTimeZone = DateUtility::getValidTimeZone($selectedTimeZone);
+
+        echo '<select id="', htmlspecialchars($selectID), '" name="', htmlspecialchars($selectID), '"';
+
+        if (!empty($selectClass))
+        {
+            echo ' class="', htmlspecialchars($selectClass), '"';
+        }
+
+        if (!empty($selectStyle))
+        {
+            echo ' style="', htmlspecialchars($selectStyle), '"';
+        }
+
+        echo '>';
+
+        foreach (DateUtility::getTimeZoneIdentifiers() as $timeZone)
+        {
+            echo '<option value="', htmlspecialchars($timeZone), '"';
+
+            if ($timeZone === $selectedTimeZone)
+            {
+                echo ' selected="selected"';
+            }
+
+            echo '>', htmlspecialchars(str_replace('_', ' ', $timeZone) . ' (' . $timeZone . ')'), '</option>';
+        }
+
+        echo '</select>';
+    }
+
+    /**
      * Prints the Quick Search box and MRU list.
      *
      * @return void

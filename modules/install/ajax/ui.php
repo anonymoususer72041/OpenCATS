@@ -30,6 +30,7 @@
 include_once('./config.php');
 include_once(LEGACY_ROOT . '/lib/InstallationTests.php');
 include_once(LEGACY_ROOT . '/lib/CATSUtility.php');
+include_once(LEGACY_ROOT . '/lib/DateUtility.php');
 
 if( ini_get('safe_mode') )
 {
@@ -504,6 +505,7 @@ switch ($action)
             $onClick .= htmlspecialchars($index) . ',\' + encodeURIComponent(getCheckedValue(document.getElementsByName(\'' . htmlspecialchars($index) . '\'))) + \',';
         }
         $onClick .= '&timeZone=\' + encodeURIComponent(document.getElementById(\'timeZone\').value) + \'';
+        $onClick .= '&applicationTimeZone=\' + encodeURIComponent(document.getElementById(\'applicationTimeZone\').value) + \'';
         $onClick .= '&dateFormat=\' + encodeURIComponent(document.getElementById(\'dateFormat\').value) + \'';
         $onClick .= '&defaultPhoneCountryCodeDigits=\' + encodeURIComponent(document.getElementById(\'defaultPhoneCountryCodeDigits\').value));';
 
@@ -534,10 +536,14 @@ switch ($action)
         // FIXME: Input validation.
         $timeZone = $_REQUEST['timeZone'];
         CATSUtility::changeConfigSetting('OFFSET_GMT', ($timeZone));
+        $applicationTimeZone = DateUtility::getValidTimeZone(
+            isset($_REQUEST['applicationTimeZone']) ? trim($_REQUEST['applicationTimeZone']) : ''
+        );
 
         $dateFormat = $_REQUEST['dateFormat'];
 
         $_SESSION['timeZoneInstaller'] = $timeZone;
+        $_SESSION['applicationTimeZoneInstaller'] = $applicationTimeZone;
         $_SESSION['dateFormatInstaller'] = $dateFormat;
 
         // Default phone country calling code collected in the installer.
@@ -1054,6 +1060,14 @@ switch ($action)
         $timeZone = $_SESSION['timeZoneInstaller'];
 
         MySQLQuery(sprintf("UPDATE site SET time_zone = %s", $timeZone));
+
+        $applicationTimeZone = DateUtility::getValidTimeZone(
+            isset($_SESSION['applicationTimeZoneInstaller']) ? $_SESSION['applicationTimeZoneInstaller'] : ''
+        );
+        MySQLQuery(sprintf(
+            "UPDATE site SET application_time_zone = '%s'",
+            mysqli_real_escape_string($mySQLConnection, $applicationTimeZone)
+        ));
 
         if (isset($_SESSION['defaultPhoneCountryCodeInstaller'])
             && $_SESSION['defaultPhoneCountryCodeInstaller'] !== '')

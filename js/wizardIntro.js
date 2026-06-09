@@ -90,11 +90,13 @@ function extendedNext()
     {
         // This is the localization page
         var timeZone = document.getElementById("timeZone");
+        var applicationTimeZone = document.getElementById("applicationTimeZone");
         var dateFormat = document.getElementById("dateFormat");
         failAction = "alert(\"Unable to set your localization settings! Please try again.\");";
         userActionSuccess = "funcNext();";
         failAction = "";
-        userAction("Localization&timeZone=" + escape(timeZone.value) + "&dateFormat=" + escape(dateFormat.value));
+        userAction("Localization&timeZone=" + escape(timeZone.value) + "&applicationTimeZone="
+            + escape(applicationTimeZone.value) + "&dateFormat=" + escape(dateFormat.value));
         return false;
     }
 

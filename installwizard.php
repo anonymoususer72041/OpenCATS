@@ -471,7 +471,14 @@
                                             <br />
                                             <table>
                                                 <tr>
-                                                    <td>Please choose your time zone.</td>
+                                                    <td>Please choose your application time zone. This setting is used for daylight-saving-time-aware conversions.</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="padding-bottom: 10px;"><?php if (!isset($php4)) TemplateUtility::printApplicationTimeZoneSelect('applicationTimeZone', 'width: 420px;', '', DateUtility::DEFAULT_APPLICATION_TIME_ZONE); ?></td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td>Please choose your display GMT offset. This setting is retained for compatibility with existing date displays.</td>
                                                 </tr>
                                                 <tr>
                                                     <td style="padding-bottom: 10px;"><?php if (!isset($php4)) TemplateUtility::printTimeZoneSelect('timeZone', 'width: 420px;', '', OFFSET_GMT); ?></td>

@@ -34,6 +34,7 @@ include_once(LEGACY_ROOT . '/lib/Companies.php');
 include_once(LEGACY_ROOT . '/lib/Contacts.php');
 include_once(LEGACY_ROOT . '/lib/Graphs.php');
 include_once(LEGACY_ROOT . '/lib/Site.php');
+include_once(LEGACY_ROOT . '/lib/DateUtility.php');
 include_once(LEGACY_ROOT . '/lib/ListEditor.php');
 include_once(LEGACY_ROOT . '/lib/SystemUtility.php');
 include_once(LEGACY_ROOT . '/lib/Mailer.php');
@@ -2485,6 +2486,10 @@ class SettingsUI extends UserInterface
                     }
 
                     $this->_template->assign('defaultPhoneCountryCodeDigits', $defaultPhoneCountryCodeDigits);
+                    $this->_template->assign(
+                        'applicationTimeZone',
+                        $_SESSION['CATS']->getApplicationTimeZone()
+                    );
 
                     $templateFile = './modules/settings/Localization.tpl';
                     break;
@@ -2631,6 +2636,9 @@ class SettingsUI extends UserInterface
                 }
                 //FIXME: Validation (escaped at lib level anyway)
                 $timeZone = $_POST['timeZone'];
+                $applicationTimeZone = DateUtility::getValidTimeZone(
+                    $this->getTrimmedInput('applicationTimeZone', $_POST)
+                );
                 $dateFormat = $_POST['dateFormat'];
                 if ($dateFormat == 'mdy')
                 {
@@ -2642,7 +2650,7 @@ class SettingsUI extends UserInterface
                 }
 
                 $site = new Site($this->_siteID);
-                $site->setLocalization($timeZone, $isDMY);
+                $site->setLocalization($timeZone, $isDMY, $applicationTimeZone);
 
                 // Default phone country calling code (E.164) for the site.
                 if (isset($_POST['defaultPhoneCountryCodeDigits']))
@@ -2685,6 +2693,9 @@ class SettingsUI extends UserInterface
         // FIXME: Input validation!
 
         $timeZone = $_POST['timeZone'];
+        $applicationTimeZone = DateUtility::getValidTimeZone(
+            $this->getTrimmedInput('applicationTimeZone', $_POST)
+        );
         $dateFormat = $_POST['dateFormat'];
         if ($dateFormat == 'mdy')
         {
@@ -2696,10 +2707,10 @@ class SettingsUI extends UserInterface
         }
 
         $site = new Site($this->_siteID);
-        $site->setLocalization($timeZone, $dateFormat);
+        $site->setLocalization($timeZone, $isDMY, $applicationTimeZone);
 
         /* Reload the new data for the session. */
-        $_SESSION['CATS']->setTimeDateLocalization($timeZone, $isDMY);
+        $_SESSION['CATS']->setTimeDateLocalization($timeZone, $isDMY, $applicationTimeZone);
 
         $this->_template->assign('inputType', 'conclusion');
         $this->_template->assign('title', 'Localization Settings Saved!');
@@ -3271,6 +3282,9 @@ class SettingsUI extends UserInterface
         }
 
         $timeZone = $_GET['timeZone'];
+        $applicationTimeZone = DateUtility::getValidTimeZone(
+            $this->getTrimmedInput('applicationTimeZone', $_GET)
+        );
         $dateFormat = $_GET['dateFormat'];
         if ($dateFormat == 'mdy')
         {
@@ -3282,7 +3296,7 @@ class SettingsUI extends UserInterface
         }
 
         $site = new Site($this->_siteID);
-        $site->setLocalization($timeZone, $isDMY);
+        $site->setLocalization($timeZone, $isDMY, $applicationTimeZone);
         $site->setLocalizationConfigured();
 
         echo 'Ok';

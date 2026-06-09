@@ -1,9 +1,14 @@
-<b>Please select your time zone and date format.</b>
+<b>Please select your application time zone, display GMT offset, and date format.</b>
 <p />
 <div id="localizationBeacon" style="display: none;">&nbsp;</div>
 <table class="editTable">
     <tr>
-        <td style="font-size: 14px;">Time Zone</td>
+        <td style="font-size: 14px;">Application Time Zone</td>
+        <td style="padding-bottom: 10px;"><?php TemplateUtility::printApplicationTimeZoneSelect('applicationTimeZone', 'width: 420px;', '', DateUtility::getApplicationTimeZone()); ?></td>
+    </tr>
+
+    <tr>
+        <td style="font-size: 14px;">Display GMT Offset</td>
         <td style="padding-bottom: 10px;"><?php TemplateUtility::printTimeZoneSelect('timeZone', 'width: 420px;', '', $this->timeZone); ?></td>
     </tr>
 
@@ -18,4 +23,4 @@
     </tr>
 </table>
 <p />
-These settings will effect how you see dates and times in OpenCATS.
+The application time zone is used for daylight-saving-time-aware conversions. The display GMT offset is retained for compatibility with existing date displays.
