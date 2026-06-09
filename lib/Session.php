@@ -31,6 +31,7 @@
  */
 
 include(LEGACY_ROOT . '/lib/ACL.php');
+include_once(LEGACY_ROOT . '/lib/DateUtility.php');
 
 /**
  *  CATS Session Object
@@ -72,6 +73,7 @@ class CATSSession
     private $_storedBuild = -1;
     private $_timeZoneOffset = 0;
     private $_timeZone = 0;
+    private $_applicationTimeZone = DateUtility::DEFAULT_APPLICATION_TIME_ZONE;
     private $_defaultPhoneCountryCode = '+1';
     private $_dateDMY = false;
     private $_pipelineEntriesPerPage = 15;
@@ -535,6 +537,16 @@ class CATSSession
     }
 
     /**
+     * Gets the current site's validated IANA application time zone.
+     *
+     * @return string
+     */
+    public function getApplicationTimeZone()
+    {
+        return DateUtility::getValidTimeZone($this->_applicationTimeZone);
+    }
+
+    /**
      * Returns the default phone country calling code (E.164) for the
      * current site. The value is stored in the "site" table.
      *
@@ -621,15 +633,21 @@ class CATSSession
      *
      * @param integer Time zone offset from GMT.
      * @param boolean Display dates in D-M-Y format?
+     * @param string IANA application time zone
      * @return void
      */
-    public function setTimeDateLocalization($timeZone, $isDMY)
+    public function setTimeDateLocalization($timeZone, $isDMY, $applicationTimeZone = null)
     {
         $timeZone = (integer) $timeZone;
 
         $this->_timeZone       = $timeZone;
         $this->_timeZoneOffset = $timeZone - OFFSET_GMT;
         $this->_dateDMY        = $isDMY;
+
+        if ($applicationTimeZone !== null)
+        {
+            $this->_applicationTimeZone = DateUtility::getValidTimeZone($applicationTimeZone);
+        }
     }
 
     /**
@@ -702,6 +720,7 @@ class CATSSession
                 site.account_active AS accountActive,
                 site.account_deleted AS accountDeleted,
                 site.time_zone AS timeZone,
+                site.application_time_zone AS applicationTimeZone,
                 site.default_phone_country_code AS defaultPhoneCountryCode,
                 site.date_format_ddmmyy AS dateFormatDMY,
                 site.is_free AS isFree,
@@ -835,6 +854,7 @@ class CATSSession
                 $this->_userAgent              = $userAgent;
                 $this->_timeZoneOffset         = $rs['timeZone'] - OFFSET_GMT;
                 $this->_timeZone               = $rs['timeZone'];
+                $this->_applicationTimeZone    = DateUtility::getValidTimeZone($rs['applicationTimeZone']);
                 $this->_defaultPhoneCountryCode = $rs['defaultPhoneCountryCode'];
                 $this->_dateDMY                = ($rs['dateFormatDMY'] == 0 ? false : true);
                 $this->_canSeeEEOInfo          = ($rs['canSeeEEOInfo'] == 0 ? false : true);
@@ -999,6 +1019,7 @@ class CATSSession
                 site.account_active AS accountActive,
                 site.account_deleted AS accountDeleted,
                 site.time_zone AS timeZone,
+                site.application_time_zone AS applicationTimeZone,
                 site.default_phone_country_code AS defaultPhoneCountryCode,
                 site.date_format_ddmmyy AS dateFormatDMY,
                 site.is_free AS isFree,
@@ -1034,6 +1055,7 @@ class CATSSession
         $this->_accountDeleted  = ($rs['accountDeleted'] == 0 ? false : true);
         $this->_email           = $rs['email'];
         $this->_timeZone        = $rs['timeZone'];
+        $this->_applicationTimeZone = DateUtility::getValidTimeZone($rs['applicationTimeZone']);
         $this->_defaultPhoneCountryCode = $rs['defaultPhoneCountryCode'];
         $this->_dateDMY         = ($rs['dateFormatDMY'] == 0 ? false : true);
         $this->_isFirstTimeSetup = true;

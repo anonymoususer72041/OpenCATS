@@ -1527,6 +1527,27 @@ class CATSSchema
                 CREATE INDEX `IDX_site_occurred` ON `activity` (`site_id`,`date_occurred`);
                 CREATE INDEX `IDX_activity_site_type_occurred_job` ON `activity` (`site_id`,`data_item_type`,`date_occurred`,`entered_by`,`joborder_id`);
             ',
+            '381' => 'PHP:
+                $rs = $db->getAssoc(
+                    "SELECT
+                        COUNT(*) AS column_exists
+                     FROM
+                        information_schema.COLUMNS
+                     WHERE
+                        TABLE_SCHEMA = DATABASE()
+                        AND TABLE_NAME = \'site\'
+                        AND COLUMN_NAME = \'application_time_zone\'"
+                );
+
+                if (empty($rs) || (int) $rs[\'column_exists\'] === 0)
+                {
+                    $db->query(
+                        "ALTER TABLE `site`
+                         ADD COLUMN `application_time_zone` VARCHAR(64) NOT NULL DEFAULT \'UTC\'
+                         AFTER `time_zone`"
+                    );
+                }
+            ',
 
         );
     }

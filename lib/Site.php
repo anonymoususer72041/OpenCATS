@@ -30,6 +30,8 @@
  * @version    $Id: Site.php 3779 2007-12-03 20:49:58Z andrew $
  */
 
+include_once(LEGACY_ROOT . '/lib/DateUtility.php');
+
 /**
  *	Site Library
  *	@package    CATS
@@ -75,19 +77,31 @@ class Site
      *
      * @param integer time zone offset
      * @param boolean use D-M-Y format dates
+     * @param string optional IANA application time zone
      * @return boolean True if successful; false otherwise.
      */
-    public function setLocalization($timeZone, $isDMY)
+    public function setLocalization($timeZone, $isDMY, $applicationTimeZone = null)
     {
+        $applicationTimeZoneSQL = '';
+        if ($applicationTimeZone !== null)
+        {
+            $applicationTimeZone = DateUtility::getValidTimeZone($applicationTimeZone);
+            $applicationTimeZoneSQL = sprintf(
+                "application_time_zone = %s,\n                ",
+                $this->_db->makeQueryString($applicationTimeZone)
+            );
+        }
+
         $sql = sprintf(
             "UPDATE
                 site
             SET
                 time_zone = %s,
-                date_format_ddmmyy = %s
+                %sdate_format_ddmmyy = %s
             WHERE
                 site_id = %s",
             $this->_db->makeQueryInteger($timeZone),
+            $applicationTimeZoneSQL,
             ($isDMY ? 1 : 0),
             $this->_siteID
         );
