@@ -30,6 +30,7 @@
  * @version    $Id: Statistics.php 3587 2007-11-13 03:55:57Z will $
  */
 
+include_once(LEGACY_ROOT . '/lib/DateUtility.php');
 include_once(LEGACY_ROOT . '/lib/Pipelines.php');
 include_once(LEGACY_ROOT . '/lib/JobOrderStatuses.php');
 
@@ -696,13 +697,25 @@ class Statistics
         switch ($modePeriod)
         {
             case 'month':
-                $periodChriterion = 'AND TO_DAYS(candidate.date_modified) >= TO_DAYS(DATE_SUB(CURDATE(), INTERVAL 1 MONTH))';
+                $eeoOneMonthAgo = DateUtility::localMidnightUTC(
+                    $this->_timeZoneIANA, '-1 month'
+                );
+                $periodChriterion = sprintf(
+                    "AND candidate.date_modified >= '%s'",
+                    $eeoOneMonthAgo
+                );
                 break;
-                
+
             case 'week':
-                $periodChriterion = 'AND TO_DAYS(candidate.date_modified) >= TO_DAYS(DATE_SUB(CURDATE(), INTERVAL 7 DAY))';
+                $eeoOneWeekAgo = DateUtility::localMidnightUTC(
+                    $this->_timeZoneIANA, '-1 week'
+                );
+                $periodChriterion = sprintf(
+                    "AND candidate.date_modified >= '%s'",
+                    $eeoOneWeekAgo
+                );
                 break;
-            
+
             default:
                 $periodChriterion = '';
                 break;

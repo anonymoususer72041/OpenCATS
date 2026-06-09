@@ -723,7 +723,7 @@ class CATSSession
                 site.first_time_setup as isFirstTimeSetup,
                 site.localization_configured as isLocalizationConfigured,
                 site.agreed_to_license as isAgreedToLicense,
-                IF(site.last_viewed_day = CURDATE(), 1, 0) AS lastViewedDayIsToday
+                site.last_viewed_day AS lastViewedDay
             FROM
                 user
             LEFT JOIN site
@@ -916,16 +916,21 @@ class CATSSession
                 $this->_userLoginID = $userLoginID;
                 $this->_isLoggedIn = true;
 
-                if ($rs['lastViewedDayIsToday'] == 0)
+                $localToday = (new DateTimeImmutable(
+                    'now',
+                    new DateTimeZone($this->_timeZoneIANA)
+                ))->format('Y-m-d');
+                if ($rs['lastViewedDay'] !== $localToday)
                 {
                     $sql = sprintf(
                         "UPDATE
                             site
                          SET
-                            last_viewed_day = CURDATE(),
+                            last_viewed_day = %s,
                             page_view_days = page_view_days + 1
                          WHERE
                             site_id = %s",
+                        $db->makeQueryString($localToday),
                         $this->_siteID
                     );
                     $rs = $db->query($sql);

@@ -102,7 +102,9 @@ class ActivityUI extends UserInterface
         /* Only show a month of activities. */
         $dataGridProperties['startDate'] = '';
         $dataGridProperties['endDate'] = '';
-        $dataGridProperties['period'] = 'DATE_SUB(CURDATE(), INTERVAL 1 MONTH)';
+        $timeZone = $_SESSION['CATS']->getTimeZoneIANA();
+        $dataGridProperties['period'] = "'" .
+            DateUtility::localMidnightUTC($timeZone, '-1 month') . "'";
 
         $dataGrid = DataGrid::get("activity:ActivityDataGrid", $dataGridProperties);
 
@@ -144,22 +146,31 @@ class ActivityUI extends UserInterface
             in_array($periodString, array('lastweek', 'lastmonth', 'lastsixmonths', 'lastyear', 'all')))
         {
             /* formats start and end date for searching */
+            $searchTimeZone = $_SESSION['CATS']->getTimeZoneIANA();
             switch ($periodString)
             {
                 case 'lastweek':
-                    $period = 'DATE_SUB(CURDATE(), INTERVAL 1 WEEK)';
+                    $period = "'" .
+                        DateUtility::localMidnightUTC($searchTimeZone, '-1 week') .
+                        "'";
                     break;
 
                 case 'lastmonth':
-                    $period = 'DATE_SUB(CURDATE(), INTERVAL 1 MONTH)';
+                    $period = "'" .
+                        DateUtility::localMidnightUTC($searchTimeZone, '-1 month') .
+                        "'";
                     break;
 
                 case 'lastsixmonths':
-                    $period = 'DATE_SUB(CURDATE(), INTERVAL 6 MONTH)';
+                    $period = "'" .
+                        DateUtility::localMidnightUTC($searchTimeZone, '-6 months') .
+                        "'";
                     break;
 
                 case 'lastyear':
-                    $period = 'DATE_SUB(CURDATE(), INTERVAL 1 YEAR)';
+                    $period = "'" .
+                        DateUtility::localMidnightUTC($searchTimeZone, '-1 year') .
+                        "'";
                     break;
 
                 case 'all':
@@ -274,17 +285,21 @@ class ActivityUI extends UserInterface
      */
     private function getQuickLinks()
     {
+        $qlTimeZone = $_SESSION['CATS']->getTimeZoneIANA();
+        $qlTZ = new DateTimeZone($qlTimeZone);
+        $localNow = new DateTimeImmutable('now', $qlTZ);
+        $localYesterday = $localNow->modify('-1 day');
+
         $today = array(
-            'month' => date('n'),
-            'day'   => date('j'),
-            'year'  => date('Y')
+            'month' => (int) $localNow->format('n'),
+            'day'   => (int) $localNow->format('j'),
+            'year'  => (int) $localNow->format('Y')
         );
 
-        $yesterdayTimeStamp = DateUtility::subtractDaysFromDate(time(), 1);
         $yesterday = array(
-            'month' => date('n', $yesterdayTimeStamp),
-            'day'   => date('j', $yesterdayTimeStamp),
-            'year'  => date('Y', $yesterdayTimeStamp)
+            'month' => (int) $localYesterday->format('n'),
+            'day'   => (int) $localYesterday->format('j'),
+            'year'  => (int) $localYesterday->format('Y')
         );
 
         $baseURL = sprintf(

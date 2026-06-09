@@ -1061,13 +1061,16 @@ switch ($action)
         $timeZone = $_SESSION['timeZoneInstaller'];
         $legacyTimeZone = $_SESSION['legacyTimeZoneInstaller'];
 
-        MySQLQuery(sprintf(
-            "UPDATE site
-             SET time_zone = %d,
-                 time_zone_iana = '%s'",
-            $legacyTimeZone,
-            mysqli_real_escape_string($mySQLConnection, $timeZone)
-        ));
+        if ($timeZone !== 'UTC')
+        {
+            MySQLQuery(sprintf(
+                "UPDATE site
+                 SET time_zone = %d,
+                     time_zone_iana = '%s'",
+                $legacyTimeZone,
+                mysqli_real_escape_string($mySQLConnection, $timeZone)
+            ));
+        }
 
         if (isset($_SESSION['defaultPhoneCountryCodeInstaller'])
             && $_SESSION['defaultPhoneCountryCodeInstaller'] !== '')
