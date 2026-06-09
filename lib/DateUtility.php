@@ -37,9 +37,175 @@
  */
 class DateUtility
 {
+    const DEFAULT_APPLICATION_TIME_ZONE = 'UTC';
+
     /* Prevent this class from being instantiated. */
     private function __construct() {}
     private function __clone() {}
+
+    /**
+     * Returns the IANA timezone identifiers supported by PHP.
+     *
+     * @return array
+     */
+    public static function getTimeZoneIdentifiers()
+    {
+        $timeZones = DateTimeZone::listIdentifiers();
+
+        if (!in_array(self::DEFAULT_APPLICATION_TIME_ZONE, $timeZones, true))
+        {
+            array_unshift($timeZones, self::DEFAULT_APPLICATION_TIME_ZONE);
+        }
+
+        return $timeZones;
+    }
+
+    /**
+     * Returns true if the specified value is a supported IANA timezone.
+     *
+     * @param string $timeZone
+     * @return boolean
+     */
+    public static function isValidTimeZone($timeZone)
+    {
+        if (!is_string($timeZone) || $timeZone === '')
+        {
+            return false;
+        }
+
+        return in_array($timeZone, self::getTimeZoneIdentifiers(), true);
+    }
+
+    /**
+     * Returns a valid IANA timezone, falling back to UTC when necessary.
+     *
+     * @param string $timeZone
+     * @return string
+     */
+    public static function getValidTimeZone($timeZone)
+    {
+        if (self::isValidTimeZone($timeZone))
+        {
+            return $timeZone;
+        }
+
+        return self::DEFAULT_APPLICATION_TIME_ZONE;
+    }
+
+    /**
+     * Returns the validated application time zone or UTC.
+     *
+     * @param string $timeZone Optional explicit IANA time zone.
+     * @return string
+     */
+    public static function getApplicationTimeZone($timeZone = null)
+    {
+        if ($timeZone !== null)
+        {
+            return self::getValidTimeZone($timeZone);
+        }
+
+        if (isset($_SESSION['CATS']) &&
+            method_exists($_SESSION['CATS'], 'getApplicationTimeZone'))
+        {
+            return self::getValidTimeZone(
+                $_SESSION['CATS']->getApplicationTimeZone()
+            );
+        }
+
+        return self::DEFAULT_APPLICATION_TIME_ZONE;
+    }
+
+    /**
+     * Returns the validated application time zone as a DateTimeZone object.
+     *
+     * @param string $timeZone Optional explicit IANA time zone.
+     * @return DateTimeZone
+     */
+    public static function getApplicationTimeZoneObject($timeZone = null)
+    {
+        return new DateTimeZone(self::getApplicationTimeZone($timeZone));
+    }
+
+    /**
+     * Converts an application-local datetime to UTC.
+     *
+     * @param string $dateTime
+     * @param string $timeZone Optional explicit IANA time zone.
+     * @return string|boolean|null
+     */
+    public static function convertLocalDateTimeToUTC($dateTime, $timeZone = null)
+    {
+        if (self::_isEmptyDateTime($dateTime))
+        {
+            return $dateTime;
+        }
+
+        if (!is_string($dateTime))
+        {
+            return false;
+        }
+
+        $date = self::_createDateTime(
+            $dateTime,
+            self::getApplicationTimeZone($timeZone)
+        );
+        if ($date === false)
+        {
+            return false;
+        }
+
+        $date->setTimezone(new DateTimeZone('UTC'));
+
+        return $date->format('Y-m-d H:i:s');
+    }
+
+    /**
+     * Converts a UTC datetime to application-local time.
+     *
+     * @param string $dateTime
+     * @param string $timeZone Optional explicit IANA time zone.
+     * @return string|boolean|null
+     */
+    public static function convertUTCDateTimeToLocal($dateTime, $timeZone = null)
+    {
+        return self::formatUTCDateTime(
+            $dateTime,
+            'Y-m-d H:i:s',
+            $timeZone
+        );
+    }
+
+    /**
+     * Formats a UTC datetime in application-local time.
+     *
+     * @param string $dateTime
+     * @param string $format
+     * @param string $timeZone Optional explicit IANA time zone.
+     * @return string|boolean|null
+     */
+    public static function formatUTCDateTime($dateTime, $format, $timeZone = null)
+    {
+        if (self::_isEmptyDateTime($dateTime))
+        {
+            return $dateTime;
+        }
+
+        if (!is_string($dateTime) || !is_string($format))
+        {
+            return false;
+        }
+
+        $date = self::_createDateTime($dateTime, 'UTC');
+        if ($date === false)
+        {
+            return false;
+        }
+
+        $date->setTimezone(self::getApplicationTimeZoneObject($timeZone));
+
+        return $date->format($format);
+    }
 
 
     /**
@@ -742,6 +908,46 @@ class DateUtility
         }
 
         return $array;
+    }
+
+    /**
+     * Returns true for empty and zero datetime values.
+     *
+     * @param mixed $dateTime
+     * @return boolean
+     */
+    private static function _isEmptyDateTime($dateTime)
+    {
+        return $dateTime === null ||
+            $dateTime === '' ||
+            $dateTime === '0000-00-00' ||
+            $dateTime === '0000-00-00 00:00:00';
+    }
+
+    /**
+     * Creates a strictly validated SQL datetime in the specified time zone.
+     *
+     * @param string $dateTime
+     * @param string $timeZone
+     * @return DateTime|boolean
+     */
+    private static function _createDateTime($dateTime, $timeZone)
+    {
+        $date = DateTime::createFromFormat(
+            '!Y-m-d H:i:s',
+            $dateTime,
+            new DateTimeZone($timeZone)
+        );
+        $errors = DateTime::getLastErrors();
+
+        if ($date === false ||
+            ($errors !== false &&
+                ($errors['warning_count'] > 0 || $errors['error_count'] > 0)))
+        {
+            return false;
+        }
+
+        return $date;
     }
 }
 ?>
