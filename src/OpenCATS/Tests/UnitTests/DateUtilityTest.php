@@ -225,6 +225,129 @@ class DateUtilityTest extends TestCase
                 );
         }
     }
+
+    function testTimeZoneValidation()
+    {
+        $this->assertTrue(DateUtility::isValidTimeZone('UTC'));
+        $this->assertTrue(DateUtility::isValidTimeZone('Europe/Berlin'));
+        $this->assertTrue(DateUtility::isValidTimeZone('America/New_York'));
+        $this->assertFalse(DateUtility::isValidTimeZone(''));
+        $this->assertFalse(DateUtility::isValidTimeZone('+02:00'));
+        $this->assertFalse(DateUtility::isValidTimeZone('Invalid/TimeZone'));
+    }
+
+    function testTimeZoneFallback()
+    {
+        $this->assertSame('UTC', DateUtility::getValidTimeZone(''));
+        $this->assertSame('UTC', DateUtility::getValidTimeZone('Invalid/TimeZone'));
+        $this->assertSame('UTC', DateUtility::getApplicationTimeZone(''));
+        $this->assertSame('UTC', DateUtility::getApplicationTimeZone('Invalid/TimeZone'));
+        $this->assertSame(
+            'Europe/Berlin',
+            DateUtility::getApplicationTimeZoneObject('Europe/Berlin')->getName()
+        );
+    }
+
+    function testLocalDateTimeToUTCUsesDaylightSavingRules()
+    {
+        $this->assertSame(
+            '2024-01-15 09:00:00',
+            DateUtility::convertLocalDateTimeToUTC(
+                '2024-01-15 10:00:00',
+                'Europe/Berlin'
+            )
+        );
+        $this->assertSame(
+            '2024-07-15 08:00:00',
+            DateUtility::convertLocalDateTimeToUTC(
+                '2024-07-15 10:00:00',
+                'Europe/Berlin'
+            )
+        );
+    }
+
+    function testUTCDateTimeToLocalUsesDaylightSavingRules()
+    {
+        $this->assertSame(
+            '2024-01-15 10:00:00',
+            DateUtility::convertUTCDateTimeToLocal(
+                '2024-01-15 09:00:00',
+                'Europe/Berlin'
+            )
+        );
+        $this->assertSame(
+            '2024-07-15 10:00:00',
+            DateUtility::convertUTCDateTimeToLocal(
+                '2024-07-15 08:00:00',
+                'Europe/Berlin'
+            )
+        );
+    }
+
+    function testUTCDateTimeFormatting()
+    {
+        $this->assertSame(
+            '15.07.2024 10:00 CEST',
+            DateUtility::formatUTCDateTime(
+                '2024-07-15 08:00:00',
+                'd.m.Y H:i T',
+                'Europe/Berlin'
+            )
+        );
+    }
+
+    function testTimeZoneConversionsDoNotUseDefaultTimeZone()
+    {
+        $defaultTimeZone = date_default_timezone_get();
+
+        try
+        {
+            date_default_timezone_set('America/Los_Angeles');
+
+            $this->assertSame(
+                '2024-07-15 08:00:00',
+                DateUtility::convertLocalDateTimeToUTC(
+                    '2024-07-15 10:00:00',
+                    'Europe/Berlin'
+                )
+            );
+            $this->assertSame(
+                '2024-01-15 10:00:00',
+                DateUtility::convertUTCDateTimeToLocal(
+                    '2024-01-15 09:00:00',
+                    'Europe/Berlin'
+                )
+            );
+        }
+        finally
+        {
+            date_default_timezone_set($defaultTimeZone);
+        }
+    }
+
+    function testTimeZoneConversionsHandleEmptyAndInvalidValues()
+    {
+        $this->assertNull(
+            DateUtility::convertLocalDateTimeToUTC(null, 'Europe/Berlin')
+        );
+        $this->assertSame(
+            '',
+            DateUtility::convertUTCDateTimeToLocal('', 'Europe/Berlin')
+        );
+        $this->assertSame(
+            '0000-00-00 00:00:00',
+            DateUtility::convertLocalDateTimeToUTC(
+                '0000-00-00 00:00:00',
+                'Europe/Berlin'
+            )
+        );
+        $this->assertFalse(
+            DateUtility::convertUTCDateTimeToLocal(
+                '2024-02-31 10:00:00',
+                'Europe/Berlin'
+            )
+        );
+    }
 }
 
 ?>
