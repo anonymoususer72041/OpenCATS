@@ -139,8 +139,8 @@ class Contacts
                 %s,
                 %s,
                 %s,
-                NOW(),
-                NOW()
+                UTC_TIMESTAMP(),
+                UTC_TIMESTAMP()
             )",
             $this->_db->makeQueryInteger($companyID),
             $this->_db->makeQueryString($firstName),
@@ -241,7 +241,7 @@ class Contacts
                 contact.left_company  = %s,
                 contact.notes         = %s,
                 contact.owner         = %s,
-                contact.date_modified = NOW()
+                contact.date_modified = UTC_TIMESTAMP()
             WHERE
                 contact.contact_id = %s
             AND
@@ -324,7 +324,7 @@ class Contacts
                 city          = %s,
                 state         = %s,
                 zip           = %s,
-                date_modified = NOW()
+                date_modified = UTC_TIMESTAMP()
             WHERE
                 left_company != 1
             AND
@@ -655,7 +655,7 @@ class Contacts
             "UPDATE
                 contact
             SET
-                date_modified = NOW()
+                date_modified = UTC_TIMESTAMP()
             WHERE
                 contact_id = %s
             AND

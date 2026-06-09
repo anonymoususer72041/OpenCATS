@@ -82,7 +82,7 @@ class ActivityEntries
      * @param string Activity notes.
      * @param integer Entered-by user ID.
      * @param integer Job Order ID; -1 for general (stored as NULL).
-     * @param string Date occurred timestamp (YYYY-MM-DD HH:MM:SS); false for NOW().
+     * @param string Date occurred timestamp (YYYY-MM-DD HH:MM:SS); false for UTC_TIMESTAMP().
      * @return integer New Activity ID; -1 on failure.
      */
     public function add($dataItemID, $dataItemType, $activityType,
@@ -96,11 +96,26 @@ class ActivityEntries
         if (is_string($dateOccurred) &&
             preg_match('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/', $dateOccurred))
         {
-            $dateOccurredSQL = $this->_db->makeQueryString($dateOccurred);
+            $timeZone = 'UTC';
+            if (isset($_SESSION['CATS']) && $_SESSION['CATS']->isLoggedIn())
+            {
+                $timeZone = $_SESSION['CATS']->getTimeZoneIANA();
+            }
+
+            $dateOccurredUTC = DateUtility::localDateTimeToUTC(
+                $dateOccurred,
+                $timeZone
+            );
+            if ($dateOccurredUTC === false)
+            {
+                return -1;
+            }
+
+            $dateOccurredSQL = $this->_db->makeQueryString($dateOccurredUTC);
         }
         else
         {
-            $dateOccurredSQL = 'NOW()';
+            $dateOccurredSQL = 'UTC_TIMESTAMP()';
         }
 
         $sql = sprintf(
@@ -125,8 +140,8 @@ class ActivityEntries
                 %s,
                 %s,
                 %s,
-                NOW(),
-                NOW()
+                UTC_TIMESTAMP(),
+                UTC_TIMESTAMP()
             )",
             $this->_db->makeQueryInteger($dataItemID),
             $this->_db->makeQueryInteger($dataItemType),
@@ -181,7 +196,7 @@ class ActivityEntries
      * @return boolean True if successful; false otherwise.
      */
     public function update($activityID, $activityType, $activityNotes,
-        $jobOrderID, $date, $timezoneOffset)
+        $jobOrderID, $date, $timeZone)
     {
         /* Get some extra information about the activity entry that we'll
          * need later on.
@@ -236,7 +251,7 @@ class ActivityEntries
                 type          = %s,
                 notes         = %s,
                 joborder_id   = %s,
-                date_modified = NOW()
+                date_modified = UTC_TIMESTAMP()
             WHERE
                 activity_id = %s
             AND
@@ -251,18 +266,23 @@ class ActivityEntries
 
         if ($date !== false)
         {
+            $dateUTC = DateUtility::localDateTimeToUTC($date, $timeZone);
+            if ($dateUTC === false)
+            {
+                return false;
+            }
+
             $sql = sprintf(
                 "UPDATE
                     activity
                 SET
-                    date_occurred = DATE_SUB(%s, INTERVAL %s HOUR),
-                    date_modified = NOW()
+                    date_occurred = %s,
+                    date_modified = UTC_TIMESTAMP()
                 WHERE
                     activity_id = %s
                 AND
                     site_id = %s",
-                $this->_db->makeQueryString($date),
-                $this->_db->makeQueryInteger($timezoneOffset),
+                $this->_db->makeQueryString($dateUTC),
                 $this->_db->makeQueryInteger($activityID),
                 $this->_siteID
             );

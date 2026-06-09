@@ -73,21 +73,30 @@ class Site
     /**
      * Sets the site name for the current site.
      *
-     * @param integer time zone offset
+     * @param string IANA time zone identifier
      * @param boolean use D-M-Y format dates
      * @return boolean True if successful; false otherwise.
      */
     public function setLocalization($timeZone, $isDMY)
     {
+        if (!DateUtility::isValidTimeZoneIdentifier($timeZone))
+        {
+            return false;
+        }
+
+        $legacyTimeZone = DateUtility::getLegacyTimeZoneOffset($timeZone);
+
         $sql = sprintf(
             "UPDATE
                 site
             SET
                 time_zone = %s,
+                time_zone_iana = %s,
                 date_format_ddmmyy = %s
             WHERE
                 site_id = %s",
-            $this->_db->makeQueryInteger($timeZone),
+            $this->_db->makeQueryInteger($legacyTimeZone),
+            $this->_db->makeQueryString($timeZone),
             ($isDMY ? 1 : 0),
             $this->_siteID
         );

@@ -216,7 +216,7 @@ class TemplateUtility
      * @param integer ID and name attributes of the time zone select input
      * @param string style attribute of the time zone select input
      * @param string class attribute of the time zone select input
-     * @param integer selected GMT offset
+     * @param string selected IANA time zone identifier
      * @return void
      */
     public static function printTimeZoneSelect($selectID, $selectStyle,
@@ -236,22 +236,29 @@ class TemplateUtility
 
         echo '>';
 
-        $currentTimeZone = '';
+        $selectedTimeZone = DateUtility::normalizeTimeZoneIdentifier(
+            $selectedTimeZone
+        );
+        /* Prepend UTC explicitly and exclude it from listIdentifiers() to
+         * avoid rendering it twice on PHP versions that include it there. */
+        $timeZones = array_merge(
+            array('UTC'),
+            array_values(array_filter(
+                DateTimeZone::listIdentifiers(DateTimeZone::ALL_WITH_BC),
+                static function ($tz) { return $tz !== 'UTC'; }
+            ))
+        );
 
-        foreach ($GLOBALS['timeZones'] as $timeZone)
+        foreach ($timeZones as $timeZone)
         {
-            echo '<option value="', $timeZone[0], '"';
-
-            if ($timeZone[0] !== $currentTimeZone)
+            echo '<option value="', htmlspecialchars($timeZone), '"';
+            if ($timeZone === $selectedTimeZone)
             {
-                $currentTimeZone = $timeZone[0];
-                if ($timeZone[0] == $selectedTimeZone)
-                {
-                    echo ' selected="selected"';
-                }
+                echo ' selected="selected"';
             }
 
-            echo '>', htmlspecialchars($timeZone[1]), '</option>';
+            echo '>', htmlspecialchars(str_replace('_', ' ', $timeZone)),
+                '</option>';
         }
 
         echo '</select>';

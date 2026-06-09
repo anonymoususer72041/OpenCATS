@@ -376,7 +376,7 @@ class Mailer
                 %s,
                 %s,
                 %s,
-                NOW()
+                UTC_TIMESTAMP()
             )",
             $this->_db->makeQueryString($from),
             $this->_db->makeQueryString($to),

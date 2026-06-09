@@ -235,7 +235,7 @@ class CalendarUI extends UserInterface
         /* Textual representation of the month and year. */
         $dateString = date(
             'F Y',
-            mktime($_SESSION['CATS']->getTimeZoneOffset(), 0, 0, $month, 1, $year)
+            mktime(0, 0, 0, $month, 1, $year)
         );
 
         /* The offset is the number of days after the first Sunday on a given
@@ -466,7 +466,7 @@ class CalendarUI extends UserInterface
             );
         }
 
-        $timeZoneOffset = $_SESSION['CATS']->getTimeZoneOffset();
+        $timeZone = $_SESSION['CATS']->getTimeZoneIANA();
 
         if (!eval(Hooks::get('CALENDAR_ADD_PRE'))) return;
 
@@ -474,7 +474,7 @@ class CalendarUI extends UserInterface
         $eventID = $calendar->addEvent(
             $type, $date, $description, $allDay, $this->_userID, -1, -1, null,
             $title, $duration, $reminderEnabled, $reminderEmail, $reminderTime,
-            $publicEntry, $timeZoneOffset
+            $publicEntry, $timeZone
         );
 
         if ($eventID <= 0)
@@ -678,7 +678,7 @@ class CalendarUI extends UserInterface
         if (!$calendar->updateEvent($eventID, $type, $date, $description,
             $allDay, $dataItemID, $dataItemType, $jobOrderID, $title, $duration,
             $reminderEnabled, $reminderEmail, $reminderTime, $publicEntry,
-            $_SESSION['CATS']->getTimeZoneOffset()))
+            $_SESSION['CATS']->getTimeZoneIANA()))
         {
             CommonErrors::fatal(COMMONERROR_RECORDERROR, $this, 'Failed to update calendar event.');
         }

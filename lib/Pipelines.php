@@ -110,8 +110,8 @@ class Pipelines
                 %s,
                 100,
                 %s,
-                NOW(),
-                NOW()%s
+                UTC_TIMESTAMP(),
+                UTC_TIMESTAMP()%s
             )",
             $extraFields,
             $this->_siteID,
@@ -336,7 +336,7 @@ class Pipelines
                 candidate_joborder
             SET
                 status        = %s,
-                date_modified = NOW()
+                date_modified = UTC_TIMESTAMP()
             WHERE
                 candidate_joborder_id = %s
             AND
@@ -441,7 +441,7 @@ class Pipelines
                 %s,
                 %s,
                 %s,
-                NOW(),
+                UTC_TIMESTAMP(),
                 %s,
                 %s
             )",

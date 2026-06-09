@@ -88,7 +88,7 @@ class HTTPLogger
             $db->makeQueryString(@$_SERVER['SCRIPT_NAME']),
             $db->makeQueryInteger($type),
             $db->makeQueryInteger($siteID),
-            $db->makeQueryString(date("Y-m-d H:i:s"))
+            $db->makeQueryString(DateUtility::getCurrentUTCDateTime())
         );
         
         return (boolean) $db->query($sql);

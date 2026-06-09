@@ -303,7 +303,7 @@ class CommonErrors
         $db = DatabaseConnection::getInstance();
 
         $sql = sprintf('INSERT INTO exceptions (site_id, user_id, title, message, access_level, script, '
-            . 'domain, request, backtrace, date) VALUES (%d, %d, "%s", "%s", %d, "%s", "%s", "%s", "%s", NOW())',
+            . 'domain, request, backtrace, date) VALUES (%d, %d, "%s", "%s", %d, "%s", "%s", "%s", "%s", UTC_TIMESTAMP())',
             $siteID, $userID, addslashes($internalErrorTitle), addslashes($customMessage),
             $accessLevel, addslashes($_SERVER['SCRIPT_NAME']), addslashes($_SERVER['SERVER_NAME']),
             addslashes($_SERVER['QUERY_STRING']), addslashes(self::getBacktrace())

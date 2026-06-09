@@ -183,7 +183,7 @@ class SavedLists
                 saved_list
              SET
                 description = %s,
-                date_modified = NOW()
+                date_modified = UTC_TIMESTAMP()
              WHERE
                 saved_list_id = %s
              AND
@@ -213,8 +213,8 @@ class SavedLists
                 site_id = %s,
                 number_entries = 0,
                 created_by = %s,
-                date_created = NOW(),
-                date_modified = NOW()",
+                date_created = UTC_TIMESTAMP(),
+                date_modified = UTC_TIMESTAMP()",
             $this->_db->makeQueryString($description),
             $dataItemType,
             $this->_siteID,
@@ -319,8 +319,8 @@ class SavedLists
                             %s,
                             %s,
                             %s,
-                            NOW(),
-                            NOW()
+                            UTC_TIMESTAMP(),
+                            UTC_TIMESTAMP()
                         )",
                         $this->_db->makeQueryString($update[0]),
                         $this->_siteID,
@@ -364,7 +364,7 @@ class SavedLists
                             saved_list
                          SET
                             description = %s,
-                            date_modified = NOW()
+                            date_modified = UTC_TIMESTAMP()
                          WHERE
                             saved_list_id = %s
                          AND
@@ -420,7 +420,7 @@ class SavedLists
                                   $this->_db->makeQueryInteger($dataItemType) . ',' .
                                   $this->_db->makeQueryInteger($dataItemID) . ',' .
                                   $this->_siteID .','.
-                                  'NOW())';
+                                  'UTC_TIMESTAMP())';
         }
         
         $sql = sprintf(
@@ -499,7 +499,7 @@ class SavedLists
             "UPDATE 
                 saved_list
              SET
-                date_modified = NOW()
+                date_modified = UTC_TIMESTAMP()
              WHERE
                 site_id = %s
              AND
@@ -548,7 +548,7 @@ class SavedLists
                             %s,
                             %s,
                             %s,
-                            NOW()
+                            UTC_TIMESTAMP()
                         )",
                         $this->_db->makeQueryInteger($savedListID),
                         $this->_db->makeQueryInteger($dataItemType),

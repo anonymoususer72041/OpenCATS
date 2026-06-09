@@ -1547,7 +1547,7 @@ class ContactsUI extends UserInterface
                 $eventTypeID, $date, $description, $allDay, $this->_userID,
                 $contactID, DATA_ITEM_CONTACT, $eventJobOrderID, $title,
                 $duration, $reminderEnabled, $reminderEmail, $reminderTime,
-                $publicEntry, $_SESSION['CATS']->getTimeZoneOffset()
+                $publicEntry, $_SESSION['CATS']->getTimeZoneIANA()
             );
 
             if ($eventID <= 0)

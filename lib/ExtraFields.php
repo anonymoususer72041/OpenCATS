@@ -98,7 +98,7 @@ class ExtraFields
              VALUES (
                 %s,
                 %s,
-                NOW(),
+                UTC_TIMESTAMP(),
                 %s,
                 %s
              )",

@@ -2471,7 +2471,10 @@ class SettingsUI extends UserInterface
                         CommonErrors::fatal(COMMONERROR_PERMISSION, $this, 'Invalid user level for administration.');
                     }
 
-                    $this->_template->assign('timeZone', $_SESSION['CATS']->getTimeZone());
+                    $this->_template->assign(
+                        'timeZone',
+                        $_SESSION['CATS']->getTimeZoneIANA()
+                    );
                     $this->_template->assign('isDateDMY', $_SESSION['CATS']->isDateDMY());
 
                     // Default phone country calling code for the localization settings page.
@@ -2629,8 +2632,15 @@ class SettingsUI extends UserInterface
                 {
                     CommonErrors::fatal(COMMONERROR_PERMISSION, $this, 'Invalid user level for administration.');
                 }
-                //FIXME: Validation (escaped at lib level anyway)
                 $timeZone = $_POST['timeZone'];
+                if (!DateUtility::isValidTimeZoneIdentifier($timeZone))
+                {
+                    CommonErrors::fatal(
+                        COMMONERROR_BADFIELDS,
+                        $this,
+                        'Invalid time zone.'
+                    );
+                }
                 $dateFormat = $_POST['dateFormat'];
                 if ($dateFormat == 'mdy')
                 {
@@ -2642,7 +2652,14 @@ class SettingsUI extends UserInterface
                 }
 
                 $site = new Site($this->_siteID);
-                $site->setLocalization($timeZone, $isDMY);
+                if (!$site->setLocalization($timeZone, $isDMY))
+                {
+                    CommonErrors::fatal(
+                        COMMONERROR_RECORDERROR,
+                        $this,
+                        'Failed to save localization settings.'
+                    );
+                }
 
                 // Default phone country calling code (E.164) for the site.
                 if (isset($_POST['defaultPhoneCountryCodeDigits']))
@@ -2682,9 +2699,15 @@ class SettingsUI extends UserInterface
      */
     private function onAspLocalization()
     {
-        // FIXME: Input validation!
-
         $timeZone = $_POST['timeZone'];
+        if (!DateUtility::isValidTimeZoneIdentifier($timeZone))
+        {
+            CommonErrors::fatal(
+                COMMONERROR_BADFIELDS,
+                $this,
+                'Invalid time zone.'
+            );
+        }
         $dateFormat = $_POST['dateFormat'];
         if ($dateFormat == 'mdy')
         {
@@ -2696,7 +2719,7 @@ class SettingsUI extends UserInterface
         }
 
         $site = new Site($this->_siteID);
-        $site->setLocalization($timeZone, $dateFormat);
+        $site->setLocalization($timeZone, $isDMY);
 
         /* Reload the new data for the session. */
         $_SESSION['CATS']->setTimeDateLocalization($timeZone, $isDMY);
@@ -3271,6 +3294,11 @@ class SettingsUI extends UserInterface
         }
 
         $timeZone = $_GET['timeZone'];
+        if (!DateUtility::isValidTimeZoneIdentifier($timeZone))
+        {
+            echo 'Invalid time zone.';
+            return;
+        }
         $dateFormat = $_GET['dateFormat'];
         if ($dateFormat == 'mdy')
         {

@@ -474,7 +474,7 @@
                                                     <td>Please choose your time zone.</td>
                                                 </tr>
                                                 <tr>
-                                                    <td style="padding-bottom: 10px;"><?php if (!isset($php4)) TemplateUtility::printTimeZoneSelect('timeZone', 'width: 420px;', '', OFFSET_GMT); ?></td>
+                                                    <td style="padding-bottom: 10px;"><?php if (!isset($php4)) TemplateUtility::printTimeZoneSelect('timeZone', 'width: 420px;', '', 'UTC'); ?></td>
                                                 </tr>
 
                                                 <tr>

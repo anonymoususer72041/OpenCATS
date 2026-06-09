@@ -225,6 +225,78 @@ class DateUtilityTest extends TestCase
                 );
         }
     }
+
+    function testTimeZoneIdentifierValidationAndFallback()
+    {
+        $this->assertTrue(
+            DateUtility::isValidTimeZoneIdentifier('Europe/Berlin')
+        );
+        $this->assertTrue(DateUtility::isValidTimeZoneIdentifier('UTC'));
+        $this->assertFalse(
+            DateUtility::isValidTimeZoneIdentifier('Not/A_Time_Zone')
+        );
+        $this->assertSame(
+            'UTC',
+            DateUtility::normalizeTimeZoneIdentifier('Not/A_Time_Zone')
+        );
+    }
+
+    function testUTCDisplayConversionUsesDSTRules()
+    {
+        $this->assertSame(
+            '2026-01-15 13:00:00',
+            DateUtility::utcDateTimeToTimeZone(
+                '2026-01-15 12:00:00',
+                'Europe/Berlin'
+            )
+        );
+        $this->assertSame(
+            '2026-07-15 14:00:00',
+            DateUtility::utcDateTimeToTimeZone(
+                '2026-07-15 12:00:00',
+                'Europe/Berlin'
+            )
+        );
+    }
+
+    function testLocalCalendarDateTimeConvertsToUTC()
+    {
+        $this->assertSame(
+            '2026-01-15 14:00:00',
+            DateUtility::localDateTimeToUTC(
+                '2026-01-15 09:00:00',
+                'America/New_York'
+            )
+        );
+        $this->assertSame(
+            '2026-07-15 13:00:00',
+            DateUtility::localDateTimeToUTC(
+                '2026-07-15 09:00:00',
+                'America/New_York'
+            )
+        );
+    }
+
+    function testLegacyOffsetIsDerivedForCompatibility()
+    {
+        $winter = (new DateTimeImmutable(
+            '2026-01-15 12:00:00',
+            new DateTimeZone('UTC')
+        ))->getTimestamp();
+        $summer = (new DateTimeImmutable(
+            '2026-07-15 12:00:00',
+            new DateTimeZone('UTC')
+        ))->getTimestamp();
+
+        $this->assertSame(
+            1,
+            DateUtility::getLegacyTimeZoneOffset('Europe/Berlin', $winter)
+        );
+        $this->assertSame(
+            2,
+            DateUtility::getLegacyTimeZoneOffset('Europe/Berlin', $summer)
+        );
+    }
 }
 
 ?>

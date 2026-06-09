@@ -41,6 +41,189 @@ class DateUtility
     private function __construct() {}
     private function __clone() {}
 
+    /**
+     * Returns true if the specified value is a PHP-supported IANA time zone.
+     *
+     * @param string Time zone identifier.
+     * @return boolean Valid identifier.
+     */
+    public static function isValidTimeZoneIdentifier($timeZone)
+    {
+        if ($timeZone === 'UTC')
+        {
+            return true;
+        }
+
+        return in_array(
+            $timeZone,
+            DateTimeZone::listIdentifiers(DateTimeZone::ALL_WITH_BC),
+            true
+        );
+    }
+
+    /**
+     * Returns a valid IANA time zone identifier, falling back to UTC.
+     *
+     * @param string Time zone identifier.
+     * @return string Valid time zone identifier.
+     */
+    public static function normalizeTimeZoneIdentifier($timeZone)
+    {
+        if (self::isValidTimeZoneIdentifier($timeZone))
+        {
+            return $timeZone;
+        }
+
+        return 'UTC';
+    }
+
+    /**
+     * Returns the legacy whole-hour offset for an IANA time zone.
+     *
+     * This value is retained only for migration and old-code compatibility.
+     *
+     * @param string Time zone identifier.
+     * @param integer Unix timestamp (optional).
+     * @return integer Whole-hour UTC offset.
+     */
+    public static function getLegacyTimeZoneOffset($timeZone, $timestamp = false)
+    {
+        $timeZone = self::normalizeTimeZoneIdentifier($timeZone);
+        if ($timestamp === false)
+        {
+            $timestamp = time();
+        }
+
+        $date = new DateTimeImmutable('@' . (int) $timestamp);
+        $offset = (new DateTimeZone($timeZone))->getOffset($date);
+
+        return (int) ($offset / 3600);
+    }
+
+    /**
+     * Converts a local SQL datetime to UTC using an IANA time zone.
+     *
+     * @param string SQL datetime in local site time.
+     * @param string Time zone identifier.
+     * @return string|false SQL datetime in UTC, or false when invalid.
+     */
+    public static function localDateTimeToUTC($date, $timeZone)
+    {
+        $timeZone = self::normalizeTimeZoneIdentifier($timeZone);
+        $local = DateTimeImmutable::createFromFormat(
+            '!Y-m-d H:i:s',
+            $date,
+            new DateTimeZone($timeZone)
+        );
+        $errors = DateTimeImmutable::getLastErrors();
+
+        if ($local === false ||
+            ($errors !== false &&
+             ($errors['warning_count'] !== 0 || $errors['error_count'] !== 0)) ||
+            $local->format('Y-m-d H:i:s') !== $date)
+        {
+            return false;
+        }
+
+        return $local->setTimezone(new DateTimeZone('UTC'))
+            ->format('Y-m-d H:i:s');
+    }
+
+    /**
+     * Converts a UTC SQL datetime to an IANA time zone.
+     *
+     * @param string SQL datetime in UTC.
+     * @param string Time zone identifier.
+     * @param string Output format.
+     * @return string|false Formatted local datetime, or false when invalid.
+     */
+    public static function utcDateTimeToTimeZone(
+        $date,
+        $timeZone,
+        $format = 'Y-m-d H:i:s'
+    )
+    {
+        $utc = DateTimeImmutable::createFromFormat(
+            '!Y-m-d H:i:s',
+            $date,
+            new DateTimeZone('UTC')
+        );
+        $errors = DateTimeImmutable::getLastErrors();
+
+        if ($utc === false ||
+            ($errors !== false &&
+             ($errors['warning_count'] !== 0 || $errors['error_count'] !== 0)) ||
+            $utc->format('Y-m-d H:i:s') !== $date)
+        {
+            return false;
+        }
+
+        $timeZone = self::normalizeTimeZoneIdentifier($timeZone);
+
+        return $utc->setTimezone(new DateTimeZone($timeZone))->format($format);
+    }
+
+    /**
+     * Converts a fixed-offset IANA identifier to a MySQL CONVERT_TZ offset
+     * string.  Returns false for DST-aware zones that require named timezone
+     * tables.
+     *
+     * Note: Etc/GMT sign convention is inverted — Etc/GMT-2 = UTC+2,
+     * Etc/GMT+5 = UTC-5.
+     *
+     * @param string IANA time zone identifier.
+     * @return string|false MySQL offset string (e.g. '+02:00'), or false.
+     */
+    public static function ianaToMysqlOffset($timeZone)
+    {
+        if ($timeZone === 'UTC')
+        {
+            return '+00:00';
+        }
+
+        if (preg_match('/^Etc\/GMT([+-][0-9]{1,2})$/', $timeZone, $m))
+        {
+            /* Etc/GMT sign is inverted relative to UTC offset. */
+            $mysqlHours = -(int) $m[1];
+            $sign = ($mysqlHours >= 0) ? '+' : '-';
+            return sprintf('%s%02d:00', $sign, abs($mysqlHours));
+        }
+
+        return false;
+    }
+
+    /**
+     * Returns the UTC datetime string for local midnight on a day relative to
+     * now in the given IANA timezone.
+     *
+     * @param string IANA time zone identifier.
+     * @param string Date modifier understood by DateTimeImmutable::modify()
+     *               (e.g. '-1 month', '-1 week').  Empty string means today.
+     * @return string UTC SQL datetime (Y-m-d H:i:s) for the local midnight.
+     */
+    public static function localMidnightUTC($timeZone, $modifier = '')
+    {
+        $timeZone = self::normalizeTimeZoneIdentifier($timeZone);
+        $tz = new DateTimeZone($timeZone);
+        $local = new DateTimeImmutable('now', $tz);
+        if ($modifier !== '')
+        {
+            $local = $local->modify($modifier);
+        }
+        $local = $local->setTime(0, 0, 0);
+        return $local->setTimezone(new DateTimeZone('UTC'))->format('Y-m-d H:i:s');
+    }
+
+    /**
+     * Returns the current UTC time formatted for a database datetime field.
+     *
+     * @return string UTC SQL datetime.
+     */
+    public static function getCurrentUTCDateTime()
+    {
+        return gmdate('Y-m-d H:i:s');
+    }
+
 
     /**
      * Returns the number of days in the month for the specified month in
@@ -313,29 +496,23 @@ class DateUtility
     {
         if ($date === false)
         {
-            if (isset($_SESSION['CATS']) && $_SESSION['CATS']->isLoggedIn())
-            {
-                $timeZoneOffset = $_SESSION['CATS']->getTimeZoneOffset();
-                $date = mktime(
-                    date('H') + $timeZoneOffset,
-                    date('i'),
-                    date('s'),
-                    date('m'),
-                    date('d'),
-                    date('Y')
-                );
-            }
-            else
-            {
-                $date = time();
-            }
+            $date = time();
         }
+
+        $timeZone = 'UTC';
+        if (isset($_SESSION['CATS']) && $_SESSION['CATS']->isLoggedIn())
+        {
+            $timeZone = $_SESSION['CATS']->getTimeZoneIANA();
+        }
+        $localDate = (new DateTimeImmutable('@' . (int) $date))
+            ->setTimezone(new DateTimeZone($timeZone))
+            ->modify('+1 day');
 
         /* To calculate the week number starting on Sunday instead of Monday,
          * find the starting-on-Monday week number of the day after the
          * specified date instead.
          */
-        return date('W', self::addDaysToDate($date, 1));
+        return $localDate->format('W');
     }
 
     /**
@@ -376,16 +553,15 @@ class DateUtility
             $date = time();
         }
 
-        $unixTime = mktime(
-            date('H', $date) + $_SESSION['CATS']->getTimeZoneOffset(),
-            date('i', $date),
-            date('s', $date),
-            date('m', $date),
-            date('d', $date),
-            date('Y', $date)
-        );
+        $timeZone = 'UTC';
+        if (isset($_SESSION['CATS']) && $_SESSION['CATS']->isLoggedIn())
+        {
+            $timeZone = $_SESSION['CATS']->getTimeZoneIANA();
+        }
 
-        return date($format, $unixTime);
+        return (new DateTimeImmutable('@' . (int) $date))
+            ->setTimezone(new DateTimeZone($timeZone))
+            ->format($format);
     }
     
     /**

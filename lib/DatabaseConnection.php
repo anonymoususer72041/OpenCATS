@@ -40,7 +40,7 @@ class DatabaseConnection
     static private $_instance;
     private $_connection = null;
     private $_queryResult = null;
-    private $_timeZone;
+    private $_timeZoneIANA = 'UTC';
     private $_dateDMY;
     private $_inTransaction;
 
@@ -62,12 +62,13 @@ class DatabaseConnection
         // FIXME: Remove Session tight-coupling here.
         if (isset($_SESSION['CATS']) && $_SESSION['CATS']->isLoggedIn())
         {
-            self::$_instance->_timeZone = $_SESSION['CATS']->getTimeZoneOffset();
+            self::$_instance->_timeZoneIANA =
+                $_SESSION['CATS']->getTimeZoneIANA();
             self::$_instance->_dateDMY = $_SESSION['CATS']->isDateDMY();
         }
         else
         {
-            self::$_instance->_timeZone = OFFSET_GMT * -1;
+            self::$_instance->_timeZoneIANA = 'UTC';
             self::$_instance->_dateDMY = false;
         }
 
@@ -140,6 +141,12 @@ class DatabaseConnection
             );
             return false;
         }
+
+        /*
+         * Timestamp writes and comparisons must not depend on the MySQL
+         * server's configured local time zone.
+         */
+        @mysqli_query($this->_connection, "SET time_zone = '+00:00'");
 
         return true;
     }
@@ -647,7 +654,7 @@ class DatabaseConnection
     // FIXME: Document me.
     private function _localizationFilter($query)
     {
-        /* Fix query to allow time results to be offset by $_timeZone. */
+        /* Convert UTC timestamp display values to the site IANA time zone. */
         if (strpos($query , 'SELECT') !== 0)
         {
             return $query;
@@ -679,19 +686,39 @@ class DatabaseConnection
             $query = substr($query, strpos($query, ','));
             if (strpos(substr($working, 13), '(') === false)
             {
-                /* Add or subtract time before the date format depeidng on the
-                 * time zone offset. We don't have to do any replacement if the
-                 * offset is 0.
+                /*
+                 * COALESCE provides a UTC fallback when MySQL's named time
+                 * zone tables are unavailable. The identifier itself is
+                 * validated by DateUtility before it reaches the session.
                  */
-                if ($this->_timeZone > 0)
+                $dateExpression = trim(substr(
+                    $working,
+                    strlen('DATE_FORMAT(')
+                ));
+                if (!preg_match(
+                    '/(?:^|\.)(?:date_available|start_date)$/i',
+                    $dateExpression
+                ))
                 {
-                    $working = str_replace('DATE_FORMAT(', 'DATE_FORMAT(DATE_ADD(', $working);
-                    $working .= ', INTERVAL ' . $this->_timeZone . ' HOUR)';
-                }
-                else if ($this->_timeZone < 0)
-                {
-                    $working = str_replace('DATE_FORMAT(', 'DATE_FORMAT(DATE_SUB(', $working);
-                    $working .= ', INTERVAL ' . ($this->_timeZone * -1) . ' HOUR)';
+                    /*
+                     * Use a numeric offset string for UTC and fixed Etc/GMT±N
+                     * zones so CONVERT_TZ works without MySQL named timezone
+                     * tables.  DST-aware zones still use the IANA identifier
+                     * (requires loaded timezone tables) and fall back to the
+                     * original UTC value via COALESCE.
+                     */
+                    $mysqlOffset = DateUtility::ianaToMysqlOffset(
+                        $this->_timeZoneIANA
+                    );
+                    $tzArg = ($mysqlOffset !== false)
+                        ? $this->makeQueryString($mysqlOffset)
+                        : $this->makeQueryString($this->_timeZoneIANA);
+                    $working = sprintf(
+                        'DATE_FORMAT(COALESCE(CONVERT_TZ(%s, \'+00:00\', %s), %s)',
+                        $dateExpression,
+                        $tzArg,
+                        $dateExpression
+                    );
                 }
             }
             $newQuery .= $working;

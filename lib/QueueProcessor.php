@@ -452,7 +452,7 @@ class QueueProcessor
             "DELETE FROM
                 queue
              WHERE
-                (TO_DAYS(NOW()) - TO_DAYS(date_completed)) > %s
+                (TO_DAYS(UTC_TIMESTAMP()) - TO_DAYS(date_completed)) > %s
              AND
                 locked = 0
              AND
@@ -479,7 +479,7 @@ class QueueProcessor
              WHERE
                 locked = 1
              AND
-                date_timeout <= NOW()"
+                date_timeout <= UTC_TIMESTAMP()"
         );
 
         $db->query($sql);

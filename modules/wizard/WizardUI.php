@@ -64,7 +64,7 @@ class WizardUI extends UserInterface
             $this->_template->assign(\'accessLevels\', $users->getAccessLevels());
         ');
         $this->addPage('Localization', './modules/wizard/WizardIntroLocalization.tpl', '
-            $this->_template->assign(\'timeZone\', $_SESSION[\'CATS\']->getTimeZone());
+            $this->_template->assign(\'timeZone\', $_SESSION[\'CATS\']->getTimeZoneIANA());
             $this->_template->assign(\'isDateDMY\', $_SESSION[\'CATS\']->isDateDMY());
         ');
 

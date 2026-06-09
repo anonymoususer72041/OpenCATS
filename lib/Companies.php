@@ -158,7 +158,7 @@ class Companies
                 notes            = %s,
                 billing_contact  = %s,
                 owner            = %s,
-                date_modified    = NOW()
+                date_modified    = UTC_TIMESTAMP()
             WHERE
                 company_id = %s
             AND
@@ -427,7 +427,7 @@ class Companies
                 company
              SET
                 default_company = 1,
-                date_modified  = NOW()
+                date_modified  = UTC_TIMESTAMP()
             WHERE
                 company_id = %s",
             $this->_db->makeQueryInteger($companyID)
@@ -648,7 +648,7 @@ class Companies
                             %s,
                             %s,
                             %s,
-                            NOW()
+                            UTC_TIMESTAMP()
                          )",
                          $this->_db->makeQueryString($update[0]),
                          $this->_db->makeQueryInteger($companyID),

@@ -163,8 +163,8 @@ class Candidates
                 0,
                 %s,
                 %s,
-                NOW(),
-                NOW(),
+                UTC_TIMESTAMP(),
+                UTC_TIMESTAMP(),
                 %s,
                 %s,
                 %s,
@@ -288,7 +288,7 @@ class Candidates
                 web_site              = %s,
                 best_time_to_call     = %s,
                 owner                 = %s,
-                date_modified         = NOW(),
+                date_modified         = UTC_TIMESTAMP(),
                 eeo_ethnic_type_id    = %s,
                 eeo_veteran_type_id   = %s,
                 eeo_disability_status = %s,
@@ -961,7 +961,7 @@ class Candidates
             "UPDATE
                 candidate
             SET
-                date_modified = NOW()
+                date_modified = UTC_TIMESTAMP()
             WHERE
                 candidate_id = %s
             AND
@@ -1038,7 +1038,7 @@ class Candidates
                          VALUES (
                             %s,
                             %s,
-                            NOW()
+                            UTC_TIMESTAMP()
                          )",
                          $this->_db->makeQueryString($update[0]),
                          $this->_siteID
@@ -1542,7 +1542,7 @@ class Candidates
                     "can_relocate = " . $rs['canRelocate'] . ", " .  
                     "best_time_to_call = '" . $rs['bestTimeToCall'] . "', " .
                     "is_hot = " . $rs['isHot'] . ", " . 
-                    "date_modified = NOW()";
+                    "date_modified = UTC_TIMESTAMP()";
         $comma = true;
         if($rs['source'] != "" && $rs['source'] != "(none)")
         {

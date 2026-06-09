@@ -42,7 +42,7 @@ class Statistics
 {
     private $_db;
     private $_siteID;
-    private $_timeZoneOffset;
+    private $_timeZoneIANA;
 
 
     public function __construct($siteID)
@@ -51,7 +51,7 @@ class Statistics
         $this->_db = DatabaseConnection::getInstance();
 
         // FIXME: Session coupling...
-        $this->_timeZoneOffset = $_SESSION['CATS']->getTimeZoneOffset();
+        $this->_timeZoneIANA = $_SESSION['CATS']->getTimeZoneIANA();
     }
 
 
@@ -983,7 +983,7 @@ class Statistics
 
             case TIME_PERIOD_THISWEEK:
                 $criteria = sprintf(
-                    'AND %s > \'1900-01-01\' AND YEARWEEK(%s) = YEARWEEK(NOW())',
+                    'AND %s > \'1900-01-01\' AND YEARWEEK(%s) = YEARWEEK(UTC_TIMESTAMP())',
                     $dateField,
                     $dateField
                 );
@@ -999,7 +999,7 @@ class Statistics
 
             case TIME_PERIOD_LASTTWOWEEKS:
                 $criteria =sprintf(
-                    'AND %s > \'1900-01-01\' AND (YEARWEEK(%s) = YEARWEEK(NOW()) OR YEARWEEK(%s) = YEARWEEK(NOW() - INTERVAL 7 DAY))',
+                    'AND %s > \'1900-01-01\' AND (YEARWEEK(%s) = YEARWEEK(UTC_TIMESTAMP()) OR YEARWEEK(%s) = YEARWEEK(UTC_TIMESTAMP() - INTERVAL 7 DAY))',
                     $dateField,
                     $dateField,
                     $dateField
@@ -1024,7 +1024,7 @@ class Statistics
 
             case TIME_PERIOD_THISYEAR:
                 $criteria = sprintf(
-                    'AND %s > \'1900-01-01\' AND YEAR(%s) = YEAR(NOW())',
+                    'AND %s > \'1900-01-01\' AND YEAR(%s) = YEAR(UTC_TIMESTAMP())',
                     $dateField,
                     $dateField
                 );
@@ -1044,12 +1044,20 @@ class Statistics
                 break;
         }
 
-        if ($this->_timeZoneOffset != 0)
-        {
-            $criteria = str_replace('CURDATE()', 'DATE_ADD(CURDATE(), INTERVAL ' . $this->_timeZoneOffset . ' HOUR)', $criteria);
-            $criteria = str_replace('NOW()', 'DATE_ADD(NOW(), INTERVAL ' . $this->_timeZoneOffset . ' HOUR)', $criteria);
-            $criteria = str_replace($dateField, 'DATE_ADD(' . $dateField . ', INTERVAL ' . $this->_timeZoneOffset . ' HOUR)', $criteria);
-        }
+        $timeZone = $this->_db->makeQueryString($this->_timeZoneIANA);
+        $localNow = sprintf(
+            "COALESCE(CONVERT_TZ(UTC_TIMESTAMP(), '+00:00', %s), UTC_TIMESTAMP())",
+            $timeZone
+        );
+        $localDateField = sprintf(
+            "COALESCE(CONVERT_TZ(%s, '+00:00', %s), %s)",
+            $dateField,
+            $timeZone,
+            $dateField
+        );
+        $criteria = str_replace('UTC_TIMESTAMP()', $localNow, $criteria);
+        $criteria = str_replace('CURDATE()', 'DATE(' . $localNow . ')', $criteria);
+        $criteria = str_replace($dateField, $localDateField, $criteria);
 
         return $criteria;
     }

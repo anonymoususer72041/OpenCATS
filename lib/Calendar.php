@@ -82,8 +82,21 @@ class Calendar
      */
     public function getEventArray($month, $year)
     {
-        // FIXME: Rewrite this query to use date ranges in WHERE, so that
-        //        indexes can be used.
+        $timeZone = $_SESSION['CATS']->getTimeZoneIANA();
+        $monthStart = sprintf('%04d-%02d-01 00:00:00', $year, $month);
+        $nextMonth = (new DateTimeImmutable(
+            $monthStart,
+            new DateTimeZone($timeZone)
+        ))->modify('+1 month')->format('Y-m-d H:i:s');
+        $monthStartUTC = DateUtility::localDateTimeToUTC(
+            $monthStart,
+            $timeZone
+        );
+        $nextMonthUTC = DateUtility::localDateTimeToUTC(
+            $nextMonth,
+            $timeZone
+        );
+
         $sql = sprintf(
             "SELECT
                 calendar_event.calendar_event_id AS eventID,
@@ -135,15 +148,15 @@ class Calendar
             LEFT JOIN user AS entered_by_user
                 ON calendar_event.entered_by = entered_by_user.user_id
             WHERE
-                DATE_FORMAT(calendar_event.date, '%%c') = %s
+                calendar_event.date >= %s
             AND
-                DATE_FORMAT(calendar_event.date, '%%Y') = %s
+                calendar_event.date < %s
             AND
                 calendar_event.site_id = %s
             ORDER BY
                 dateSort ASC",
-            $month,
-            $year,
+            $this->_db->makeQueryString($monthStartUTC),
+            $this->_db->makeQueryString($nextMonthUTC),
             $this->_siteID
         );
 
@@ -242,7 +255,7 @@ class Calendar
             WHERE
                 calendar_event.reminder_enabled = 1
             AND
-                DATE_ADD(NOW(), INTERVAL calendar_event.reminder_time MINUTE) >= calendar_event.date"
+                DATE_ADD(UTC_TIMESTAMP(), INTERVAL calendar_event.reminder_time MINUTE) >= calendar_event.date"
         );
 
         return $this->_db->getAllAssoc($sql);
@@ -316,15 +329,25 @@ class Calendar
      * @param string E-mail address to send reminders.
      * @param integer Minutes before event occurrs to send reminders.
      * @param boolean Is this a public event entry?
-     * @param integer Time zone offset from GMT.
+     * @param string IANA time zone identifier.
      * @return integer New Calendar Event ID, or -1 on failure.
      */
-    // FIXME: Time Zone Offset probably shouldn't be paramaterized.
     public function addEvent($type, $date, $description, $allDay, $enteredBy,
         $dataItemID, $dataItemType, $jobOrderID, $title, $duration,
         $reminderEnabled, $reminderEmail, $reminderTime, $isPublic,
-        $timeZoneOffset)
+        $timeZone)
     {
+        if (strlen($date) === 10)
+        {
+            $date .= ' 00:00:00';
+        }
+
+        $dateUTC = DateUtility::localDateTimeToUTC($date, $timeZone);
+        if ($dateUTC === false)
+        {
+            return -1;
+        }
+
         if ($jobOrderID === null)
         {
             $jobOrderIDSQL = 'NULL';
@@ -356,7 +379,6 @@ class Calendar
             )
             VALUES (
                 %s,
-                DATE_SUB(%s, INTERVAL %s HOUR),
                 %s,
                 %s,
                 %s,
@@ -364,8 +386,9 @@ class Calendar
                 %s,
                 %s,
                 %s,
-                NOW(),
-                NOW(),
+                %s,
+                UTC_TIMESTAMP(),
+                UTC_TIMESTAMP(),
                 %s,
                 %s,
                 %s,
@@ -374,8 +397,7 @@ class Calendar
                 %s
             )",
             $this->_db->makeQueryInteger($type),
-            $this->_db->makeQueryString($date),
-            $this->_db->makeQueryInteger($timeZoneOffset),
+            $this->_db->makeQueryString($dateUTC),
             $this->_db->makeQueryString($description),
             ($allDay ? '1' : '0'),
             $this->_db->makeQueryInteger($enteredBy),
@@ -420,15 +442,25 @@ class Calendar
      * @param string E-mail address to send reminders.
      * @param integer Minutes before event occurrs to send reminders.
      * @param boolean Is this a public event entry?
-     * @param integer Time zone offset from GMT.
+     * @param string IANA time zone identifier.
      * @return boolean True if successful; false otherwise.
      */
-    // FIXME: Time Zone Offset probably shouldn't be paramaterized.
     public function updateEvent($eventID, $type, $date, $description, $allDay,
         $dataItemID, $dataItemType, $jobOrderID, $title, $duration,
         $reminderEnabled, $reminderEmail, $reminderTime, $isPublic,
-        $timeZoneOffset)
+        $timeZone)
     {
+        if (strlen($date) === 10)
+        {
+            $date .= ' 00:00:00';
+        }
+
+        $dateUTC = DateUtility::localDateTimeToUTC($date, $timeZone);
+        if ($dateUTC === false)
+        {
+            return false;
+        }
+
         if ($jobOrderID === null)
         {
             $jobOrderIDSQL = 'NULL';
@@ -443,13 +475,13 @@ class Calendar
                 calendar_event
             SET
                 type             = %s,
-                date             = DATE_SUB(%s, INTERVAL %s HOUR),
+                date             = %s,
                 description      = %s,
                 all_day          = %s,
                 data_item_id     = %s,
                 data_item_type   = %s,
                 joborder_id      = %s,
-                date_modified    = NOW(),
+                date_modified    = UTC_TIMESTAMP(),
                 title            = %s,
                 duration         = %s,
                 reminder_enabled = %s,
@@ -461,8 +493,7 @@ class Calendar
             AND
                 site_id = %s",
             $this->_db->makeQueryInteger($type),
-            $this->_db->makeQueryString($date),
-            $this->_db->makeQueryInteger($timeZoneOffset),
+            $this->_db->makeQueryString($dateUTC),
             $this->_db->makeQueryString($description),
             ($allDay ? '1' : '0'),
             $this->_db->makeQueryInteger($dataItemID),
@@ -616,7 +647,13 @@ class Calendar
      */
     public function getUpcomingEventsByDataItem($dataItemType, $dataItemID)
     {
-        $currentDateForMySQL = strftime('%Y-%m-%d 00:00:00', time());
+        $timeZone = $_SESSION['CATS']->getTimeZoneIANA();
+        $currentDateForMySQL = DateUtility::getAdjustedDate('Y-m-d') .
+            ' 00:00:00';
+        $currentDateUTC = DateUtility::localDateTimeToUTC(
+            $currentDateForMySQL,
+            $timeZone
+        );
 
         $sql = sprintf(
             "SELECT
@@ -665,7 +702,7 @@ class Calendar
             ORDER BY
                 dateSort ASC",
             $this->_siteID,
-            $this->_db->makeQueryString($currentDateForMySQL),
+            $this->_db->makeQueryString($currentDateUTC),
             $this->_userID,
             $this->_db->makeQueryInteger($dataItemType),
             $this->_db->makeQueryInteger($dataItemID)
@@ -684,6 +721,18 @@ class Calendar
      */
     public function getUpcomingEventsHTML($limit, $flag = UPCOMING_FOR_CALENDAR)
     {
+        $timeZone = $_SESSION['CATS']->getTimeZoneIANA();
+        $todayLocal = DateUtility::getAdjustedDate('Y-m-d') . ' 00:00:00';
+        $tomorrowLocal = (new DateTimeImmutable(
+            $todayLocal,
+            new DateTimeZone($timeZone)
+        ))->modify('+1 day')->format('Y-m-d H:i:s');
+        $todayUTC = DateUtility::localDateTimeToUTC($todayLocal, $timeZone);
+        $tomorrowUTC = DateUtility::localDateTimeToUTC(
+            $tomorrowLocal,
+            $timeZone
+        );
+
         switch ($flag)
         {
             case UPCOMING_FOR_CALENDAR:
@@ -737,7 +786,9 @@ class Calendar
             LEFT JOIN user AS entered_by_user
                 ON calendar_event.entered_by = entered_by_user.user_id
             WHERE
-                TO_DAYS(NOW()) = TO_DAYS(calendar_event.date)
+                calendar_event.date >= %s
+            AND
+                calendar_event.date < %s
             AND
                 calendar_event.site_id = %s
             AND
@@ -748,6 +799,8 @@ class Calendar
             %s
             ORDER BY
                 dateSort ASC",
+            $this->_db->makeQueryString($todayUTC),
+            $this->_db->makeQueryString($tomorrowUTC),
             $this->_siteID,
             ($flag == UPCOMING_FOR_CALENDAR ? 'calendar_event.public = 1' : 'false'),
             $this->_userID,
@@ -787,9 +840,7 @@ class Calendar
             LEFT JOIN user AS entered_by_user
                 ON calendar_event.entered_by = entered_by_user.user_id
             WHERE
-                DATE(calendar_event.date) > CURDATE()
-            AND
-                TO_DAYS(NOW()) != TO_DAYS(calendar_event.date)
+                calendar_event.date >= %s
             AND
                 calendar_event.site_id = %s
             AND
@@ -802,6 +853,7 @@ class Calendar
                 dateSort ASC
             LIMIT
                 0, %s",
+            $this->_db->makeQueryString($tomorrowUTC),
             $this->_siteID,
             $this->_userID,
             $criteria,
