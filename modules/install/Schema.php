@@ -1520,7 +1520,7 @@ class CATSSchema
             '380' => '
                 ALTER TABLE `activity`
                 ADD COLUMN `date_occurred` datetime NOT NULL DEFAULT \'1000-01-01 00:00:00\'
-                BEFORE `date_created`;
+                AFTER `entered_by`;
                 UPDATE `activity`
                 SET `date_occurred` = `date_created`;
                 CREATE INDEX `IDX_date_occurred` ON `activity` (`date_occurred`);
