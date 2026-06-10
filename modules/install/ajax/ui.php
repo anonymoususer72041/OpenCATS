@@ -1131,6 +1131,7 @@ function MySQLConnect()
         return false;
     }
 
+    mysqli_set_charset($mySQLConnection, SQL_CHARACTER_SET);
 
     /* Create an array of all tables in the database. */
     $tables = array();
