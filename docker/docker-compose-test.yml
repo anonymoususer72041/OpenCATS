@@ -44,8 +44,6 @@ services:
         - ../test/data/:/test/data/
         - ../test/scripts/:/test/scripts
         - ../db:/db
-        - ../db/cats_schema.sql:/docker-entrypoint-initdb.d/000_initDB.sql
-        - ../test/data/securityTests.sql:/docker-entrypoint-initdb.d/001_addUsers.sql
 
     integrationtestdb:
       image: mariadb:10.7

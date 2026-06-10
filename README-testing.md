@@ -5,12 +5,12 @@ This project uses two distinct MariaDB instances during the testing phase to ens
 
 ### 1. opencatsdb (Port 3306)
 * **Purpose:** Primary application database for functional testing.
-* **Data:** Pre-seeded with `db/cats_schema.sql` and `test/data/securityTests.sql` via Docker's `initdb.d`.
+* **Data:** Seeded explicitly after container start: `phinx migrate` builds the schema, `test/data/securityTests.sql` adds Behat fixtures.
 * **Used By:** Manual development, Behat (Gherkin/Selenium) suites.
 
 ### 2. integrationtestdb (Port 3307)
 * **Purpose:** A "Disposable Sandbox" for PHPUnit Integration Tests.
-* **Behavior:** The `DatabaseTestCase.php` class drops and recreates this database for every test run to ensure a clean schema build from `db/cats_schema.sql`.
+* **Behavior:** The `DatabaseTestCase.php` class drops and recreates this database for every test run to ensure a clean schema via `phinx migrate`.
 
 ---
 
@@ -34,7 +34,13 @@ To mirror the CI environment on your machine:
    docker compose -f docker-compose-test.yml exec -T --workdir /var/www/public php composer install --no-interaction --prefer-dist
    ```
 
-4. **Run the suites:**
+4. **Seed opencatsdb** (wait until the container is healthy first):
+   ```bash
+   docker compose -f docker-compose-test.yml exec -T --workdir /var/www/public php ./vendor/bin/phinx migrate
+   docker compose -f docker-compose-test.yml exec -T opencatsdb sh -c "mysql -udev -pdev cats_test < /test/data/securityTests.sql"
+   ```
+
+5. **Run the suites:**
    * **PHPUnit Unit Tests:** `docker compose -f docker-compose-test.yml exec php ./vendor/bin/phpunit --testsuite UnitTests`
    * **PHPUnit Integration Tests:** `docker compose -f docker-compose-test.yml exec php ./vendor/bin/phpunit --testsuite IntegrationTests`
    * **Behat:** `docker compose -f docker-compose-test.yml exec php ./vendor/bin/behat -c ./test/behat.yml`

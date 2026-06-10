@@ -748,12 +748,13 @@ switch ($action)
         break;
 
     case 'doInstallEmptyDatabase':
-        MySQLConnect();
-
         CATSUtility::changeConfigSetting('ENABLE_DEMO_MODE', 'false');
 
-        $schema = file_get_contents('db/cats_schema.sql');
-        MySQLQueryMultiple($schema, ";\n");
+        exec(
+            escapeshellcmd(LEGACY_ROOT . '/vendor/bin/phinx') .
+            ' migrate -c ' . escapeshellarg(LEGACY_ROOT . '/phinx.php') .
+            ' 2>&1'
+        );
 
         echo '<script type="text/javascript">Installpage_populate(\'a=resumeParsing\');</script>';
         break;

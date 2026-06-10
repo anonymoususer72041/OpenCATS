@@ -39,23 +39,11 @@ class DatabaseTestCase extends TestCase
         // FIXED: Corrected parameter order for mysqli_select_db
         @mysqli_select_db($mySQLConnection, DATABASE_NAME);
 
-        $this->mySQLQueryMultiple(file_get_contents('db/cats_schema.sql'), ";\n");
-    }
-
-    private function MySQLQueryMultiple($SQLData, $delimiter = ';')
-    {
-        $SQLStatments = explode($delimiter, $SQLData);
-
-        foreach ($SQLStatments as $SQL)
-        {
-            $SQL = trim($SQL);
-
-            if (empty($SQL))
-            {
-                continue;
-            }
-
-            $this->mySQLQuery($SQL);
+        $phinxOutput = [];
+        $phinxExit = 0;
+        exec('./vendor/bin/phinx migrate 2>&1', $phinxOutput, $phinxExit);
+        if ($phinxExit !== 0) {
+            throw new \Exception('Phinx migration failed: ' . implode("\n", $phinxOutput));
         }
     }
 
