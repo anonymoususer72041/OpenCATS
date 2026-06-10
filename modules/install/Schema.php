@@ -1536,6 +1536,19 @@ class CATSSchema
                 include_once(\'modules/install/scripts/382.php\');
                 update_382($db);
             ',
+            '383' => 'PHP:
+                $column = $db->getAssoc(
+                    "SHOW COLUMNS FROM `site` LIKE \'time_zone\'"
+                );
+
+                if (!empty($column))
+                {
+                    $db->query(
+                        "ALTER TABLE `site` DROP COLUMN `time_zone`",
+                        true
+                    );
+                }
+            ',
 
         );
     }

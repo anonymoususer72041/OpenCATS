@@ -538,13 +538,9 @@ switch ($action)
             die('Invalid time zone.');
         }
 
-        $legacyTimeZone = DateUtility::getLegacyTimeZoneOffset($timeZone);
-        CATSUtility::changeConfigSetting('OFFSET_GMT', $legacyTimeZone);
-
         $dateFormat = $_REQUEST['dateFormat'];
 
         $_SESSION['timeZoneInstaller'] = $timeZone;
-        $_SESSION['legacyTimeZoneInstaller'] = $legacyTimeZone;
         $_SESSION['dateFormatInstaller'] = $dateFormat;
 
         // Default phone country calling code collected in the installer.
@@ -1059,18 +1055,11 @@ switch ($action)
         }
 
         $timeZone = $_SESSION['timeZoneInstaller'];
-        $legacyTimeZone = $_SESSION['legacyTimeZoneInstaller'];
 
-        if ($timeZone !== 'UTC')
-        {
-            MySQLQuery(sprintf(
-                "UPDATE site
-                 SET time_zone = %d,
-                     time_zone_iana = '%s'",
-                $legacyTimeZone,
-                mysqli_real_escape_string($mySQLConnection, $timeZone)
-            ));
-        }
+        MySQLQuery(sprintf(
+            "UPDATE site SET time_zone_iana = '%s'",
+            mysqli_real_escape_string($mySQLConnection, $timeZone)
+        ));
 
         if (isset($_SESSION['defaultPhoneCountryCodeInstaller'])
             && $_SESSION['defaultPhoneCountryCodeInstaller'] !== '')

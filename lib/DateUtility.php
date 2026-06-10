@@ -78,29 +78,6 @@ class DateUtility
     }
 
     /**
-     * Returns the legacy whole-hour offset for an IANA time zone.
-     *
-     * This value is retained only for migration and old-code compatibility.
-     *
-     * @param string Time zone identifier.
-     * @param integer Unix timestamp (optional).
-     * @return integer Whole-hour UTC offset.
-     */
-    public static function getLegacyTimeZoneOffset($timeZone, $timestamp = false)
-    {
-        $timeZone = self::normalizeTimeZoneIdentifier($timeZone);
-        if ($timestamp === false)
-        {
-            $timestamp = time();
-        }
-
-        $date = new DateTimeImmutable('@' . (int) $timestamp);
-        $offset = (new DateTimeZone($timeZone))->getOffset($date);
-
-        return (int) ($offset / 3600);
-    }
-
-    /**
      * Converts a local SQL datetime to UTC using an IANA time zone.
      *
      * @param string SQL datetime in local site time.

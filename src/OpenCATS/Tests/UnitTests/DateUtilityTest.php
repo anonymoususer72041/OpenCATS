@@ -277,26 +277,6 @@ class DateUtilityTest extends TestCase
         );
     }
 
-    function testLegacyOffsetIsDerivedForCompatibility()
-    {
-        $winter = (new DateTimeImmutable(
-            '2026-01-15 12:00:00',
-            new DateTimeZone('UTC')
-        ))->getTimestamp();
-        $summer = (new DateTimeImmutable(
-            '2026-07-15 12:00:00',
-            new DateTimeZone('UTC')
-        ))->getTimestamp();
-
-        $this->assertSame(
-            1,
-            DateUtility::getLegacyTimeZoneOffset('Europe/Berlin', $winter)
-        );
-        $this->assertSame(
-            2,
-            DateUtility::getLegacyTimeZoneOffset('Europe/Berlin', $summer)
-        );
-    }
 }
 
 ?>

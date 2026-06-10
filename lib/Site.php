@@ -84,18 +84,14 @@ class Site
             return false;
         }
 
-        $legacyTimeZone = DateUtility::getLegacyTimeZoneOffset($timeZone);
-
         $sql = sprintf(
             "UPDATE
                 site
             SET
-                time_zone = %s,
                 time_zone_iana = %s,
                 date_format_ddmmyy = %s
             WHERE
                 site_id = %s",
-            $this->_db->makeQueryInteger($legacyTimeZone),
             $this->_db->makeQueryString($timeZone),
             ($isDMY ? 1 : 0),
             $this->_siteID

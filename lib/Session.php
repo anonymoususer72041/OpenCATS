@@ -70,8 +70,6 @@ class CATSSession
     private $_endTime;
     private $_backupDirectory;
     private $_storedBuild = -1;
-    private $_timeZoneOffset = 0;
-    private $_timeZone = 0;
     private $_timeZoneIANA = 'UTC';
     private $_defaultPhoneCountryCode = '+1';
     private $_dateDMY = false;
@@ -508,34 +506,6 @@ class CATSSession
     }
 
     /**
-     * Gets the current user's time zone offset from the system time zone
-     * (from config.php) stored in the session. The database is not accessed,
-     * nor is config.php. 0 is returned if the session is not logged in.
-     *
-     * @return integer Time zone offset from the system time zone.
-     */
-    public function getTimeZoneOffset()
-    {
-        if ($this->isLoggedIn())
-        {
-            return $this->_timeZoneOffset;
-        }
-
-        return 0;
-    }
-
-    /**
-     * Gets the current user's time zone offset from GMT stored in the session.
-     * The database is not accessed.
-     *
-     * @return integer Time zone offset from GMT.
-     */
-    public function getTimeZone()
-    {
-        return $this->_timeZone;
-    }
-
-    /**
      * Gets the current site's validated IANA time zone identifier.
      *
      * @return string IANA time zone identifier.
@@ -637,12 +607,9 @@ class CATSSession
     public function setTimeDateLocalization($timeZone, $isDMY)
     {
         $timeZone = DateUtility::normalizeTimeZoneIdentifier($timeZone);
-        $legacyTimeZone = DateUtility::getLegacyTimeZoneOffset($timeZone);
 
-        $this->_timeZone       = $legacyTimeZone;
-        $this->_timeZoneOffset = $legacyTimeZone - OFFSET_GMT;
-        $this->_timeZoneIANA   = $timeZone;
-        $this->_dateDMY        = $isDMY;
+        $this->_timeZoneIANA = $timeZone;
+        $this->_dateDMY      = $isDMY;
     }
 
     /**
@@ -714,7 +681,6 @@ class CATSSession
                 site.is_demo AS isDemo,
                 site.account_active AS accountActive,
                 site.account_deleted AS accountDeleted,
-                site.time_zone AS timeZone,
                 site.time_zone_iana AS timeZoneIANA,
                 site.default_phone_country_code AS defaultPhoneCountryCode,
                 site.date_format_ddmmyy AS dateFormatDMY,
@@ -847,8 +813,6 @@ class CATSSession
                 $this->_email                  = $rs['email'];
                 $this->_ip                     = $ip;
                 $this->_userAgent              = $userAgent;
-                $this->_timeZoneOffset         = $rs['timeZone'] - OFFSET_GMT;
-                $this->_timeZone               = $rs['timeZone'];
                 $this->_timeZoneIANA           = DateUtility::normalizeTimeZoneIdentifier(
                     $rs['timeZoneIANA']
                 );
@@ -1020,7 +984,6 @@ class CATSSession
                 site.is_demo AS isDemo,
                 site.account_active AS accountActive,
                 site.account_deleted AS accountDeleted,
-                site.time_zone AS timeZone,
                 site.time_zone_iana AS timeZoneIANA,
                 site.default_phone_country_code AS defaultPhoneCountryCode,
                 site.date_format_ddmmyy AS dateFormatDMY,
@@ -1056,8 +1019,6 @@ class CATSSession
         $this->_accountActive   = ($rs['accountActive'] == 0 ? false : true);
         $this->_accountDeleted  = ($rs['accountDeleted'] == 0 ? false : true);
         $this->_email           = $rs['email'];
-        $this->_timeZone        = $rs['timeZone'];
-        $this->_timeZoneOffset  = $rs['timeZone'] - OFFSET_GMT;
         $this->_timeZoneIANA    = DateUtility::normalizeTimeZoneIdentifier(
             $rs['timeZoneIANA']
         );
