@@ -1527,6 +1527,27 @@ class CATSSchema
                 CREATE INDEX `IDX_site_occurred` ON `activity` (`site_id`,`date_occurred`);
                 CREATE INDEX `IDX_activity_site_type_occurred_job` ON `activity` (`site_id`,`data_item_type`,`date_occurred`,`entered_by`,`joborder_id`);
             ',
+            '381' => 'PHP:
+                $quoteIdentifier = function($identifier)
+                {
+                    return \'`\' . str_replace(\'`\', \'``\', $identifier) . \'`\';
+                };
+                $db->query(\'ALTER DATABASE \' . $quoteIdentifier(DATABASE_NAME) . \' CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci\');
+                $tables = $db->getAllAssoc(
+                    "SELECT TABLE_NAME AS table_name
+                     FROM information_schema.TABLES
+                     WHERE TABLE_SCHEMA = DATABASE()
+                       AND TABLE_TYPE = \'BASE TABLE\'"
+                );
+                foreach ($tables as $row)
+                {
+                    $tableName = $row[\'table_name\'];
+                    $db->query(
+                        \'ALTER TABLE \' . $quoteIdentifier($tableName)
+                        . \' CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci\'
+                    );
+                }
+            ',
 
         );
     }
