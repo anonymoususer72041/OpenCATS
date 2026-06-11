@@ -36,11 +36,9 @@ if (!isset($_REQUEST['email']))
     die ('Invalid E-Mail address.');
 }
 
-$siteID = $interface->getSiteID();
-
 $email = $_REQUEST['email'];
 
-$candidates = new Candidates($siteID);
+$candidates = new Candidates();
 
 $output = "<data>\n";
 

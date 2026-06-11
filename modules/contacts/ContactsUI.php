@@ -226,7 +226,7 @@ class ContactsUI extends UserInterface
         $this->_template->assign('userID', $_SESSION['CATS']->getUserID());
         $this->_template->assign('errMessage', $errMessage);
 
-        $contacts = new Contacts($this->_siteID);
+        $contacts = new Contacts();
         $this->_template->assign('totalContacts', $contacts->getCount());
 
         if (!eval(Hooks::get('CONTACTS_LIST_BY_VIEW'))) return;
@@ -247,7 +247,7 @@ class ContactsUI extends UserInterface
 
         $contactID = $_GET['contactID'];
 
-        $contacts = new Contacts($this->_siteID);
+        $contacts = new Contacts();
         $data = $contacts->get($contactID);
 
         /* Bail out if we got an empty result set. */
@@ -305,7 +305,7 @@ class ContactsUI extends UserInterface
             $data['titleClassCompany'] = 'jobTitleCold';
         }
 
-        $jobOrders   = new JobOrders($this->_siteID);
+        $jobOrders   = new JobOrders();
         $jobOrdersRS = $jobOrders->getAll(JOBORDERS_STATUS_ALL, -1, -1, $contactID);
 
         if (!empty($jobOrdersRS))
@@ -346,7 +346,7 @@ class ContactsUI extends UserInterface
             }
         }
 
-        $activityEntries = new ActivityEntries($this->_siteID);
+        $activityEntries = new ActivityEntries();
         $activityRS = $activityEntries->getAllByDataItem($contactID, DATA_ITEM_CONTACT);
         if (!empty($activityRS))
         {
@@ -426,8 +426,8 @@ class ContactsUI extends UserInterface
      */
     private function add()
     {
-        $companies = new Companies($this->_siteID);
-        $contacts = new Contacts($this->_siteID);
+        $companies = new Companies();
+        $contacts = new Contacts();
 
         /* Do we have a selected_company_id? */
         if ($_SESSION['CATS']->isHrMode())
@@ -552,7 +552,7 @@ class ContactsUI extends UserInterface
         }
 
         /* Update departments. */
-        $companies = new Companies($this->_siteID);
+        $companies = new Companies();
         $departments = $companies->getDepartments($companyID);
         $departmentsDifferences = ListEditor::getDifferencesFromList(
             $departments, 'name', 'departmentID', $departmentsCSV
@@ -561,7 +561,7 @@ class ContactsUI extends UserInterface
 
         if (!eval(Hooks::get('CONTACTS_ON_ADD_PRE'))) return;
 
-        $contacts = new Contacts($this->_siteID);
+        $contacts = new Contacts();
         $contactID = $contacts->add(
             $companyID, $firstName, $lastName, $title, $department, $reportsTo,
             $email1, $email2, $phoneWork, $phoneCell, $phoneOther, $address, $address2,
@@ -605,7 +605,7 @@ class ContactsUI extends UserInterface
 
         $contactID = $_GET['contactID'];
 
-        $contacts = new Contacts($this->_siteID);
+        $contacts = new Contacts();
         $data = $contacts->getForEditing($contactID);
 
         /* Bail out if we got an empty result set. */
@@ -614,10 +614,10 @@ class ContactsUI extends UserInterface
             CommonErrors::fatal(COMMONERROR_BADINDEX, $this, 'The specified contact ID could not be found.');
         }
 
-        $companies = new Companies($this->_siteID);
+        $companies = new Companies();
         $companiesRS = $companies->getSelectList();
 
-        $users = new Users($this->_siteID);
+        $users = new Users();
         $usersRS = $users->getSelectList();
 
         /* Add an MRU entry. */
@@ -632,7 +632,7 @@ class ContactsUI extends UserInterface
         $departmentsRS = $companies->getDepartments($data['companyID']);
         $departmentsString = ListEditor::getStringFromList($departmentsRS, 'name');
 
-        $emailTemplates = new EmailTemplates($this->_siteID);
+        $emailTemplates = new EmailTemplates();
         $statusChangeTemplateRS = $emailTemplates->getByTag(
             'EMAIL_TEMPLATE_OWNERSHIPASSIGNCONTACT'
         );
@@ -657,7 +657,7 @@ class ContactsUI extends UserInterface
             $canEmail = true;
         }
 
-        $companies = new Companies($this->_siteID);
+        $companies = new Companies();
         $defaultCompanyID = $companies->getDefaultCompany();
         if ($defaultCompanyID !== false)
         {
@@ -750,13 +750,13 @@ class ContactsUI extends UserInterface
             $phoneOther = $this->getTrimmedInput('phoneOther', $_POST);
         }
 
-        $contacts = new Contacts($this->_siteID);
+        $contacts = new Contacts();
 
         if ($this->isChecked('ownershipChange', $_POST) && $owner > 0)
         {
             $contactDetails = $contacts->get($contactID);
 
-            $users = new Users($this->_siteID);
+            $users = new Users();
             $ownerDetails = $users->get($owner);
 
             if (!empty($ownerDetails))
@@ -764,7 +764,7 @@ class ContactsUI extends UserInterface
                 $emailAddress = $ownerDetails['email'];
 
                 /* Get the change status email template. */
-                $emailTemplates = new EmailTemplates($this->_siteID);
+                $emailTemplates = new EmailTemplates();
                 $statusChangeTemplateRS = $emailTemplates->getByTag(
                     'EMAIL_TEMPLATE_OWNERSHIPASSIGNCONTACT'
                 );
@@ -843,7 +843,7 @@ class ContactsUI extends UserInterface
         if (!eval(Hooks::get('CONTACTS_ON_EDIT_PRE'))) return;
 
         /* Update departments. */
-        $companies = new Companies($this->_siteID);
+        $companies = new Companies();
         $departments = $companies->getDepartments($companyID);
         $departmentsDifferences = ListEditor::getDifferencesFromList(
             $departments, 'name', 'departmentID', $departmentsCSV
@@ -884,7 +884,7 @@ class ContactsUI extends UserInterface
 
         if (!eval(Hooks::get('CONTACTS_DELETE_PRE'))) return;
 
-        $contacts = new Contacts($this->_siteID);
+        $contacts = new Contacts();
         $contacts->delete($contactID);
 
         /* Delete the MRU entry if present. */
@@ -902,7 +902,7 @@ class ContactsUI extends UserInterface
      */
     private function search()
     {
-        $savedSearches = new SavedSearches($this->_siteID);
+        $savedSearches = new SavedSearches();
         $savedSearchRS = $savedSearches->get(DATA_ITEM_CONTACT);
 
         if (!eval(Hooks::get('CONTACTS_SEARCH'))) return;
@@ -949,7 +949,7 @@ class ContactsUI extends UserInterface
         }
 
         $searchPager = new SearchPager(
-            CANDIDATES_PER_PAGE, $currentPage, $this->_siteID, $_GET
+            CANDIDATES_PER_PAGE, $currentPage
         );
 
         if ($searchPager->isSortByValid('sortBy', $_GET))
@@ -979,7 +979,7 @@ class ContactsUI extends UserInterface
         $mode = $this->getSanitisedInput('mode', $_GET);
 
         /* Execute the search. */
-        $search = new ContactsSearch($this->_siteID);
+        $search = new ContactsSearch();
         switch ($mode)
         {
             case 'searchByFullName':
@@ -1048,7 +1048,7 @@ class ContactsUI extends UserInterface
         );
 
         /* Save the search. */
-        $savedSearches = new SavedSearches($this->_siteID);
+        $savedSearches = new SavedSearches();
         $savedSearches->add(
             DATA_ITEM_CONTACT,
             $query,
@@ -1081,7 +1081,7 @@ class ContactsUI extends UserInterface
      */
     private function showColdCallList()
     {
-        $contacts = new Contacts($this->_siteID);
+        $contacts = new Contacts();
 
         $rs = $contacts->getColdCallList();
 
@@ -1103,12 +1103,12 @@ class ContactsUI extends UserInterface
 
         $contactID = $_GET['contactID'];
 
-        $contacts = new Contacts($this->_siteID);
+        $contacts = new Contacts();
         $contactData = $contacts->get($contactID);
 
         $regardingRS = $contacts->getNonClosedJobOrdersArray($contactID);
 
-        $calendar = new Calendar($this->_siteID);
+        $calendar = new Calendar();
         $calendarEventTypes = $calendar->getAllEventTypes();
 
         /* Are we in "Only Schedule Event" mode? */
@@ -1166,10 +1166,10 @@ class ContactsUI extends UserInterface
 
         $contactID = $_GET['contactID'];
 
-        $contacts = new Contacts($this->_siteID);
+        $contacts = new Contacts();
         $contact = $contacts->get($contactID);
 
-        $companies = new Companies($this->_siteID);
+        $companies = new Companies();
         $company = $companies->get($contact['companyID']);
 
         /* Bail out if we got an empty result set. */
@@ -1352,7 +1352,7 @@ class ContactsUI extends UserInterface
             }
 
             $activityTypeID = (int) $_POST['activityTypeID'];
-            $activityEntries = new ActivityEntries($this->_siteID);
+            $activityEntries = new ActivityEntries();
             $activityTypes = $activityEntries->getTypes();
             if (ResultSetUtility::findRowByColumnValue(
                 $activityTypes, 'typeID', $activityTypeID
@@ -1542,7 +1542,7 @@ class ContactsUI extends UserInterface
                 $eventJobOrderID = null;
             }
 
-            $calendar = new Calendar($this->_siteID);
+            $calendar = new Calendar();
             $eventID = $calendar->addEvent(
                 $eventTypeID, $date, $description, $allDay, $this->_userID,
                 $contactID, DATA_ITEM_CONTACT, $eventJobOrderID, $title,
@@ -1559,7 +1559,7 @@ class ContactsUI extends UserInterface
             $parsedDate = strtotime($date);
             $formattedDate = date('l, F jS, Y', $parsedDate);
 
-            $calendar = new Calendar($this->_siteID);
+            $calendar = new Calendar();
             $calendarEventTypes = $calendar->getAllEventTypes();
 
             $eventTypeDescription = ResultSetUtility::getColumnValueByIDValue(

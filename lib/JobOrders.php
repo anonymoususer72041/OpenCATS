@@ -56,16 +56,14 @@ include_once(LEGACY_ROOT . '/lib/JobOrderStatuses.php');
 class JobOrders
 {
     public $_db;
-    public $_siteID;
 
     public $extraFields;
 
 
-    public function __construct($siteID)
+    public function __construct()
     {
-        $this->_siteID = $siteID;
         $this->_db = DatabaseConnection::getInstance();
-        $this->extraFields = new ExtraFields($siteID, DATA_ITEM_JOBORDER);
+        $this->extraFields = new ExtraFields(DATA_ITEM_JOBORDER);
     }
 
 
@@ -100,11 +98,10 @@ class JobOrders
         // FIXME: Move this up to the UserInterface level. I don't like this
         //        tight coupling, and calling Contacts methods as static is
         //        bad.
-        $departmentId = (new Contacts($this->_siteID))->getDepartmentIDByName(
+        $departmentId = (new Contacts())->getDepartmentIDByName(
             $department, $companyId, $this->_db
         );
         $jobOrder = JobOrder::create(
-            $this->_siteID,
             $title,
             $companyId,
             $contactId,
@@ -129,7 +126,7 @@ class JobOrders
         );
         $JobOrderRepository = new JobOrderRepository($this->_db);
         try {
-            $jobOrderId = $JobOrderRepository->persist($jobOrder, new History($this->_siteID));
+            $jobOrderId = $JobOrderRepository->persist($jobOrder, new History());
         } catch (JobOrderRepositoryException $e) {
             return -1;
         }
@@ -169,7 +166,7 @@ class JobOrders
         // FIXME: Move this up to the UserInterface level. I don't like this
         //        tight coupling, and calling Contacts methods as static is
         //        bad.
-        $departmentID = (new Contacts($this->_siteID))->getDepartmentIDByName(
+        $departmentID = (new Contacts())->getDepartmentIDByName(
             $department, $companyID, $this->_db
         );
 
@@ -202,9 +199,7 @@ class JobOrders
                 date_modified      = NOW(),
                 questionnaire_id   = %s
             WHERE
-                joborder_id = %s
-            AND
-                site_id = %s",
+                joborder_id = %s",
             $this->_db->makeQueryString($title),
             $this->_db->makeQueryString($companyJobID),
             $this->_db->makeQueryInteger($companyID),
@@ -228,8 +223,7 @@ class JobOrders
             ($public ? '1' : '0'),
             // Questionnaire ID or NULL if none
             $questionnaire !== false ? $this->_db->makeQueryInteger($questionnaire) : 'NULL',
-            $this->_db->makeQueryInteger($jobOrderID),
-            $this->_siteID
+            $this->_db->makeQueryInteger($jobOrderID)
         );
 
         $preHistory = $this->get($jobOrderID);
@@ -237,7 +231,7 @@ class JobOrders
         $postHistory = $this->get($jobOrderID);
 
         /* Store history. */
-        $history = new History($this->_siteID);
+        $history = new History();
         $history->storeHistoryChanges(
             DATA_ITEM_JOBORDER, $jobOrderID, $preHistory, $postHistory
         );
@@ -251,7 +245,7 @@ class JobOrders
         {
             /* Send e-mail notification. */
             //FIXME: Make subject configurable.
-            $mailer = new Mailer($this->_siteID);
+            $mailer = new Mailer();
             $mailerStatus = $mailer->sendToOne(
                 array($emailAddress, ''),
                 'CATS Notification: Job Order Ownership Change',
@@ -276,16 +270,13 @@ class JobOrders
             "DELETE FROM
                 joborder
             WHERE
-                joborder_id = %s
-            AND
-                site_id = %s",
-            $this->_db->makeQueryInteger($jobOrderID),
-            $this->_siteID
+                joborder_id = %s",
+            $this->_db->makeQueryInteger($jobOrderID)
         );
         $this->_db->query($sql);
 
         /* Store history. */
-        $history = new History($this->_siteID);
+        $history = new History();
         $history->storeHistoryDeleted(DATA_ITEM_JOBORDER, $jobOrderID);
 
         /* Clear calendar event associations for this job order. */
@@ -295,11 +286,8 @@ class JobOrders
             SET
                 joborder_id = NULL
             WHERE
-                joborder_id = %s
-            AND
-                site_id = %s",
-            $this->_db->makeQueryInteger($jobOrderID),
-            $this->_siteID
+                joborder_id = %s",
+            $this->_db->makeQueryInteger($jobOrderID)
         );
         $this->_db->query($sql);
 
@@ -308,11 +296,8 @@ class JobOrders
             "DELETE FROM
                 candidate_joborder
             WHERE
-                joborder_id = %s
-            AND
-                site_id = %s",
-            $this->_db->makeQueryInteger($jobOrderID),
-            $this->_siteID
+                joborder_id = %s",
+            $this->_db->makeQueryInteger($jobOrderID)
         );
         $this->_db->query($sql);
 
@@ -321,16 +306,13 @@ class JobOrders
             "DELETE FROM
                 candidate_joborder_status_history
             WHERE
-                joborder_id = %s
-            AND
-                site_id = %s",
-            $this->_db->makeQueryInteger($jobOrderID),
-            $this->_siteID
+                joborder_id = %s",
+            $this->_db->makeQueryInteger($jobOrderID)
         );
         $this->_db->query($sql);
 
         /* Delete attachments. */
-        $attachments = new Attachments($this->_siteID);
+        $attachments = new Attachments();
         $attachmentsRS = $attachments->getAll(
             DATA_ITEM_JOBORDER, $jobOrderID
         );
@@ -347,11 +329,8 @@ class JobOrders
             WHERE
                 data_item_id = %s
             AND
-                site_id = %s
-            AND
                 data_item_type = %s",
             $this->_db->makeQueryInteger($jobOrderID),
-            $this->_siteID,
             DATA_ITEM_JOBORDER
         );
         $this->_db->query($sql);
@@ -367,15 +346,10 @@ class JobOrders
      */
     public function getCount()
     {
-        $sql = sprintf(
-            "SELECT
+        $sql = "SELECT
                 COUNT(*) AS totalJobOrders
             FROM
-                joborder
-            WHERE
-                joborder.site_id = %s",
-            $this->_siteID
-        );
+                joborder";
 
         return $this->_db->getColumn($sql, 0, 0);
     }
@@ -453,8 +427,6 @@ class JobOrders
                         joborder_id = %s
                     AND
                         status_to = %s
-                    AND
-                        site_id = %s
                 ) AS submitted,
                 company.name AS companyName
             FROM
@@ -475,15 +447,11 @@ class JobOrders
                 ON joborder.company_department_id = company_department.company_department_id
             WHERE
                 joborder.joborder_id = %s
-            AND
-                joborder.site_id = %s
             GROUP BY
                 joborder.joborder_id",
             $this->_db->makeQueryInteger($jobOrderID),
             PIPELINE_STATUS_SUBMITTED,
-            $this->_siteID,
-            $this->_db->makeQueryInteger($jobOrderID),
-            $this->_siteID
+            $this->_db->makeQueryInteger($jobOrderID)
         );
 
         if (!eval(Hooks::get('JO_GET_1_SQL'))) return;
@@ -536,11 +504,8 @@ class JobOrders
             LEFT JOIN company_department
                 ON joborder.company_department_id = company_department.company_department_id
             WHERE
-                joborder.joborder_id = %s
-            AND
-                joborder.site_id = %s",
-            $jobOrderID,
-            $this->_siteID
+                joborder.joborder_id = %s",
+            $jobOrderID
         );
 
         if (!eval(Hooks::get('JO_GET_EDIT_SQL'))) return;
@@ -688,8 +653,6 @@ class JobOrders
                         joborder_id = joborder.joborder_id
                     AND
                         status_to = %s
-                    AND
-                        site_id = %s
                 ) AS submitted,
                 joborder.is_admin_hidden AS isAdminHidden,
                 joborder.date_created AS dateCreatedSort
@@ -714,7 +677,7 @@ class JobOrders
                     AND attachment.data_item_type = 400
                 )
             WHERE
-                joborder.site_id = %s
+                1=1
             %s
             %s
             %s
@@ -728,8 +691,6 @@ class JobOrders
                 daysOld ASC,
                 dateCreatedSort DESC",
             PIPELINE_STATUS_SUBMITTED,
-            $this->_siteID,
-            $this->_siteID,
             $statusCriterion,
             $userCriterion,
             $companyCriterion,
@@ -758,11 +719,8 @@ class JobOrders
             SET
                 date_modified = NOW()
             WHERE
-                joborder_id = %s
-            AND
-                site_id = %s",
-            $this->_db->makeQueryInteger($jobOrderID),
-            $this->_siteID
+                joborder_id = %s",
+            $this->_db->makeQueryInteger($jobOrderID)
         );
 
         return (boolean) $this->_db->query($sql);
@@ -783,12 +741,9 @@ class JobOrders
             SET
                 openings_available = %s
             WHERE
-                joborder_id = %s
-            AND
-                site_id = %s",
+                joborder_id = %s",
             $this->_db->makeQueryInteger($count),
-            $this->_db->makeQueryInteger($jobOrderID),
-            $this->_siteID
+            $this->_db->makeQueryInteger($jobOrderID)
         );
 
         return (boolean) $this->_db->query($sql);
@@ -828,12 +783,9 @@ class JobOrders
             SET
                 is_admin_hidden = %s
             WHERE
-                joborder_id = %s
-            AND
-                site_id = %s",
+                joborder_id = %s",
             $this->_db->makeQueryInteger($state),
-            $this->_db->makeQueryInteger($jobOrderID),
-            $this->_siteID
+            $this->_db->makeQueryInteger($jobOrderID)
         );
 
         return (boolean) $this->_db->query($sql);
@@ -848,10 +800,7 @@ class JobOrders
             FROM
                 joborder
             WHERE
-                site_id = %s
-            AND
                 joborder_id = %s",
-            $this->_siteID,
             $this->_db->makeQueryInteger($regardingID)
         );
 
@@ -877,14 +826,10 @@ class JobOrders
 
 class JobOrdersDataGrid extends DataGrid
 {
-    protected $_siteID;
-
-
     // FIXME: Fix ugly indenting - ~400 character lines = bad.
-    public function __construct($instanceName, $siteID, $parameters, $misc)
+    public function __construct($instanceName, $parameters, $misc)
     {
         $this->_db = DatabaseConnection::getInstance();
-        $this->_siteID = $siteID;
         $this->_assignedCriterion = "";
         $this->_dataItemIDColumn = 'joborder.joborder_id';
 
@@ -1001,8 +946,6 @@ class JobOrdersDataGrid extends DataGrid
                                                                 candidate_joborder
                                                             WHERE
                                                                 joborder_id = joborder.joborder_id
-                                                            AND
-                                                                site_id = '.$this->_siteID.'
                                                           ) AS totalPipeline',
                                        'pagerRender'      => 'return $rsData[\'totalPipeline\'];',
                                        'sortableColumn'     => 'totalPipeline',
@@ -1020,8 +963,6 @@ class JobOrdersDataGrid extends DataGrid
                                                                   joborder_id = joborder.joborder_id
                                                               AND
                                                                   (status = '.PIPELINE_STATUS_NOCONTACT.' OR status = '.PIPELINE_STATUS_NOSTATUS.')
-                                                              AND
-                                                                  site_id = '.$this->_siteID.'
                                                           ) AS notContacted',
                                        'pagerRender'      => 'return $rsData[\'notContacted\'];',
                                        'sortableColumn'     => 'notContacted',
@@ -1039,8 +980,6 @@ class JobOrdersDataGrid extends DataGrid
                                                                 joborder_id = joborder.joborder_id
                                                             AND
                                                                 status_to = '.PIPELINE_STATUS_SUBMITTED.'
-                                                            AND
-                                                                site_id = '.$this->_siteID.'
                                                         ) AS submitted',
                                      'pagerRender'      => 'return $rsData[\'submitted\'];',
                                      'sortableColumn'     => 'submitted',
@@ -1056,8 +995,6 @@ class JobOrdersDataGrid extends DataGrid
                                                                 candidate_joborder
                                                             WHERE
                                                                 joborder_id = joborder.joborder_id
-                                                            AND
-                                                                site_id = '.$this->_siteID.'
                                                         ) AS pipeline',
                                      'pagerRender'      => 'return $rsData[\'pipeline\'];',
                                      'sortableColumn'     => 'pipeline',
@@ -1075,8 +1012,6 @@ class JobOrdersDataGrid extends DataGrid
                                                                  joborder_id = joborder.joborder_id
                                                              AND
                                                                  status_to = '.PIPELINE_STATUS_INTERVIEWING.'
-                                                             AND
-                                                                 site_id = '.$this->_siteID.'
                                                          ) AS interviewingCount',
                                       'pagerRender'      => 'return $rsData[\'interviewingCount\'];',
                                       'sortableColumn'     => 'interviewingCount',
@@ -1205,7 +1140,7 @@ class JobOrdersDataGrid extends DataGrid
         if (!eval(Hooks::get('JOBORDERS_DATAGRID_COLUMNS'))) return;
 
         /* Extra fields get added as columns here. */
-        $jobOrders = new JobOrders($this->_siteID);
+        $jobOrders = new JobOrders();
         $extraFieldsRS = $jobOrders->extraFields->getSettings();
         foreach ($extraFieldsRS as $index => $data)
         {
@@ -1234,7 +1169,7 @@ class JobOrdersDataGrid extends DataGrid
     public function getSQL($selectSQL, $joinSQL, $whereSQL, $havingSQL, $orderSQL, $limitSQL, $distinct = '')
     {
         // FIXME: Factor out Session dependency.
-        if ($_SESSION['CATS']->isLoggedIn() && $_SESSION['CATS']->getAccessLevel(ACL::SECOBJ_ROOT) < ACCESS_LEVEL_MULTI_SA)
+        if ($_SESSION['CATS']->isLoggedIn() && $_SESSION['CATS']->getAccessLevel(ACL::SECOBJ_ROOT) < ACCESS_LEVEL_SA)
         {
             $adminHiddenCriterion = 'AND joborder.is_admin_hidden = 0';
         }
@@ -1249,15 +1184,13 @@ class JobOrdersDataGrid extends DataGrid
             $joinSQL  .= ' INNER JOIN saved_list_entry
                                     ON saved_list_entry.data_item_type = '.DATA_ITEM_JOBORDER.'
                                     AND saved_list_entry.data_item_id = joborder.joborder_id
-                                    AND saved_list_entry.site_id = '.$this->_siteID.'
                                     AND saved_list_entry.saved_list_id = '.$savedListID;
         }
         else
         {
             $joinSQL  .= ' LEFT JOIN saved_list_entry
                                     ON saved_list_entry.data_item_type = '.DATA_ITEM_JOBORDER.'
-                                    AND saved_list_entry.data_item_id = joborder.joborder_id
-                                    AND saved_list_entry.site_id = '.$this->_siteID;
+                                    AND saved_list_entry.data_item_id = joborder.joborder_id';
         }
 
         if (!eval(Hooks::get('JOBORDER_DATAGRID_GETSQL'))) return;
@@ -1281,7 +1214,7 @@ class JobOrdersDataGrid extends DataGrid
                 AND attachment.data_item_type = %s
             %s
             WHERE
-                joborder.site_id = %s
+                1=1
             %s
             %s
             %s
@@ -1293,7 +1226,6 @@ class JobOrdersDataGrid extends DataGrid
             $selectSQL,
             DATA_ITEM_JOBORDER,
             $joinSQL,
-            $this->_siteID,
             $adminHiddenCriterion,
             (strlen($whereSQL) > 0) ? ' AND ' . $whereSQL : '',
             $this->_assignedCriterion,

@@ -1020,19 +1020,15 @@ switch ($action)
 
         // If this is an existing database, just set all the fromAddress settings to new
         MySQLQuery(sprintf('UPDATE settings SET value = "%s" WHERE setting = "fromAddress"', $fromAddress));
-        // This is a new install, insert a settings value for each site in the database
+        // This is a new install, insert the default settings
         if(mysqli_affected_rows($mySQLConnection) == 0)
         {
-            // Insert a "fromAddress" = $fromAddress for each site
             MySQLQuery(sprintf(
-                'INSERT INTO settings (setting, value, site_id, settings_type) '
-                . 'SELECT "fromAddress", "%s", site_id, 1 FROM site',
+                'INSERT INTO settings (setting, value, settings_type) VALUES ("fromAddress", "%s", 1)',
                 $fromAddress
             ));
-            // Insert a "configured" = 1 setting for each site
             MySQLQuery(
-                'INSERT INTO settings (setting, value, site_id, settings_type) '
-                . 'SELECT "configured", "1", site_id, 1 FROM site'
+                'INSERT INTO settings (setting, value, settings_type) VALUES ("configured", "1", 1)'
             );
         }
 

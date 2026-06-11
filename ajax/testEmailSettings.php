@@ -44,8 +44,6 @@ if ($_SESSION['CATS']->getAccessLevel('settings.emailSettings.POST') < ACCESS_LE
     die();
 }
 
-$siteID = $interface->getSiteID();
-
 if (!isset($_POST['testEmailAddress']) ||
     empty($_POST['testEmailAddress']))
 {
@@ -91,9 +89,9 @@ if (strpos($fromAddress, '@') === false)
     die();
 }
 
-$mailerSettings = new MailerSettings($siteID);
+$mailerSettings = new MailerSettings();
 $mailerSettingsRS = $mailerSettings->getAll();
-$mailer = new Mailer($siteID);
+$mailer = new Mailer();
 
 $mailer->overrideSetting('fromAddress', $fromAddress);
 

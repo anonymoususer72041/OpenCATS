@@ -3,7 +3,6 @@ namespace OpenCATS\Entity;
 
 class Company
 {
-    private $siteId;
     private $name;
     private $address;
     private $address2;
@@ -20,17 +19,11 @@ class Company
     private $enteredBy;
     private $owner;
     
-    function __construct($siteId, $name)
+    function __construct($name)
     {
-        $this->siteId = $siteId;
         $this->name = $name;
     }
-    
-    function getSiteId()
-    {
-        return $this->siteId;
-    }
-    
+
     function getName()
     {
         return $this->name;
@@ -181,7 +174,6 @@ class Company
     }
     
     static function create(
-        $siteId,
         $name,
         $address,
         $address2,
@@ -199,7 +191,7 @@ class Company
         $owner
     )
     {
-        $company = new Company($siteId, $name);
+        $company = new Company($name);
         $company->setAddress($address);
         $company->setAddress2($address2);
         $company->setCity($city);

@@ -57,12 +57,10 @@ if (!$interface->isRequiredIDValid('rating', true, true) ||
     die();
 }
 
-$siteID = $interface->getSiteID();
-
 $candidateJobOrderID = $_POST['candidateJobOrderID'];
 $rating              = $_POST['rating'];
 
-$pipelines = new Pipelines($siteID);
+$pipelines = new Pipelines();
 $pipelines->updateRatingValue($candidateJobOrderID, $rating);
 
 $newRating = $pipelines->getRatingValue($candidateJobOrderID);

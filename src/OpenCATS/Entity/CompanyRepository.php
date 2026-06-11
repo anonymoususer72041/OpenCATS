@@ -32,12 +32,10 @@ class CompanyRepository
                 notes,
                 entered_by,
                 owner,
-                site_id,
                 date_created,
                 date_modified
             )
             VALUES (
-                %s,
                 %s,
                 %s,
                 %s,
@@ -70,8 +68,7 @@ class CompanyRepository
             ($company->isHot() ? '1' : '0'),
             $this->databaseConnection->makeQueryString($company->getNotes()),
             $this->databaseConnection->makeQueryInteger($company->getEnteredBy()),
-            $this->databaseConnection->makeQueryInteger($company->getOwner()),
-            $company->getSiteId()
+            $this->databaseConnection->makeQueryInteger($company->getOwner())
         );
         if ($result = $this->databaseConnection->query($sql)) {
             $companyId = $this->databaseConnection->getLastInsertID();
@@ -90,11 +87,11 @@ class CompanyRepository
     }
     
     // FIXME: Consolidate with Search.php code
-    function findByName($siteId, $companyName)
+    function findByName($companyName)
     {
         $wildCardString = str_replace('*', '%', $companyName) . '%';
         $wildCardString = $this->databaseConnection->makeQueryString($wildCardString);
-        
+
         $sql = sprintf(
             "SELECT
                 company.company_id AS companyID,
@@ -119,12 +116,9 @@ class CompanyRepository
                 ON company.owner = owner_user.user_id
             WHERE
                 company.name LIKE %s
-            AND
-                company.site_id = %s
             ORDER BY
                 %s %s",
             $wildCardString,
-            $siteId,
             'company.name',
             'ASC'
         );
