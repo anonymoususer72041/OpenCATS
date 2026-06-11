@@ -1527,6 +1527,12 @@ class CATSSchema
                 CREATE INDEX `IDX_site_occurred` ON `activity` (`site_id`,`date_occurred`);
                 CREATE INDEX `IDX_activity_site_type_occurred_job` ON `activity` (`site_id`,`data_item_type`,`date_occurred`,`entered_by`,`joborder_id`);
             ',
+            '381' => '
+                DELETE FROM `extra_field_settings` WHERE `site_id` = 180;
+                DELETE FROM `settings` WHERE `site_id` = 180;
+                DELETE FROM `user` WHERE `site_id` = 180;
+                DELETE FROM `site` WHERE `site_id` = 180;
+            ',
 
         );
     }
