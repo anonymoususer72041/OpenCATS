@@ -128,8 +128,19 @@
                                     <?php endforeach; ?>
                                 </select>
                             </td>
+                            <td style="padding: 3px 6px; white-space: nowrap;"><label for="dfct_saved_list">Saved List:</label></td>
+                            <td style="padding: 3px 6px;">
+                                <select id="dfct_saved_list" name="dfct_saved_list" class="selectBox">
+                                    <option value="0">Any</option>
+                                    <?php foreach ($this->savedListsRS as $sl): ?>
+                                    <option value="<?php echo (int)$sl['savedListID']; ?>"<?php if ($this->dfct['saved_list'] === (int)$sl['savedListID']): ?> selected="selected"<?php endif; ?>>
+                                        <?php echo htmlspecialchars($sl['description']); ?>
+                                    </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </td>
                             <td style="padding: 3px 6px; white-space: nowrap;"><label for="dfct_created_from">Created:</label></td>
-                            <td style="padding: 3px 6px;" colspan="3">
+                            <td style="padding: 3px 6px;">
                                 <input type="text" class="inputbox" id="dfct_created_from" name="dfct_created_from"
                                     value="<?php echo htmlspecialchars($this->dfct['created_from']); ?>"
                                     style="width: 90px;" placeholder="YYYY-MM-DD" />
@@ -139,7 +150,7 @@
                                     style="width: 90px;" placeholder="YYYY-MM-DD" />
                             </td>
                             <td style="padding: 3px 6px; white-space: nowrap;"><label for="dfct_modified_from">Modified:</label></td>
-                            <td style="padding: 3px 6px;" colspan="1">
+                            <td style="padding: 3px 6px;">
                                 <input type="text" class="inputbox" id="dfct_modified_from" name="dfct_modified_from"
                                     value="<?php echo htmlspecialchars($this->dfct['modified_from']); ?>"
                                     style="width: 90px;" placeholder="YYYY-MM-DD" />

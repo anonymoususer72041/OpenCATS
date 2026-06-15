@@ -39,6 +39,7 @@ include_once(LEGACY_ROOT . '/lib/ExtraFields.php');
 include_once(LEGACY_ROOT . '/lib/Calendar.php');
 include_once(LEGACY_ROOT . '/lib/CommonErrors.php');
 include_once(LEGACY_ROOT . '/lib/Users.php');
+include_once(LEGACY_ROOT . '/lib/SavedLists.php');
 include_once(LEGACY_ROOT . '/lib/DashboardFilter.php');
 
 
@@ -236,10 +237,12 @@ class ContactsUI extends UserInterface
             'dfct_email', 'dfct_phone', 'dfct_city', 'dfct_state',
             'dfct_owner', 'dfct_created_from', 'dfct_created_to',
             'dfct_modified_from', 'dfct_modified_to', 'dfct_is_hot',
+            'dfct_saved_list',
         );
 
-        $users   = new Users($this->_siteID);
-        $contacts = new Contacts($this->_siteID);
+        $users      = new Users($this->_siteID);
+        $contacts   = new Contacts($this->_siteID);
+        $savedLists = new SavedLists($this->_siteID);
 
         $this->_template->assign('active', $this);
         $this->_template->assign('dataGrid', $dataGrid);
@@ -247,6 +250,7 @@ class ContactsUI extends UserInterface
         $this->_template->assign('errMessage', $errMessage);
         $this->_template->assign('totalContacts', $contacts->getCount());
         $this->_template->assign('usersRS', $users->getSelectList());
+        $this->_template->assign('savedListsRS', $savedLists->getAll(DATA_ITEM_CONTACT, STATIC_LISTS));
         $this->_template->assign('filterActive', DashboardFilter::isActive($filterKeys));
         $this->_template->assign('dfct', array(
             'first_name'    => DashboardFilter::getString('dfct_first_name'),
@@ -263,6 +267,7 @@ class ContactsUI extends UserInterface
             'modified_from' => DashboardFilter::getDate('dfct_modified_from'),
             'modified_to'   => DashboardFilter::getDate('dfct_modified_to'),
             'is_hot'        => DashboardFilter::getInt('dfct_is_hot'),
+            'saved_list'    => DashboardFilter::getInt('dfct_saved_list'),
         ));
 
         if (!eval(Hooks::get('CONTACTS_LIST_BY_VIEW'))) return;
