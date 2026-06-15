@@ -48,6 +48,8 @@ include_once(LEGACY_ROOT . '/lib/ParseUtility.php');
 include_once(LEGACY_ROOT . '/lib/Questionnaire.php');
 include_once(LEGACY_ROOT . '/lib/Tags.php');
 include_once(LEGACY_ROOT . '/lib/Search.php');
+include_once(LEGACY_ROOT . '/lib/Users.php');
+include_once(LEGACY_ROOT . '/lib/DashboardFilter.php');
 
 class CandidatesUI extends UserInterface
 {
@@ -547,6 +549,14 @@ class CandidatesUI extends UserInterface
                                         'filterVisible' => false);
         }
 
+        /* Reset to page 1 when the filter form is freshly submitted. */
+        if (DashboardFilter::isFilterFormSubmission(
+            'dfca_',
+            'parameterscandidates:candidatesListByViewDataGrid'
+        )) {
+            $dataGridProperties['rangeStart'] = 0;
+        }
+
         //$newParameterArray = $this->_parameters;
         $tags = new Tags($this->_siteID);
         $tagsRS = $tags->getAll();
@@ -554,15 +564,41 @@ class CandidatesUI extends UserInterface
 
         $dataGrid = DataGrid::get("candidates:candidatesListByViewDataGrid", $dataGridProperties);
 
-        $candidates = new Candidates($this->_siteID);
-        $this->_template->assign('totalCandidates', $candidates->getCount());
+        $filterKeys = array(
+            'dfca_first_name', 'dfca_last_name', 'dfca_email', 'dfca_phone',
+            'dfca_city', 'dfca_state', 'dfca_key_skills', 'dfca_source',
+            'dfca_owner', 'dfca_created_from', 'dfca_created_to',
+            'dfca_modified_from', 'dfca_modified_to', 'dfca_is_hot',
+        );
 
+        $users      = new Users($this->_siteID);
+        $candidates = new Candidates($this->_siteID);
+
+        $this->_template->assign('totalCandidates', $candidates->getCount());
         $this->_template->assign('active', $this);
         $this->_template->assign('dataGrid', $dataGrid);
         $this->_template->assign('userID', $_SESSION['CATS']->getUserID());
         $this->_template->assign('errMessage', $errMessage);
         $this->_template->assign('topLog', $topLog);
         $this->_template->assign('tagsRS', $tagsRS);
+        $this->_template->assign('usersRS', $users->getSelectList());
+        $this->_template->assign('filterActive', DashboardFilter::isActive($filterKeys));
+        $this->_template->assign('dfca', array(
+            'first_name'    => DashboardFilter::getString('dfca_first_name'),
+            'last_name'     => DashboardFilter::getString('dfca_last_name'),
+            'email'         => DashboardFilter::getString('dfca_email'),
+            'phone'         => DashboardFilter::getString('dfca_phone'),
+            'city'          => DashboardFilter::getString('dfca_city'),
+            'state'         => DashboardFilter::getString('dfca_state'),
+            'key_skills'    => DashboardFilter::getString('dfca_key_skills'),
+            'source'        => DashboardFilter::getString('dfca_source'),
+            'owner'         => DashboardFilter::getInt('dfca_owner'),
+            'created_from'  => DashboardFilter::getDate('dfca_created_from'),
+            'created_to'    => DashboardFilter::getDate('dfca_created_to'),
+            'modified_from' => DashboardFilter::getDate('dfca_modified_from'),
+            'modified_to'   => DashboardFilter::getDate('dfca_modified_to'),
+            'is_hot'        => DashboardFilter::getInt('dfca_is_hot'),
+        ));
 
         if (!eval(Hooks::get('CANDIDATE_LIST_BY_VIEW'))) return;
 

@@ -110,6 +110,114 @@
             </div>
             <?php endif; ?>
 
+            <fieldset class="filterAreaFieldSet">
+                <legend class="filterAreaLegend">Filter Candidates</legend>
+                <form method="get" action="<?php echo htmlspecialchars(CATSUtility::getIndexName()); ?>">
+                    <input type="hidden" name="m" value="candidates" />
+                    <input type="hidden" name="a" value="listByView" />
+                    <table style="border-collapse: collapse; width: 100%;">
+                        <tr>
+                            <td style="padding: 3px 6px; white-space: nowrap;"><label for="dfca_first_name">First Name:</label></td>
+                            <td style="padding: 3px 6px;">
+                                <input type="text" class="inputbox" id="dfca_first_name" name="dfca_first_name"
+                                    value="<?php echo htmlspecialchars($this->dfca['first_name']); ?>"
+                                    style="width: 100px;" />
+                            </td>
+                            <td style="padding: 3px 6px; white-space: nowrap;"><label for="dfca_last_name">Last Name:</label></td>
+                            <td style="padding: 3px 6px;">
+                                <input type="text" class="inputbox" id="dfca_last_name" name="dfca_last_name"
+                                    value="<?php echo htmlspecialchars($this->dfca['last_name']); ?>"
+                                    style="width: 100px;" />
+                            </td>
+                            <td style="padding: 3px 6px; white-space: nowrap;"><label for="dfca_email">Email:</label></td>
+                            <td style="padding: 3px 6px;">
+                                <input type="text" class="inputbox" id="dfca_email" name="dfca_email"
+                                    value="<?php echo htmlspecialchars($this->dfca['email']); ?>"
+                                    style="width: 130px;" />
+                            </td>
+                            <td style="padding: 3px 6px; white-space: nowrap;"><label for="dfca_phone">Phone:</label></td>
+                            <td style="padding: 3px 6px;">
+                                <input type="text" class="inputbox" id="dfca_phone" name="dfca_phone"
+                                    value="<?php echo htmlspecialchars($this->dfca['phone']); ?>"
+                                    style="width: 110px;" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 3px 6px; white-space: nowrap;"><label for="dfca_city">City:</label></td>
+                            <td style="padding: 3px 6px;">
+                                <input type="text" class="inputbox" id="dfca_city" name="dfca_city"
+                                    value="<?php echo htmlspecialchars($this->dfca['city']); ?>"
+                                    style="width: 100px;" />
+                            </td>
+                            <td style="padding: 3px 6px; white-space: nowrap;"><label for="dfca_state">State:</label></td>
+                            <td style="padding: 3px 6px;">
+                                <input type="text" class="inputbox" id="dfca_state" name="dfca_state"
+                                    value="<?php echo htmlspecialchars($this->dfca['state']); ?>"
+                                    style="width: 60px;" />
+                            </td>
+                            <td style="padding: 3px 6px; white-space: nowrap;"><label for="dfca_key_skills">Key Skills:</label></td>
+                            <td style="padding: 3px 6px;">
+                                <input type="text" class="inputbox" id="dfca_key_skills" name="dfca_key_skills"
+                                    value="<?php echo htmlspecialchars($this->dfca['key_skills']); ?>"
+                                    style="width: 130px;" />
+                            </td>
+                            <td style="padding: 3px 6px; white-space: nowrap;"><label for="dfca_source">Source:</label></td>
+                            <td style="padding: 3px 6px;">
+                                <input type="text" class="inputbox" id="dfca_source" name="dfca_source"
+                                    value="<?php echo htmlspecialchars($this->dfca['source']); ?>"
+                                    style="width: 110px;" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 3px 6px; white-space: nowrap;"><label for="dfca_owner">Owner:</label></td>
+                            <td style="padding: 3px 6px;">
+                                <select id="dfca_owner" name="dfca_owner" class="selectBox">
+                                    <option value="0">Any</option>
+                                    <?php foreach ($this->usersRS as $u): ?>
+                                    <option value="<?php echo (int)$u['userID']; ?>"<?php if ($this->dfca['owner'] === (int)$u['userID']): ?> selected="selected"<?php endif; ?>>
+                                        <?php echo htmlspecialchars($u['firstName'] . ' ' . $u['lastName']); ?>
+                                    </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </td>
+                            <td style="padding: 3px 6px; white-space: nowrap;"><label for="dfca_created_from">Created:</label></td>
+                            <td style="padding: 3px 6px;" colspan="3">
+                                <input type="text" class="inputbox" id="dfca_created_from" name="dfca_created_from"
+                                    value="<?php echo htmlspecialchars($this->dfca['created_from']); ?>"
+                                    style="width: 90px;" placeholder="YYYY-MM-DD" />
+                                &ndash;
+                                <input type="text" class="inputbox" id="dfca_created_to" name="dfca_created_to"
+                                    value="<?php echo htmlspecialchars($this->dfca['created_to']); ?>"
+                                    style="width: 90px;" placeholder="YYYY-MM-DD" />
+                            </td>
+                            <td style="padding: 3px 6px; white-space: nowrap;"><label for="dfca_modified_from">Modified:</label></td>
+                            <td style="padding: 3px 6px;">
+                                <input type="text" class="inputbox" id="dfca_modified_from" name="dfca_modified_from"
+                                    value="<?php echo htmlspecialchars($this->dfca['modified_from']); ?>"
+                                    style="width: 90px;" placeholder="YYYY-MM-DD" />
+                                &ndash;
+                                <input type="text" class="inputbox" id="dfca_modified_to" name="dfca_modified_to"
+                                    value="<?php echo htmlspecialchars($this->dfca['modified_to']); ?>"
+                                    style="width: 90px;" placeholder="YYYY-MM-DD" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 3px 6px;" colspan="8">
+                                <label>
+                                    <input type="checkbox" name="dfca_is_hot" value="1"<?php if ($this->dfca['is_hot'] === 1): ?> checked="checked"<?php endif; ?> />
+                                    Hot Candidates only
+                                </label>
+                                &nbsp;&nbsp;
+                                <input type="submit" class="button" value="Apply Filters" />
+                                <?php if ($this->filterActive): ?>
+                                &nbsp;<a href="<?php echo htmlspecialchars(CATSUtility::getIndexName() . '?' . DashboardFilter::getClearUrl('candidates', 'listByView')); ?>">Clear Filters</a>
+                                <?php endif; ?>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </fieldset>
+
             <p class="note">
                 <span style="float:left;">Candidates - Page <?php echo($this->dataGrid->getCurrentPageHTML()); ?> (<?php echo($this->dataGrid->getNumberOfRows()); ?> Items)</span>
                 <span style="float:right;">

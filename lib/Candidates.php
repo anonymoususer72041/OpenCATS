@@ -1941,7 +1941,7 @@ class CandidatesDataGrid extends DataGrid
     {
         $this->_db = DatabaseConnection::getInstance();
         $this->_siteID = $siteID;
-        $this->_assignedCriterion = "";
+        $this->_assignedCriterion = $this->_buildDashboardCriterion();
         $this->_dataItemIDColumn = 'candidate.candidate_id';
 
         $this->_classColumns = array(
@@ -2289,6 +2289,97 @@ class CandidatesDataGrid extends DataGrid
         }
 
         parent::__construct($instanceName, $parameters, $misc);
+    }
+
+    /**
+     * Builds extra WHERE conditions from dashboard filter GET parameters
+     * (dfca_* prefix) and returns them as a SQL fragment beginning with
+     * AND, or an empty string when no filters are active.
+     *
+     * All values are escaped through DatabaseConnection before use.
+     * owner is matched on candidate.owner (integer) so no extra JOIN is
+     * needed even when the Owner column is not visible in the DataGrid.
+     */
+    private function _buildDashboardCriterion()
+    {
+        include_once(LEGACY_ROOT . '/lib/DashboardFilter.php');
+
+        $c = array();
+
+        $firstName = DashboardFilter::getString('dfca_first_name');
+        if ($firstName !== '') {
+            $c[] = 'candidate.first_name LIKE ' . $this->_db->makeQueryString('%' . $firstName . '%');
+        }
+
+        $lastName = DashboardFilter::getString('dfca_last_name');
+        if ($lastName !== '') {
+            $c[] = 'candidate.last_name LIKE ' . $this->_db->makeQueryString('%' . $lastName . '%');
+        }
+
+        $email = DashboardFilter::getString('dfca_email');
+        if ($email !== '') {
+            $escaped = $this->_db->makeQueryString('%' . $email . '%');
+            $c[] = '(candidate.email1 LIKE ' . $escaped . ' OR candidate.email2 LIKE ' . $escaped . ')';
+        }
+
+        $phone = DashboardFilter::getString('dfca_phone');
+        if ($phone !== '') {
+            $escaped = $this->_db->makeQueryString('%' . $phone . '%');
+            $c[] = '(candidate.phone_home LIKE ' . $escaped
+                . ' OR candidate.phone_cell LIKE ' . $escaped
+                . ' OR candidate.phone_work LIKE ' . $escaped . ')';
+        }
+
+        $city = DashboardFilter::getString('dfca_city');
+        if ($city !== '') {
+            $c[] = 'candidate.city LIKE ' . $this->_db->makeQueryString('%' . $city . '%');
+        }
+
+        $state = DashboardFilter::getString('dfca_state');
+        if ($state !== '') {
+            $c[] = 'candidate.state LIKE ' . $this->_db->makeQueryString('%' . $state . '%');
+        }
+
+        $keySkills = DashboardFilter::getString('dfca_key_skills');
+        if ($keySkills !== '') {
+            $c[] = 'candidate.key_skills LIKE ' . $this->_db->makeQueryString('%' . $keySkills . '%');
+        }
+
+        $source = DashboardFilter::getString('dfca_source');
+        if ($source !== '') {
+            $c[] = 'candidate.source LIKE ' . $this->_db->makeQueryString('%' . $source . '%');
+        }
+
+        $ownerID = DashboardFilter::getInt('dfca_owner');
+        if ($ownerID > 0) {
+            $c[] = 'candidate.owner = ' . $ownerID;
+        }
+
+        $createdFrom = DashboardFilter::getDate('dfca_created_from');
+        if ($createdFrom !== '') {
+            $c[] = 'candidate.date_created >= ' . $this->_db->makeQueryString($createdFrom . ' 00:00:00');
+        }
+
+        $createdTo = DashboardFilter::getDate('dfca_created_to');
+        if ($createdTo !== '') {
+            $c[] = 'candidate.date_created <= ' . $this->_db->makeQueryString($createdTo . ' 23:59:59');
+        }
+
+        $modifiedFrom = DashboardFilter::getDate('dfca_modified_from');
+        if ($modifiedFrom !== '') {
+            $c[] = 'candidate.date_modified >= ' . $this->_db->makeQueryString($modifiedFrom . ' 00:00:00');
+        }
+
+        $modifiedTo = DashboardFilter::getDate('dfca_modified_to');
+        if ($modifiedTo !== '') {
+            $c[] = 'candidate.date_modified <= ' . $this->_db->makeQueryString($modifiedTo . ' 23:59:59');
+        }
+
+        if (DashboardFilter::getInt('dfca_is_hot') === 1) {
+            $c[] = 'candidate.is_hot = 1';
+        }
+
+        return empty($c) ? '' : 'AND ' . implode(' AND ', $c);
     }
 
     /**
