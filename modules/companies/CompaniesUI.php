@@ -40,6 +40,8 @@ include_once(LEGACY_ROOT . '/lib/ListEditor.php');
 include_once(LEGACY_ROOT . '/lib/FileUtility.php');
 include_once(LEGACY_ROOT . '/lib/ExtraFields.php');
 include_once(LEGACY_ROOT . '/lib/CommonErrors.php');
+include_once(LEGACY_ROOT . '/lib/Users.php');
+include_once(LEGACY_ROOT . '/lib/DashboardFilter.php');
 
 class CompaniesUI extends UserInterface
 {
@@ -227,12 +229,44 @@ class CompaniesUI extends UserInterface
                                         'filterVisible' => false);
         }
 
+        /* Reset to page 1 when the filter form is freshly submitted. */
+        if (DashboardFilter::isFilterFormSubmission(
+            'dfco_',
+            'parameterscompanies:CompaniesListByViewDataGrid'
+        )) {
+            $dataGridProperties['rangeStart'] = 0;
+        }
+
         $dataGrid = DataGrid::get("companies:CompaniesListByViewDataGrid", $dataGridProperties);
+
+        $filterKeys = array(
+            'dfco_name', 'dfco_city', 'dfco_state', 'dfco_phone',
+            'dfco_website', 'dfco_owner', 'dfco_created_from',
+            'dfco_created_to', 'dfco_modified_from', 'dfco_modified_to',
+            'dfco_is_hot',
+        );
+
+        $users = new Users($this->_siteID);
 
         $this->_template->assign('active', $this);
         $this->_template->assign('dataGrid', $dataGrid);
         $this->_template->assign('userID', $_SESSION['CATS']->getUserID());
         $this->_template->assign('errMessage', $errMessage);
+        $this->_template->assign('usersRS', $users->getSelectList());
+        $this->_template->assign('filterActive', DashboardFilter::isActive($filterKeys));
+        $this->_template->assign('dfco', array(
+            'name'          => DashboardFilter::getString('dfco_name'),
+            'city'          => DashboardFilter::getString('dfco_city'),
+            'state'         => DashboardFilter::getString('dfco_state'),
+            'phone'         => DashboardFilter::getString('dfco_phone'),
+            'website'       => DashboardFilter::getString('dfco_website'),
+            'owner'         => DashboardFilter::getInt('dfco_owner'),
+            'created_from'  => DashboardFilter::getDate('dfco_created_from'),
+            'created_to'    => DashboardFilter::getDate('dfco_created_to'),
+            'modified_from' => DashboardFilter::getDate('dfco_modified_from'),
+            'modified_to'   => DashboardFilter::getDate('dfco_modified_to'),
+            'is_hot'        => DashboardFilter::getInt('dfco_is_hot'),
+        ));
 
         if (!eval(Hooks::get('CLIENTS_LIST_BY_VIEW'))) return;
 

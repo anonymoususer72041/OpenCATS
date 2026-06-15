@@ -56,6 +56,94 @@
             </div>
             <?php endif; ?>
 
+            <fieldset class="filterAreaFieldSet">
+                <legend class="filterAreaLegend">Filter Companies</legend>
+                <form method="get" action="<?php echo htmlspecialchars(CATSUtility::getIndexName()); ?>">
+                    <input type="hidden" name="m" value="companies" />
+                    <input type="hidden" name="a" value="listByView" />
+                    <table style="border-collapse: collapse; width: 100%;">
+                        <tr>
+                            <td style="padding: 3px 6px; white-space: nowrap;"><label for="dfco_name">Name:</label></td>
+                            <td style="padding: 3px 6px;">
+                                <input type="text" class="inputbox" id="dfco_name" name="dfco_name"
+                                    value="<?php echo htmlspecialchars($this->dfco['name']); ?>"
+                                    style="width: 140px;" />
+                            </td>
+                            <td style="padding: 3px 6px; white-space: nowrap;"><label for="dfco_city">City:</label></td>
+                            <td style="padding: 3px 6px;">
+                                <input type="text" class="inputbox" id="dfco_city" name="dfco_city"
+                                    value="<?php echo htmlspecialchars($this->dfco['city']); ?>"
+                                    style="width: 110px;" />
+                            </td>
+                            <td style="padding: 3px 6px; white-space: nowrap;"><label for="dfco_state">State:</label></td>
+                            <td style="padding: 3px 6px;">
+                                <input type="text" class="inputbox" id="dfco_state" name="dfco_state"
+                                    value="<?php echo htmlspecialchars($this->dfco['state']); ?>"
+                                    style="width: 60px;" />
+                            </td>
+                            <td style="padding: 3px 6px; white-space: nowrap;"><label for="dfco_phone">Phone:</label></td>
+                            <td style="padding: 3px 6px;">
+                                <input type="text" class="inputbox" id="dfco_phone" name="dfco_phone"
+                                    value="<?php echo htmlspecialchars($this->dfco['phone']); ?>"
+                                    style="width: 110px;" />
+                            </td>
+                            <td style="padding: 3px 6px; white-space: nowrap;"><label for="dfco_website">Website:</label></td>
+                            <td style="padding: 3px 6px;">
+                                <input type="text" class="inputbox" id="dfco_website" name="dfco_website"
+                                    value="<?php echo htmlspecialchars($this->dfco['website']); ?>"
+                                    style="width: 110px;" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 3px 6px; white-space: nowrap;"><label for="dfco_owner">Owner:</label></td>
+                            <td style="padding: 3px 6px;">
+                                <select id="dfco_owner" name="dfco_owner" class="selectBox">
+                                    <option value="0">Any</option>
+                                    <?php foreach ($this->usersRS as $u): ?>
+                                    <option value="<?php echo (int)$u['userID']; ?>"<?php if ($this->dfco['owner'] === (int)$u['userID']): ?> selected="selected"<?php endif; ?>>
+                                        <?php echo htmlspecialchars($u['firstName'] . ' ' . $u['lastName']); ?>
+                                    </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </td>
+                            <td style="padding: 3px 6px; white-space: nowrap;"><label for="dfco_created_from">Created:</label></td>
+                            <td style="padding: 3px 6px;" colspan="3">
+                                <input type="text" class="inputbox" id="dfco_created_from" name="dfco_created_from"
+                                    value="<?php echo htmlspecialchars($this->dfco['created_from']); ?>"
+                                    style="width: 90px;" placeholder="YYYY-MM-DD" />
+                                &ndash;
+                                <input type="text" class="inputbox" id="dfco_created_to" name="dfco_created_to"
+                                    value="<?php echo htmlspecialchars($this->dfco['created_to']); ?>"
+                                    style="width: 90px;" placeholder="YYYY-MM-DD" />
+                            </td>
+                            <td style="padding: 3px 6px; white-space: nowrap;"><label for="dfco_modified_from">Modified:</label></td>
+                            <td style="padding: 3px 6px;" colspan="3">
+                                <input type="text" class="inputbox" id="dfco_modified_from" name="dfco_modified_from"
+                                    value="<?php echo htmlspecialchars($this->dfco['modified_from']); ?>"
+                                    style="width: 90px;" placeholder="YYYY-MM-DD" />
+                                &ndash;
+                                <input type="text" class="inputbox" id="dfco_modified_to" name="dfco_modified_to"
+                                    value="<?php echo htmlspecialchars($this->dfco['modified_to']); ?>"
+                                    style="width: 90px;" placeholder="YYYY-MM-DD" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 3px 6px;" colspan="10">
+                                <label>
+                                    <input type="checkbox" name="dfco_is_hot" value="1"<?php if ($this->dfco['is_hot'] === 1): ?> checked="checked"<?php endif; ?> />
+                                    Hot Companies only
+                                </label>
+                                &nbsp;&nbsp;
+                                <input type="submit" class="button" value="Apply Filters" />
+                                <?php if ($this->filterActive): ?>
+                                &nbsp;<a href="<?php echo htmlspecialchars(CATSUtility::getIndexName() . '?' . DashboardFilter::getClearUrl('companies', 'listByView')); ?>">Clear Filters</a>
+                                <?php endif; ?>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </fieldset>
+
             <p class="note">
                 <span style="float:left;">Companies  -
                     Page <?php echo($this->dataGrid->getCurrentPageHTML()); ?>

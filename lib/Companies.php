@@ -757,7 +757,7 @@ class CompaniesDataGrid extends DataGrid
     {
         $this->_db = DatabaseConnection::getInstance();
         $this->_siteID = $siteID;
-        $this->_assignedCriterion = "";
+        $this->_assignedCriterion = $this->_buildDashboardCriterion();
         $this->_dataItemIDColumn = 'company.company_id';
 
         $this->_classColumns = array(
@@ -925,6 +925,77 @@ class CompaniesDataGrid extends DataGrid
         }
 
         parent::__construct($instanceName, $parameters, $misc);
+    }
+
+    /**
+     * Builds extra WHERE conditions from dashboard filter GET parameters
+     * (dfco_* prefix) and returns them as a SQL fragment beginning with
+     * AND, or an empty string when no filters are active.
+     *
+     * All values are escaped through DatabaseConnection before use.
+     */
+    private function _buildDashboardCriterion()
+    {
+        include_once(LEGACY_ROOT . '/lib/DashboardFilter.php');
+
+        $c = array();
+
+        $name = DashboardFilter::getString('dfco_name');
+        if ($name !== '') {
+            $c[] = 'company.name LIKE ' . $this->_db->makeQueryString('%' . $name . '%');
+        }
+
+        $city = DashboardFilter::getString('dfco_city');
+        if ($city !== '') {
+            $c[] = 'company.city LIKE ' . $this->_db->makeQueryString('%' . $city . '%');
+        }
+
+        $state = DashboardFilter::getString('dfco_state');
+        if ($state !== '') {
+            $c[] = 'company.state LIKE ' . $this->_db->makeQueryString('%' . $state . '%');
+        }
+
+        $phone = DashboardFilter::getString('dfco_phone');
+        if ($phone !== '') {
+            $escaped = $this->_db->makeQueryString('%' . $phone . '%');
+            $c[] = '(company.phone1 LIKE ' . $escaped . ' OR company.phone2 LIKE ' . $escaped . ')';
+        }
+
+        $website = DashboardFilter::getString('dfco_website');
+        if ($website !== '') {
+            $c[] = 'company.url LIKE ' . $this->_db->makeQueryString('%' . $website . '%');
+        }
+
+        $ownerID = DashboardFilter::getInt('dfco_owner');
+        if ($ownerID > 0) {
+            $c[] = 'company.owner = ' . $ownerID;
+        }
+
+        $createdFrom = DashboardFilter::getDate('dfco_created_from');
+        if ($createdFrom !== '') {
+            $c[] = 'company.date_created >= ' . $this->_db->makeQueryString($createdFrom . ' 00:00:00');
+        }
+
+        $createdTo = DashboardFilter::getDate('dfco_created_to');
+        if ($createdTo !== '') {
+            $c[] = 'company.date_created <= ' . $this->_db->makeQueryString($createdTo . ' 23:59:59');
+        }
+
+        $modifiedFrom = DashboardFilter::getDate('dfco_modified_from');
+        if ($modifiedFrom !== '') {
+            $c[] = 'company.date_modified >= ' . $this->_db->makeQueryString($modifiedFrom . ' 00:00:00');
+        }
+
+        $modifiedTo = DashboardFilter::getDate('dfco_modified_to');
+        if ($modifiedTo !== '') {
+            $c[] = 'company.date_modified <= ' . $this->_db->makeQueryString($modifiedTo . ' 23:59:59');
+        }
+
+        if (DashboardFilter::getInt('dfco_is_hot') === 1) {
+            $c[] = 'company.is_hot = 1';
+        }
+
+        return empty($c) ? '' : 'AND ' . implode(' AND ', $c);
     }
 
     /**
