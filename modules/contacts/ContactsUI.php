@@ -38,6 +38,8 @@ include_once(LEGACY_ROOT . '/lib/Export.php');
 include_once(LEGACY_ROOT . '/lib/ExtraFields.php');
 include_once(LEGACY_ROOT . '/lib/Calendar.php');
 include_once(LEGACY_ROOT . '/lib/CommonErrors.php');
+include_once(LEGACY_ROOT . '/lib/Users.php');
+include_once(LEGACY_ROOT . '/lib/DashboardFilter.php');
 
 
 class ContactsUI extends UserInterface
@@ -219,15 +221,49 @@ class ContactsUI extends UserInterface
                                         'filterVisible' => false);
         }
 
+        /* Reset to page 1 when the filter form is freshly submitted. */
+        if (DashboardFilter::isFilterFormSubmission(
+            'dfct_',
+            'parameterscontacts:ContactsListByViewDataGrid'
+        )) {
+            $dataGridProperties['rangeStart'] = 0;
+        }
+
         $dataGrid = DataGrid::get("contacts:ContactsListByViewDataGrid", $dataGridProperties);
+
+        $filterKeys = array(
+            'dfct_first_name', 'dfct_last_name', 'dfct_company', 'dfct_title',
+            'dfct_email', 'dfct_phone', 'dfct_city', 'dfct_state',
+            'dfct_owner', 'dfct_created_from', 'dfct_created_to',
+            'dfct_modified_from', 'dfct_modified_to', 'dfct_is_hot',
+        );
+
+        $users   = new Users($this->_siteID);
+        $contacts = new Contacts($this->_siteID);
 
         $this->_template->assign('active', $this);
         $this->_template->assign('dataGrid', $dataGrid);
         $this->_template->assign('userID', $_SESSION['CATS']->getUserID());
         $this->_template->assign('errMessage', $errMessage);
-
-        $contacts = new Contacts($this->_siteID);
         $this->_template->assign('totalContacts', $contacts->getCount());
+        $this->_template->assign('usersRS', $users->getSelectList());
+        $this->_template->assign('filterActive', DashboardFilter::isActive($filterKeys));
+        $this->_template->assign('dfct', array(
+            'first_name'    => DashboardFilter::getString('dfct_first_name'),
+            'last_name'     => DashboardFilter::getString('dfct_last_name'),
+            'company'       => DashboardFilter::getString('dfct_company'),
+            'title'         => DashboardFilter::getString('dfct_title'),
+            'email'         => DashboardFilter::getString('dfct_email'),
+            'phone'         => DashboardFilter::getString('dfct_phone'),
+            'city'          => DashboardFilter::getString('dfct_city'),
+            'state'         => DashboardFilter::getString('dfct_state'),
+            'owner'         => DashboardFilter::getInt('dfct_owner'),
+            'created_from'  => DashboardFilter::getDate('dfct_created_from'),
+            'created_to'    => DashboardFilter::getDate('dfct_created_to'),
+            'modified_from' => DashboardFilter::getDate('dfct_modified_from'),
+            'modified_to'   => DashboardFilter::getDate('dfct_modified_to'),
+            'is_hot'        => DashboardFilter::getInt('dfct_is_hot'),
+        ));
 
         if (!eval(Hooks::get('CONTACTS_LIST_BY_VIEW'))) return;
 

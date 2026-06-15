@@ -863,7 +863,7 @@ class ContactsDataGrid extends DataGrid
     {
         $this->_db = DatabaseConnection::getInstance();
         $this->_siteID = $siteID;
-        $this->_assignedCriterion = "";
+        $this->_assignedCriterion = $this->_buildDashboardCriterion();
         $this->_dataItemIDColumn = 'contact.contact_id';
 
         $this->_classColumns = array(
@@ -1032,6 +1032,95 @@ class ContactsDataGrid extends DataGrid
         }
 
         parent::__construct($instanceName, $parameters, $misc);
+    }
+
+    /**
+     * Builds extra WHERE conditions from dashboard filter GET parameters
+     * (dfct_* prefix) and returns them as a SQL fragment beginning with
+     * AND, or an empty string when no filters are active.
+     *
+     * All values are escaped through DatabaseConnection before use.
+     * The company table is always JOINed in getSQL(), so company.name is safe
+     * to reference here.
+     */
+    private function _buildDashboardCriterion()
+    {
+        include_once(LEGACY_ROOT . '/lib/DashboardFilter.php');
+
+        $c = array();
+
+        $firstName = DashboardFilter::getString('dfct_first_name');
+        if ($firstName !== '') {
+            $c[] = 'contact.first_name LIKE ' . $this->_db->makeQueryString('%' . $firstName . '%');
+        }
+
+        $lastName = DashboardFilter::getString('dfct_last_name');
+        if ($lastName !== '') {
+            $c[] = 'contact.last_name LIKE ' . $this->_db->makeQueryString('%' . $lastName . '%');
+        }
+
+        $company = DashboardFilter::getString('dfct_company');
+        if ($company !== '') {
+            $c[] = 'company.name LIKE ' . $this->_db->makeQueryString('%' . $company . '%');
+        }
+
+        $title = DashboardFilter::getString('dfct_title');
+        if ($title !== '') {
+            $c[] = 'contact.title LIKE ' . $this->_db->makeQueryString('%' . $title . '%');
+        }
+
+        $email = DashboardFilter::getString('dfct_email');
+        if ($email !== '') {
+            $escaped = $this->_db->makeQueryString('%' . $email . '%');
+            $c[] = '(contact.email1 LIKE ' . $escaped . ' OR contact.email2 LIKE ' . $escaped . ')';
+        }
+
+        $phone = DashboardFilter::getString('dfct_phone');
+        if ($phone !== '') {
+            $escaped = $this->_db->makeQueryString('%' . $phone . '%');
+            $c[] = '(contact.phone_work LIKE ' . $escaped . ' OR contact.phone_cell LIKE ' . $escaped . ')';
+        }
+
+        $city = DashboardFilter::getString('dfct_city');
+        if ($city !== '') {
+            $c[] = 'contact.city LIKE ' . $this->_db->makeQueryString('%' . $city . '%');
+        }
+
+        $state = DashboardFilter::getString('dfct_state');
+        if ($state !== '') {
+            $c[] = 'contact.state LIKE ' . $this->_db->makeQueryString('%' . $state . '%');
+        }
+
+        $ownerID = DashboardFilter::getInt('dfct_owner');
+        if ($ownerID > 0) {
+            $c[] = 'contact.owner = ' . $ownerID;
+        }
+
+        $createdFrom = DashboardFilter::getDate('dfct_created_from');
+        if ($createdFrom !== '') {
+            $c[] = 'contact.date_created >= ' . $this->_db->makeQueryString($createdFrom . ' 00:00:00');
+        }
+
+        $createdTo = DashboardFilter::getDate('dfct_created_to');
+        if ($createdTo !== '') {
+            $c[] = 'contact.date_created <= ' . $this->_db->makeQueryString($createdTo . ' 23:59:59');
+        }
+
+        $modifiedFrom = DashboardFilter::getDate('dfct_modified_from');
+        if ($modifiedFrom !== '') {
+            $c[] = 'contact.date_modified >= ' . $this->_db->makeQueryString($modifiedFrom . ' 00:00:00');
+        }
+
+        $modifiedTo = DashboardFilter::getDate('dfct_modified_to');
+        if ($modifiedTo !== '') {
+            $c[] = 'contact.date_modified <= ' . $this->_db->makeQueryString($modifiedTo . ' 23:59:59');
+        }
+
+        if (DashboardFilter::getInt('dfct_is_hot') === 1) {
+            $c[] = 'contact.is_hot = 1';
+        }
+
+        return empty($c) ? '' : 'AND ' . implode(' AND ', $c);
     }
 
     /**
