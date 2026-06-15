@@ -41,6 +41,7 @@ include_once(LEGACY_ROOT . '/lib/FileUtility.php');
 include_once(LEGACY_ROOT . '/lib/ExtraFields.php');
 include_once(LEGACY_ROOT . '/lib/CommonErrors.php');
 include_once(LEGACY_ROOT . '/lib/Users.php');
+include_once(LEGACY_ROOT . '/lib/SavedLists.php');
 include_once(LEGACY_ROOT . '/lib/DashboardFilter.php');
 
 class CompaniesUI extends UserInterface
@@ -243,16 +244,18 @@ class CompaniesUI extends UserInterface
             'dfco_name', 'dfco_city', 'dfco_state', 'dfco_phone',
             'dfco_website', 'dfco_owner', 'dfco_created_from',
             'dfco_created_to', 'dfco_modified_from', 'dfco_modified_to',
-            'dfco_is_hot',
+            'dfco_is_hot', 'dfco_saved_list',
         );
 
-        $users = new Users($this->_siteID);
+        $users      = new Users($this->_siteID);
+        $savedLists = new SavedLists($this->_siteID);
 
         $this->_template->assign('active', $this);
         $this->_template->assign('dataGrid', $dataGrid);
         $this->_template->assign('userID', $_SESSION['CATS']->getUserID());
         $this->_template->assign('errMessage', $errMessage);
         $this->_template->assign('usersRS', $users->getSelectList());
+        $this->_template->assign('savedListsRS', $savedLists->getAll(DATA_ITEM_COMPANY, STATIC_LISTS));
         $this->_template->assign('filterActive', DashboardFilter::isActive($filterKeys));
         $this->_template->assign('dfco', array(
             'name'          => DashboardFilter::getString('dfco_name'),
@@ -266,6 +269,7 @@ class CompaniesUI extends UserInterface
             'modified_from' => DashboardFilter::getDate('dfco_modified_from'),
             'modified_to'   => DashboardFilter::getDate('dfco_modified_to'),
             'is_hot'        => DashboardFilter::getInt('dfco_is_hot'),
+            'saved_list'    => DashboardFilter::getInt('dfco_saved_list'),
         ));
 
         if (!eval(Hooks::get('CLIENTS_LIST_BY_VIEW'))) return;

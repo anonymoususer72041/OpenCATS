@@ -106,8 +106,19 @@
                                     <?php endforeach; ?>
                                 </select>
                             </td>
+                            <td style="padding: 3px 6px; white-space: nowrap;"><label for="dfco_saved_list">Saved List:</label></td>
+                            <td style="padding: 3px 6px;">
+                                <select id="dfco_saved_list" name="dfco_saved_list" class="selectBox">
+                                    <option value="0">Any</option>
+                                    <?php foreach ($this->savedListsRS as $sl): ?>
+                                    <option value="<?php echo (int)$sl['savedListID']; ?>"<?php if ($this->dfco['saved_list'] === (int)$sl['savedListID']): ?> selected="selected"<?php endif; ?>>
+                                        <?php echo htmlspecialchars($sl['description']); ?>
+                                    </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </td>
                             <td style="padding: 3px 6px; white-space: nowrap;"><label for="dfco_created_from">Created:</label></td>
-                            <td style="padding: 3px 6px;" colspan="3">
+                            <td style="padding: 3px 6px;" colspan="2">
                                 <input type="text" class="inputbox" id="dfco_created_from" name="dfco_created_from"
                                     value="<?php echo htmlspecialchars($this->dfco['created_from']); ?>"
                                     style="width: 90px;" placeholder="YYYY-MM-DD" />
@@ -117,7 +128,7 @@
                                     style="width: 90px;" placeholder="YYYY-MM-DD" />
                             </td>
                             <td style="padding: 3px 6px; white-space: nowrap;"><label for="dfco_modified_from">Modified:</label></td>
-                            <td style="padding: 3px 6px;" colspan="3">
+                            <td style="padding: 3px 6px;" colspan="2">
                                 <input type="text" class="inputbox" id="dfco_modified_from" name="dfco_modified_from"
                                     value="<?php echo htmlspecialchars($this->dfco['modified_from']); ?>"
                                     style="width: 90px;" placeholder="YYYY-MM-DD" />
