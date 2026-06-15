@@ -98,7 +98,7 @@
                             <td style="padding: 3px 6px; white-space: nowrap;"><label for="dfco_owner">Owner:</label></td>
                             <td style="padding: 3px 6px;">
                                 <select id="dfco_owner" name="dfco_owner" class="selectBox">
-                                    <option value="0">Any</option>
+                                    <option value="">Any</option>
                                     <?php foreach ($this->usersRS as $u): ?>
                                     <option value="<?php echo (int)$u['userID']; ?>"<?php if ($this->dfco['owner'] === (int)$u['userID']): ?> selected="selected"<?php endif; ?>>
                                         <?php echo htmlspecialchars($u['firstName'] . ' ' . $u['lastName']); ?>
@@ -109,7 +109,7 @@
                             <td style="padding: 3px 6px; white-space: nowrap;"><label for="dfco_saved_list">Saved List:</label></td>
                             <td style="padding: 3px 6px;">
                                 <select id="dfco_saved_list" name="dfco_saved_list" class="selectBox">
-                                    <option value="0">Any</option>
+                                    <option value="">Any</option>
                                     <?php foreach ($this->savedListsRS as $sl): ?>
                                     <option value="<?php echo (int)$sl['savedListID']; ?>"<?php if ($this->dfco['saved_list'] === (int)$sl['savedListID']): ?> selected="selected"<?php endif; ?>>
                                         <?php echo htmlspecialchars($sl['description']); ?>
