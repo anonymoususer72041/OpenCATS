@@ -115,5 +115,40 @@ class DashboardFilter
     {
         return 'm=' . urlencode($module) . '&a=' . urlencode($action);
     }
+
+    /**
+     * Returns true when the current GET request looks like a filter form
+     * submission rather than a DataGrid navigation link.
+     *
+     * Specifically, returns true when at least one key with $prefix is
+     * present in GET AND the DataGrid's own parameter key ($dgParamKey)
+     * is absent.  When the DataGrid generates navigation links it always
+     * includes its own parameters key, so its absence means the request
+     * came from the filter form.
+     *
+     * Use this in listByView() to reset rangeStart to 0 on filter change:
+     *
+     *   if (DashboardFilter::isFilterFormSubmission('dfco_', 'parameterscompanies:CompaniesListByViewDataGrid')) {
+     *       $dataGridProperties['rangeStart'] = 0;
+     *   }
+     *
+     * @param string $prefix      Module-scoped GET key prefix, e.g. 'dfco_'
+     * @param string $dgParamKey  DataGrid parameters key, e.g.
+     *                            'parameterscompanies:CompaniesListByViewDataGrid'
+     * @return bool
+     */
+    public static function isFilterFormSubmission($prefix, $dgParamKey)
+    {
+        if (isset($_GET[$dgParamKey])) {
+            return false;
+        }
+        foreach ($_GET as $key => $value) {
+            if (strncmp($key, $prefix, strlen($prefix)) === 0
+                && trim((string) $value) !== '') {
+                return true;
+            }
+        }
+        return false;
+    }
 }
 ?>
