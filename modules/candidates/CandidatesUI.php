@@ -49,6 +49,7 @@ include_once(LEGACY_ROOT . '/lib/Questionnaire.php');
 include_once(LEGACY_ROOT . '/lib/Tags.php');
 include_once(LEGACY_ROOT . '/lib/Search.php');
 include_once(LEGACY_ROOT . '/lib/Users.php');
+include_once(LEGACY_ROOT . '/lib/SavedLists.php');
 include_once(LEGACY_ROOT . '/lib/DashboardFilter.php');
 
 class CandidatesUI extends UserInterface
@@ -569,10 +570,12 @@ class CandidatesUI extends UserInterface
             'dfca_city', 'dfca_state', 'dfca_key_skills', 'dfca_source',
             'dfca_owner', 'dfca_created_from', 'dfca_created_to',
             'dfca_modified_from', 'dfca_modified_to', 'dfca_is_hot',
+            'dfca_saved_list', 'dfca_tags',
         );
 
         $users      = new Users($this->_siteID);
         $candidates = new Candidates($this->_siteID);
+        $savedLists = new SavedLists($this->_siteID);
 
         $this->_template->assign('totalCandidates', $candidates->getCount());
         $this->_template->assign('active', $this);
@@ -582,6 +585,7 @@ class CandidatesUI extends UserInterface
         $this->_template->assign('topLog', $topLog);
         $this->_template->assign('tagsRS', $tagsRS);
         $this->_template->assign('usersRS', $users->getSelectList());
+        $this->_template->assign('savedListsRS', $savedLists->getAll(DATA_ITEM_CANDIDATE, STATIC_LISTS));
         $this->_template->assign('filterActive', DashboardFilter::isActive($filterKeys));
         $this->_template->assign('dfca', array(
             'first_name'    => DashboardFilter::getString('dfca_first_name'),
@@ -598,6 +602,8 @@ class CandidatesUI extends UserInterface
             'modified_from' => DashboardFilter::getDate('dfca_modified_from'),
             'modified_to'   => DashboardFilter::getDate('dfca_modified_to'),
             'is_hot'        => DashboardFilter::getInt('dfca_is_hot'),
+            'saved_list'    => DashboardFilter::getInt('dfca_saved_list'),
+            'tags'          => DashboardFilter::getString('dfca_tags'),
         ));
 
         if (!eval(Hooks::get('CANDIDATE_LIST_BY_VIEW'))) return;

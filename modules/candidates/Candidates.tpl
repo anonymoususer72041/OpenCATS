@@ -180,8 +180,30 @@
                                     <?php endforeach; ?>
                                 </select>
                             </td>
+                            <td style="padding: 3px 6px; white-space: nowrap;"><label for="dfca_saved_list">Saved List:</label></td>
+                            <td style="padding: 3px 6px;">
+                                <select id="dfca_saved_list" name="dfca_saved_list" class="selectBox">
+                                    <option value="0">Any</option>
+                                    <?php foreach ($this->savedListsRS as $sl): ?>
+                                    <option value="<?php echo (int)$sl['savedListID']; ?>"<?php if ($this->dfca['saved_list'] === (int)$sl['savedListID']): ?> selected="selected"<?php endif; ?>>
+                                        <?php echo htmlspecialchars($sl['description']); ?>
+                                    </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </td>
+                            <td style="padding: 3px 6px; white-space: nowrap;"><label for="dfca_tags">Tag:</label></td>
+                            <td style="padding: 3px 6px;">
+                                <select id="dfca_tags" name="dfca_tags" class="selectBox">
+                                    <option value="">Any</option>
+                                    <?php foreach ($this->tagsRS as $tag): ?>
+                                    <option value="<?php echo (int)$tag['tag_id']; ?>"<?php if ((string)$this->dfca['tags'] === (string)$tag['tag_id']): ?> selected="selected"<?php endif; ?>>
+                                        <?php echo htmlspecialchars($tag['tag_title']); ?>
+                                    </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </td>
                             <td style="padding: 3px 6px; white-space: nowrap;"><label for="dfca_created_from">Created:</label></td>
-                            <td style="padding: 3px 6px;" colspan="3">
+                            <td style="padding: 3px 6px;">
                                 <input type="text" class="inputbox" id="dfca_created_from" name="dfca_created_from"
                                     value="<?php echo htmlspecialchars($this->dfca['created_from']); ?>"
                                     style="width: 90px;" placeholder="YYYY-MM-DD" />
@@ -190,8 +212,10 @@
                                     value="<?php echo htmlspecialchars($this->dfca['created_to']); ?>"
                                     style="width: 90px;" placeholder="YYYY-MM-DD" />
                             </td>
+                        </tr>
+                        <tr>
                             <td style="padding: 3px 6px; white-space: nowrap;"><label for="dfca_modified_from">Modified:</label></td>
-                            <td style="padding: 3px 6px;">
+                            <td style="padding: 3px 6px;" colspan="3">
                                 <input type="text" class="inputbox" id="dfca_modified_from" name="dfca_modified_from"
                                     value="<?php echo htmlspecialchars($this->dfca['modified_from']); ?>"
                                     style="width: 90px;" placeholder="YYYY-MM-DD" />
@@ -200,9 +224,7 @@
                                     value="<?php echo htmlspecialchars($this->dfca['modified_to']); ?>"
                                     style="width: 90px;" placeholder="YYYY-MM-DD" />
                             </td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 3px 6px;" colspan="8">
+                            <td style="padding: 3px 6px;" colspan="4">
                                 <label>
                                     <input type="checkbox" name="dfca_is_hot" value="1"<?php if ($this->dfca['is_hot'] === 1): ?> checked="checked"<?php endif; ?> />
                                     Hot Candidates only

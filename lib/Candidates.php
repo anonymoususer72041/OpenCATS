@@ -2379,6 +2379,26 @@ class CandidatesDataGrid extends DataGrid
             $c[] = 'candidate.is_hot = 1';
         }
 
+        $savedListID = DashboardFilter::getInt('dfca_saved_list');
+        if ($savedListID > 0) {
+            $c[] = 'candidate.candidate_id IN ('
+                . 'SELECT data_item_id FROM saved_list_entry'
+                . ' WHERE saved_list_id = ' . $savedListID
+                . ' AND data_item_type = ' . DATA_ITEM_CANDIDATE
+                . ' AND site_id = ' . (int) $this->_siteID
+                . ')';
+        }
+
+        $tagIDs = DashboardFilter::getIntList('dfca_tags');
+        if (!empty($tagIDs)) {
+            $escapedIDs = implode(',', $tagIDs);
+            $c[] = 'candidate.candidate_id IN ('
+                . 'SELECT candidate_id FROM candidate_tag'
+                . ' WHERE tag_id IN (' . $escapedIDs . ')'
+                . ' AND site_id = ' . (int) $this->_siteID
+                . ')';
+        }
+
         return empty($c) ? '' : 'AND ' . implode(' AND ', $c);
     }
 
