@@ -909,7 +909,6 @@ CREATE TABLE `site` (
   `account_active` INT(1) NOT NULL DEFAULT '1',
   `account_deleted` INT(1) NOT NULL DEFAULT '0',
   `reason_disabled` TEXT CHARACTER SET utf8mb4,
-  `time_zone` INT(5) DEFAULT '0',
   `time_zone_iana` VARCHAR(64) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'UTC',
   `time_format_24` INT(1) DEFAULT '0',
   `date_format_ddmmyy` INT(1) DEFAULT '0',
@@ -929,7 +928,7 @@ CREATE TABLE `site` (
 
 /* Data for the table `site` */
 
-INSERT INTO `site` (`site_id`, `name`, `is_demo`, `user_licenses`, `entered_by`, `date_created`, `unix_name`, `company_id`, `is_free`, `account_active`, `account_deleted`, `reason_disabled`, `time_zone`, `time_zone_iana`, `time_format_24`, `date_format_ddmmyy`, `is_hr_mode`, `file_size_kb`, `page_views`, `page_view_days`, `last_viewed_day`, `first_time_setup`, `localization_configured`, `agreed_to_license`, `limit_warning`) VALUES (1, 'example.com', 0, 0, 0, '1000-01-01 00:00:00', NULL, NULL, 0, 1, 0, NULL, 2, 'UTC', 0, 1, 0, 0, 574, 1, '1000-01-01', 0, 0, 1, 0);
+INSERT INTO `site` (`site_id`, `name`, `is_demo`, `user_licenses`, `entered_by`, `date_created`, `unix_name`, `company_id`, `is_free`, `account_active`, `account_deleted`, `reason_disabled`, `time_zone_iana`, `time_format_24`, `date_format_ddmmyy`, `is_hr_mode`, `file_size_kb`, `page_views`, `page_view_days`, `last_viewed_day`, `first_time_setup`, `localization_configured`, `agreed_to_license`, `limit_warning`) VALUES (1, 'example.com', 0, 0, 0, '1000-01-01 00:00:00', NULL, NULL, 0, 1, 0, NULL, 'UTC', 0, 1, 0, 0, 574, 1, '1000-01-01', 0, 0, 1, 0);
 
 /* Table structure for table `sph_counter` */
 

@@ -2048,6 +2048,9 @@ class CATSSchema
                 include_once(\'modules/install/scripts/394.php\');
                 update_394($db);
             ',
+            '395' => '
+                ALTER TABLE `site` DROP COLUMN `time_zone`;
+            ',
 
         );
     }
