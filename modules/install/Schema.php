@@ -1532,6 +1532,10 @@ class CATSSchema
                     ADD COLUMN `time_zone_iana` varchar(64) NOT NULL DEFAULT \'UTC\'
                     AFTER `time_zone`", true);
             ',
+            '382' => 'PHP:
+                include_once(\'modules/install/scripts/382.php\');
+                update_382($db);
+            ',
 
         );
     }
