@@ -2044,6 +2044,10 @@ class CATSSchema
                         WHERE candidate_joborder_status_id = 675
                     );
             ',
+            '394' => 'PHP:
+                include_once(\'modules/install/scripts/394.php\');
+                update_394($db);
+            ',
 
         );
     }
