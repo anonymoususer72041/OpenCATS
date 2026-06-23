@@ -71,7 +71,6 @@ class CATSSession
     private $_backupDirectory;
     private $_storedBuild = -1;
     private $_timeZoneOffset = 0;
-    private $_timeZone = 0;
     private $_ianaTimeZone = 'UTC';
     private $_defaultPhoneCountryCode = '+1';
     private $_dateDMY = false;
@@ -508,13 +507,30 @@ class CATSSession
     }
 
     /**
-     * Gets the current user's time zone offset from the system time zone
-     * (from config.php) stored in the session. The database is not accessed,
-     * nor is config.php. 0 is returned if the session is not logged in.
+     * Returns the site timezone offset from UTC in whole hours (truncated
+     * toward zero). This is the legacy API; callers that need the exact
+     * offset should use getTimeZoneOffsetMinutes() or getIanaTimeZone().
      *
-     * @return integer Time zone offset from the system time zone.
+     * For non-whole-hour timezones (e.g. Asia/Kolkata = UTC+5:30) the
+     * fractional part is lost.
+     *
+     * @return integer Offset in hours (truncated toward zero).
      */
     public function getTimeZoneOffset()
+    {
+        return $this->getTimeZoneOffsetHours();
+    }
+
+    /**
+     * Returns the site timezone offset from UTC in minutes. Computed from
+     * the IANA timezone for the current instant (i.e. DST-dependent).
+     * 0 is returned if the session is not logged in.
+     *
+     * Examples: Europe/Berlin summer = 120, Asia/Kolkata = 330.
+     *
+     * @return integer Offset in minutes.
+     */
+    public function getTimeZoneOffsetMinutes()
     {
         if ($this->isLoggedIn())
         {
@@ -525,14 +541,20 @@ class CATSSession
     }
 
     /**
-     * Gets the current user's time zone offset from GMT stored in the session.
-     * The database is not accessed.
+     * Returns the site timezone offset from UTC in whole hours (truncated
+     * toward zero). For non-whole-hour timezones (e.g. Asia/Kolkata =
+     * UTC+5:30) the fractional part is lost. Prefer
+     * getTimeZoneOffsetMinutes() or getIanaTimeZone() when precision
+     * matters.
      *
-     * @return integer Time zone offset from GMT.
+     * @return integer Offset in hours (truncated toward zero).
      */
-    public function getTimeZone()
+    public function getTimeZoneOffsetHours()
     {
-        return $this->_timeZone;
+        $minutes = $this->getTimeZoneOffsetMinutes();
+        return ($minutes >= 0)
+            ? (int) floor($minutes / 60)
+            : (int) ceil($minutes / 60);
     }
 
     /**
@@ -630,18 +652,32 @@ class CATSSession
      * Updates time and date localization settings in the session. The database
      * is not modified.
      *
-     * @param integer Time zone offset from GMT.
      * @param boolean Display dates in D-M-Y format?
+     * @param string  IANA timezone identifier (e.g. 'Europe/Berlin').
      * @return void
      */
-    public function setTimeDateLocalization($timeZone, $isDMY, $ianaTimeZone = 'UTC')
+    public function setTimeDateLocalization($isDMY, $ianaTimeZone = 'UTC')
     {
-        $timeZone = (integer) $timeZone;
-
-        $this->_timeZone       = $timeZone;
-        $this->_timeZoneOffset = $timeZone - OFFSET_GMT;
-        $this->_dateDMY        = $isDMY;
         $this->_ianaTimeZone   = $ianaTimeZone;
+        $this->_timeZoneOffset = self::_computeIanaOffsetMinutes($ianaTimeZone);
+        $this->_dateDMY        = $isDMY;
+    }
+
+    /**
+     * Computes the UTC offset in minutes for an IANA timezone at the
+     * current instant. Returns 0 if the timezone is invalid.
+     *
+     * @param string IANA timezone identifier.
+     * @return integer Offset in minutes.
+     */
+    private static function _computeIanaOffsetMinutes($ianaTimeZone)
+    {
+        try {
+            $tz = new DateTimeZone($ianaTimeZone);
+            return (int) round($tz->getOffset(new DateTime('now', new DateTimeZone('UTC'))) / 60);
+        } catch (Exception $e) {
+            return 0;
+        }
     }
 
     /**
@@ -713,7 +749,6 @@ class CATSSession
                 site.is_demo AS isDemo,
                 site.account_active AS accountActive,
                 site.account_deleted AS accountDeleted,
-                site.time_zone AS timeZone,
                 site.time_zone_iana AS ianaTimeZone,
                 site.default_phone_country_code AS defaultPhoneCountryCode,
                 site.date_format_ddmmyy AS dateFormatDMY,
@@ -846,9 +881,8 @@ class CATSSession
                 $this->_email                  = $rs['email'];
                 $this->_ip                     = $ip;
                 $this->_userAgent              = $userAgent;
-                $this->_timeZoneOffset         = $rs['timeZone'] - OFFSET_GMT;
-                $this->_timeZone               = $rs['timeZone'];
                 $this->_ianaTimeZone           = isset($rs['ianaTimeZone']) ? $rs['ianaTimeZone'] : 'UTC';
+                $this->_timeZoneOffset         = self::_computeIanaOffsetMinutes($this->_ianaTimeZone);
                 $this->_defaultPhoneCountryCode = $rs['defaultPhoneCountryCode'];
                 $this->_dateDMY                = ($rs['dateFormatDMY'] == 0 ? false : true);
                 $this->_canSeeEEOInfo          = ($rs['canSeeEEOInfo'] == 0 ? false : true);
@@ -1012,7 +1046,6 @@ class CATSSession
                 site.is_demo AS isDemo,
                 site.account_active AS accountActive,
                 site.account_deleted AS accountDeleted,
-                site.time_zone AS timeZone,
                 site.time_zone_iana AS ianaTimeZone,
                 site.default_phone_country_code AS defaultPhoneCountryCode,
                 site.date_format_ddmmyy AS dateFormatDMY,
@@ -1048,8 +1081,8 @@ class CATSSession
         $this->_accountActive   = ($rs['accountActive'] == 0 ? false : true);
         $this->_accountDeleted  = ($rs['accountDeleted'] == 0 ? false : true);
         $this->_email           = $rs['email'];
-        $this->_timeZone        = $rs['timeZone'];
         $this->_ianaTimeZone    = isset($rs['ianaTimeZone']) ? $rs['ianaTimeZone'] : 'UTC';
+        $this->_timeZoneOffset  = self::_computeIanaOffsetMinutes($this->_ianaTimeZone);
         $this->_defaultPhoneCountryCode = $rs['defaultPhoneCountryCode'];
         $this->_dateDMY         = ($rs['dateFormatDMY'] == 0 ? false : true);
         $this->_isFirstTimeSetup = true;

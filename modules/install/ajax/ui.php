@@ -556,14 +556,10 @@ switch ($action)
             break;
         }
 
-        $offsetSeconds = $tz->getOffset(new DateTime('now', new DateTimeZone('UTC')));
-        $timeZone = (int) round($offsetSeconds / 3600);
-
-        CATSUtility::changeConfigSetting('OFFSET_GMT', ($timeZone));
+        CATSUtility::changeConfigSetting('OFFSET_GMT', 0);
 
         $dateFormat = $_REQUEST['dateFormat'];
 
-        $_SESSION['timeZoneInstaller'] = $timeZone;
         $_SESSION['ianaTimeZoneInstaller'] = $ianaTimeZone;
         $_SESSION['dateFormatInstaller'] = $dateFormat;
 
@@ -1077,10 +1073,6 @@ switch ($action)
         {
             MySQLQuery('UPDATE site SET date_format_ddmmyy = 1');
         }
-
-        $timeZone = $_SESSION['timeZoneInstaller'];
-
-        MySQLQuery(sprintf("UPDATE site SET time_zone = %s", $timeZone));
 
         if (isset($_SESSION['ianaTimeZoneInstaller']))
         {

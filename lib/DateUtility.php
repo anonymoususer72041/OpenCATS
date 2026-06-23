@@ -315,14 +315,15 @@ class DateUtility
         {
             if (isset($_SESSION['CATS']) && $_SESSION['CATS']->isLoggedIn())
             {
-                $timeZoneOffset = $_SESSION['CATS']->getTimeZoneOffset();
+                $ianaTimeZone = $_SESSION['CATS']->getIanaTimeZone();
+                $now = new DateTime('now', new DateTimeZone($ianaTimeZone));
                 $date = mktime(
-                    date('H') + $timeZoneOffset,
-                    date('i'),
-                    date('s'),
-                    date('m'),
-                    date('d'),
-                    date('Y')
+                    (int) $now->format('H'),
+                    (int) $now->format('i'),
+                    (int) $now->format('s'),
+                    (int) $now->format('m'),
+                    (int) $now->format('d'),
+                    (int) $now->format('Y')
                 );
             }
             else
@@ -373,19 +374,16 @@ class DateUtility
     {
         if ($date === false)
         {
-            $date = time();
+            $dt = new DateTime('now', new DateTimeZone('UTC'));
+        }
+        else
+        {
+            $dt = new DateTime('@' . $date);
         }
 
-        $unixTime = mktime(
-            date('H', $date) + $_SESSION['CATS']->getTimeZoneOffset(),
-            date('i', $date),
-            date('s', $date),
-            date('m', $date),
-            date('d', $date),
-            date('Y', $date)
-        );
-
-        return date($format, $unixTime);
+        $ianaTimeZone = $_SESSION['CATS']->getIanaTimeZone();
+        $dt->setTimezone(new DateTimeZone($ianaTimeZone));
+        return $dt->format($format);
     }
     
     /**

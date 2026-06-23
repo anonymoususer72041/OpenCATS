@@ -96,6 +96,9 @@ class ActivityEntries
         if (is_string($dateOccurred) &&
             preg_match('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/', $dateOccurred))
         {
+            $dateOccurred = self::_localToUtc(
+                $dateOccurred, $this->_getIanaTimeZone()
+            );
             $dateOccurredSQL = $this->_db->makeQueryString($dateOccurred);
         }
         else
@@ -251,18 +254,19 @@ class ActivityEntries
 
         if ($date !== false)
         {
+            $utcDate = self::_localToUtc($date, $this->_getIanaTimeZone());
+
             $sql = sprintf(
                 "UPDATE
                     activity
                 SET
-                    date_occurred = DATE_SUB(%s, INTERVAL %s HOUR),
+                    date_occurred = %s,
                     date_modified = NOW()
                 WHERE
                     activity_id = %s
                 AND
                     site_id = %s",
-                $this->_db->makeQueryString($date),
-                $this->_db->makeQueryInteger($timezoneOffset),
+                $this->_db->makeQueryString($utcDate),
                 $this->_db->makeQueryInteger($activityID),
                 $this->_siteID
             );
@@ -638,6 +642,57 @@ class ActivityEntries
         }
 
         $dataItem->updateModified($dataItemID);
+    }
+
+    /**
+     * Returns the IANA timezone identifier for the current site.
+     *
+     * @return string IANA timezone identifier (e.g. 'Europe/Berlin').
+     */
+    private function _getIanaTimeZone()
+    {
+        return $_SESSION['CATS']->getIanaTimeZone();
+    }
+
+    /**
+     * Converts a local SQL datetime string to UTC.
+     *
+     * @param string SQL datetime (YYYY-MM-DD HH:MM:SS) in the local timezone.
+     * @param string IANA timezone identifier.
+     * @return string SQL datetime in UTC, or original value on failure.
+     */
+    protected static function _localToUtc($localDate, $ianaTimeZone)
+    {
+        if (!is_string($localDate) ||
+            !preg_match('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/', $localDate))
+        {
+            return $localDate;
+        }
+
+        try
+        {
+            $localTimeZone = new DateTimeZone($ianaTimeZone);
+            $date = DateTime::createFromFormat(
+                '!Y-m-d H:i:s', $localDate, $localTimeZone
+            );
+
+            $errors = DateTime::getLastErrors();
+            if ($date === false ||
+                ($errors !== false &&
+                 ($errors['warning_count'] > 0 || $errors['error_count'] > 0)) ||
+                $date->format('Y-m-d H:i:s') !== $localDate)
+            {
+                return $localDate;
+            }
+
+            $date->setTimezone(new DateTimeZone('UTC'));
+
+            return $date->format('Y-m-d H:i:s');
+        }
+        catch (Exception $e)
+        {
+            return $localDate;
+        }
     }
 }
 

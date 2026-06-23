@@ -2433,7 +2433,6 @@ class SettingsUI extends UserInterface
                         CommonErrors::fatal(COMMONERROR_PERMISSION, $this, 'Invalid user level for administration.');
                     }
 
-                    $this->_template->assign('timeZone', $_SESSION['CATS']->getTimeZone());
                     $this->_template->assign('ianaTimeZone', $_SESSION['CATS']->getIanaTimeZone());
                     $this->_template->assign('isDateDMY', $_SESSION['CATS']->isDateDMY());
 
@@ -2585,13 +2584,10 @@ class SettingsUI extends UserInterface
 
                 $ianaTimeZone = isset($_POST['timeZoneIana']) ? $_POST['timeZoneIana'] : 'UTC';
                 try {
-                    $tz = new DateTimeZone($ianaTimeZone);
+                    new DateTimeZone($ianaTimeZone);
                 } catch (Exception $e) {
                     $ianaTimeZone = 'UTC';
-                    $tz = new DateTimeZone('UTC');
                 }
-                $offsetSeconds = $tz->getOffset(new DateTime('now', new DateTimeZone('UTC')));
-                $timeZone = (int) round($offsetSeconds / 3600);
 
                 $dateFormat = $_POST['dateFormat'];
                 if ($dateFormat == 'mdy')
@@ -2604,7 +2600,7 @@ class SettingsUI extends UserInterface
                 }
 
                 $site = new Site($this->_siteID);
-                $site->setLocalization($timeZone, $isDMY, $ianaTimeZone);
+                $site->setLocalization($isDMY, $ianaTimeZone);
 
                 // Default phone country calling code (E.164) for the site.
                 if (isset($_POST['defaultPhoneCountryCodeDigits']))
@@ -2646,13 +2642,10 @@ class SettingsUI extends UserInterface
     {
         $ianaTimeZone = isset($_POST['timeZoneIana']) ? $_POST['timeZoneIana'] : 'UTC';
         try {
-            $tz = new DateTimeZone($ianaTimeZone);
+            new DateTimeZone($ianaTimeZone);
         } catch (Exception $e) {
             $ianaTimeZone = 'UTC';
-            $tz = new DateTimeZone('UTC');
         }
-        $offsetSeconds = $tz->getOffset(new DateTime('now', new DateTimeZone('UTC')));
-        $timeZone = (int) round($offsetSeconds / 3600);
 
         $dateFormat = $_POST['dateFormat'];
         if ($dateFormat == 'mdy')
@@ -2665,9 +2658,9 @@ class SettingsUI extends UserInterface
         }
 
         $site = new Site($this->_siteID);
-        $site->setLocalization($timeZone, $isDMY, $ianaTimeZone);
+        $site->setLocalization($isDMY, $ianaTimeZone);
 
-        $_SESSION['CATS']->setTimeDateLocalization($timeZone, $isDMY, $ianaTimeZone);
+        $_SESSION['CATS']->setTimeDateLocalization($isDMY, $ianaTimeZone);
 
         $this->_template->assign('inputType', 'conclusion');
         $this->_template->assign('title', 'Localization Settings Saved!');
@@ -3092,13 +3085,10 @@ class SettingsUI extends UserInterface
 
         $ianaTimeZone = $_GET['timeZoneIana'];
         try {
-            $tz = new DateTimeZone($ianaTimeZone);
+            new DateTimeZone($ianaTimeZone);
         } catch (Exception $e) {
             $ianaTimeZone = 'UTC';
-            $tz = new DateTimeZone('UTC');
         }
-        $offsetSeconds = $tz->getOffset(new DateTime('now', new DateTimeZone('UTC')));
-        $timeZone = (int) round($offsetSeconds / 3600);
 
         $dateFormat = $_GET['dateFormat'];
         if ($dateFormat == 'mdy')
@@ -3111,7 +3101,7 @@ class SettingsUI extends UserInterface
         }
 
         $site = new Site($this->_siteID);
-        $site->setLocalization($timeZone, $isDMY, $ianaTimeZone);
+        $site->setLocalization($isDMY, $ianaTimeZone);
         $site->setLocalizationConfigured();
 
         echo 'Ok';

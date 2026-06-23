@@ -200,53 +200,6 @@ class TemplateUtility
     }
 
     /**
-     * Prints the time zone selection dropdown list.
-     *
-     * @param integer ID and name attributes of the time zone select input
-     * @param string style attribute of the time zone select input
-     * @param string class attribute of the time zone select input
-     * @param integer selected GMT offset
-     * @return void
-     */
-    public static function printTimeZoneSelect($selectID, $selectStyle,
-        $selectClass, $selectedTimeZone)
-    {
-        echo '<select id="', $selectID, '" name="', $selectID, '"';
-
-        if (!empty($selectClass))
-        {
-            echo ' class="', $selectClass, '"';
-        }
-
-        if (!empty($selectStyle))
-        {
-            echo ' style="', $selectStyle, '"';
-        }
-
-        echo '>';
-
-        $currentTimeZone = '';
-
-        foreach ($GLOBALS['timeZones'] as $timeZone)
-        {
-            echo '<option value="', $timeZone[0], '"';
-
-            if ($timeZone[0] !== $currentTimeZone)
-            {
-                $currentTimeZone = $timeZone[0];
-                if ($timeZone[0] == $selectedTimeZone)
-                {
-                    echo ' selected="selected"';
-                }
-            }
-
-            echo '>', htmlspecialchars($timeZone[1]), '</option>';
-        }
-
-        echo '</select>';
-    }
-
-    /**
      * Prints an HTML select box populated with IANA timezone identifiers,
      * grouped by region (Africa, America, Asia, etc.).
      *

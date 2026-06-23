@@ -62,7 +62,7 @@ class DatabaseConnection
         // FIXME: Remove Session tight-coupling here.
         if (isset($_SESSION['CATS']) && $_SESSION['CATS']->isLoggedIn())
         {
-            self::$_instance->_timeZone = $_SESSION['CATS']->getTimeZoneOffset();
+            self::$_instance->_timeZone = $_SESSION['CATS']->getTimeZoneOffsetMinutes();
             self::$_instance->_dateDMY = $_SESSION['CATS']->isDateDMY();
         }
         else
@@ -686,12 +686,12 @@ class DatabaseConnection
                 if ($this->_timeZone > 0)
                 {
                     $working = str_replace('DATE_FORMAT(', 'DATE_FORMAT(DATE_ADD(', $working);
-                    $working .= ', INTERVAL ' . $this->_timeZone . ' HOUR)';
+                    $working .= ', INTERVAL ' . $this->_timeZone . ' MINUTE)';
                 }
                 else if ($this->_timeZone < 0)
                 {
                     $working = str_replace('DATE_FORMAT(', 'DATE_FORMAT(DATE_SUB(', $working);
-                    $working .= ', INTERVAL ' . ($this->_timeZone * -1) . ' HOUR)';
+                    $working .= ', INTERVAL ' . ($this->_timeZone * -1) . ' MINUTE)';
                 }
             }
             $newQuery .= $working;
