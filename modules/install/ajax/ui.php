@@ -507,6 +507,7 @@ switch ($action)
 
         echo 'setActiveStep(6);';
         echo 'showTextBlock(\'pickOptionalComponents\');';
+        echo 'document.getElementById(\'timeZoneIanaError\').style.display = \'none\';';
         echo '</script>';
 
         $onClick  = 'document.getElementById(\'pickOptionalComponents\').style.display = \'none\'; ';
@@ -516,7 +517,7 @@ switch ($action)
         {
             $onClick .= htmlspecialchars($index) . ',\' + encodeURIComponent(getCheckedValue(document.getElementsByName(\'' . htmlspecialchars($index) . '\'))) + \',';
         }
-        $onClick .= '&timeZone=\' + encodeURIComponent(document.getElementById(\'timeZone\').value) + \'';
+        $onClick .= '&timeZoneIana=\' + encodeURIComponent(document.getElementById(\'timeZoneIana\').value) + \'';
         $onClick .= '&dateFormat=\' + encodeURIComponent(document.getElementById(\'dateFormat\').value) + \'';
         $onClick .= '&timeFormat=\' + encodeURIComponent(document.getElementById(\'timeFormat\').value) + \'';
         $onClick .= '&defaultPhoneCountryCodeDigits=\' + encodeURIComponent(document.getElementById(\'defaultPhoneCountryCodeDigits\').value));';
@@ -545,14 +546,40 @@ switch ($action)
         @session_name(CATS_SESSION_NAME);
         session_start();
 
-        // FIXME: Input validation.
-        $timeZone = $_REQUEST['timeZone'];
+        $ianaTimeZone = isset($_REQUEST['timeZoneIana'])
+            ? trim($_REQUEST['timeZoneIana']) : '';
+
+        $tzValid = false;
+        if ($ianaTimeZone !== '')
+        {
+            try {
+                $tz = new DateTimeZone($ianaTimeZone);
+                $tzValid = true;
+            } catch (Exception $e) {
+                /* Invalid timezone; handled below. */
+            }
+        }
+
+        if (!$tzValid)
+        {
+            echo '<script type="text/javascript">';
+            echo 'setActiveStep(6);';
+            echo 'showTextBlock(\'pickOptionalComponents\');';
+            echo 'document.getElementById(\'timeZoneIanaError\').style.display = \'\';';
+            echo '</script>';
+            break;
+        }
+
+        $offsetSeconds = $tz->getOffset(new DateTime('now', new DateTimeZone('UTC')));
+        $timeZone = (int) round($offsetSeconds / 3600);
+
         CATSUtility::changeConfigSetting('OFFSET_GMT', ($timeZone));
 
         $dateFormat = $_REQUEST['dateFormat'];
         $timeFormat = isset($_REQUEST['timeFormat']) ? $_REQUEST['timeFormat'] : '12';
 
         $_SESSION['timeZoneInstaller'] = $timeZone;
+        $_SESSION['ianaTimeZoneInstaller'] = $ianaTimeZone;
         $_SESSION['dateFormatInstaller'] = $dateFormat;
         $_SESSION['timeFormatInstaller'] = $timeFormat;
 
@@ -929,6 +956,16 @@ switch ($action)
         $timeZone = $_SESSION['timeZoneInstaller'];
 
         MySQLQuery(sprintf("UPDATE site SET time_zone = %s", $timeZone));
+
+        if (isset($_SESSION['ianaTimeZoneInstaller']))
+        {
+            $ianaTimeZone = mysqli_real_escape_string(
+                $mySQLConnection, $_SESSION['ianaTimeZoneInstaller']
+            );
+            MySQLQuery(sprintf(
+                "UPDATE site SET time_zone_iana = '%s'", $ianaTimeZone
+            ));
+        }
 
         if (isset($_SESSION['defaultPhoneCountryCodeInstaller'])
             && $_SESSION['defaultPhoneCountryCodeInstaller'] !== '')

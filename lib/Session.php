@@ -69,6 +69,7 @@ class CATSSession
     private $_storedBuild = -1;
     private $_timeZoneOffset = 0;
     private $_timeZone = 0;
+    private $_ianaTimeZone = 'UTC';
     private $_defaultPhoneCountryCode = '+1';
     private $_dateDMY = false;
     private $_timeFormat24 = false;
@@ -493,6 +494,16 @@ class CATSSession
     }
 
     /**
+     * Gets the IANA timezone identifier for the current site (e.g. 'Europe/Berlin').
+     *
+     * @return string IANA timezone identifier.
+     */
+    public function getIanaTimeZone()
+    {
+        return $this->_ianaTimeZone;
+    }
+
+    /**
      * Returns the default phone country calling code (E.164) for the
      * current site. The value is stored in the "site" table.
      *
@@ -581,7 +592,7 @@ class CATSSession
      * @param boolean Display dates in D-M-Y format?
      * @return void
      */
-    public function setTimeDateLocalization($timeZone, $isDMY, $isTimeFormat24 = false)
+    public function setTimeDateLocalization($timeZone, $isDMY, $isTimeFormat24 = false, $ianaTimeZone = 'UTC')
     {
         $timeZone = (integer) $timeZone;
 
@@ -589,6 +600,7 @@ class CATSSession
         $this->_timeZoneOffset = $timeZone - OFFSET_GMT;
         $this->_dateDMY        = $isDMY;
         $this->_timeFormat24   = (bool) $isTimeFormat24;
+        $this->_ianaTimeZone   = $ianaTimeZone;
     }
 
     /**
@@ -659,6 +671,7 @@ class CATSSession
                 site.account_active AS accountActive,
                 site.account_deleted AS accountDeleted,
                 site.time_zone AS timeZone,
+                site.time_zone_iana AS ianaTimeZone,
                 site.default_phone_country_code AS defaultPhoneCountryCode,
                 site.date_format_ddmmyy AS dateFormatDMY,
                 site.time_format_24 AS timeFormat24,
@@ -786,6 +799,7 @@ class CATSSession
                 $this->_userAgent              = $userAgent;
                 $this->_timeZoneOffset         = $rs['timeZone'] - OFFSET_GMT;
                 $this->_timeZone               = $rs['timeZone'];
+                $this->_ianaTimeZone           = isset($rs['ianaTimeZone']) ? $rs['ianaTimeZone'] : 'UTC';
                 $this->_defaultPhoneCountryCode = $rs['defaultPhoneCountryCode'];
                 $this->_dateDMY                = ($rs['dateFormatDMY'] == 0 ? false : true);
                 $this->_timeFormat24           = ($rs['timeFormat24'] == 0 ? false : true);
@@ -894,6 +908,109 @@ class CATSSession
 
                 break;
         }
+    }
+
+    /**
+     * Forces the session to make the current user "transparently" login to
+     * another site. This is used only to support the CATS administrative
+     * console, but must remain part of Session.
+     *
+     * @param integer New Site ID to login to.
+     * @param integer User ID with which to login to the new site.
+     * @param integer Site ID associated with $asUserID
+     * @return void
+     */
+    public function transparentLogin($toSiteID, $asUserID, $asSiteID)
+    {
+         $db = DatabaseConnection::getInstance();
+
+         $sql = sprintf(
+            "SELECT
+                user.user_id AS userID,
+                user.user_name AS username,
+                user.first_name AS firstName,
+                user.last_name AS lastName,
+                user.access_level AS accessLevel,
+                user.site_id AS userSiteID,
+                user.is_demo AS isDemoUser,
+                user.email AS email,
+                user.categories AS categories,
+                site.name AS siteName,
+                site.unix_name AS unixName,
+                site.company_id AS companyID,
+                site.is_demo AS isDemo,
+                site.account_active AS accountActive,
+                site.account_deleted AS accountDeleted,
+                site.time_zone AS timeZone,
+                site.time_zone_iana AS ianaTimeZone,
+                site.default_phone_country_code AS defaultPhoneCountryCode,
+                site.date_format_ddmmyy AS dateFormatDMY,
+                site.time_format_24 AS timeFormat24,
+                site.is_free AS isFree,
+                site.is_hr_mode AS isHrMode
+            FROM
+                user
+            LEFT JOIN site
+                ON site.site_id = %s
+            WHERE
+                user.user_id = %s
+                AND user.site_id = %s",
+            $toSiteID,
+            $asUserID,
+            $asSiteID
+        );
+        $rs = $db->getAssoc($sql);
+
+        $this->_username        = $rs['username'];
+        $this->_userID          = $rs['userID'];
+        $this->_siteID          = $toSiteID;
+        $this->_firstName       = $rs['firstName'];
+        $this->_lastName        = $rs['lastName'];
+        $this->_siteName        = $rs['siteName'];
+        $this->_unixName        = $rs['unixName'];
+        $this->_accessLevel     = $rs['accessLevel'];
+        $this->_realAccessLevel = $rs['accessLevel'];
+        $this->_categories      = array();
+        $this->_isASP           = ($rs['companyID'] != 0 ? true : false);
+        $this->_siteCompanyID   = ($rs['companyID'] != 0 ? $rs['companyID'] : -1);
+        $this->_isFree          = ($rs['isFree'] == 0 ? false : true);
+        $this->_isHrMode        = ($rs['isHrMode'] != 0 ? true : false);
+        $this->_accountActive   = ($rs['accountActive'] == 0 ? false : true);
+        $this->_accountDeleted  = ($rs['accountDeleted'] == 0 ? false : true);
+        $this->_email           = $rs['email'];
+        $this->_timeZone        = $rs['timeZone'];
+        $this->_ianaTimeZone    = isset($rs['ianaTimeZone']) ? $rs['ianaTimeZone'] : 'UTC';
+        $this->_defaultPhoneCountryCode = $rs['defaultPhoneCountryCode'];
+        $this->_dateDMY         = ($rs['dateFormatDMY'] == 0 ? false : true);
+        $this->_timeFormat24    = (isset($rs['timeFormat24']) && $rs['timeFormat24'] == 0 ? false : true);
+        $this->_isFirstTimeSetup = true;
+        $this->_isAgreedToLicense = true;
+        $this->_isLocalizationConfigured = true;
+
+
+        /* Mark session as logged in. */
+        $this->_isLoggedIn = true;
+
+        /* Force a new MRU object to be created. */
+        $this->_MRU = null;
+
+        if (!eval(Hooks::get('TRANSPARENT_LOGIN_POST'))) return;
+
+        $cookie = $this->getCookie();
+        $sql = sprintf(
+            "UPDATE
+                user
+             SET
+                session_cookie = %s
+             WHERE
+                user_id = %s
+             AND
+                site_id = %s",
+            $db->makeQueryString($cookie),
+            $asUserID,
+            $asSiteID
+        );
+        $db->query($sql);
     }
 
     /**
