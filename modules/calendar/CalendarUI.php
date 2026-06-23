@@ -233,10 +233,11 @@ class CalendarUI extends UserInterface
         );
 
         /* Textual representation of the month and year. */
-        $dateString = date(
-            'F Y',
-            mktime($_SESSION['CATS']->getTimeZoneOffset(), 0, 0, $month, 1, $year)
+        $dt = new DateTime(
+            sprintf('%04d-%02d-01', $year, $month),
+            new DateTimeZone($_SESSION['CATS']->getIanaTimeZone())
         );
+        $dateString = $dt->format('F Y');
 
         /* The offset is the number of days after the first Sunday on a given
          * calendar page on which the 1st of the month falls. We subtract 1

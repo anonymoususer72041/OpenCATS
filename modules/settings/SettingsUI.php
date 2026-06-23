@@ -2430,7 +2430,6 @@ class SettingsUI extends UserInterface
                         CommonErrors::fatal(COMMONERROR_PERMISSION, $this, 'Invalid user level for administration.');
                     }
 
-                    $this->_template->assign('timeZone', $_SESSION['CATS']->getTimeZone());
                     $this->_template->assign('ianaTimeZone', $_SESSION['CATS']->getIanaTimeZone());
                     $this->_template->assign('isDateDMY', $_SESSION['CATS']->isDateDMY());
                     $this->_template->assign('isTimeFormat24', $_SESSION['CATS']->isTimeFormat24());
@@ -2583,13 +2582,10 @@ class SettingsUI extends UserInterface
 
                 $ianaTimeZone = isset($_POST['timeZoneIana']) ? $_POST['timeZoneIana'] : 'UTC';
                 try {
-                    $tz = new DateTimeZone($ianaTimeZone);
+                    new DateTimeZone($ianaTimeZone);
                 } catch (Exception $e) {
                     $ianaTimeZone = 'UTC';
-                    $tz = new DateTimeZone('UTC');
                 }
-                $offsetSeconds = $tz->getOffset(new DateTime('now', new DateTimeZone('UTC')));
-                $timeZone = (int) round($offsetSeconds / 3600);
 
                 $dateFormat = $_POST['dateFormat'];
                 if ($dateFormat == 'mdy')
@@ -2646,13 +2642,10 @@ class SettingsUI extends UserInterface
     {
         $ianaTimeZone = isset($_POST['timeZoneIana']) ? $_POST['timeZoneIana'] : 'UTC';
         try {
-            $tz = new DateTimeZone($ianaTimeZone);
+            new DateTimeZone($ianaTimeZone);
         } catch (Exception $e) {
             $ianaTimeZone = 'UTC';
-            $tz = new DateTimeZone('UTC');
         }
-        $offsetSeconds = $tz->getOffset(new DateTime('now', new DateTimeZone('UTC')));
-        $timeZone = (int) round($offsetSeconds / 3600);
 
         $dateFormat = $_POST['dateFormat'];
         if ($dateFormat == 'mdy')
@@ -3077,13 +3070,10 @@ class SettingsUI extends UserInterface
 
         $ianaTimeZone = $_GET['timeZoneIana'];
         try {
-            $tz = new DateTimeZone($ianaTimeZone);
+            new DateTimeZone($ianaTimeZone);
         } catch (Exception $e) {
             $ianaTimeZone = 'UTC';
-            $tz = new DateTimeZone('UTC');
         }
-        $offsetSeconds = $tz->getOffset(new DateTime('now', new DateTimeZone('UTC')));
-        $timeZone = (int) round($offsetSeconds / 3600);
 
         $dateFormat = $_GET['dateFormat'];
         if ($dateFormat == 'mdy')

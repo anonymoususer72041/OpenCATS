@@ -66,9 +66,8 @@ class Site
     }
 
     /**
-     * Sets the site name for the current site.
+     * Sets localization preferences for the current site.
      *
-     * @param integer time zone offset
      * @param boolean use D-M-Y format dates
      * @param boolean use 24-hour time format
      * @param string IANA timezone identifier (e.g. 'Europe/Berlin')
@@ -80,13 +79,11 @@ class Site
             "UPDATE
                 site
             SET
-                time_zone = %s,
                 date_format_ddmmyy = %s,
                 time_format_24 = %s,
                 time_zone_iana = %s
             WHERE
                 site_id = %s",
-            $this->_db->makeQueryInteger($timeZone),
             ($isDMY ? 1 : 0),
             ($isTimeFormat24 ? 1 : 0),
             $this->_db->makeQueryString($ianaTimeZone),

@@ -49,7 +49,7 @@ class Statistics
         $this->_db = DatabaseConnection::getInstance();
 
         // FIXME: Session coupling...
-        $this->_timeZoneOffset = $_SESSION['CATS']->getTimeZoneOffset();
+        $this->_timeZoneOffset = $_SESSION['CATS']->getTimeZoneOffsetMinutes();
     }
 
 
@@ -968,9 +968,9 @@ class Statistics
 
         if ($this->_timeZoneOffset != 0)
         {
-            $criteria = str_replace('CURDATE()', 'DATE_ADD(CURDATE(), INTERVAL ' . $this->_timeZoneOffset . ' HOUR)', $criteria);
-            $criteria = str_replace('NOW()', 'DATE_ADD(NOW(), INTERVAL ' . $this->_timeZoneOffset . ' HOUR)', $criteria);
-            $criteria = str_replace($dateField, 'DATE_ADD(' . $dateField . ', INTERVAL ' . $this->_timeZoneOffset . ' HOUR)', $criteria);
+            $criteria = str_replace('CURDATE()', 'DATE_ADD(CURDATE(), INTERVAL ' . $this->_timeZoneOffset . ' MINUTE)', $criteria);
+            $criteria = str_replace('NOW()', 'DATE_ADD(NOW(), INTERVAL ' . $this->_timeZoneOffset . ' MINUTE)', $criteria);
+            $criteria = str_replace($dateField, 'DATE_ADD(' . $dateField . ', INTERVAL ' . $this->_timeZoneOffset . ' MINUTE)', $criteria);
         }
 
         return $criteria;

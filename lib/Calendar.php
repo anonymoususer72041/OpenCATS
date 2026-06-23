@@ -325,6 +325,8 @@ class Calendar
             $jobOrderIDSQL = $this->_db->makeQueryInteger($jobOrderID);
         }
 
+        $utcDate = self::_localToUtc($date, $this->_getIanaTimeZone());
+
         $sql = sprintf(
             "INSERT INTO calendar_event (
                 type,
@@ -346,7 +348,7 @@ class Calendar
             )
             VALUES (
                 %s,
-                DATE_SUB(%s, INTERVAL %s HOUR),
+                %s,
                 %s,
                 %s,
                 %s,
@@ -363,8 +365,7 @@ class Calendar
                 %s
             )",
             $this->_db->makeQueryInteger($type),
-            $this->_db->makeQueryString($date),
-            $this->_db->makeQueryInteger($timeZoneOffset),
+            $this->_db->makeQueryString($utcDate),
             $this->_db->makeQueryString($description),
             ($allDay ? '1' : '0'),
             $this->_db->makeQueryInteger($enteredBy),
@@ -426,12 +427,14 @@ class Calendar
             $jobOrderIDSQL = $this->_db->makeQueryInteger($jobOrderID);
         }
 
+        $utcDate = self::_localToUtc($date, $this->_getIanaTimeZone());
+
         $sql = sprintf(
             "UPDATE
                 calendar_event
             SET
                 type             = %s,
-                date             = DATE_SUB(%s, INTERVAL %s HOUR),
+                date             = %s,
                 description      = %s,
                 all_day          = %s,
                 data_item_id     = %s,
@@ -447,8 +450,7 @@ class Calendar
             WHERE
                 calendar_event_id = %s",
             $this->_db->makeQueryInteger($type),
-            $this->_db->makeQueryString($date),
-            $this->_db->makeQueryInteger($timeZoneOffset),
+            $this->_db->makeQueryString($utcDate),
             $this->_db->makeQueryString($description),
             ($allDay ? '1' : '0'),
             $this->_db->makeQueryInteger($dataItemID),
@@ -979,6 +981,57 @@ class Calendar
                 $body,
                 true
             );
+        }
+    }
+
+    /**
+     * Returns the IANA timezone identifier for the current site.
+     *
+     * @return string IANA timezone identifier (e.g. 'Europe/Berlin').
+     */
+    private function _getIanaTimeZone()
+    {
+        return $_SESSION['CATS']->getIanaTimeZone();
+    }
+
+    /**
+     * Converts a local SQL datetime string to UTC.
+     *
+     * @param string SQL datetime (YYYY-MM-DD HH:MM:SS) in the local timezone.
+     * @param string IANA timezone identifier.
+     * @return string SQL datetime in UTC, or original value on failure.
+     */
+    protected static function _localToUtc($localDate, $ianaTimeZone)
+    {
+        if (!is_string($localDate) ||
+            !preg_match('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/', $localDate))
+        {
+            return $localDate;
+        }
+
+        try
+        {
+            $localTimeZone = new DateTimeZone($ianaTimeZone);
+            $date = DateTime::createFromFormat(
+                '!Y-m-d H:i:s', $localDate, $localTimeZone
+            );
+
+            $errors = DateTime::getLastErrors();
+            if ($date === false ||
+                ($errors !== false &&
+                 ($errors['warning_count'] > 0 || $errors['error_count'] > 0)) ||
+                $date->format('Y-m-d H:i:s') !== $localDate)
+            {
+                return $localDate;
+            }
+
+            $date->setTimezone(new DateTimeZone('UTC'));
+
+            return $date->format('Y-m-d H:i:s');
+        }
+        catch (Exception $e)
+        {
+            return $localDate;
         }
     }
 }
