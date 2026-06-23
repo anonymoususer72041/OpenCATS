@@ -1536,6 +1536,9 @@ class CATSSchema
                 include_once(\'modules/install/scripts/382.php\');
                 update_382($db);
             ',
+            '383' => '
+                ALTER TABLE `site` DROP COLUMN `time_zone`;
+            ',
 
         );
     }
