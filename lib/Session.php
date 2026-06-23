@@ -72,6 +72,7 @@ class CATSSession
     private $_storedBuild = -1;
     private $_timeZoneOffset = 0;
     private $_timeZone = 0;
+    private $_ianaTimeZone = 'UTC';
     private $_defaultPhoneCountryCode = '+1';
     private $_dateDMY = false;
     private $_pipelineEntriesPerPage = 15;
@@ -535,6 +536,16 @@ class CATSSession
     }
 
     /**
+     * Gets the IANA timezone identifier for the current site (e.g. 'Europe/Berlin').
+     *
+     * @return string IANA timezone identifier.
+     */
+    public function getIanaTimeZone()
+    {
+        return $this->_ianaTimeZone;
+    }
+
+    /**
      * Returns the default phone country calling code (E.164) for the
      * current site. The value is stored in the "site" table.
      *
@@ -623,13 +634,14 @@ class CATSSession
      * @param boolean Display dates in D-M-Y format?
      * @return void
      */
-    public function setTimeDateLocalization($timeZone, $isDMY)
+    public function setTimeDateLocalization($timeZone, $isDMY, $ianaTimeZone = 'UTC')
     {
         $timeZone = (integer) $timeZone;
 
         $this->_timeZone       = $timeZone;
         $this->_timeZoneOffset = $timeZone - OFFSET_GMT;
         $this->_dateDMY        = $isDMY;
+        $this->_ianaTimeZone   = $ianaTimeZone;
     }
 
     /**
@@ -702,6 +714,7 @@ class CATSSession
                 site.account_active AS accountActive,
                 site.account_deleted AS accountDeleted,
                 site.time_zone AS timeZone,
+                site.time_zone_iana AS ianaTimeZone,
                 site.default_phone_country_code AS defaultPhoneCountryCode,
                 site.date_format_ddmmyy AS dateFormatDMY,
                 site.is_free AS isFree,
@@ -835,6 +848,7 @@ class CATSSession
                 $this->_userAgent              = $userAgent;
                 $this->_timeZoneOffset         = $rs['timeZone'] - OFFSET_GMT;
                 $this->_timeZone               = $rs['timeZone'];
+                $this->_ianaTimeZone           = isset($rs['ianaTimeZone']) ? $rs['ianaTimeZone'] : 'UTC';
                 $this->_defaultPhoneCountryCode = $rs['defaultPhoneCountryCode'];
                 $this->_dateDMY                = ($rs['dateFormatDMY'] == 0 ? false : true);
                 $this->_canSeeEEOInfo          = ($rs['canSeeEEOInfo'] == 0 ? false : true);
@@ -999,6 +1013,7 @@ class CATSSession
                 site.account_active AS accountActive,
                 site.account_deleted AS accountDeleted,
                 site.time_zone AS timeZone,
+                site.time_zone_iana AS ianaTimeZone,
                 site.default_phone_country_code AS defaultPhoneCountryCode,
                 site.date_format_ddmmyy AS dateFormatDMY,
                 site.is_free AS isFree,
@@ -1034,6 +1049,7 @@ class CATSSession
         $this->_accountDeleted  = ($rs['accountDeleted'] == 0 ? false : true);
         $this->_email           = $rs['email'];
         $this->_timeZone        = $rs['timeZone'];
+        $this->_ianaTimeZone    = isset($rs['ianaTimeZone']) ? $rs['ianaTimeZone'] : 'UTC';
         $this->_defaultPhoneCountryCode = $rs['defaultPhoneCountryCode'];
         $this->_dateDMY         = ($rs['dateFormatDMY'] == 0 ? false : true);
         $this->_isFirstTimeSetup = true;

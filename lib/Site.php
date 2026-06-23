@@ -75,20 +75,23 @@ class Site
      *
      * @param integer time zone offset
      * @param boolean use D-M-Y format dates
+     * @param string IANA timezone identifier (e.g. 'Europe/Berlin')
      * @return boolean True if successful; false otherwise.
      */
-    public function setLocalization($timeZone, $isDMY)
+    public function setLocalization($timeZone, $isDMY, $ianaTimeZone = 'UTC')
     {
         $sql = sprintf(
             "UPDATE
                 site
             SET
                 time_zone = %s,
-                date_format_ddmmyy = %s
+                date_format_ddmmyy = %s,
+                time_zone_iana = %s
             WHERE
                 site_id = %s",
             $this->_db->makeQueryInteger($timeZone),
             ($isDMY ? 1 : 0),
+            $this->_db->makeQueryString($ianaTimeZone),
             $this->_siteID
         );
 

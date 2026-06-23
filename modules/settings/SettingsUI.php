@@ -2434,6 +2434,7 @@ class SettingsUI extends UserInterface
                     }
 
                     $this->_template->assign('timeZone', $_SESSION['CATS']->getTimeZone());
+                    $this->_template->assign('ianaTimeZone', $_SESSION['CATS']->getIanaTimeZone());
                     $this->_template->assign('isDateDMY', $_SESSION['CATS']->isDateDMY());
 
                     // Default phone country calling code for the localization settings page.
@@ -2581,8 +2582,17 @@ class SettingsUI extends UserInterface
                 {
                     CommonErrors::fatal(COMMONERROR_PERMISSION, $this, 'Invalid user level for administration.');
                 }
-                //FIXME: Validation (escaped at lib level anyway)
-                $timeZone = $_POST['timeZone'];
+
+                $ianaTimeZone = isset($_POST['timeZoneIana']) ? $_POST['timeZoneIana'] : 'UTC';
+                try {
+                    $tz = new DateTimeZone($ianaTimeZone);
+                } catch (Exception $e) {
+                    $ianaTimeZone = 'UTC';
+                    $tz = new DateTimeZone('UTC');
+                }
+                $offsetSeconds = $tz->getOffset(new DateTime('now', new DateTimeZone('UTC')));
+                $timeZone = (int) round($offsetSeconds / 3600);
+
                 $dateFormat = $_POST['dateFormat'];
                 if ($dateFormat == 'mdy')
                 {
@@ -2594,7 +2604,7 @@ class SettingsUI extends UserInterface
                 }
 
                 $site = new Site($this->_siteID);
-                $site->setLocalization($timeZone, $isDMY);
+                $site->setLocalization($timeZone, $isDMY, $ianaTimeZone);
 
                 // Default phone country calling code (E.164) for the site.
                 if (isset($_POST['defaultPhoneCountryCodeDigits']))
@@ -2634,9 +2644,16 @@ class SettingsUI extends UserInterface
      */
     private function onAspLocalization()
     {
-        // FIXME: Input validation!
+        $ianaTimeZone = isset($_POST['timeZoneIana']) ? $_POST['timeZoneIana'] : 'UTC';
+        try {
+            $tz = new DateTimeZone($ianaTimeZone);
+        } catch (Exception $e) {
+            $ianaTimeZone = 'UTC';
+            $tz = new DateTimeZone('UTC');
+        }
+        $offsetSeconds = $tz->getOffset(new DateTime('now', new DateTimeZone('UTC')));
+        $timeZone = (int) round($offsetSeconds / 3600);
 
-        $timeZone = $_POST['timeZone'];
         $dateFormat = $_POST['dateFormat'];
         if ($dateFormat == 'mdy')
         {
@@ -2648,10 +2665,9 @@ class SettingsUI extends UserInterface
         }
 
         $site = new Site($this->_siteID);
-        $site->setLocalization($timeZone, $dateFormat);
+        $site->setLocalization($timeZone, $isDMY, $ianaTimeZone);
 
-        /* Reload the new data for the session. */
-        $_SESSION['CATS']->setTimeDateLocalization($timeZone, $isDMY);
+        $_SESSION['CATS']->setTimeDateLocalization($timeZone, $isDMY, $ianaTimeZone);
 
         $this->_template->assign('inputType', 'conclusion');
         $this->_template->assign('title', 'Localization Settings Saved!');
@@ -3068,13 +3084,22 @@ class SettingsUI extends UserInterface
 
     private function wizard_localization()
     {
-        if (!isset($_GET['timeZone']) || !isset($_GET['dateFormat']))
+        if (!isset($_GET['timeZoneIana']) || !isset($_GET['dateFormat']))
         {
             echo 'You didn\'t provide a time zone or date format.';
             return;
         }
 
-        $timeZone = $_GET['timeZone'];
+        $ianaTimeZone = $_GET['timeZoneIana'];
+        try {
+            $tz = new DateTimeZone($ianaTimeZone);
+        } catch (Exception $e) {
+            $ianaTimeZone = 'UTC';
+            $tz = new DateTimeZone('UTC');
+        }
+        $offsetSeconds = $tz->getOffset(new DateTime('now', new DateTimeZone('UTC')));
+        $timeZone = (int) round($offsetSeconds / 3600);
+
         $dateFormat = $_GET['dateFormat'];
         if ($dateFormat == 'mdy')
         {
@@ -3086,7 +3111,7 @@ class SettingsUI extends UserInterface
         }
 
         $site = new Site($this->_siteID);
-        $site->setLocalization($timeZone, $isDMY);
+        $site->setLocalization($timeZone, $isDMY, $ianaTimeZone);
         $site->setLocalizationConfigured();
 
         echo 'Ok';

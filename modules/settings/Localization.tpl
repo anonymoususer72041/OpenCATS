@@ -31,7 +31,7 @@
                                     <td>Please choose your time zone.</td>
                                 </tr>
                                 <tr>
-                                    <td style="padding-bottom: 10px;"><?php TemplateUtility::printTimeZoneSelect('timeZone', 'width: 420px;', '', $this->timeZone); ?></td>
+                                    <td style="padding-bottom: 10px;"><?php TemplateUtility::printIanaTimeZoneSelect('timeZoneIana', 'width: 420px;', '', $this->ianaTimeZone); ?></td>
                                 </tr>
 
                                 <tr>

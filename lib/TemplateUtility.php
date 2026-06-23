@@ -247,6 +247,95 @@ class TemplateUtility
     }
 
     /**
+     * Prints an HTML select box populated with IANA timezone identifiers,
+     * grouped by region (Africa, America, Asia, etc.).
+     *
+     * @param string ID and name attributes of the select input
+     * @param string style attribute of the select input
+     * @param string class attribute of the select input
+     * @param string selected IANA timezone identifier (e.g. 'Europe/Berlin')
+     * @return void
+     */
+    public static function printIanaTimeZoneSelect($selectID, $selectStyle,
+        $selectClass, $selectedTimeZone)
+    {
+        echo '<select id="', htmlspecialchars($selectID), '" name="', htmlspecialchars($selectID), '"';
+
+        if (!empty($selectClass))
+        {
+            echo ' class="', htmlspecialchars($selectClass), '"';
+        }
+
+        if (!empty($selectStyle))
+        {
+            echo ' style="', htmlspecialchars($selectStyle), '"';
+        }
+
+        echo '>';
+
+        $now = new DateTime('now', new DateTimeZone('UTC'));
+        $regions = array(
+            'Africa'     => DateTimeZone::AFRICA,
+            'America'    => DateTimeZone::AMERICA,
+            'Antarctica' => DateTimeZone::ANTARCTICA,
+            'Arctic'     => DateTimeZone::ARCTIC,
+            'Asia'       => DateTimeZone::ASIA,
+            'Atlantic'   => DateTimeZone::ATLANTIC,
+            'Australia'  => DateTimeZone::AUSTRALIA,
+            'Europe'     => DateTimeZone::EUROPE,
+            'Indian'     => DateTimeZone::INDIAN,
+            'Pacific'    => DateTimeZone::PACIFIC,
+        );
+
+        if ($selectedTimeZone === '')
+        {
+            echo '<option value="" selected="selected" disabled>-- Please select --</option>';
+        }
+
+        echo '<option value="UTC"';
+        if ($selectedTimeZone === 'UTC')
+        {
+            echo ' selected="selected"';
+        }
+        echo '>(UTC+00:00) UTC</option>';
+
+        foreach ($regions as $regionName => $regionConstant)
+        {
+            $identifiers = DateTimeZone::listIdentifiers($regionConstant);
+            if (empty($identifiers))
+            {
+                continue;
+            }
+
+            echo '<optgroup label="', htmlspecialchars($regionName), '">';
+
+            foreach ($identifiers as $identifier)
+            {
+                $tz = new DateTimeZone($identifier);
+                $offsetSeconds = $tz->getOffset($now);
+                $offsetHours = (int) ($offsetSeconds / 3600);
+                $offsetMinutes = abs((int) (($offsetSeconds % 3600) / 60));
+                $offsetString = sprintf('%+03d:%02d', $offsetHours, $offsetMinutes);
+
+                $displayName = str_replace('_', ' ',
+                    substr($identifier, strlen($regionName) + 1));
+
+                echo '<option value="', htmlspecialchars($identifier), '"';
+                if ($identifier === $selectedTimeZone)
+                {
+                    echo ' selected="selected"';
+                }
+                echo '>(UTC', $offsetString, ') ', htmlspecialchars($displayName),
+                    '</option>';
+            }
+
+            echo '</optgroup>';
+        }
+
+        echo '</select>';
+    }
+
+    /**
      * Prints the Quick Search box and MRU list.
      *
      * @return void

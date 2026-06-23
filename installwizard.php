@@ -474,7 +474,10 @@
                                                     <td>Please choose your time zone.</td>
                                                 </tr>
                                                 <tr>
-                                                    <td style="padding-bottom: 10px;"><?php if (!isset($php4)) TemplateUtility::printTimeZoneSelect('timeZone', 'width: 420px;', '', OFFSET_GMT); ?></td>
+                                                    <td style="padding-bottom: 10px;"><?php if (!isset($php4)) TemplateUtility::printIanaTimeZoneSelect('timeZoneIana', 'width: 420px;', '', ''); ?></td>
+                                                </tr>
+                                                <tr id="timeZoneIanaError" style="display: none;">
+                                                    <td><table class="footer_fail"><tr><td>Please select a valid time zone before continuing.</td></tr></table></td>
                                                 </tr>
 
                                                 <tr>
