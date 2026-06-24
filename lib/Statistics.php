@@ -1044,6 +1044,10 @@ class Statistics
                 break;
         }
 
+        /* Apply the current session offset (minutes) to align period
+         * boundaries with local time. This is a single fixed offset and
+         * does NOT perform a full per-row IANA/DST conversion; dates in
+         * a different DST period will be off by the DST delta. */
         if ($this->_timeZoneOffset != 0)
         {
             $criteria = str_replace('CURDATE()', 'DATE_ADD(CURDATE(), INTERVAL ' . $this->_timeZoneOffset . ' MINUTE)', $criteria);

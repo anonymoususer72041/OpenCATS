@@ -661,7 +661,13 @@ class DatabaseConnection
     // FIXME: Document me.
     private function _localizationFilter($query)
     {
-        /* Fix query to allow time results to be offset by $_timeZone. */
+        /* Shift DATE_FORMAT() results by the current session offset so that
+         * displayed timestamps approximate local time. This uses a single
+         * fixed offset (minutes) computed once per request and does NOT
+         * perform a full per-row IANA/DST conversion. Historical or future
+         * dates in a different DST period will be off by the DST delta.
+         * A proper fix would require MySQL CONVERT_TZ() with loaded timezone
+         * tables, which is not guaranteed in all deployments. */
         if (strpos($query , 'SELECT') !== 0)
         {
             return $query;
