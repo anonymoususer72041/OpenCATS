@@ -331,7 +331,7 @@ class Calendar
             $jobOrderIDSQL = $this->_db->makeQueryInteger($jobOrderID);
         }
 
-        $utcDate = self::_localToUtc($date, $this->_getIanaTimeZone());
+        $utcDate = DateUtility::localDateTimeToUtc($date, $this->_getIanaTimeZone());
 
         $sql = sprintf(
             "INSERT INTO calendar_event (
@@ -433,7 +433,7 @@ class Calendar
             $jobOrderIDSQL = $this->_db->makeQueryInteger($jobOrderID);
         }
 
-        $utcDate = self::_localToUtc($date, $this->_getIanaTimeZone());
+        $utcDate = DateUtility::localDateTimeToUtc($date, $this->_getIanaTimeZone());
 
         $sql = sprintf(
             "UPDATE
@@ -1055,17 +1055,6 @@ class Calendar
         );
     }
 
-    /**
-     * Converts a local SQL datetime string to UTC.
-     *
-     * @param string SQL datetime (YYYY-MM-DD HH:MM:SS) in the local timezone.
-     * @param string IANA timezone identifier.
-     * @return string SQL datetime in UTC, or original value on failure.
-     */
-    protected static function _localToUtc($localDate, $ianaTimeZone)
-    {
-        return DateUtility::localDateTimeToUtc($localDate, $ianaTimeZone);
-    }
 }
 
 /**

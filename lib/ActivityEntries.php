@@ -98,7 +98,7 @@ class ActivityEntries
         if (is_string($dateOccurred) &&
             preg_match('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/', $dateOccurred))
         {
-            $dateOccurred = self::_localToUtc(
+            $dateOccurred = DateUtility::localDateTimeToUtc(
                 $dateOccurred, $this->_getIanaTimeZone()
             );
             $dateOccurredSQL = $this->_db->makeQueryString($dateOccurred);
@@ -256,7 +256,7 @@ class ActivityEntries
 
         if ($date !== false)
         {
-            $utcDate = self::_localToUtc($date, $this->_getIanaTimeZone());
+            $utcDate = DateUtility::localDateTimeToUtc($date, $this->_getIanaTimeZone());
 
             $sql = sprintf(
                 "UPDATE
@@ -656,17 +656,6 @@ class ActivityEntries
         return $_SESSION['CATS']->getIanaTimeZone();
     }
 
-    /**
-     * Converts a local SQL datetime string to UTC.
-     *
-     * @param string SQL datetime (YYYY-MM-DD HH:MM:SS) in the local timezone.
-     * @param string IANA timezone identifier.
-     * @return string SQL datetime in UTC, or original value on failure.
-     */
-    protected static function _localToUtc($localDate, $ianaTimeZone)
-    {
-        return DateUtility::localDateTimeToUtc($localDate, $ianaTimeZone);
-    }
 }
 
 ?>
