@@ -15,6 +15,13 @@ class TimezoneOffsetTest extends TestCase
     {
         date_default_timezone_set('UTC');
         $this->_session = new CATSSession();
+
+        /* Mark the session as logged in so that getTimeZoneOffsetMinutes()
+         * returns computed values instead of the not-logged-in default of 0. */
+        $rc = new ReflectionClass('CATSSession');
+        $prop = $rc->getProperty('_isLoggedIn');
+        $prop->setAccessible(true);
+        $prop->setValue($this->_session, true);
     }
 
     function testBerlinOffsetMinutes()
@@ -95,6 +102,31 @@ class TimezoneOffsetTest extends TestCase
 
         $minutes = $this->_session->getTimeZoneOffsetMinutes();
         $this->assertSame(-570, $minutes);
+    }
+
+    function testStJohnsNegativeFractionalOffset()
+    {
+        $this->_session->setTimeDateLocalization(false, 'America/St_Johns');
+
+        $minutes = $this->_session->getTimeZoneOffsetMinutes();
+
+        /* America/St_Johns is UTC-3:30 (NST) or UTC-2:30 (NDT). */
+        $this->assertTrue(
+            $minutes === -210 || $minutes === -150,
+            'America/St_Johns should be -210 or -150 minutes, got ' . $minutes
+        );
+
+        $hours = $this->_session->getTimeZoneOffsetHours();
+
+        /* Truncation toward zero: -3:30 -> -3, -2:30 -> -2. */
+        $this->assertTrue(
+            $hours === -3 || $hours === -2,
+            'America/St_Johns truncated hours should be -3 or -2, got ' . $hours
+        );
+
+        $legacy = $this->_session->getTimeZoneOffset();
+        $this->assertSame($hours, $legacy,
+            'getTimeZoneOffset() must match getTimeZoneOffsetHours()');
     }
 
     function testUtcOffsetIsZero()
