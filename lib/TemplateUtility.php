@@ -902,8 +902,12 @@ class TemplateUtility
     {
         $build = $_SESSION['CATS']->getCachedBuild();
 
-        // FIXME: LOCAL TIME ZONE!
-        $date  = date('l, F jS, Y \a\t h:i:s A T');
+        $ianaTimeZone = $_SESSION['CATS']->getIanaTimeZone();
+        $date = DateUtility::utcDateTimeToLocal(
+            gmdate('Y-m-d H:i:s'),
+            $ianaTimeZone,
+            'l, F jS, Y \a\t h:i:s A T'
+        );
 
         if ($build > 0)
         {

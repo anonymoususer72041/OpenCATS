@@ -676,13 +676,29 @@ class Statistics
         switch ($modePeriod)
         {
             case 'month':
-                $periodChriterion = 'AND TO_DAYS(candidate.date_modified) >= TO_DAYS(DATE_SUB(CURDATE(), INTERVAL 1 MONTH))';
+                $tz = new DateTimeZone($this->_ianaTimeZone);
+                $start = new DateTime('now', $tz);
+                $start->setTime(0, 0, 0);
+                $start->modify('-1 month');
+                $start->setTimezone(new DateTimeZone('UTC'));
+                $periodChriterion = sprintf(
+                    "AND candidate.date_modified >= '%s'",
+                    $start->format('Y-m-d H:i:s')
+                );
                 break;
-                
+
             case 'week':
-                $periodChriterion = 'AND TO_DAYS(candidate.date_modified) >= TO_DAYS(DATE_SUB(CURDATE(), INTERVAL 7 DAY))';
+                $tz = new DateTimeZone($this->_ianaTimeZone);
+                $start = new DateTime('now', $tz);
+                $start->setTime(0, 0, 0);
+                $start->modify('-7 days');
+                $start->setTimezone(new DateTimeZone('UTC'));
+                $periodChriterion = sprintf(
+                    "AND candidate.date_modified >= '%s'",
+                    $start->format('Y-m-d H:i:s')
+                );
                 break;
-            
+
             default:
                 $periodChriterion = '';
                 break;
