@@ -110,7 +110,7 @@ class ImportantPipelineDashboard extends DataGrid
                                      'alphaNavigation' => true,
                                      'filterHaving'    => 'companyName'),
 
-            'Modified' =>      array('pagerRender'     => 'return $rsData[\'dateModified\'];',
+            'Modified' =>      array('pagerRender'     => '$f = $_SESSION[\'CATS\']->isDateDMY() ? \'d-m-y\' : \'m-d-y\'; return DateUtility::utcDateTimeToLocal($rsData[\'dateModified\'], $_SESSION[\'CATS\']->getIanaTimeZone(), $f);',
                                      'sortableColumn'  => 'dateModifiedSort',
                                      'pagerWidth'      => 70,
                                      'pagerOptional'   => true,
@@ -143,7 +143,7 @@ class ImportantPipelineDashboard extends DataGrid
                 joborder.joborder_id as joborderID,
                 user.first_name as userFirstName,
                 user.last_name as userLastName,
-                DATE_FORMAT(candidate_joborder.date_modified, '%%m-%%d-%%y ') as dateModified,
+                candidate_joborder.date_modified as dateModified,
                 candidate_joborder.date_modified as dateModifiedSort,
                 IF(candidate_joborder.status = %s, 1, IF(candidate_joborder.status = %s, 2, 3)) as statusSort,
                 candidate_joborder_status.short_description as status
@@ -271,7 +271,7 @@ class CallsDataGrid extends DataGrid
         $this->_dataItemIDColumn = 'company.company_id';
 
         $this->_classColumns = array(
-            'Time' =>          array('pagerRender'    => 'return $rsData[\'dateCreated\'].\':\';',
+            'Time' =>          array('pagerRender'    => '$f = $_SESSION[\'CATS\']->isDateDMY() ? \'d-m-y h:i A\' : \'m-d-y h:i A\'; return DateUtility::utcDateTimeToLocal($rsData[\'dateCreated\'], $_SESSION[\'CATS\']->getIanaTimeZone(), $f).\':\';',
                                       'sortableColumn' => 'dateCreatedSort',
                                       'pagerWidth'     => 90,
                                       'pagerOptional'  => false,
@@ -327,9 +327,7 @@ class CallsDataGrid extends DataGrid
                 activity.joborder_id AS jobOrderID,
                 activity.notes AS notes,
                 activity_type.short_description AS typeDescription,
-                DATE_FORMAT(
-                    activity.date_occurred, '%%m-%%d-%%y %%h:%%i %%p'
-                ) AS dateCreated,
+                activity.date_occurred AS dateCreated,
                 activity.date_occurred AS dateCreatedSort,
                 entered_by_user.first_name AS enteredByFirstName,
                 entered_by_user.last_name AS enteredByLastName,
@@ -381,9 +379,7 @@ class CallsDataGrid extends DataGrid
                 activity.joborder_id AS jobOrderID,
                 activity.notes AS notes,
                 activity_type.short_description AS typeDescription,
-                DATE_FORMAT(
-                    activity.date_occurred, '%%m-%%d-%%y %%h:%%i %%p'
-                ) AS dateCreated,
+                activity.date_occurred AS dateCreated,
                 activity.date_occurred AS dateCreatedSort,
                 entered_by_user.first_name AS enteredByFirstName,
                 entered_by_user.last_name AS enteredByLastName,

@@ -212,12 +212,8 @@ class Pipelines
                 joborder.is_hot AS isHot,
                 joborder.openings AS openings,
                 joborder.openings_available AS openingsAvailable,
-                DATE_FORMAT(
-                    joborder.start_date, '%%m-%%d-%%y'
-                ) AS start_date,
-                DATE_FORMAT(
-                    joborder.date_created, '%%m-%%d-%%y'
-                ) AS dateCreated,
+                joborder.start_date AS startDateRaw,
+                joborder.date_created AS dateCreatedRaw,
                 candidate.candidate_id AS candidateID,
                 candidate.email1 AS candidateEmail,
                 candidate_joborder_status.candidate_joborder_status_id AS statusID,
@@ -253,7 +249,14 @@ class Pipelines
             $this->_siteID
         );
 
-        return $this->_db->getAssoc($sql);
+        $rs = $this->_db->getAssoc($sql);
+        if (!empty($rs))
+        {
+            $formatted = $this->_formatPipelineRows(array($rs));
+            $rs = $formatted[0];
+        }
+
+        return $rs;
     }
 
     /**
@@ -397,7 +400,7 @@ class Pipelines
             $this->_siteID
         );
 
-        return $this->_db->getAllAssoc($sql);
+        return $this->_formatPipelineRows($this->_db->getAllAssoc($sql));
     }
 
     // FIXME: Document me.
@@ -421,7 +424,7 @@ class Pipelines
             $this->_siteID
         );
 
-        return $this->_db->getAllAssoc($sql);
+        return $this->_formatPipelineRows($this->_db->getAllAssoc($sql));
     }
 
     // FIXME: Document me.
@@ -482,12 +485,8 @@ class Pipelines
                 joborder.salary AS salary,
                 joborder.is_hot AS isHot,
                 joborder.client_job_id AS clientJobID,
-                DATE_FORMAT(
-                    joborder.start_date, '%%m-%%d-%%y'
-                ) AS start_date,
-                DATE_FORMAT(
-                    joborder.date_created, '%%m-%%d-%%y'
-                ) AS dateCreated,
+                joborder.start_date AS startDateRaw,
+                joborder.date_created AS dateCreatedRaw,
                 candidate.candidate_id AS candidateID,
                 candidate.email1 AS candidateEmail,
                 candidate_joborder_status.candidate_joborder_status_id AS statusID,
@@ -526,7 +525,7 @@ class Pipelines
             $this->_siteID
         );
 
-        return $this->_db->getAllAssoc($sql);
+        return $this->_formatPipelineRows($this->_db->getAllAssoc($sql));
     }
 
     /**
@@ -550,12 +549,8 @@ class Pipelines
                 joborder.salary AS salary,
                 joborder.is_hot AS isHot,
                 joborder.client_job_id AS clientJobID,
-                DATE_FORMAT(
-                    joborder.start_date, '%%m-%%d-%%y'
-                ) AS start_date,
-                DATE_FORMAT(
-                    joborder.date_created, '%%m-%%d-%%y'
-                ) AS dateCreated,
+                joborder.start_date AS startDateRaw,
+                joborder.date_created AS dateCreatedRaw,
                 candidate.candidate_id AS candidateID,
                 candidate.email1 AS candidateEmail,
                 candidate_joborder_status.candidate_joborder_status_id AS statusID,
@@ -597,7 +592,7 @@ class Pipelines
             JobOrderStatuses::getClosedStatusSQL()
         );
 
-        return $this->_db->getAllAssoc($sql);
+        return $this->_formatPipelineRows($this->_db->getAllAssoc($sql));
     }
 
     /**
@@ -622,9 +617,7 @@ class Pipelines
                 candidate.email1 AS candidateEmail,
                 candidate_joborder.status AS jobOrderStatus,
                 candidate.is_hot AS isHotCandidate,
-                DATE_FORMAT(
-                    candidate_joborder.date_created, '%%m-%%d-%%y'
-                ) AS dateCreated,
+                candidate_joborder.date_created AS dateCreatedRaw,
                 UNIX_TIMESTAMP(candidate_joborder.date_created) AS dateCreatedInt,
                 candidate_joborder_status.short_description AS status,
                 candidate_joborder.candidate_joborder_id AS candidateJobOrderID,
@@ -713,7 +706,7 @@ class Pipelines
             $orderBy
         );
 
-        return $this->_db->getAllAssoc($sql);
+        return $this->_formatPipelineRows($this->_db->getAllAssoc($sql));
     }
 
     // FIXME: Document me.
@@ -775,14 +768,12 @@ class Pipelines
                 candidate.email1 AS candidateEmail,
                 candidate_joborder.status AS jobOrderStatus,
                 activity.notes AS notes,
-                DATE_FORMAT(
-                    candidate_joborder.date_created, '%%m-%%d-%%y'
-                ) AS dateCreated,
+                candidate_joborder.date_created AS dateCreatedRaw,
                 candidate_joborder.candidate_joborder_id AS candidateJobOrderID,
                 candidate_joborder.rating_value AS ratingValue,
                 entered_by_user.first_name AS enteredByFirstName,
                 entered_by_user.last_name AS enteredByLastName,
-                DATE_FORMAT(activity.date_modified, '%%m-%%d-%%y (%%h:%%i:%%s %%p)') AS dateModified
+                activity.date_modified AS dateModifiedRaw
             FROM
                 candidate_joborder
             LEFT JOIN candidate
@@ -805,7 +796,49 @@ class Pipelines
             $this->_siteID
         );
 
-        return $this->_db->getAllAssoc($sql);
+        return $this->_formatPipelineRows($this->_db->getAllAssoc($sql));
+    }
+
+    private function _getIanaTimeZone()
+    {
+        return $_SESSION['CATS']->getIanaTimeZone();
+    }
+
+    private function _isDateDMY()
+    {
+        return $_SESSION['CATS']->isDateDMY();
+    }
+
+    private function _formatPipelineRows($rs)
+    {
+        $ianaTimeZone = $this->_getIanaTimeZone();
+        $dateDMY = $this->_isDateDMY();
+        $dFormat = $dateDMY ? 'd-m-y' : 'm-d-y';
+        $dtFormat = $dateDMY ? 'd-m-y (h:i:s A)' : 'm-d-y (h:i:s A)';
+
+        foreach ($rs as $key => $row)
+        {
+            if (isset($row['startDateRaw']))
+            {
+                $rs[$key]['start_date'] = DateUtility::formatDate(
+                    $row['startDateRaw'], $dFormat
+                );
+            }
+            if (isset($row['dateCreatedRaw']))
+            {
+                $rs[$key]['dateCreated'] = DateUtility::utcDateTimeToLocal(
+                    $row['dateCreatedRaw'], $ianaTimeZone, $dFormat
+                );
+            }
+            if (isset($row['dateModifiedRaw']))
+            {
+                $rs[$key]['dateModified'] = DateUtility::utcDateTimeToLocal(
+                    $row['dateModifiedRaw'], $ianaTimeZone, $dtFormat
+                );
+            }
+        }
+
+        return $rs;
     }
 
 }

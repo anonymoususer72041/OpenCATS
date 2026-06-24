@@ -30,6 +30,7 @@
  * @version    $Id: Dashboard.php 3784 2007-12-03 21:57:10Z brian $
  */
 
+include_once(LEGACY_ROOT . '/lib/DateUtility.php');
 include_once(LEGACY_ROOT . '/lib/Calendar.php');
 
 /**
@@ -67,9 +68,6 @@ class Dashboard
                 user.last_name as userLastName,
                 IF (company.is_hot = 1, 'jobLinkHot', 'jobLinkCold') as companyClassName,
                 IF (candidate.is_hot = 1, 'jobLinkHot', 'jobLinkCold') as candidateClassName,
-                DATE_FORMAT(
-                    candidate_joborder_status_history.date, '%%m-%%d-%%y'
-                ) AS date,
                 candidate_joborder_status_history.date AS datesort
             FROM
                 candidate_joborder_status_history
@@ -93,6 +91,15 @@ class Dashboard
         );
 
         $rs = $this->_db->getAllAssoc($sql);
+
+        $ianaTimeZone = $_SESSION['CATS']->getIanaTimeZone();
+        $dFormat = $_SESSION['CATS']->isDateDMY() ? 'd-m-y' : 'm-d-y';
+        foreach ($rs as $key => $row)
+        {
+            $rs[$key]['date'] = DateUtility::utcDateTimeToLocal(
+                $row['datesort'], $ianaTimeZone, $dFormat
+            );
+        }
 
         return $rs;
     }

@@ -108,7 +108,7 @@ class ActivityDataGrid extends DataGrid
         $this->_dataItemIDColumn = 'company.company_id';
 
         $this->_classColumns = array( 
-            'Date' =>           array('pagerRender'    => 'return $rsData[\'dateCreated\'];', 
+            'Date' =>           array('pagerRender'    => '$f = $_SESSION[\'CATS\']->isDateDMY() ? \'d-m-y (h:i A)\' : \'m-d-y (h:i A)\'; return DateUtility::utcDateTimeToLocal($rsData[\'dateCreated\'], $_SESSION[\'CATS\']->getIanaTimeZone(), $f);', 
                                       'sortableColumn' => 'dateCreatedSort',
                                       'pagerWidth'     => 110,
                                       'pagerOptional'  => true,
@@ -204,9 +204,7 @@ class ActivityDataGrid extends DataGrid
                 activity.joborder_id AS jobOrderID,
                 activity.notes AS notes,
                 activity_type.short_description AS typeDescription,
-                DATE_FORMAT(
-                    activity.date_occurred, '%%m-%%d-%%y (%%h:%%i %%p)'
-                ) AS dateCreated,
+                activity.date_occurred AS dateCreated,
                 activity.date_occurred AS dateCreatedSort,
                 entered_by_user.first_name AS enteredByFirstName,
                 entered_by_user.last_name AS enteredByLastName,
@@ -253,9 +251,7 @@ class ActivityDataGrid extends DataGrid
                 activity.joborder_id AS jobOrderID,
                 activity.notes AS notes,
                 activity_type.short_description AS typeDescription,
-                DATE_FORMAT(
-                    activity.date_occurred, '%%m-%%d-%%y (%%h:%%i %%p)'
-                ) AS dateCreated,
+                activity.date_occurred AS dateCreated,
                 activity.date_occurred AS dateCreatedSort,
                 entered_by_user.first_name AS enteredByFirstName,
                 entered_by_user.last_name AS enteredByLastName,
