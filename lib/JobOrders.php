@@ -40,6 +40,7 @@ use OpenCATS\Entity\JobOrderRepositoryException;
 define('JOBORDERS_STATUS_SHARE',         100);
 define('JOBORDERS_STATUS_ALL',           10100);
 
+include_once(LEGACY_ROOT . '/lib/DateUtility.php');
 include_once(LEGACY_ROOT . '/lib/Pipelines.php');
 include_once(LEGACY_ROOT . '/lib/Calendar.php');
 include_once(LEGACY_ROOT . '/lib/Pager.php');
@@ -454,18 +455,12 @@ class JobOrders
                 ) AS ownerFullName,
                 owner_user.email AS owner_email,
                 recruiter_user.email AS recruiter_email,
-                DATE_FORMAT(
-                    joborder.start_date, '%%m-%%d-%%y'
-                ) AS startDate,
+                joborder.start_date AS startDateRaw,
                 DATEDIFF(
                     NOW(), joborder.date_created
                 ) AS daysOld,
-                DATE_FORMAT(
-                    joborder.date_created, '" . DateUtility::getMysqlDateTimeFormat() . "'
-                ) AS dateCreated,
-                DATE_FORMAT(
-                    joborder.date_modified, '" . DateUtility::getMysqlDateTimeFormat() . "'
-                ) AS dateModified,
+                joborder.date_created AS dateCreatedRaw,
+                joborder.date_modified AS dateModifiedRaw,
                 COUNT(
                     candidate_joborder.joborder_id
                 ) AS pipeline,
@@ -507,7 +502,25 @@ class JobOrders
 
         if (!eval(Hooks::get('JO_GET_1_SQL'))) return;
 
-        return $this->_db->getAssoc($sql);
+        $rs = $this->_db->getAssoc($sql);
+        if (!empty($rs))
+        {
+            $ianaTimeZone = $this->_getIanaTimeZone();
+            $dateDMY = $this->_isDateDMY();
+            $dtFormat = $dateDMY ? 'd-m-y (h:i A)' : 'm-d-y (h:i A)';
+            $dFormat = $dateDMY ? 'd-m-y' : 'm-d-y';
+            $rs['startDate'] = DateUtility::formatDate(
+                $rs['startDateRaw'], $dFormat
+            );
+            $rs['dateCreated'] = DateUtility::utcDateTimeToLocal(
+                $rs['dateCreatedRaw'], $ianaTimeZone, $dtFormat
+            );
+            $rs['dateModified'] = DateUtility::utcDateTimeToLocal(
+                $rs['dateModifiedRaw'], $ianaTimeZone, $dtFormat
+            );
+        }
+
+        return $rs;
     }
 
     /**
@@ -546,9 +559,7 @@ class JobOrders
                 joborder.public AS public,
                 joborder.questionnaire_id as questionnaireID,
                 joborder.company_department_id AS departmentID,
-                DATE_FORMAT(
-                    joborder.start_date, '%%m-%%d-%%y'
-                ) AS startDate
+                joborder.start_date AS startDateRaw
             FROM
                 joborder
             LEFT JOIN company
@@ -563,6 +574,13 @@ class JobOrders
         if (!eval(Hooks::get('JO_GET_EDIT_SQL'))) return;
 
         $rs = $this->_db->getAssoc($sql);
+        if (!empty($rs))
+        {
+            $dFormat = $this->_isDateDMY() ? 'd-m-y' : 'm-d-y';
+            $rs['startDate'] = DateUtility::formatDate(
+                $rs['startDateRaw'], $dFormat
+            );
+        }
 
         return $rs;
     }
@@ -682,15 +700,8 @@ class JobOrders
                 recruiter_user.last_name AS recruiterLastName,
                 owner_user.first_name AS ownerFirstName,
                 owner_user.last_name AS ownerLastName,
-                DATE_FORMAT(
-                    joborder.start_date, '%%m-%%d-%%y'
-                ) AS startDate,
-                DATE_FORMAT(
-                    joborder.date_created, '%%m-%%d-%%y'
-                ) AS dateCreated,
-                DATE_FORMAT(
-                    joborder.date_modified, '%%m-%%d-%%y'
-                ) AS dateModified,
+                joborder.start_date AS startDateRaw,
+                joborder.date_modified AS dateModifiedRaw,
                 DATEDIFF(
                     NOW(), joborder.date_created
                 ) AS daysOld,
@@ -755,7 +766,24 @@ class JobOrders
 
         if (!eval(Hooks::get('JO_GET_ALL_SQL'))) return;
 
-        return $this->_db->getAllAssoc($sql);
+        $rs = $this->_db->getAllAssoc($sql);
+        $ianaTimeZone = $this->_getIanaTimeZone();
+        $dateDMY = $this->_isDateDMY();
+        $dFormat = $dateDMY ? 'd-m-y' : 'm-d-y';
+        foreach ($rs as $key => $row)
+        {
+            $rs[$key]['startDate'] = DateUtility::formatDate(
+                $row['startDateRaw'], $dFormat
+            );
+            $rs[$key]['dateCreated'] = DateUtility::utcDateTimeToLocal(
+                $row['dateCreatedSort'], $ianaTimeZone, $dFormat
+            );
+            $rs[$key]['dateModified'] = DateUtility::utcDateTimeToLocal(
+                $row['dateModifiedRaw'], $ianaTimeZone, $dFormat
+            );
+        }
+
+        return $rs;
     }
 
     /**
@@ -873,6 +901,16 @@ class JobOrders
         {
             return false;
         }
+    }
+
+    private function _getIanaTimeZone()
+    {
+        return $_SESSION['CATS']->getIanaTimeZone();
+    }
+
+    private function _isDateDMY()
+    {
+        return $_SESSION['CATS']->isDateDMY();
     }
 }
 

@@ -35,6 +35,7 @@ use OpenCATS\Entity\CompanyRepository;
  * @version    $Id: Companies.php 3690 2007-11-26 18:07:17Z brian $
  */
 
+include_once(LEGACY_ROOT . '/lib/DateUtility.php');
 include_once(LEGACY_ROOT . '/lib/Pager.php');
 include_once(LEGACY_ROOT . '/lib/ListEditor.php');
 include_once(LEGACY_ROOT . '/lib/EmailTemplates.php');
@@ -373,9 +374,7 @@ class Companies
                 CONCAT(
                     billing_contact.first_name, ' ', billing_contact.last_name
                 ) AS billingContactFullName,
-                DATE_FORMAT(
-                    company.date_created, '" . DateUtility::getMysqlDateTimeFormat() . "'
-                ) AS dateCreated,
+                company.date_created AS dateCreatedRaw,
                 CONCAT(
                     entered_by_user.first_name, ' ', entered_by_user.last_name
                 ) AS enteredByFullName,
@@ -396,7 +395,16 @@ class Companies
             $this->_db->makeQueryInteger($companyID)
         );
 
-        return $this->_db->getAssoc($sql);
+        $rs = $this->_db->getAssoc($sql);
+        if (!empty($rs))
+        {
+            $dtFormat = $this->_isDateDMY() ? 'd-m-y (h:i A)' : 'm-d-y (h:i A)';
+            $rs['dateCreated'] = DateUtility::utcDateTimeToLocal(
+                $rs['dateCreatedRaw'], $this->_getIanaTimeZone(), $dtFormat
+            );
+        }
+
+        return $rs;
     }
 
     /**
@@ -742,6 +750,16 @@ class Companies
         }
 
         return $rs['companyID'];
+    }
+
+    private function _getIanaTimeZone()
+    {
+        return $_SESSION['CATS']->getIanaTimeZone();
+    }
+
+    private function _isDateDMY()
+    {
+        return $_SESSION['CATS']->isDateDMY();
     }
 }
 
