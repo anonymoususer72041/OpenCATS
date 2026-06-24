@@ -43,6 +43,8 @@ class Statistics
     private $_db;
     private $_siteID;
     private $_timeZoneOffset;
+    private $_ianaTimeZone;
+    private $_dateDMY;
 
 
     public function __construct($siteID)
@@ -52,6 +54,8 @@ class Statistics
 
         // FIXME: Session coupling...
         $this->_timeZoneOffset = $_SESSION['CATS']->getTimeZoneOffsetMinutes();
+        $this->_ianaTimeZone = $_SESSION['CATS']->getIanaTimeZone();
+        $this->_dateDMY = $_SESSION['CATS']->isDateDMY();
     }
 
 
@@ -293,9 +297,7 @@ class Statistics
                 CONCAT(
                     owner_user.first_name, ' ', owner_user.last_name
                 ) AS ownerFullName,
-                DATE_FORMAT(
-                    candidate_joborder_status_history.date, '%%m-%%d-%%y (%%h:%%i %%p)'
-                ) AS dateSubmitted
+                candidate_joborder_status_history.date AS dateSubmittedUtc
             FROM
                 candidate_joborder_status_history
             LEFT JOIN candidate
@@ -327,7 +329,15 @@ class Statistics
             $this->_siteID
         );
 
-        return $this->_db->getAllAssoc($sql);
+        $rs = $this->_db->getAllAssoc($sql);
+        foreach ($rs as $key => $row)
+        {
+            $rs[$key]['dateSubmitted'] = $this->_formatDateTimeForDisplay(
+                $row['dateSubmittedUtc']
+            );
+        }
+
+        return $rs;
     }
     
     /**
@@ -403,9 +413,7 @@ class Statistics
                 CONCAT(
                     owner_user.first_name, ' ', owner_user.last_name
                 ) AS ownerFullName,
-                DATE_FORMAT(
-                    candidate_joborder_status_history.date, '%%m-%%d-%%y (%%h:%%i %%p)'
-                ) AS dateSubmitted
+                candidate_joborder_status_history.date AS dateSubmittedUtc
             FROM
                 candidate_joborder_status_history
             LEFT JOIN candidate
@@ -437,7 +445,15 @@ class Statistics
             $this->_siteID
         );
 
-        return $this->_db->getAllAssoc($sql);
+        $rs = $this->_db->getAllAssoc($sql);
+        foreach ($rs as $key => $row)
+        {
+            $rs[$key]['dateSubmitted'] = $this->_formatDateTimeForDisplay(
+                $row['dateSubmittedUtc']
+            );
+        }
+
+        return $rs;
     }
     
     // FIXME: Document me.
@@ -615,9 +631,7 @@ class Statistics
                 CONCAT(
                     owner_user.first_name, ' ', owner_user.last_name
                 ) AS ownerFullName,
-                DATE_FORMAT(
-                    joborder.date_created, '%%m-%%d-%%y (%%h:%%i %%p)'
-                ) AS dateCreated,
+                joborder.date_created AS dateCreatedUtc,
                 COUNT(
                     candidate_joborder.joborder_id
                 ) AS pipeline,
@@ -688,9 +702,17 @@ class Statistics
             $this->_siteID
         );
 
-        return $this->_db->getAssoc($sql);
+        $rs = $this->_db->getAssoc($sql);
+        if (!empty($rs))
+        {
+            $rs['dateCreated'] = $this->_formatDateTimeForDisplay(
+                $rs['dateCreatedUtc']
+            );
+        }
+
+        return $rs;
     }
-    
+
     public function getEEOReport($modePeriod, $modeStatus)
     {
         switch ($modePeriod)
@@ -951,6 +973,24 @@ class Statistics
         }
 
         return $rs;
+    }
+
+
+    /**
+     * Formats a raw UTC datetime from the database as a local display string.
+     *
+     * @param string $utcDateTime Raw UTC datetime from a query result.
+     * @return string Formatted local datetime (e.g. '01-15-24 (01:00 PM)').
+     */
+    private function _formatDateTimeForDisplay($utcDateTime)
+    {
+        $format = $this->_dateDMY
+            ? 'd-m-y (h:i A)'
+            : 'm-d-y (h:i A)';
+
+        return DateUtility::utcDateTimeToLocal(
+            $utcDateTime, $this->_ianaTimeZone, $format
+        );
     }
 
 
