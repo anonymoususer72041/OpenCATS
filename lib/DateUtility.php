@@ -827,10 +827,36 @@ class DateUtility
     }
 
     /**
+     * Formats a date-only value (no timezone conversion).
+     *
+     * @param string $dateString  Date string (e.g. '2024-06-15' or
+     *                            '2024-06-15 00:00:00').
+     * @param string $format      PHP date() format string.
+     * @return string Formatted date, or the original value on failure /
+     *               empty input.
+     */
+    public static function formatDate($dateString, $format = 'm-d-y')
+    {
+        if (!is_string($dateString) || $dateString === '' ||
+            $dateString === '0000-00-00' || $dateString === '0000-00-00 00:00:00')
+        {
+            return $dateString;
+        }
+
+        $ts = strtotime($dateString);
+        if ($ts === false)
+        {
+            return $dateString;
+        }
+
+        return date($format, $ts);
+    }
+
+    /**
      * Converts the limited set of MySQL DATE_FORMAT tokens used in OpenCATS
      * to PHP date() tokens.
      *
-     * Supported: %m %d %y %Y %h %H %i %s %p %c
+     * Supported: %m %d %y %Y %h %H %i %s %p %c %b %M
      *
      * @param string $mysqlFormat MySQL DATE_FORMAT format string (with %%
      *               escaping as used in sprintf-style SQL).
@@ -849,6 +875,8 @@ class DateUtility
             '%%s' => 's',
             '%%p' => 'A',
             '%%c' => 'n',
+            '%%b' => 'M',
+            '%%M' => 'F',
         );
 
         return str_replace(array_keys($map), array_values($map), $mysqlFormat);

@@ -411,6 +411,78 @@ class TimezoneOffsetTest extends TestCase
             DateUtility::mysqlFormatToPhp('%%H:%%i %%c')
         );
     }
+
+    function testMysqlFormatToPhpAbbreviatedMonth()
+    {
+        $this->assertSame(
+            'M d, Y',
+            DateUtility::mysqlFormatToPhp('%%b %%d, %%Y')
+        );
+    }
+
+    function testMysqlFormatToPhpFullMonth()
+    {
+        $this->assertSame(
+            'F d, Y',
+            DateUtility::mysqlFormatToPhp('%%M %%d, %%Y')
+        );
+    }
+
+    /* ---------------------------------------------------------------
+     * formatDate()
+     * --------------------------------------------------------------- */
+
+    function testFormatDateBasic()
+    {
+        $this->assertSame(
+            '06-15-24',
+            DateUtility::formatDate('2024-06-15', 'm-d-y')
+        );
+    }
+
+    function testFormatDateDMY()
+    {
+        $this->assertSame(
+            '15-06-24',
+            DateUtility::formatDate('2024-06-15', 'd-m-y')
+        );
+    }
+
+    function testFormatDateWithTimeIgnored()
+    {
+        $this->assertSame(
+            '01-15-24',
+            DateUtility::formatDate('2024-01-15 13:00:00', 'm-d-y')
+        );
+    }
+
+    function testFormatDateEmptyReturnsEmpty()
+    {
+        $this->assertSame('', DateUtility::formatDate(''));
+    }
+
+    function testFormatDateZeroDateReturnsZeroDate()
+    {
+        $this->assertSame(
+            '0000-00-00', DateUtility::formatDate('0000-00-00')
+        );
+    }
+
+    function testFormatDateZeroDatetimeReturnsZeroDatetime()
+    {
+        $this->assertSame(
+            '0000-00-00 00:00:00',
+            DateUtility::formatDate('0000-00-00 00:00:00')
+        );
+    }
+
+    function testFormatDateInvalidReturnsOriginal()
+    {
+        $this->assertSame(
+            'not-a-date',
+            DateUtility::formatDate('not-a-date')
+        );
+    }
 }
 
 ?>
