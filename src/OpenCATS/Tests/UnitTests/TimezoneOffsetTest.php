@@ -250,6 +250,167 @@ class TimezoneOffsetTest extends TestCase
             $input, DateUtility::localDateTimeToUtc($input, '')
         );
     }
+
+    /* ---------------------------------------------------------------
+     * utcDateTimeToLocal()
+     * --------------------------------------------------------------- */
+
+    function testUtcToLocalBerlinWinter()
+    {
+        $result = DateUtility::utcDateTimeToLocal(
+            '2024-01-15 12:00:00', 'Europe/Berlin', 'Y-m-d H:i:s'
+        );
+        $this->assertSame('2024-01-15 13:00:00', $result);
+    }
+
+    function testUtcToLocalBerlinSummer()
+    {
+        $result = DateUtility::utcDateTimeToLocal(
+            '2024-07-15 12:00:00', 'Europe/Berlin', 'Y-m-d H:i:s'
+        );
+        $this->assertSame('2024-07-15 14:00:00', $result);
+    }
+
+    function testUtcToLocalKolkataFractionalOffset()
+    {
+        $result = DateUtility::utcDateTimeToLocal(
+            '2024-06-15 09:00:00', 'Asia/Kolkata', 'Y-m-d H:i:s'
+        );
+        $this->assertSame('2024-06-15 14:30:00', $result);
+    }
+
+    function testUtcToLocalStJohnsNegativeFractional()
+    {
+        /* America/St_Johns is UTC-3:30 (NST) in January. */
+        $result = DateUtility::utcDateTimeToLocal(
+            '2024-01-15 12:00:00', 'America/St_Johns', 'Y-m-d H:i:s'
+        );
+        $this->assertSame('2024-01-15 08:30:00', $result);
+    }
+
+    function testUtcToLocalMarquesasNegativeOffset()
+    {
+        /* Pacific/Marquesas is UTC-9:30 year-round. */
+        $result = DateUtility::utcDateTimeToLocal(
+            '2024-06-15 12:00:00', 'Pacific/Marquesas', 'Y-m-d H:i:s'
+        );
+        $this->assertSame('2024-06-15 02:30:00', $result);
+    }
+
+    function testUtcToLocalDstBoundaryDateShift()
+    {
+        /* UTC midnight in January in Europe/Berlin is 01:00 local,
+         * so the local date is still the same.  But for a west timezone
+         * the date can shift backwards. */
+        $result = DateUtility::utcDateTimeToLocal(
+            '2024-01-15 03:00:00', 'America/New_York', 'Y-m-d H:i:s'
+        );
+        /* America/New_York is UTC-5 in January. */
+        $this->assertSame('2024-01-14 22:00:00', $result);
+    }
+
+    function testUtcToLocalCustomFormat()
+    {
+        $result = DateUtility::utcDateTimeToLocal(
+            '2024-07-15 14:30:00', 'Europe/Berlin', 'm-d-y (h:i A)'
+        );
+        $this->assertSame('07-15-24 (04:30 PM)', $result);
+    }
+
+    function testUtcToLocalReturnsEmptyStringForEmpty()
+    {
+        $this->assertSame(
+            '', DateUtility::utcDateTimeToLocal('', 'Europe/Berlin')
+        );
+    }
+
+    function testUtcToLocalReturnsZeroDateUnchanged()
+    {
+        $this->assertSame(
+            '0000-00-00 00:00:00',
+            DateUtility::utcDateTimeToLocal(
+                '0000-00-00 00:00:00', 'Europe/Berlin'
+            )
+        );
+    }
+
+    function testUtcToLocalReturnsZeroDateOnlyUnchanged()
+    {
+        $this->assertSame(
+            '0000-00-00',
+            DateUtility::utcDateTimeToLocal('0000-00-00', 'Europe/Berlin')
+        );
+    }
+
+    function testUtcToLocalReturnsOriginalOnInvalidTimezone()
+    {
+        $input = '2024-06-15 12:00:00';
+        $this->assertSame(
+            $input,
+            DateUtility::utcDateTimeToLocal($input, 'Invalid/Zone')
+        );
+    }
+
+    function testUtcToLocalReturnsOriginalOnEmptyTimezone()
+    {
+        $input = '2024-06-15 12:00:00';
+        $this->assertSame(
+            $input, DateUtility::utcDateTimeToLocal($input, '')
+        );
+    }
+
+    function testUtcToLocalReturnsOriginalOnNonDateString()
+    {
+        $input = 'not-a-date';
+        $this->assertSame(
+            $input,
+            DateUtility::utcDateTimeToLocal($input, 'Europe/Berlin')
+        );
+    }
+
+    /* ---------------------------------------------------------------
+     * mysqlFormatToPhp()
+     * --------------------------------------------------------------- */
+
+    function testMysqlFormatToPhpDateTimeFormat()
+    {
+        $this->assertSame(
+            'm-d-y (h:i A)',
+            DateUtility::mysqlFormatToPhp('%%m-%%d-%%y (%%h:%%i %%p)')
+        );
+    }
+
+    function testMysqlFormatToPhpWithSeconds()
+    {
+        $this->assertSame(
+            'm-d-y (h:i:s A)',
+            DateUtility::mysqlFormatToPhp('%%m-%%d-%%y (%%h:%%i:%%s %%p)')
+        );
+    }
+
+    function testMysqlFormatToPhpDateOnly()
+    {
+        $this->assertSame(
+            'm-d-y',
+            DateUtility::mysqlFormatToPhp('%%m-%%d-%%y')
+        );
+    }
+
+    function testMysqlFormatToPhpFourDigitYear()
+    {
+        $this->assertSame(
+            'Y-m-d',
+            DateUtility::mysqlFormatToPhp('%%Y-%%m-%%d')
+        );
+    }
+
+    function testMysqlFormatToPhp24HourAndMonthNoLeadingZero()
+    {
+        $this->assertSame(
+            'H:i n',
+            DateUtility::mysqlFormatToPhp('%%H:%%i %%c')
+        );
+    }
 }
 
 ?>
