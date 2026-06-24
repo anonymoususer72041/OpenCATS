@@ -112,7 +112,7 @@ $date = DateUtility::convert('-', $activityDate, $dateFormatFlag, DATE_FORMAT_YY
 
 /* Save the new activity entry. */
 $activityEntries = new ActivityEntries();
-$activityEntries->update($activityID, $type, $activityNote, $jobOrderID, $date, $_SESSION['CATS']->getTimeZoneOffset());
+$activityEntries->update($activityID, $type, $activityNote, $jobOrderID, $date);
 
 /* Grab the current activity entry. */
 $activityEntry = $activityEntries->get($activityID);

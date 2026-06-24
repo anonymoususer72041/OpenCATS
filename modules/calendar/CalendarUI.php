@@ -471,15 +471,13 @@ class CalendarUI extends UserInterface
             );
         }
 
-        $timeZoneOffset = $_SESSION['CATS']->getTimeZoneOffset();
-
         if (!eval(Hooks::get('CALENDAR_ADD_PRE'))) return;
 
         $calendar = new Calendar();
         $eventID = $calendar->addEvent(
             $type, $date, $description, $allDay, $this->_userID, -1, -1, null,
             $title, $duration, $reminderEnabled, $reminderEmail, $reminderTime,
-            $publicEntry, $timeZoneOffset
+            $publicEntry
         );
 
         if ($eventID <= 0)
@@ -686,8 +684,7 @@ class CalendarUI extends UserInterface
         /* Update the event. */
         if (!$calendar->updateEvent($eventID, $type, $date, $description,
             $allDay, $dataItemID, $dataItemType, $jobOrderID, $title, $duration,
-            $reminderEnabled, $reminderEmail, $reminderTime, $publicEntry,
-            $_SESSION['CATS']->getTimeZoneOffset()))
+            $reminderEnabled, $reminderEmail, $reminderTime, $publicEntry))
         {
             CommonErrors::fatal(COMMONERROR_RECORDERROR, $this, 'Failed to update calendar event.');
         }
