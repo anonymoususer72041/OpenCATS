@@ -36,6 +36,7 @@ $CATSHome = realpath(dirname(__FILE__) . '/');
 chdir($CATSHome);
 
 include_once('./config.php');
+date_default_timezone_set('UTC');
 include_once(LEGACY_ROOT . '/constants.php');
 include_once(LEGACY_ROOT . '/lib/CATSUtility.php');
 include_once(LEGACY_ROOT . '/lib/DatabaseConnection.php');

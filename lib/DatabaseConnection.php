@@ -141,6 +141,20 @@ class DatabaseConnection
             return false;
         }
 
+        if (!mysqli_query($this->_connection, "SET time_zone = '+00:00'"))
+        {
+            $error = "errno: " . mysqli_errno($this->_connection) . ", ";
+            $error .= "error: " . mysqli_error($this->_connection);
+
+            die(
+                '<!-- NOSPACEFILTER --><p style="background: #ec3737; '
+                . 'padding: 4px; margin-top: 0; font: normal normal bold '
+                . '12px/130% Arial, Tahoma, sans-serif;">Error Setting '
+                . "Session Time Zone</p><pre>\n\n" . $error . "</pre>\n\n"
+            );
+            return false;
+        }
+
         return true;
     }
 
