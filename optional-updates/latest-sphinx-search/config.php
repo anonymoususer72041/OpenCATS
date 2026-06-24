@@ -156,8 +156,6 @@ define('FORGOT_PASSWORD_BODY',      'You recently requested that your OpenCATS: 
 /* Is this a demo site? */
 define('ENABLE_DEMO_MODE', false);
 
-/* Offset to GMT Time. */
-define('OFFSET_GMT', 0);
 
 /* Should we enforce only one session per user (excluding demo)? */
 define('ENABLE_SINGLE_SESSION', false);

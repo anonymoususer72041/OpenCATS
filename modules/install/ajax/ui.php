@@ -556,7 +556,6 @@ switch ($action)
             break;
         }
 
-        CATSUtility::changeConfigSetting('OFFSET_GMT', 0);
 
         $dateFormat = $_REQUEST['dateFormat'];
 

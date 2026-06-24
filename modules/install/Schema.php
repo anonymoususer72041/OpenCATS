@@ -134,7 +134,7 @@ class CATSSchema
                 ALTER TABLE `site` CHANGE `timezone_offset` `time_zone` int(5) DEFAULT 0;
             ',
             '24' => '
-                UPDATE `site` SET time_zone = ' . OFFSET_GMT . ';
+                UPDATE `site` SET time_zone = 0;
             ',
             '27' => 'PHP:
                 $db->query("DELETE FROM job_board_template");
