@@ -82,8 +82,10 @@ class Calendar
      */
     public function getEventArray($month, $year)
     {
-        // FIXME: Rewrite this query to use date ranges in WHERE, so that
-        //        indexes can be used.
+        $boundaries = $this->_getLocalMonthBoundariesUtc($month, $year);
+        $ianaTimeZone = $this->_getIanaTimeZone();
+        $dateDMY = $this->_isDateDMY();
+
         $sql = sprintf(
             "SELECT
                 calendar_event.calendar_event_id AS eventID,
@@ -98,31 +100,8 @@ class Calendar
                 calendar_event.reminder_email AS reminderEmail,
                 calendar_event.reminder_time AS reminderTime,
                 calendar_event.public AS public,
-                DATE_FORMAT(
-                    calendar_event.date, '%%d'
-                ) AS day,
-                DATE_FORMAT(
-                    calendar_event.date, '%%m'
-                ) AS month,
-                DATE_FORMAT(
-                    calendar_event.date, '%%y'
-                ) AS year,
-                DATE_FORMAT(
-                    calendar_event.date, '%%m-%%d-%%y'
-                ) AS date,
-                DATE_FORMAT(
-                    calendar_event.date, '%%h:%%i %%p'
-                ) AS time,
-                DATE_FORMAT(
-                    calendar_event.date, '%%H'
-                ) AS hour,
-                DATE_FORMAT(
-                    calendar_event.date, '%%i'
-                ) AS minute,
                 calendar_event.date AS dateSort,
-                DATE_FORMAT(
-                    calendar_event.date_created, '%%m-%%d-%%y (%%h:%%i %%p)'
-                ) AS dateCreated,
+                calendar_event.date_created AS dateCreatedRaw,
                 calendar_event_type.calendar_event_type_id AS eventType,
                 calendar_event_type.short_description AS eventTypeDescription,
                 entered_by_user.user_id AS userID,
@@ -135,19 +114,49 @@ class Calendar
             LEFT JOIN user AS entered_by_user
                 ON calendar_event.entered_by = entered_by_user.user_id
             WHERE
-                DATE_FORMAT(calendar_event.date, '%%c') = %s
+                calendar_event.date >= %s
             AND
-                DATE_FORMAT(calendar_event.date, '%%Y') = %s
+                calendar_event.date < %s
             AND
                 calendar_event.site_id = %s
             ORDER BY
                 dateSort ASC",
-            $month,
-            $year,
+            $this->_db->makeQueryString($boundaries['monthStart']),
+            $this->_db->makeQueryString($boundaries['nextMonthStart']),
             $this->_siteID
         );
 
         $rs = $this->_db->getAllAssoc($sql);
+
+        $dateFormat = $dateDMY ? 'd-m-y' : 'm-d-y';
+        $dateTimeFormat = $dateDMY ? 'd-m-y (h:i A)' : 'm-d-y (h:i A)';
+        foreach ($rs as $key => $row)
+        {
+            $rs[$key]['day'] = DateUtility::utcDateTimeToLocal(
+                $row['dateSort'], $ianaTimeZone, 'd'
+            );
+            $rs[$key]['month'] = DateUtility::utcDateTimeToLocal(
+                $row['dateSort'], $ianaTimeZone, 'm'
+            );
+            $rs[$key]['year'] = DateUtility::utcDateTimeToLocal(
+                $row['dateSort'], $ianaTimeZone, 'y'
+            );
+            $rs[$key]['date'] = DateUtility::utcDateTimeToLocal(
+                $row['dateSort'], $ianaTimeZone, $dateFormat
+            );
+            $rs[$key]['time'] = DateUtility::utcDateTimeToLocal(
+                $row['dateSort'], $ianaTimeZone, 'h:i A'
+            );
+            $rs[$key]['hour'] = DateUtility::utcDateTimeToLocal(
+                $row['dateSort'], $ianaTimeZone, 'H'
+            );
+            $rs[$key]['minute'] = DateUtility::utcDateTimeToLocal(
+                $row['dateSort'], $ianaTimeZone, 'i'
+            );
+            $rs[$key]['dateCreated'] = DateUtility::utcDateTimeToLocal(
+                $row['dateCreatedRaw'], $ianaTimeZone, $dateTimeFormat
+            );
+        }
 
         /* Build an array of result set arrays for each day of the month.
          * Days without any events scheduled will have an empty array.
@@ -621,18 +630,6 @@ class Calendar
                 calendar_event.all_day AS allDay,
                 calendar_event.description AS description,
                 calendar_event.public AS public,
-                DATE_FORMAT(
-                    calendar_event.date, '%%m-%%d-%%y (%%h:%%i %%p)'
-                ) AS dateShow,
-                DATE_FORMAT(
-                    calendar_event.date, '%%d'
-                ) AS day,
-                DATE_FORMAT(
-                    calendar_event.date, '%%m'
-                ) AS month,
-                DATE_FORMAT(
-                    calendar_event.date, '%%y'
-                ) AS year,
                 calendar_event.date AS dateSort,
                 entered_by_user.user_id AS userID,
                 entered_by_user.first_name AS enteredByFirstName,
@@ -667,7 +664,9 @@ class Calendar
             $this->_db->makeQueryInteger($dataItemID)
         );
 
-        return $this->_db->getAllAssoc($sql);
+        $rs = $this->_db->getAllAssoc($sql);
+
+        return $this->_formatCalendarEventRows($rs);
     }
 
     /**
@@ -711,21 +710,6 @@ class Calendar
                 calendar_event.description AS description,
                 calendar_event.public AS public,
                 calendar_event.all_day AS allDay,
-                DATE_FORMAT(
-                    calendar_event.date, '%%d'
-                ) AS day,
-                DATE_FORMAT(
-                    calendar_event.date, '%%m'
-                ) AS month,
-                DATE_FORMAT(
-                    calendar_event.date, '%%y'
-                ) AS year,
-                DATE_FORMAT(
-                    calendar_event.date, '%%m-%%d-%%y'
-                ) AS date,
-                DATE_FORMAT(
-                    calendar_event.date, '%%h:%%i %%p'
-                ) AS time,
                 calendar_event.date AS dateSort,
                 entered_by_user.user_id AS userID,
                 entered_by_user.first_name AS enteredByFirstName,
@@ -755,7 +739,9 @@ class Calendar
             $this->_userID,
             $criteria
         );
-        $todayRS = $this->_db->getAllAssoc($sql);
+        $todayRS = $this->_formatCalendarEventRows(
+            $this->_db->getAllAssoc($sql)
+        );
 
         /* Get events after today (local-day aware). */
         $sql = sprintf(
@@ -765,21 +751,6 @@ class Calendar
                 calendar_event.description AS description,
                 calendar_event.public AS public,
                 calendar_event.all_day AS allDay,
-                DATE_FORMAT(
-                    calendar_event.date, '%%d'
-                ) AS day,
-                DATE_FORMAT(
-                    calendar_event.date, '%%m'
-                ) AS month,
-                DATE_FORMAT(
-                    calendar_event.date, '%%y'
-                ) AS year,
-                DATE_FORMAT(
-                    calendar_event.date, '%%m-%%d-%%y'
-                ) AS date,
-                DATE_FORMAT(
-                    calendar_event.date, '%%h:%%i %%p'
-                ) AS time,
                 calendar_event.date AS dateSort,
                 entered_by_user.user_id AS userID,
                 entered_by_user.first_name AS enteredByFirstName,
@@ -808,7 +779,9 @@ class Calendar
             $criteria,
             $limit
         );
-        $futureRS = $this->_db->getAllAssoc($sql);
+        $futureRS = $this->_formatCalendarEventRows(
+            $this->_db->getAllAssoc($sql)
+        );
 
         $indexName = CATSUtility::getIndexName();
 
@@ -1018,6 +991,99 @@ class Calendar
     private function _getIanaTimeZone()
     {
         return $_SESSION['CATS']->getIanaTimeZone();
+    }
+
+    private function _isDateDMY()
+    {
+        return $_SESSION['CATS']->isDateDMY();
+    }
+
+    /**
+     * Adds IANA-aware day/month/year/date/time/hour/minute keys to calendar
+     * event rows from their raw UTC dateSort value.
+     */
+    private function _formatCalendarEventRows($rs)
+    {
+        $ianaTimeZone = $this->_getIanaTimeZone();
+        $dateFormat = $this->_isDateDMY() ? 'd-m-y' : 'm-d-y';
+        $dateTimeFormat = $this->_isDateDMY() ? 'd-m-y (h:i A)' : 'm-d-y (h:i A)';
+
+        foreach ($rs as $key => $row)
+        {
+            $rs[$key]['day'] = DateUtility::utcDateTimeToLocal(
+                $row['dateSort'], $ianaTimeZone, 'd'
+            );
+            $rs[$key]['month'] = DateUtility::utcDateTimeToLocal(
+                $row['dateSort'], $ianaTimeZone, 'm'
+            );
+            $rs[$key]['year'] = DateUtility::utcDateTimeToLocal(
+                $row['dateSort'], $ianaTimeZone, 'y'
+            );
+            $rs[$key]['date'] = DateUtility::utcDateTimeToLocal(
+                $row['dateSort'], $ianaTimeZone, $dateFormat
+            );
+            $rs[$key]['time'] = DateUtility::utcDateTimeToLocal(
+                $row['dateSort'], $ianaTimeZone, 'h:i A'
+            );
+            $rs[$key]['hour'] = DateUtility::utcDateTimeToLocal(
+                $row['dateSort'], $ianaTimeZone, 'H'
+            );
+            $rs[$key]['minute'] = DateUtility::utcDateTimeToLocal(
+                $row['dateSort'], $ianaTimeZone, 'i'
+            );
+            if (isset($row['dateCreatedRaw']))
+            {
+                $rs[$key]['dateCreated'] = DateUtility::utcDateTimeToLocal(
+                    $row['dateCreatedRaw'], $ianaTimeZone, $dateTimeFormat
+                );
+            }
+            if (isset($row['dateSort']) && !isset($row['dateShow']))
+            {
+                $rs[$key]['dateShow'] = DateUtility::utcDateTimeToLocal(
+                    $row['dateSort'], $ianaTimeZone, $dateTimeFormat
+                );
+            }
+        }
+
+        return $rs;
+    }
+
+    /**
+     * Returns the UTC boundaries for a local month in the site IANA timezone.
+     *
+     * @param integer $month Month number (1-12).
+     * @param integer $year  Four-digit year.
+     * @return array ('monthStart' => string, 'nextMonthStart' => string)
+     *               Both values are SQL datetime strings in UTC.
+     */
+    private function _getLocalMonthBoundariesUtc($month, $year)
+    {
+        $ianaTimeZone = $this->_getIanaTimeZone();
+
+        try
+        {
+            $localTz = new DateTimeZone($ianaTimeZone);
+        }
+        catch (Exception $e)
+        {
+            $localTz = new DateTimeZone('UTC');
+        }
+
+        $monthStart = new DateTime(
+            sprintf('%04d-%02d-01 00:00:00', $year, $month), $localTz
+        );
+
+        $nextMonthStart = clone $monthStart;
+        $nextMonthStart->modify('+1 month');
+
+        $utcTz = new DateTimeZone('UTC');
+        $monthStart->setTimezone($utcTz);
+        $nextMonthStart->setTimezone($utcTz);
+
+        return array(
+            'monthStart'     => $monthStart->format('Y-m-d H:i:s'),
+            'nextMonthStart' => $nextMonthStart->format('Y-m-d H:i:s')
+        );
     }
 
     /**
