@@ -728,6 +728,54 @@ class DateUtility
         );
     }
 
+    /**
+     * Converts a local wall-clock datetime string to UTC.
+     *
+     * @param string $localDateTime  SQL datetime (YYYY-MM-DD HH:MM:SS) in
+     *                               the given IANA timezone.
+     * @param string $ianaTimeZone   IANA timezone identifier (e.g.
+     *                               'Europe/Berlin').
+     * @return string SQL datetime in UTC, or the original value on failure.
+     */
+    public static function localDateTimeToUtc($localDateTime, $ianaTimeZone)
+    {
+        if (!is_string($localDateTime) ||
+            !preg_match('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/', $localDateTime))
+        {
+            return $localDateTime;
+        }
+
+        if (empty($ianaTimeZone) || !is_string($ianaTimeZone))
+        {
+            return $localDateTime;
+        }
+
+        try
+        {
+            $localTimeZone = new DateTimeZone($ianaTimeZone);
+            $date = DateTime::createFromFormat(
+                '!Y-m-d H:i:s', $localDateTime, $localTimeZone
+            );
+
+            $errors = DateTime::getLastErrors();
+            if ($date === false ||
+                ($errors !== false &&
+                 ($errors['warning_count'] > 0 || $errors['error_count'] > 0)) ||
+                $date->format('Y-m-d H:i:s') !== $localDateTime)
+            {
+                return $localDateTime;
+            }
+
+            $date->setTimezone(new DateTimeZone('UTC'));
+
+            return $date->format('Y-m-d H:i:s');
+        }
+        catch (Exception $e)
+        {
+            return $localDateTime;
+        }
+    }
+
     private static function _removeLeadingZeros($array)
     {
         foreach ($array as $key => $value)

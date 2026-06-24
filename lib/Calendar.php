@@ -1070,36 +1070,7 @@ class Calendar
      */
     protected static function _localToUtc($localDate, $ianaTimeZone)
     {
-        if (!is_string($localDate) ||
-            !preg_match('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/', $localDate))
-        {
-            return $localDate;
-        }
-
-        try
-        {
-            $localTimeZone = new DateTimeZone($ianaTimeZone);
-            $date = DateTime::createFromFormat(
-                '!Y-m-d H:i:s', $localDate, $localTimeZone
-            );
-
-            $errors = DateTime::getLastErrors();
-            if ($date === false ||
-                ($errors !== false &&
-                 ($errors['warning_count'] > 0 || $errors['error_count'] > 0)) ||
-                $date->format('Y-m-d H:i:s') !== $localDate)
-            {
-                return $localDate;
-            }
-
-            $date->setTimezone(new DateTimeZone('UTC'));
-
-            return $date->format('Y-m-d H:i:s');
-        }
-        catch (Exception $e)
-        {
-            return $localDate;
-        }
+        return DateUtility::localDateTimeToUtc($localDate, $ianaTimeZone);
     }
 }
 
