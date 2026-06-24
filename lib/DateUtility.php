@@ -776,6 +776,84 @@ class DateUtility
         }
     }
 
+    /**
+     * Converts a UTC datetime string to a local datetime string in the
+     * given IANA timezone.
+     *
+     * @param string $utcDateTime   SQL datetime (YYYY-MM-DD HH:MM:SS) in UTC.
+     * @param string $ianaTimeZone  IANA timezone identifier (e.g.
+     *                              'Europe/Berlin').
+     * @param string $format        PHP date() format string.
+     * @return string Formatted local datetime, or the original value on
+     *               failure / empty input.
+     */
+    public static function utcDateTimeToLocal(
+        $utcDateTime, $ianaTimeZone, $format = 'Y-m-d H:i:s'
+    )
+    {
+        if (!is_string($utcDateTime) || $utcDateTime === '' ||
+            $utcDateTime === '0000-00-00 00:00:00' ||
+            $utcDateTime === '0000-00-00')
+        {
+            return $utcDateTime;
+        }
+
+        if (empty($ianaTimeZone) || !is_string($ianaTimeZone))
+        {
+            return $utcDateTime;
+        }
+
+        try
+        {
+            $utc = new DateTimeZone('UTC');
+            $date = DateTime::createFromFormat('!Y-m-d H:i:s', $utcDateTime, $utc);
+
+            $errors = DateTime::getLastErrors();
+            if ($date === false ||
+                ($errors !== false &&
+                 ($errors['warning_count'] > 0 || $errors['error_count'] > 0)))
+            {
+                return $utcDateTime;
+            }
+
+            $date->setTimezone(new DateTimeZone($ianaTimeZone));
+
+            return $date->format($format);
+        }
+        catch (Exception $e)
+        {
+            return $utcDateTime;
+        }
+    }
+
+    /**
+     * Converts the limited set of MySQL DATE_FORMAT tokens used in OpenCATS
+     * to PHP date() tokens.
+     *
+     * Supported: %m %d %y %Y %h %H %i %s %p %c
+     *
+     * @param string $mysqlFormat MySQL DATE_FORMAT format string (with %%
+     *               escaping as used in sprintf-style SQL).
+     * @return string PHP date() format string.
+     */
+    public static function mysqlFormatToPhp($mysqlFormat)
+    {
+        $map = array(
+            '%%m' => 'm',
+            '%%d' => 'd',
+            '%%y' => 'y',
+            '%%Y' => 'Y',
+            '%%h' => 'h',
+            '%%H' => 'H',
+            '%%i' => 'i',
+            '%%s' => 's',
+            '%%p' => 'A',
+            '%%c' => 'n',
+        );
+
+        return str_replace(array_keys($map), array_values($map), $mysqlFormat);
+    }
+
     private static function _removeLeadingZeros($array)
     {
         foreach ($array as $key => $value)
