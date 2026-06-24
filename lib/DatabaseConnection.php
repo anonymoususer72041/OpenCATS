@@ -178,8 +178,8 @@ class DatabaseConnection
             return false;
         }
 
-        /* Fix formatted dates and time zones for localization. */
-        // FIXME: I don't like rewriting queries....
+        /* Legacy: rewrite DATE_FORMAT() expressions for timezone/DMY.
+         * See _localizationFilter() for known limitations. */
         $query = $this->_localizationFilter($query);
 
         if( ini_get('safe_mode') )
@@ -658,25 +658,38 @@ class DatabaseConnection
     }
 
 
-    // FIXME: Document me.
+    /**
+     * Legacy query rewriter: shifts every DATE_FORMAT() column expression in
+     * SELECT queries by the current session offset (minutes) so displayed
+     * timestamps approximate local time.
+     *
+     * Limitation: This applies a SINGLE fixed offset computed once per
+     * request.  It does NOT perform per-row IANA/DST conversion, so
+     * historical or future timestamps whose UTC offset differs from the
+     * current session offset will be wrong by the DST delta (typically
+     * one hour).
+     *
+     * New code should avoid DATE_FORMAT() for display timestamps and
+     * instead select the raw UTC column, then convert in PHP with
+     * DateUtility::utcDateTimeToLocal() which handles DST correctly.
+     *
+     * Remaining callers: DataGrid column definitions in Candidates,
+     * Contacts, Companies, JobOrders, and Lists that use DATE_FORMAT
+     * in both 'select' and 'filterHaving' (tightly coupled);
+     * Pipelines lastActivity CONCAT subquery; and the
+     * ImportantPipelineDashboard filterHaving expression.  All other
+     * display paths have been migrated to PHP-side IANA conversion.
+     *
+     * Also handles the DMY date format swap when the session uses
+     * day-month-year order.
+     */
     private function _localizationFilter($query)
     {
-        /* Shift DATE_FORMAT() results by the current session offset so that
-         * displayed timestamps approximate local time. This uses a single
-         * fixed offset (minutes) computed once per request and does NOT
-         * perform a full per-row IANA/DST conversion. Historical or future
-         * dates in a different DST period will be off by the DST delta.
-         * A proper fix would require MySQL CONVERT_TZ() with loaded timezone
-         * tables, which is not guaranteed in all deployments. */
         if (strpos($query , 'SELECT') !== 0)
         {
             return $query;
         }
 
-        // FIXME: This could probably be done better with regexes.
-        // FIXME: D M Y support.
-        // FIXME: Document this. Any string-manipulation things like this can
-        //        get fairly confusing if not documented.
         $newQuery = '';
         while ($query != '')
         {
