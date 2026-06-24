@@ -3,6 +3,7 @@ namespace OpenCATS\Entity;
 use OpenCATS\Entity\Company;
 
 include_once(LEGACY_ROOT . '/lib/History.php');
+include_once(LEGACY_ROOT . '/lib/DateUtility.php');
 
 class CompanyRepository
 {
@@ -105,12 +106,8 @@ class CompanyRepository
                 company.url AS url,
                 company.key_technologies AS keyTechnologies,
                 company.is_hot AS isHot,
-                DATE_FORMAT(
-                    company.date_created, '%%m-%%d-%%y'
-                ) AS dateCreated,
-                DATE_FORMAT(
-                    company.date_modified, '%%m-%%d-%%y'
-                ) AS dateModified,
+                company.date_created AS dateCreatedRaw,
+                company.date_modified AS dateModifiedRaw,
                 owner_user.first_name AS ownerFirstName,
                 owner_user.last_name AS ownerLastName
             FROM
@@ -128,6 +125,18 @@ class CompanyRepository
             'company.name',
             'ASC'
         );
-        return $this->databaseConnection->getAllAssoc($sql);
+        $rs = $this->databaseConnection->getAllAssoc($sql);
+        $ianaTimeZone = $_SESSION['CATS']->getIanaTimeZone();
+        $dFormat = $_SESSION['CATS']->isDateDMY() ? 'd-m-y' : 'm-d-y';
+        foreach ($rs as $key => $row)
+        {
+            $rs[$key]['dateCreated'] = \DateUtility::utcDateTimeToLocal(
+                $row['dateCreatedRaw'], $ianaTimeZone, $dFormat
+            );
+            $rs[$key]['dateModified'] = \DateUtility::utcDateTimeToLocal(
+                $row['dateModifiedRaw'], $ianaTimeZone, $dFormat
+            );
+        }
+        return $rs;
     }
 }

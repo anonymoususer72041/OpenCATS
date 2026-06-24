@@ -30,7 +30,9 @@
  * @version    $Id: Users.php 3593 2007-11-13 17:36:57Z andrew $
  */
 
-if (AUTH_MODE == "ldap" || AUTH_MODE == "sql+ldap") 
+include_once(LEGACY_ROOT . '/lib/DateUtility.php');
+
+if (AUTH_MODE == "ldap" || AUTH_MODE == "sql+ldap")
 {
     require_once(LEGACY_ROOT . '/lib/LDAP.php');
 }
@@ -299,18 +301,12 @@ class Users
                 user.categories AS categories,
                 user.session_cookie AS sessionCookie,
                 user.can_see_eeo_info AS canSeeEEOInfo,
-                DATE_FORMAT(
-                        MAX(
-                            IF(user_login.successful = 1, user_login.date, NULL)
-                           ),
-                        '%%m-%%d-%%y (%%h:%%i %%p)'
-                        ) AS successfulDate,
-                DATE_FORMAT(
-                        MAX(
-                            IF(user_login.successful = 0, user_login.date, NULL)
-                           ),
-                        '%%m-%%d-%%y (%%h:%%i %%p)'
-                        ) AS unsuccessfulDate,
+                MAX(
+                    IF(user_login.successful = 1, user_login.date, NULL)
+                ) AS successfulDateRaw,
+                MAX(
+                    IF(user_login.successful = 0, user_login.date, NULL)
+                ) AS unsuccessfulDateRaw,
                 force_logout as forceLogout
                     FROM
                     user
@@ -328,7 +324,13 @@ class Users
                 $this->_db->makeQueryInteger($userID)
                     );
 
-        return $this->_db->getAssoc($sql);
+        $rs = $this->_db->getAssoc($sql);
+        if (!empty($rs))
+        {
+            $this->_formatLoginDates($rs);
+        }
+
+        return $rs;
     }
 
     /**
@@ -367,18 +369,12 @@ class Users
                 user.site_id AS siteID,
                 user.can_see_eeo_info AS canSeeEEOInfo,
                 site.name AS siteName,
-                DATE_FORMAT(
-                        MAX(
-                            IF(user_login.successful = 1, user_login.date, NULL)
-                           ),
-                        '%%m-%%d-%%y (%%h:%%i %%p)'
-                        ) AS successfulDate,
-                DATE_FORMAT(
-                        MAX(
-                            IF(user_login.successful = 0, user_login.date, NULL)
-                           ),
-                        '%%m-%%d-%%y (%%h:%%i %%p)'
-                        ) AS unsuccessfulDate,
+                MAX(
+                    IF(user_login.successful = 1, user_login.date, NULL)
+                ) AS successfulDateRaw,
+                MAX(
+                    IF(user_login.successful = 0, user_login.date, NULL)
+                ) AS unsuccessfulDateRaw,
                 force_logout as forceLogout
                     FROM
                     user
@@ -398,7 +394,13 @@ class Users
                 $this->_db->makeQueryInteger($userID)
                     );
 
-        return $this->_db->getAssoc($sql);
+        $rs = $this->_db->getAssoc($sql);
+        if (!empty($rs))
+        {
+            $this->_formatLoginDates($rs);
+        }
+
+        return $rs;
     }
 
     /**
@@ -488,18 +490,12 @@ class Users
                 user.address as address,
                 user.phone_work as phoneWork,
                 user.user_id AS userID,
-                DATE_FORMAT(
-                    MAX(
-                        IF(user_login.successful = 1, user_login.date, NULL)
-                       ),
-                    '%%m-%%d-%%y (%%h:%%i %%p)'
-                    ) AS successfulDate,
-                DATE_FORMAT(
-                        MAX(
-                            IF(user_login.successful = 0, user_login.date, NULL)
-                           ),
-                        '%%m-%%d-%%y (%%h:%%i %%p)'
-                        ) AS unsuccessfulDate
+                MAX(
+                    IF(user_login.successful = 1, user_login.date, NULL)
+                ) AS successfulDateRaw,
+                MAX(
+                    IF(user_login.successful = 0, user_login.date, NULL)
+                ) AS unsuccessfulDateRaw
                     FROM
                     user
                     LEFT JOIN access_level
@@ -517,7 +513,13 @@ class Users
                 $this->_siteID
                     );
 
-        return $this->_db->getAllAssoc($sql);
+        $rs = $this->_db->getAllAssoc($sql);
+        foreach ($rs as $key => $row)
+        {
+            $this->_formatLoginDates($rs[$key]);
+        }
+
+        return $rs;
     }
 
     /**
@@ -1166,9 +1168,7 @@ class Users
                 user.first_name AS firstName,
                 user.last_name AS lastName,
                 site.name AS siteName,
-                DATE_FORMAT(
-                    user_login.date_refreshed, '%%h:%%i %%p'
-                    ) AS lastRefresh,
+                user_login.date_refreshed AS lastRefreshRaw,
                 IF(
                     user_login.date_refreshed > DATE_SUB(NOW(), INTERVAL 20 SECOND),
                     1,
@@ -1192,7 +1192,16 @@ class Users
             $limitSQL
                 );
 
-        return $this->_db->getAllAssoc($sql);
+        $rs = $this->_db->getAllAssoc($sql);
+        $ianaTimeZone = $this->_getIanaTimeZone();
+        foreach ($rs as $key => $row)
+        {
+            $rs[$key]['lastRefresh'] = DateUtility::utcDateTimeToLocal(
+                $row['lastRefreshRaw'], $ianaTimeZone, 'h:i A'
+            );
+        }
+
+        return $rs;
     }
 
     /**
@@ -1341,7 +1350,33 @@ class Users
         
         return ($rs['password'] == LDAPUSER_PASSWORD);
     }
-    
+
+    private function _getIanaTimeZone()
+    {
+        return $_SESSION['CATS']->getIanaTimeZone();
+    }
+
+    private function _isDateDMY()
+    {
+        return $_SESSION['CATS']->isDateDMY();
+    }
+
+    private function _formatLoginDates(&$row)
+    {
+        $ianaTimeZone = $this->_getIanaTimeZone();
+        $dtFormat = $this->_isDateDMY() ? 'd-m-y (h:i A)' : 'm-d-y (h:i A)';
+
+        $row['successfulDate'] = DateUtility::utcDateTimeToLocal(
+            isset($row['successfulDateRaw']) ? $row['successfulDateRaw'] : '',
+            $ianaTimeZone,
+            $dtFormat
+        );
+        $row['unsuccessfulDate'] = DateUtility::utcDateTimeToLocal(
+            isset($row['unsuccessfulDateRaw']) ? $row['unsuccessfulDateRaw'] : '',
+            $ianaTimeZone,
+            $dtFormat
+        );
+    }
 }
 
 ?>

@@ -31,6 +31,7 @@
  */
 
 
+include_once(LEGACY_ROOT . '/lib/DateUtility.php');
 include_once(LEGACY_ROOT . '/lib/FileUtility.php');
 include_once(LEGACY_ROOT . '/lib/DocumentToText.php');
 include_once(LEGACY_ROOT . '/lib/DatabaseSearch.php');
@@ -526,7 +527,7 @@ class Attachments
                 directory_name AS directoryName,
                 md5_sum AS md5sum,
                 file_size_kb AS fileSizeKB,
-                DATE_FORMAT(date_created, '%%m-%%d-%%y (%%h:%%i:%%s %%p)') AS dateCreated
+                date_created AS dateCreatedRaw
             FROM
                 attachment
             WHERE
@@ -541,8 +542,17 @@ class Attachments
         );
         $rs = $this->_db->getAllAssoc($sql);
 
+        $ianaTimeZone = $_SESSION['CATS']->getIanaTimeZone();
+        $dtFormat = $_SESSION['CATS']->isDateDMY()
+            ? 'd-m-y (h:i:s A)'
+            : 'm-d-y (h:i:s A)';
+
         foreach ($rs as $index => $data)
         {
+            $rs[$index]['dateCreated'] = DateUtility::utcDateTimeToLocal(
+                $data['dateCreatedRaw'], $ianaTimeZone, $dtFormat
+            );
+
             $rs[$index]['retrievalURL'] = sprintf(
                 '%s?m=attachments&amp;a=getAttachment&amp;id=%s&amp;directoryNameHash=%s',
                 CATSUtility::getIndexName(),
@@ -592,7 +602,7 @@ class Attachments
                 directory_name AS directoryName,
                 md5_sum AS md5sum,
                 file_size_kb AS fileSizeKB,
-                DATE_FORMAT(date_created, '%%m-%%d-%%y (%%h:%%i:%%s %%p)') AS dateCreated
+                date_created AS dateCreatedRaw
             FROM
                 attachment
             WHERE
@@ -604,6 +614,17 @@ class Attachments
             ($verifySiteID ? 'false' : 'true')
         );
         $rs = $this->_db->getAssoc($sql);
+
+        if (!empty($rs))
+        {
+            $ianaTimeZone = $_SESSION['CATS']->getIanaTimeZone();
+            $dtFormat = $_SESSION['CATS']->isDateDMY()
+                ? 'd-m-y (h:i:s A)'
+                : 'm-d-y (h:i:s A)';
+            $rs['dateCreated'] = DateUtility::utcDateTimeToLocal(
+                $rs['dateCreatedRaw'], $ianaTimeZone, $dtFormat
+            );
+        }
 
         // FIXME: This doesn't follow the normal paradigm. Normally, we return
         //        array() on failed queries so upper layers know the query failed.

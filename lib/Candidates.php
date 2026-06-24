@@ -30,6 +30,7 @@
  * @version    $Id: Candidates.php 3813 2007-12-05 23:16:22Z brian $
  */
 
+include_once(LEGACY_ROOT . '/lib/DateUtility.php');
 include_once(LEGACY_ROOT . '/lib/Attachments.php');
 include_once(LEGACY_ROOT . '/lib/Pipelines.php');
 include_once(LEGACY_ROOT . '/lib/History.php');
@@ -493,12 +494,8 @@ class Candidates
                 candidate.best_time_to_call AS bestTimeToCall,
                 candidate.is_hot AS isHot,
                 candidate.is_admin_hidden AS isAdminHidden,
-                DATE_FORMAT(
-                    candidate.date_created, '%%m-%%d-%%y (%%h:%%i %%p)'
-                ) AS dateCreated,
-                DATE_FORMAT(
-                    candidate.date_modified, '%%m-%%d-%%y (%%h:%%i %%p)'
-                ) AS dateModified,
+                candidate.date_created AS dateCreatedRaw,
+                candidate.date_modified AS dateModifiedRaw,
                 COUNT(
                     candidate_joborder.joborder_id
                 ) AS pipeline,
@@ -524,9 +521,7 @@ class Candidates
                     owner_user.first_name, ' ', owner_user.last_name
                 ) AS ownerFullName,
                 owner_user.email AS owner_email,
-                DATE_FORMAT(
-                    candidate.date_available, '%%m-%%d-%%y'
-                ) AS dateAvailable,
+                candidate.date_available AS dateAvailableRaw,
                 eeo_ethnic_type.type AS eeoEthnicType,
                 eeo_veteran_type.type AS eeoVeteranType,
                 candidate.eeo_disability_status AS eeoDisabilityStatus,
@@ -562,9 +557,27 @@ class Candidates
             $this->_siteID
         );
 
-        return $this->_db->getAssoc($sql);
+        $rs = $this->_db->getAssoc($sql);
+        if (!empty($rs))
+        {
+            $ianaTimeZone = $this->_getIanaTimeZone();
+            $dateDMY = $this->_isDateDMY();
+            $dtFormat = $dateDMY ? 'd-m-y (h:i A)' : 'm-d-y (h:i A)';
+            $dFormat = $dateDMY ? 'd-m-y' : 'm-d-y';
+            $rs['dateCreated'] = DateUtility::utcDateTimeToLocal(
+                $rs['dateCreatedRaw'], $ianaTimeZone, $dtFormat
+            );
+            $rs['dateModified'] = DateUtility::utcDateTimeToLocal(
+                $rs['dateModifiedRaw'], $ianaTimeZone, $dtFormat
+            );
+            $rs['dateAvailable'] = DateUtility::formatDate(
+                $rs['dateAvailableRaw'], $dFormat
+            );
+        }
+
+        return $rs;
     }
-    
+
     public function getWithDuplicity($candidateID)
     {
         $data = $this->get($candidateID);
@@ -634,9 +647,7 @@ class Candidates
                 candidate.eeo_disability_status AS eeoDisabilityStatus,
                 candidate.eeo_gender AS eeoGender,
                 candidate.is_admin_hidden AS isAdminHidden,
-                DATE_FORMAT(
-                    candidate.date_available, '%%m-%%d-%%y'
-                ) AS dateAvailable
+                candidate.date_available AS dateAvailableRaw
             FROM
                 candidate
             WHERE
@@ -647,7 +658,16 @@ class Candidates
             $this->_siteID
         );
 
-        return $this->_db->getAssoc($sql);
+        $rs = $this->_db->getAssoc($sql);
+        if (!empty($rs))
+        {
+            $dFormat = $this->_isDateDMY() ? 'd-m-y' : 'm-d-y';
+            $rs['dateAvailable'] = DateUtility::formatDate(
+                $rs['dateAvailableRaw'], $dFormat
+            );
+        }
+
+        return $rs;
     }
 
     // FIXME: Document me.
@@ -820,13 +840,8 @@ class Candidates
                 candidate.email1 AS email1,
                 candidate.key_skills AS keySkills,
                 candidate.is_hot AS isHot,
-                DATE_FORMAT(
-                    candidate.date_created, '%%m-%%d-%%y'
-                ) AS dateCreated,
-                DATE_FORMAT(
-                    candidate.date_modified, '%%m-%%d-%%y'
-                ) AS dateModified,
                 candidate.date_created AS dateCreatedSort,
+                candidate.date_modified AS dateModifiedRaw,
                 owner_user.first_name AS ownerFirstName,
                 owner_user.last_name AS ownerLastName
             FROM
@@ -843,7 +858,20 @@ class Candidates
             $adminHiddenCriterion
         );
 
-        return $this->_db->getAllAssoc($sql);
+        $rs = $this->_db->getAllAssoc($sql);
+        $ianaTimeZone = $this->_getIanaTimeZone();
+        $dFormat = $this->_isDateDMY() ? 'd-m-y' : 'm-d-y';
+        foreach ($rs as $key => $row)
+        {
+            $rs[$key]['dateCreated'] = DateUtility::utcDateTimeToLocal(
+                $row['dateCreatedSort'], $ianaTimeZone, $dFormat
+            );
+            $rs[$key]['dateModified'] = DateUtility::utcDateTimeToLocal(
+                $row['dateModifiedRaw'], $ianaTimeZone, $dFormat
+            );
+        }
+
+        return $rs;
     }
 
     /**
@@ -1928,6 +1956,16 @@ class Candidates
                 $candidateID
             );
         return $this->_db->getAllAssoc($sql);
+    }
+
+    private function _getIanaTimeZone()
+    {
+        return $_SESSION['CATS']->getIanaTimeZone();
+    }
+
+    private function _isDateDMY()
+    {
+        return $_SESSION['CATS']->isDateDMY();
     }
 }
 

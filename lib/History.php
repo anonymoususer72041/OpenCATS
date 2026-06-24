@@ -35,6 +35,8 @@
  *	@package    CATS
  *	@subpackage Library
  */
+include_once(LEGACY_ROOT . '/lib/DateUtility.php');
+
 class History
 {
     private $_db;
@@ -272,9 +274,7 @@ class History
                 CONCAT(
                     entered_by_user.first_name, ' ', entered_by_user.last_name
                 ) AS enteredByFullName,
-                DATE_FORMAT(
-                    set_date, '%%m-%%d-%%y (%%h:%%i %%p)'
-                ) AS dateModified
+                set_date AS dateModifiedRaw
             FROM
                 history
             LEFT JOIN user AS entered_by_user
@@ -292,7 +292,19 @@ class History
             $this->_db->makeQueryInteger($dataItemID)
         );
 
-        return $this->_db->getAllAssoc($sql);
+        $rs = $this->_db->getAllAssoc($sql);
+        $ianaTimeZone = $_SESSION['CATS']->getIanaTimeZone();
+        $dtFormat = $_SESSION['CATS']->isDateDMY()
+            ? 'd-m-y (h:i A)'
+            : 'm-d-y (h:i A)';
+        foreach ($rs as $key => $row)
+        {
+            $rs[$key]['dateModified'] = DateUtility::utcDateTimeToLocal(
+                $row['dateModifiedRaw'], $ianaTimeZone, $dtFormat
+            );
+        }
+
+        return $rs;
     }
 }
 

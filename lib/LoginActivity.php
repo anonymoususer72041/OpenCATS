@@ -32,6 +32,7 @@
 
 include_once(LEGACY_ROOT . '/lib/Pager.php');
 include_once(LEGACY_ROOT . '/lib/BrowserDetection.php');
+include_once(LEGACY_ROOT . '/lib/DateUtility.php');
 
 /**
  *	Login Activity Pager
@@ -124,9 +125,6 @@ class LoginActivityPager extends Pager
                 user_login.user_id AS userID,
                 user_login.ip AS ip,
                 user_login.user_agent AS shortUserAgent,
-                DATE_FORMAT(
-                    user_login.date, '%%m-%%d-%%y (%%h:%%i %%p)'
-                ) AS date,
                 user_login.date AS dateSort,
                 user_login.host AS hostname,
                 user.first_name AS firstName,
@@ -157,8 +155,16 @@ class LoginActivityPager extends Pager
 
         $rs = $this->_db->getAllAssoc($sql);
 
+        $ianaTimeZone = $_SESSION['CATS']->getIanaTimeZone();
+        $dtFormat = $_SESSION['CATS']->isDateDMY()
+            ? 'd-m-y (h:i A)'
+            : 'm-d-y (h:i A)';
         foreach ($rs as $rowIndex => $row)
         {
+            $rs[$rowIndex]['date'] = DateUtility::utcDateTimeToLocal(
+                $row['dateSort'], $ianaTimeZone, $dtFormat
+            );
+
             if (empty($row['hostname']))
             {
                 if (ENABLE_HOSTNAME_LOOKUP)

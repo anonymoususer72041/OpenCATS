@@ -29,6 +29,7 @@
  * @version    $Id: Contacts.php 3690 2007-11-26 18:07:17Z brian $
  */
 
+include_once(LEGACY_ROOT . '/lib/DateUtility.php');
 include_once(LEGACY_ROOT . '/lib/Pager.php');
 include_once(LEGACY_ROOT . '/lib/EmailTemplates.php');
 include_once(LEGACY_ROOT . '/lib/ExtraFields.php');
@@ -460,12 +461,8 @@ class Contacts
                 reportsToContact.last_name as reportsToLastName,
                 reportsToContact.title as reportsToTitle,
                 company_department.name AS department,
-                DATE_FORMAT(
-                    contact.date_created, '%%m-%%d-%%y (%%h:%%i %%p)'
-                ) AS dateCreated,
-                DATE_FORMAT(
-                    contact.date_modified, '%%m-%%d-%%y (%%h:%%i %%p)'
-                ) AS dateModified,
+                contact.date_created AS dateCreatedRaw,
+                contact.date_modified AS dateModifiedRaw,
                 company.name AS companyName,
                 company.is_hot AS isHotCompany,
                 CONCAT(
@@ -498,7 +495,20 @@ class Contacts
             $this->_siteID
         );
 
-        return $this->_db->getAssoc($sql);
+        $rs = $this->_db->getAssoc($sql);
+        if (!empty($rs))
+        {
+            $ianaTimeZone = $this->_getIanaTimeZone();
+            $dtFormat = $this->_isDateDMY() ? 'd-m-y (h:i A)' : 'm-d-y (h:i A)';
+            $rs['dateCreated'] = DateUtility::utcDateTimeToLocal(
+                $rs['dateCreatedRaw'], $ianaTimeZone, $dtFormat
+            );
+            $rs['dateModified'] = DateUtility::utcDateTimeToLocal(
+                $rs['dateModifiedRaw'], $ianaTimeZone, $dtFormat
+            );
+        }
+
+        return $rs;
     }
 
     /**
@@ -597,12 +607,8 @@ class Contacts
                 contact.is_hot AS isHot,
                 contact.left_company AS leftCompany,
                 company_department.name AS department,
-                DATE_FORMAT(
-                    contact.date_created, '%%m-%%d-%%y'
-                ) AS dateCreated,
-                DATE_FORMAT(
-                    contact.date_modified, '%%m-%%d-%%y (%%h:%%i %%p)'
-                ) AS dateModified,
+                contact.date_created AS dateCreatedRaw,
+                contact.date_modified AS dateModifiedRaw,
                 owner_user.first_name AS ownerFirstName,
                 owner_user.last_name AS ownerLastName,
                 company.name AS companyName
@@ -626,7 +632,22 @@ class Contacts
             $companyCriterion
         );
 
-        return $this->_db->getAllAssoc($sql);
+        $rs = $this->_db->getAllAssoc($sql);
+        $ianaTimeZone = $this->_getIanaTimeZone();
+        $dateDMY = $this->_isDateDMY();
+        $dFormat = $dateDMY ? 'd-m-y' : 'm-d-y';
+        $dtFormat = $dateDMY ? 'd-m-y (h:i A)' : 'm-d-y (h:i A)';
+        foreach ($rs as $key => $row)
+        {
+            $rs[$key]['dateCreated'] = DateUtility::utcDateTimeToLocal(
+                $row['dateCreatedRaw'], $ianaTimeZone, $dFormat
+            );
+            $rs[$key]['dateModified'] = DateUtility::utcDateTimeToLocal(
+                $row['dateModifiedRaw'], $ianaTimeZone, $dtFormat
+            );
+        }
+
+        return $rs;
     }
 
     /**
@@ -849,6 +870,16 @@ class Contacts
         }
 
         return $rs['departmentID'];
+    }
+
+    private function _getIanaTimeZone()
+    {
+        return $_SESSION['CATS']->getIanaTimeZone();
+    }
+
+    private function _isDateDMY()
+    {
+        return $_SESSION['CATS']->isDateDMY();
     }
 }
 

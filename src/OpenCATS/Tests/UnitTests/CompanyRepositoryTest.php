@@ -112,6 +112,54 @@ class CompanyRepositoryTest extends TestCase
         $this->expectException(\OpenCATS\Entity\CompanyRepositoryException::class);
         $CompanyRepository->persist($this->createCompany(), $historyMock);
     }
+
+    function test_findByName_FormatsRawUtcDatesWithSessionTimezone()
+    {
+        $hadCatsSession = isset($_SESSION['CATS']);
+        $previousCatsSession = $hadCatsSession ? $_SESSION['CATS'] : null;
+        $_SESSION['CATS'] = new class {
+            public function getIanaTimeZone()
+            {
+                return 'Europe/Berlin';
+            }
+
+            public function isDateDMY()
+            {
+                return false;
+            }
+        };
+
+        try {
+            $databaseConnectionMock = $this->getDatabaseConnectionMock();
+            $databaseConnectionMock->expects($this->once())
+                ->method('makeQueryString')
+                ->with($this->equalTo(self::COMPANY_NAME . '%'))
+                ->willReturn("'" . self::COMPANY_NAME . "%'");
+            $databaseConnectionMock->expects($this->once())
+                ->method('getAllAssoc')
+                ->willReturn([
+                    [
+                        'companyID' => self::COMPANY_ID,
+                        'dateCreatedRaw' => '2024-03-31 22:30:00',
+                        'dateModifiedRaw' => '2024-01-15 23:30:00'
+                    ]
+                ]);
+
+            $companyRepository = new CompanyRepository($databaseConnectionMock);
+            $companies = $companyRepository->findByName(
+                self::SITE_ID, self::COMPANY_NAME
+            );
+
+            $this->assertSame('04-01-24', $companies[0]['dateCreated']);
+            $this->assertSame('01-16-24', $companies[0]['dateModified']);
+        } finally {
+            if ($hadCatsSession) {
+                $_SESSION['CATS'] = $previousCatsSession;
+            } else {
+                unset($_SESSION['CATS']);
+            }
+        }
+    }
     
     private function getHistoryMock()
     {
@@ -122,7 +170,10 @@ class CompanyRepositoryTest extends TestCase
     {
         return $this->getMockBuilder('\DatabaseConnection')
             ->disableOriginalConstructor()
-            ->onlyMethods(['makeQueryString', 'makeQueryInteger', 'query', 'getLastInsertID'])
+            ->onlyMethods([
+                'makeQueryString', 'makeQueryInteger', 'query', 'getLastInsertID',
+                'getAllAssoc'
+            ])
             ->getMock();
     }
     
