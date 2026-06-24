@@ -162,8 +162,6 @@ define('CANDIDATE_STATUSCHANGE_SUBJECT', 'Job Application Status Change');
 /* Is this a demo site? */
 define('ENABLE_DEMO_MODE', false);
 
-/* Offset to GMT Time. */
-define('OFFSET_GMT', 2);
 
 /* Should we enforce only one session per user (excluding demo)? */
 define('ENABLE_SINGLE_SESSION', false);

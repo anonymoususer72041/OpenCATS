@@ -570,7 +570,6 @@ switch ($action)
             break;
         }
 
-        CATSUtility::changeConfigSetting('OFFSET_GMT', 0);
 
         $dateFormat = $_REQUEST['dateFormat'];
         $timeFormat = isset($_REQUEST['timeFormat']) ? $_REQUEST['timeFormat'] : '12';

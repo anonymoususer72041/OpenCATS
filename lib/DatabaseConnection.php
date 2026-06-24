@@ -67,7 +67,7 @@ class DatabaseConnection
         }
         else
         {
-            self::$_instance->_timeZone = OFFSET_GMT * -1;
+            self::$_instance->_timeZone = 0;
             self::$_instance->_dateDMY = false;
         }
 
