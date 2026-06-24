@@ -600,7 +600,7 @@ class Calendar
      */
     public function getUpcomingEventsByDataItem($dataItemType, $dataItemID)
     {
-        $currentDateForMySQL = date('Y-m-d 00:00:00', time());
+        $boundaries = $this->_getLocalDayBoundariesUtc();
 
         $sql = sprintf(
             "SELECT
@@ -646,7 +646,7 @@ class Calendar
                 calendar_event.data_item_id = %s
             ORDER BY
                 dateSort ASC",
-            $this->_db->makeQueryString($currentDateForMySQL),
+            $this->_db->makeQueryString($boundaries['todayStart']),
             $this->_userID,
             $this->_db->makeQueryInteger($dataItemType),
             $this->_db->makeQueryInteger($dataItemID)
@@ -686,7 +686,9 @@ class Calendar
                 break;
         }
 
-        /* Get today's events. */
+        $boundaries = $this->_getLocalDayBoundariesUtc();
+
+        /* Get today's events (local-day aware using UTC boundaries). */
         $sql = sprintf(
             "SELECT
                 calendar_event.calendar_event_id AS eventID,
@@ -718,7 +720,9 @@ class Calendar
             LEFT JOIN user AS entered_by_user
                 ON calendar_event.entered_by = entered_by_user.user_id
             WHERE
-                TO_DAYS(NOW()) = TO_DAYS(calendar_event.date)
+                calendar_event.date >= %s
+            AND
+                calendar_event.date < %s
             AND
             (
                 %s
@@ -727,13 +731,15 @@ class Calendar
             %s
             ORDER BY
                 dateSort ASC",
+            $this->_db->makeQueryString($boundaries['todayStart']),
+            $this->_db->makeQueryString($boundaries['tomorrowStart']),
             ($flag == UPCOMING_FOR_CALENDAR ? 'calendar_event.public = 1' : 'false'),
             $this->_userID,
             $criteria
         );
         $todayRS = $this->_db->getAllAssoc($sql);
 
-        /* Get events after today. */
+        /* Get events after today (local-day aware). */
         $sql = sprintf(
             "SELECT
                 calendar_event.calendar_event_id AS eventID,
@@ -765,9 +771,7 @@ class Calendar
             LEFT JOIN user AS entered_by_user
                 ON calendar_event.entered_by = entered_by_user.user_id
             WHERE
-                DATE(calendar_event.date) > CURDATE()
-            AND
-                TO_DAYS(NOW()) != TO_DAYS(calendar_event.date)
+                calendar_event.date >= %s
             AND
             (
                 calendar_event.public = 1
@@ -778,6 +782,7 @@ class Calendar
                 dateSort ASC
             LIMIT
                 0, %s",
+            $this->_db->makeQueryString($boundaries['tomorrowStart']),
             $this->_userID,
             $criteria,
             $limit
@@ -992,6 +997,41 @@ class Calendar
     private function _getIanaTimeZone()
     {
         return $_SESSION['CATS']->getIanaTimeZone();
+    }
+
+    /**
+     * Returns the UTC boundaries for "today" in the site/user IANA timezone.
+     *
+     * @return array ('todayStart' => string, 'tomorrowStart' => string)
+     *               Both values are SQL datetime strings in UTC.
+     */
+    private function _getLocalDayBoundariesUtc()
+    {
+        $ianaTimeZone = $this->_getIanaTimeZone();
+
+        try
+        {
+            $localTz = new DateTimeZone($ianaTimeZone);
+        }
+        catch (Exception $e)
+        {
+            $localTz = new DateTimeZone('UTC');
+        }
+
+        $now = new DateTime('now', $localTz);
+        $todayLocal = new DateTime($now->format('Y-m-d') . ' 00:00:00', $localTz);
+
+        $tomorrowLocal = clone $todayLocal;
+        $tomorrowLocal->modify('+1 day');
+
+        $utcTz = new DateTimeZone('UTC');
+        $todayLocal->setTimezone($utcTz);
+        $tomorrowLocal->setTimezone($utcTz);
+
+        return array(
+            'todayStart'    => $todayLocal->format('Y-m-d H:i:s'),
+            'tomorrowStart' => $tomorrowLocal->format('Y-m-d H:i:s')
+        );
     }
 
     /**
