@@ -170,101 +170,85 @@ class TimezoneOffsetTest extends TestCase
         }
     }
 
-    function testCalendarLocalToUtcSummerDST()
+    function testLocalToUtcSummerDST()
     {
         /* A July event in Europe/Berlin (UTC+2 in summer) should be
          * stored 2 hours earlier in UTC. */
-        $localDate = '2024-07-15 14:00:00';
-
-        $rc = new ReflectionClass('Calendar');
-        $method = $rc->getMethod('_localToUtc');
-        $method->setAccessible(true);
-
-        $utcDate = $method->invoke(null, $localDate, 'Europe/Berlin');
+        $utcDate = DateUtility::localDateTimeToUtc(
+            '2024-07-15 14:00:00', 'Europe/Berlin'
+        );
 
         $this->assertSame('2024-07-15 12:00:00', $utcDate);
     }
 
-    function testCalendarLocalToUtcWinterDST()
+    function testLocalToUtcWinterDST()
     {
         /* A January event in Europe/Berlin (UTC+1 in winter) should be
          * stored 1 hour earlier in UTC. */
-        $localDate = '2024-01-15 14:00:00';
-
-        $rc = new ReflectionClass('Calendar');
-        $method = $rc->getMethod('_localToUtc');
-        $method->setAccessible(true);
-
-        $utcDate = $method->invoke(null, $localDate, 'Europe/Berlin');
+        $utcDate = DateUtility::localDateTimeToUtc(
+            '2024-01-15 14:00:00', 'Europe/Berlin'
+        );
 
         $this->assertSame('2024-01-15 13:00:00', $utcDate);
     }
 
-    function testCalendarLocalToUtcKolkata()
+    function testLocalToUtcKolkata()
     {
         /* Asia/Kolkata is UTC+5:30 year-round (no DST). */
-        $localDate = '2024-06-15 14:30:00';
-
-        $rc = new ReflectionClass('Calendar');
-        $method = $rc->getMethod('_localToUtc');
-        $method->setAccessible(true);
-
-        $utcDate = $method->invoke(null, $localDate, 'Asia/Kolkata');
+        $utcDate = DateUtility::localDateTimeToUtc(
+            '2024-06-15 14:30:00', 'Asia/Kolkata'
+        );
 
         $this->assertSame('2024-06-15 09:00:00', $utcDate);
     }
 
-    function testCalendarLocalToUtcFallbackOnInvalidTimezone()
+    function testLocalToUtcFallbackOnInvalidTimezone()
     {
         $localDate = '2024-06-15 14:00:00';
 
-        $rc = new ReflectionClass('Calendar');
-        $method = $rc->getMethod('_localToUtc');
-        $method->setAccessible(true);
-
-        $utcDate = $method->invoke(null, $localDate, 'Invalid/Timezone');
+        $utcDate = DateUtility::localDateTimeToUtc($localDate, 'Invalid/Timezone');
 
         $this->assertSame($localDate, $utcDate);
     }
 
-    function testCalendarLocalToUtcRejectsInvalidDay()
+    function testLocalToUtcRejectsInvalidDay()
     {
-        $rc = new ReflectionClass('Calendar');
-        $method = $rc->getMethod('_localToUtc');
-        $method->setAccessible(true);
-
         $input = '2024-02-31 10:00:00';
-        $this->assertSame($input, $method->invoke(null, $input, 'Europe/Berlin'));
+        $this->assertSame(
+            $input, DateUtility::localDateTimeToUtc($input, 'Europe/Berlin')
+        );
     }
 
-    function testCalendarLocalToUtcRejectsInvalidMonth()
+    function testLocalToUtcRejectsInvalidMonth()
     {
-        $rc = new ReflectionClass('Calendar');
-        $method = $rc->getMethod('_localToUtc');
-        $method->setAccessible(true);
-
         $input = '2024-13-01 10:00:00';
-        $this->assertSame($input, $method->invoke(null, $input, 'Europe/Berlin'));
+        $this->assertSame(
+            $input, DateUtility::localDateTimeToUtc($input, 'Europe/Berlin')
+        );
     }
 
-    function testCalendarLocalToUtcRejectsDateOnly()
+    function testLocalToUtcRejectsDateOnly()
     {
-        $rc = new ReflectionClass('Calendar');
-        $method = $rc->getMethod('_localToUtc');
-        $method->setAccessible(true);
-
         $input = '2024-01-01';
-        $this->assertSame($input, $method->invoke(null, $input, 'Europe/Berlin'));
+        $this->assertSame(
+            $input, DateUtility::localDateTimeToUtc($input, 'Europe/Berlin')
+        );
     }
 
-    function testCalendarLocalToUtcRejectsNonDateString()
+    function testLocalToUtcRejectsNonDateString()
     {
-        $rc = new ReflectionClass('Calendar');
-        $method = $rc->getMethod('_localToUtc');
-        $method->setAccessible(true);
-
         $input = 'not-a-date';
-        $this->assertSame($input, $method->invoke(null, $input, 'Europe/Berlin'));
+        $this->assertSame(
+            $input, DateUtility::localDateTimeToUtc($input, 'Europe/Berlin')
+        );
+    }
+
+    function testLocalToUtcRejectsEmptyTimezone()
+    {
+        $input = '2024-06-15 14:00:00';
+        $this->assertSame(
+            $input, DateUtility::localDateTimeToUtc($input, '')
+        );
     }
 }
 
