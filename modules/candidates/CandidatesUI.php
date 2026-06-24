@@ -3329,7 +3329,7 @@ class CandidatesUI extends UserInterface
                 $eventTypeID, $date, $description, $allDay, $this->_userID,
                 $candidateID, DATA_ITEM_CANDIDATE, $eventJobOrderID, $title,
                 $duration, $reminderEnabled, $reminderEmail, $reminderTime,
-                $publicEntry, $_SESSION['CATS']->getTimeZoneOffset()
+                $publicEntry
             );
 
             if ($eventID <= 0)

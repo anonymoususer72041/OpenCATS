@@ -316,14 +316,11 @@ class Calendar
      * @param string E-mail address to send reminders.
      * @param integer Minutes before event occurrs to send reminders.
      * @param boolean Is this a public event entry?
-     * @param integer Time zone offset from GMT.
      * @return integer New Calendar Event ID, or -1 on failure.
      */
-    // FIXME: Time Zone Offset probably shouldn't be paramaterized.
     public function addEvent($type, $date, $description, $allDay, $enteredBy,
         $dataItemID, $dataItemType, $jobOrderID, $title, $duration,
-        $reminderEnabled, $reminderEmail, $reminderTime, $isPublic,
-        $timeZoneOffset)
+        $reminderEnabled, $reminderEmail, $reminderTime, $isPublic)
     {
         if ($jobOrderID === null)
         {
@@ -421,14 +418,11 @@ class Calendar
      * @param string E-mail address to send reminders.
      * @param integer Minutes before event occurrs to send reminders.
      * @param boolean Is this a public event entry?
-     * @param integer Time zone offset from GMT.
      * @return boolean True if successful; false otherwise.
      */
-    // FIXME: Time Zone Offset probably shouldn't be paramaterized.
     public function updateEvent($eventID, $type, $date, $description, $allDay,
         $dataItemID, $dataItemType, $jobOrderID, $title, $duration,
-        $reminderEnabled, $reminderEmail, $reminderTime, $isPublic,
-        $timeZoneOffset)
+        $reminderEnabled, $reminderEmail, $reminderTime, $isPublic)
     {
         if ($jobOrderID === null)
         {
