@@ -414,9 +414,7 @@ class ActivityEntries
                 activity.type AS type,
                 activity_type.short_description AS typeDescription,
                 activity.notes AS notes,
-                DATE_FORMAT(
-                    activity.date_occurred, '" . $this->_mysqlDateTimeFormat . "'
-                ) AS dateCreated,
+                activity.date_occurred AS dateCreatedRaw,
                 entered_by_user.first_name AS enteredByFirstName,
                 entered_by_user.last_name AS enteredByLastName,
                 IF(
@@ -441,7 +439,15 @@ class ActivityEntries
             $this->_db->makeQueryInteger($activityID)
         );
 
-        return $this->_db->getAssoc($sql);
+        $rs = $this->_db->getAssoc($sql);
+        if (!empty($rs))
+        {
+            $rs['dateCreated'] = $this->_formatActivityDateTime(
+                $rs['dateCreatedRaw']
+            );
+        }
+
+        return $rs;
     }
 
     /**
@@ -459,9 +465,6 @@ class ActivityEntries
                 activity.data_item_id AS dataItemID,
                 activity.joborder_id AS jobOrderID,
                 activity.notes AS notes,
-                DATE_FORMAT(
-                    activity.date_occurred, '" . $this->_mysqlDateTimeFormat . "'
-                ) AS dateCreated,
                 activity.date_occurred AS dateCreatedSort,
                 activity.type AS type,
                 activity_type.short_description AS typeDescription,
@@ -495,7 +498,7 @@ class ActivityEntries
             $this->_db->makeQueryInteger($dataItemType)
         );
 
-        return $this->_db->getAllAssoc($sql);
+        return $this->_formatActivityRows($this->_db->getAllAssoc($sql));
     }
 
     /**
@@ -512,9 +515,6 @@ class ActivityEntries
                 activity.data_item_id AS dataItemID,
                 activity.joborder_id AS jobOrderID,
                 activity.notes AS notes,
-                DATE_FORMAT(
-                    activity.date_occurred, '" . $this->_mysqlDateTimeFormat . "'
-                ) AS dateCreated,
                 activity.date_occurred AS dateCreatedSort,
                 activity.type AS type,
                 activity_type.short_description AS typeDescription,
@@ -553,7 +553,7 @@ class ActivityEntries
             $this->_db->makeQueryInteger(DATA_ITEM_CONTACT)
         );
 
-        return $this->_db->getAllAssoc($sql);
+        return $this->_formatActivityRows($this->_db->getAllAssoc($sql));
     }
 
     /**
@@ -618,6 +618,34 @@ class ActivityEntries
     private function _getIanaTimeZone()
     {
         return $_SESSION['CATS']->getIanaTimeZone();
+    }
+
+    private function _isDateDMY()
+    {
+        return $_SESSION['CATS']->isDateDMY();
+    }
+
+    private function _formatActivityDateTime($utcDateTime)
+    {
+        $format = $this->_isDateDMY()
+            ? 'd-m-y (h:i A)'
+            : 'm-d-y (h:i A)';
+
+        return DateUtility::utcDateTimeToLocal(
+            $utcDateTime, $this->_getIanaTimeZone(), $format
+        );
+    }
+
+    private function _formatActivityRows($rs)
+    {
+        foreach ($rs as $key => $row)
+        {
+            $rs[$key]['dateCreated'] = $this->_formatActivityDateTime(
+                $row['dateCreatedSort']
+            );
+        }
+
+        return $rs;
     }
 
 }
