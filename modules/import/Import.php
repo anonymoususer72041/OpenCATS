@@ -27,6 +27,8 @@
  * $Id: Import.php 3785 2007-12-03 21:59:23Z brian $
  */
 
+include_once(LEGACY_ROOT . '/lib/DateUtility.php');
+
 class Import
 {
     private $_db;
@@ -162,15 +164,24 @@ class Import
                 import.import_id AS importID,
                 import.added_lines AS addedLines,
                 import.import_errors AS importErrors,
-				DATE_FORMAT(
-                    import.date_created, '" . DateUtility::getMysqlDateTimeFormat() . "'
-                ) AS dateCreated
+				import.date_created AS dateCreatedRaw
             FROM
                 import
             WHERE
 				TO_DAYS(date_created) > TO_DAYS(DATE_SUB(NOW(), INTERVAL 7 DAY))"
         );
         $rs = $this->_db->getAllAssoc($sql);
+
+        $ianaTimeZone = $_SESSION['CATS']->getIanaTimeZone();
+        $dtFormat = $_SESSION['CATS']->isDateDMY()
+            ? 'd-m-y (h:i A)'
+            : 'm-d-y (h:i A)';
+        foreach ($rs as $key => $row)
+        {
+            $rs[$key]['dateCreated'] = DateUtility::utcDateTimeToLocal(
+                $row['dateCreatedRaw'], $ianaTimeZone, $dtFormat
+            );
+        }
 
         return $rs;
     }

@@ -30,6 +30,7 @@
  * @version    $Id: Search.php 3587 2007-11-13 03:55:57Z will $
  */
 
+include_once(LEGACY_ROOT . '/lib/DateUtility.php');
 include_once(LEGACY_ROOT . '/lib/Pager.php');
 include_once(LEGACY_ROOT . '/lib/DatabaseSearch.php');
 include_once(LEGACY_ROOT . '/lib/JobOrderStatuses.php');
@@ -456,12 +457,8 @@ class SearchCandidates
                 candidate.email1 AS email1,
                 owner_user.first_name AS ownerFirstName,
                 owner_user.last_name AS ownerLastName,
-                DATE_FORMAT(
-                    candidate.date_created, '%%m-%%d-%%y'
-                ) AS dateCreated,
-                DATE_FORMAT(
-                    candidate.date_modified, '%%m-%%d-%%y'
-                ) AS dateModified
+                candidate.date_created AS dateCreatedRaw,
+                candidate.date_modified AS dateModifiedRaw
             FROM
                 candidate
             LEFT JOIN user AS owner_user
@@ -472,7 +469,7 @@ class SearchCandidates
             $sortDirection
         );
 
-        return $this->_db->getAllAssoc($sql);
+        return $this->_formatSearchResults($this->_db->getAllAssoc($sql));
     }
 
     /**
@@ -500,12 +497,8 @@ class SearchCandidates
                 candidate.email1 AS email1,
                 owner_user.first_name AS ownerFirstName,
                 owner_user.last_name AS ownerLastName,
-                DATE_FORMAT(
-                    candidate.date_created, '%%m-%%d-%%y'
-                ) AS dateCreated,
-                DATE_FORMAT(
-                    candidate.date_modified, '%%m-%%d-%%y'
-                ) AS dateModified
+                candidate.date_created AS dateCreatedRaw,
+                candidate.date_modified AS dateModifiedRaw
             FROM
                 candidate
             LEFT JOIN user AS owner_user
@@ -529,7 +522,7 @@ class SearchCandidates
             $sortDirection
         );
 
-        return $this->_db->getAllAssoc($sql);
+        return $this->_formatSearchResults($this->_db->getAllAssoc($sql));
     }
 
     /**
@@ -557,12 +550,8 @@ class SearchCandidates
                 candidate.email1 AS email1,
                 owner_user.first_name AS ownerFirstName,
                 owner_user.last_name AS ownerLastName,
-                DATE_FORMAT(
-                    candidate.date_created, '%%m-%%d-%%y'
-                ) AS dateCreated,
-                DATE_FORMAT(
-                    candidate.date_modified, '%%m-%%d-%%y'
-                ) AS dateModified
+                candidate.date_created AS dateCreatedRaw,
+                candidate.date_modified AS dateModifiedRaw
             FROM
                 candidate
             LEFT JOIN user AS owner_user
@@ -580,7 +569,7 @@ class SearchCandidates
             $sortDirection
         );
 
-        return $this->_db->getAllAssoc($sql);
+        return $this->_formatSearchResults($this->_db->getAllAssoc($sql));
     }
 
     /**
@@ -607,12 +596,8 @@ class SearchCandidates
                 candidate.email1 AS email1,
                 owner_user.first_name AS ownerFirstName,
                 owner_user.last_name AS ownerLastName,
-                DATE_FORMAT(
-                    candidate.date_created, '%%m-%%d-%%y'
-                ) AS dateCreated,
-                DATE_FORMAT(
-                    candidate.date_modified, '%%m-%%d-%%y'
-                ) AS dateModified
+                candidate.date_created AS dateCreatedRaw,
+                candidate.date_modified AS dateModifiedRaw
             FROM
                 candidate
             LEFT JOIN user AS owner_user
@@ -628,7 +613,7 @@ class SearchCandidates
             $sortDirection
         );
 
-        return $this->_db->getAllAssoc($sql);
+        return $this->_formatSearchResults($this->_db->getAllAssoc($sql));
     }
 
     /**
@@ -659,12 +644,8 @@ class SearchCandidates
                 candidate.email1 AS email1,
                 owner_user.first_name AS ownerFirstName,
                 owner_user.last_name AS ownerLastName,
-                DATE_FORMAT(
-                    candidate.date_created, '%%m-%%d-%%y'
-                ) AS dateCreated,
-                DATE_FORMAT(
-                    candidate.date_modified, '%%m-%%d-%%y'
-                ) AS dateModified
+                candidate.date_created AS dateCreatedRaw,
+                candidate.date_modified AS dateModifiedRaw
             FROM
                 candidate
             LEFT JOIN user AS owner_user
@@ -696,7 +677,7 @@ class SearchCandidates
             $sortDirection
         );
 
-        return $this->_db->getAllAssoc($sql);
+        return $this->_formatSearchResults($this->_db->getAllAssoc($sql));
     }
 
     /**
@@ -727,12 +708,8 @@ class SearchCandidates
                 candidate.email1 AS email1,
                 owner_user.first_name AS ownerFirstName,
                 owner_user.last_name AS ownerLastName,
-                DATE_FORMAT(
-                    candidate.date_created, '%%m-%%d-%%y'
-                ) AS dateCreated,
-                DATE_FORMAT(
-                    candidate.date_modified, '%%m-%%d-%%y'
-                ) AS dateModified
+                candidate.date_created AS dateCreatedRaw,
+                candidate.date_modified AS dateModifiedRaw
             FROM
                 candidate
             LEFT JOIN user AS owner_user
@@ -751,7 +728,41 @@ class SearchCandidates
             $sortDirection
         );
 
-        return $this->_db->getAllAssoc($sql);
+        return $this->_formatSearchResults($this->_db->getAllAssoc($sql));
+    }
+
+    private function _formatSearchResults($rs)
+    {
+        $ianaTimeZone = $_SESSION['CATS']->getIanaTimeZone();
+        $dFormat = $_SESSION['CATS']->isDateDMY() ? 'd-m-y' : 'm-d-y';
+        foreach ($rs as $key => $row)
+        {
+            if (isset($row['dateCreatedRaw']))
+            {
+                $rs[$key]['dateCreated'] = DateUtility::utcDateTimeToLocal(
+                    $row['dateCreatedRaw'], $ianaTimeZone, $dFormat
+                );
+            }
+            if (isset($row['dateCreatedSort']))
+            {
+                $rs[$key]['dateCreated'] = DateUtility::utcDateTimeToLocal(
+                    $row['dateCreatedSort'], $ianaTimeZone, $dFormat
+                );
+            }
+            if (isset($row['dateModifiedRaw']))
+            {
+                $rs[$key]['dateModified'] = DateUtility::utcDateTimeToLocal(
+                    $row['dateModifiedRaw'], $ianaTimeZone, $dFormat
+                );
+            }
+            if (isset($row['dateModifiedSort']))
+            {
+                $rs[$key]['dateModified'] = DateUtility::utcDateTimeToLocal(
+                    $row['dateModifiedSort'], $ianaTimeZone, $dFormat
+                );
+            }
+        }
+        return $rs;
     }
 }
 
@@ -796,12 +807,8 @@ class SearchCompanies
                 company.url AS url,
                 company.key_technologies AS keyTechnologies,
                 company.is_hot AS isHot,
-                DATE_FORMAT(
-                    company.date_created, '%%m-%%d-%%y'
-                ) AS dateCreated,
-                DATE_FORMAT(
-                    company.date_modified, '%%m-%%d-%%y'
-                ) AS dateModified,
+                company.date_created AS dateCreatedRaw,
+                company.date_modified AS dateModifiedRaw,
                 owner_user.first_name AS ownerFirstName,
                 owner_user.last_name AS ownerLastName
             FROM
@@ -817,7 +824,7 @@ class SearchCompanies
             $sortDirection
         );
 
-        return $this->_db->getAllAssoc($sql);
+        return $this->_formatSearchResults($this->_db->getAllAssoc($sql));
     }
 
     /**
@@ -842,12 +849,8 @@ class SearchCompanies
                 company.url AS url,
                 company.key_technologies AS keyTechnologies,
                 company.is_hot AS isHot,
-                DATE_FORMAT(
-                    company.date_created, '%%m-%%d-%%y'
-                ) AS dateCreated,
-                DATE_FORMAT(
-                    company.date_modified, '%%m-%%d-%%y'
-                ) AS dateModified,
+                company.date_created AS dateCreatedRaw,
+                company.date_modified AS dateModifiedRaw,
                 owner_user.first_name AS ownerFirstName,
                 owner_user.last_name AS ownerLastName
             FROM
@@ -861,7 +864,29 @@ class SearchCompanies
             $WHERE
         );
 
-        return $this->_db->getAllAssoc($sql);
+        return $this->_formatSearchResults($this->_db->getAllAssoc($sql));
+    }
+
+    private function _formatSearchResults($rs)
+    {
+        $ianaTimeZone = $_SESSION['CATS']->getIanaTimeZone();
+        $dFormat = $_SESSION['CATS']->isDateDMY() ? 'd-m-y' : 'm-d-y';
+        foreach ($rs as $key => $row)
+        {
+            if (isset($row['dateCreatedRaw']))
+            {
+                $rs[$key]['dateCreated'] = DateUtility::utcDateTimeToLocal(
+                    $row['dateCreatedRaw'], $ianaTimeZone, $dFormat
+                );
+            }
+            if (isset($row['dateModifiedRaw']))
+            {
+                $rs[$key]['dateModified'] = DateUtility::utcDateTimeToLocal(
+                    $row['dateModifiedRaw'], $ianaTimeZone, $dFormat
+                );
+            }
+        }
+        return $rs;
     }
 }
 
@@ -924,15 +949,9 @@ class SearchJobOrders
                 recruiter_user.last_name AS recruiterLastName,
                 owner_user.first_name AS ownerFirstName,
                 owner_user.last_name AS ownerLastName,
-                DATE_FORMAT(
-                    joborder.start_date, '%%m-%%d-%%y'
-                ) AS startDate,
-                DATE_FORMAT(
-                    joborder.date_created, '%%m-%%d-%%y'
-                ) AS dateCreated,
-                DATE_FORMAT(
-                    joborder.date_modified, '%%m-%%d-%%y'
-                ) AS dateModified
+                joborder.start_date AS startDateRaw,
+                joborder.date_created AS dateCreatedRaw,
+                joborder.date_modified AS dateModifiedRaw
             FROM
                 company
             LEFT JOIN joborder
@@ -957,7 +976,7 @@ class SearchJobOrders
         if (!eval(Hooks::get('JO_SEARCH_SQL'))) return;
         if (!eval(Hooks::get('JO_SEARCH_BY_TITLE'))) return;
 
-        return $this->_db->getAllAssoc($sql);
+        return $this->_formatSearchResults($this->_db->getAllAssoc($sql));
     }
 
     /**
@@ -999,15 +1018,9 @@ class SearchJobOrders
                 recruiter_user.last_name AS recruiterLastName,
                 owner_user.first_name AS ownerFirstName,
                 owner_user.last_name AS ownerLastName,
-                DATE_FORMAT(
-                    joborder.start_date, '%%m-%%d-%%y'
-                ) AS startDate,
-                DATE_FORMAT(
-                    joborder.date_created, '%%m-%%d-%%y'
-                ) AS dateCreated,
-                DATE_FORMAT(
-                    joborder.date_modified, '%%m-%%d-%%y'
-                ) AS dateModified
+                joborder.start_date AS startDateRaw,
+                joborder.date_created AS dateCreatedRaw,
+                joborder.date_modified AS dateModifiedRaw
             FROM
                 company
             LEFT JOIN joborder
@@ -1032,7 +1045,7 @@ class SearchJobOrders
         if (!eval(Hooks::get('JO_SEARCH_SQL'))) return;
         if (!eval(Hooks::get('JO_SEARCH_BY_CLIENT_NAME'))) return;
 
-        return $this->_db->getAllAssoc($sql);
+        return $this->_formatSearchResults($this->_db->getAllAssoc($sql));
     }
     
     /**
@@ -1070,15 +1083,9 @@ class SearchJobOrders
                 recruiter_user.last_name AS recruiterLastName,
                 owner_user.first_name AS ownerFirstName,
                 owner_user.last_name AS ownerLastName,
-                DATE_FORMAT(
-                    joborder.start_date, '%%m-%%d-%%y'
-                ) AS startDate,
-                DATE_FORMAT(
-                    joborder.date_created, '%%m-%%d-%%y'
-                ) AS dateCreated,
-                DATE_FORMAT(
-                    joborder.date_modified, '%%m-%%d-%%y'
-                ) AS dateModified,
+                joborder.start_date AS startDateRaw,
+                joborder.date_created AS dateCreatedRaw,
+                joborder.date_modified AS dateModifiedRaw,
                 joborder.date_modified AS dateModifiedSort
             FROM
                 company
@@ -1103,7 +1110,35 @@ class SearchJobOrders
 
         if (!eval(Hooks::get('JO_SEARCH_SQL'))) return;
 
-        return $this->_db->getAllAssoc($sql);
+        return $this->_formatSearchResults($this->_db->getAllAssoc($sql));
+    }
+
+    private function _formatSearchResults($rs)
+    {
+        $ianaTimeZone = $_SESSION['CATS']->getIanaTimeZone();
+        $dFormat = $_SESSION['CATS']->isDateDMY() ? 'd-m-y' : 'm-d-y';
+        foreach ($rs as $key => $row)
+        {
+            if (isset($row['dateCreatedRaw']))
+            {
+                $rs[$key]['dateCreated'] = DateUtility::utcDateTimeToLocal(
+                    $row['dateCreatedRaw'], $ianaTimeZone, $dFormat
+                );
+            }
+            if (isset($row['dateModifiedRaw']))
+            {
+                $rs[$key]['dateModified'] = DateUtility::utcDateTimeToLocal(
+                    $row['dateModifiedRaw'], $ianaTimeZone, $dFormat
+                );
+            }
+            if (isset($row['startDateRaw']))
+            {
+                $rs[$key]['startDate'] = DateUtility::formatDate(
+                    $row['startDateRaw'], $dFormat
+                );
+            }
+        }
+        return $rs;
     }
 }
 
@@ -1152,12 +1187,8 @@ class ContactsSearch
                 contact.email2 AS email2,
                 contact.is_hot AS isHotContact,
                 contact.left_company AS leftCompany,
-                DATE_FORMAT(
-                    contact.date_created, '%%m-%%d-%%y'
-                ) AS dateCreated,
-                DATE_FORMAT(
-                    contact.date_modified, '%%m-%%d-%%y'
-                ) AS dateModified,
+                contact.date_created AS dateCreatedRaw,
+                contact.date_modified AS dateModifiedRaw,
                 owner_user.first_name AS ownerFirstName,
                 owner_user.last_name AS ownerLastName,
                 company.name AS companyName,
@@ -1183,7 +1214,7 @@ class ContactsSearch
             $sortDirection
         );
 
-        return $this->_db->getAllAssoc($sql);
+        return $this->_formatSearchResults($this->_db->getAllAssoc($sql));
     }
 
     /**
@@ -1212,12 +1243,8 @@ class ContactsSearch
                 contact.email2 AS email2,
                 contact.is_hot AS isHotContact,
                 contact.left_company AS leftCompany,
-                DATE_FORMAT(
-                    contact.date_created, '%%m-%%d-%%y'
-                ) AS dateCreated,
-                DATE_FORMAT(
-                    contact.date_modified, '%%m-%%d-%%y'
-                ) AS dateModified,
+                contact.date_created AS dateCreatedRaw,
+                contact.date_modified AS dateModifiedRaw,
                 owner_user.first_name AS ownerFirstName,
                 owner_user.last_name AS ownerLastName,
                 company.name AS companyName,
@@ -1237,7 +1264,7 @@ class ContactsSearch
             $sortDirection
         );
 
-        return $this->_db->getAllAssoc($sql);
+        return $this->_formatSearchResults($this->_db->getAllAssoc($sql));
     }
 
     /**
@@ -1265,12 +1292,8 @@ class ContactsSearch
                 contact.email2 AS email2,
                 contact.is_hot AS isHotContact,
                 contact.left_company AS leftCompany,
-                DATE_FORMAT(
-                    contact.date_created, '%%m-%%d-%%y'
-                ) AS dateCreated,
-                DATE_FORMAT(
-                    contact.date_modified, '%%m-%%d-%%y'
-                ) AS dateModified,
+                contact.date_created AS dateCreatedRaw,
+                contact.date_modified AS dateModifiedRaw,
                 owner_user.first_name AS ownerFirstName,
                 owner_user.last_name AS ownerLastName,
                 company.name AS companyName,
@@ -1290,7 +1313,29 @@ class ContactsSearch
             $sortDirection
         );
 
-        return $this->_db->getAllAssoc($sql);
+        return $this->_formatSearchResults($this->_db->getAllAssoc($sql));
+    }
+
+    private function _formatSearchResults($rs)
+    {
+        $ianaTimeZone = $_SESSION['CATS']->getIanaTimeZone();
+        $dFormat = $_SESSION['CATS']->isDateDMY() ? 'd-m-y' : 'm-d-y';
+        foreach ($rs as $key => $row)
+        {
+            if (isset($row['dateCreatedRaw']))
+            {
+                $rs[$key]['dateCreated'] = DateUtility::utcDateTimeToLocal(
+                    $row['dateCreatedRaw'], $ianaTimeZone, $dFormat
+                );
+            }
+            if (isset($row['dateModifiedRaw']))
+            {
+                $rs[$key]['dateModified'] = DateUtility::utcDateTimeToLocal(
+                    $row['dateModifiedRaw'], $ianaTimeZone, $dFormat
+                );
+            }
+        }
+        return $rs;
     }
 }
 
@@ -1338,12 +1383,8 @@ class QuickSearch
                 candidate.email2 AS email2,
                 owner_user.first_name AS ownerFirstName,
                 owner_user.last_name AS ownerLastName,
-                DATE_FORMAT(
-                    candidate.date_created, '%%m-%%d-%%y'
-                ) AS dateCreated,
-                DATE_FORMAT(
-                    candidate.date_modified, '%%m-%%d-%%y'
-                ) AS dateModified
+                candidate.date_created AS dateCreatedRaw,
+                candidate.date_modified AS dateModifiedRaw
             FROM
                 candidate
             LEFT JOIN user AS owner_user
@@ -1385,7 +1426,7 @@ class QuickSearch
             $wildCardString
         );
 
-        return $this->_db->getAllAssoc($sql);
+        return $this->_formatSearchResults($this->_db->getAllAssoc($sql));
     }
     
     /**
@@ -1410,12 +1451,8 @@ class QuickSearch
                 company.url AS url,
                 company.key_technologies AS keyTechnologies,
                 company.is_hot AS isHot,
-                DATE_FORMAT(
-                    company.date_created, '%%m-%%d-%%y'
-                ) AS dateCreated,
-                DATE_FORMAT(
-                    company.date_modified, '%%m-%%d-%%y'
-                ) AS dateModified,
+                company.date_created AS dateCreatedRaw,
+                company.date_modified AS dateModifiedRaw,
                 owner_user.first_name AS ownerFirstName,
                 owner_user.last_name AS ownerLastName
             FROM
@@ -1437,7 +1474,7 @@ class QuickSearch
             $wildCardString
         );
 
-        return $this->_db->getAllAssoc($sql);
+        return $this->_formatSearchResults($this->_db->getAllAssoc($sql));
     }
     
     /**
@@ -1466,12 +1503,8 @@ class QuickSearch
                 contact.email2 AS email2,
                 contact.is_hot AS isHotContact,
                 contact.left_company AS leftCompany,
-                DATE_FORMAT(
-                    contact.date_created, '%%m-%%d-%%y'
-                ) AS dateCreated,
-                DATE_FORMAT(
-                    contact.date_modified, '%%m-%%d-%%y'
-                ) AS dateModified,
+                contact.date_created AS dateCreatedRaw,
+                contact.date_modified AS dateModifiedRaw,
                 owner_user.first_name AS ownerFirstName,
                 owner_user.last_name AS ownerLastName,
                 company.name AS companyName,
@@ -1519,7 +1552,7 @@ class QuickSearch
             $wildCardString
         );
 
-        return $this->_db->getAllAssoc($sql);
+        return $this->_formatSearchResults($this->_db->getAllAssoc($sql));
     }
     
     /**
@@ -1552,15 +1585,9 @@ class QuickSearch
                 recruiter_user.last_name AS recruiterLastName,
                 owner_user.first_name AS ownerFirstName,
                 owner_user.last_name AS ownerLastName,
-                DATE_FORMAT(
-                    joborder.start_date, '%%m-%%d-%%y'
-                ) AS startDate,
-                DATE_FORMAT(
-                    joborder.date_created, '%%m-%%d-%%y'
-                ) AS dateCreated,
-                DATE_FORMAT(
-                    joborder.date_modified, '%%m-%%d-%%y'
-                ) AS dateModified
+                joborder.start_date AS startDateRaw,
+                joborder.date_created AS dateCreatedRaw,
+                joborder.date_modified AS dateModifiedRaw
             FROM
                 joborder
             LEFT JOIN company
@@ -1585,7 +1612,35 @@ class QuickSearch
         if (!eval(Hooks::get('JO_SEARCH_SQL'))) return;
         if (!eval(Hooks::get('JO_SEARCH_BY_EVERYTHING'))) return;
 
-        return $this->_db->getAllAssoc($sql);
+        return $this->_formatSearchResults($this->_db->getAllAssoc($sql));
+    }
+
+    private function _formatSearchResults($rs)
+    {
+        $ianaTimeZone = $_SESSION['CATS']->getIanaTimeZone();
+        $dFormat = $_SESSION['CATS']->isDateDMY() ? 'd-m-y' : 'm-d-y';
+        foreach ($rs as $key => $row)
+        {
+            if (isset($row['dateCreatedRaw']))
+            {
+                $rs[$key]['dateCreated'] = DateUtility::utcDateTimeToLocal(
+                    $row['dateCreatedRaw'], $ianaTimeZone, $dFormat
+                );
+            }
+            if (isset($row['dateModifiedRaw']))
+            {
+                $rs[$key]['dateModified'] = DateUtility::utcDateTimeToLocal(
+                    $row['dateModifiedRaw'], $ianaTimeZone, $dFormat
+                );
+            }
+            if (isset($row['startDateRaw']))
+            {
+                $rs[$key]['startDate'] = DateUtility::formatDate(
+                    $row['startDateRaw'], $dFormat
+                );
+            }
+        }
+        return $rs;
     }
 }
 
@@ -1729,7 +1784,7 @@ class SavedSearches
             $this->_db->makeQueryInteger($dataItemType)
         );
 
-        return $this->_db->getAllAssoc($sql);
+        return $this->_formatSearchResults($this->_db->getAllAssoc($sql));
     }
 
     /**
@@ -1785,6 +1840,11 @@ class SavedSearches
 
             --$count;
         }
+    }
+
+    private function _formatSearchResults($rs)
+    {
+        return $rs;
     }
 }
 
@@ -1932,13 +1992,7 @@ class SearchByResumePager extends Pager
                 candidate.last_name AS lastName,
                 candidate.city AS city,
                 candidate.state AS state,
-                DATE_FORMAT(
-                    candidate.date_created, '%%m-%%d-%%y'
-                ) AS dateCreated,
                 candidate.date_created AS dateCreatedSort,
-                DATE_FORMAT(
-                    candidate.date_modified, '%%m-%%d-%%y'
-                ) AS dateModified,
                 candidate.date_modified AS dateModifiedSort,
                 owner_user.first_name AS ownerFirstName,
                 owner_user.last_name AS ownerLastName,
@@ -1972,7 +2026,7 @@ class SearchByResumePager extends Pager
             $this->_rowsPerPage
         );
 
-        return $this->_db->getAllAssoc($sql);
+        return $this->_formatSearchResults($this->_db->getAllAssoc($sql));
     }
 
     /**
@@ -1987,6 +2041,28 @@ class SearchByResumePager extends Pager
         $template->assign('errorMessage', $error);
         $template->display('./Error.tpl');
         die();
+    }
+
+    private function _formatSearchResults($rs)
+    {
+        $ianaTimeZone = $_SESSION['CATS']->getIanaTimeZone();
+        $dFormat = $_SESSION['CATS']->isDateDMY() ? 'd-m-y' : 'm-d-y';
+        foreach ($rs as $key => $row)
+        {
+            if (isset($row['dateCreatedSort']))
+            {
+                $rs[$key]['dateCreated'] = DateUtility::utcDateTimeToLocal(
+                    $row['dateCreatedSort'], $ianaTimeZone, $dFormat
+                );
+            }
+            if (isset($row['dateModifiedSort']))
+            {
+                $rs[$key]['dateModified'] = DateUtility::utcDateTimeToLocal(
+                    $row['dateModifiedSort'], $ianaTimeZone, $dFormat
+                );
+            }
+        }
+        return $rs;
     }
 }
 
