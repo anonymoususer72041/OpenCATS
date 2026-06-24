@@ -42,7 +42,6 @@ class Statistics
 {
     private $_db;
     private $_siteID;
-    private $_timeZoneOffset;
     private $_ianaTimeZone;
     private $_dateDMY;
 
@@ -53,7 +52,6 @@ class Statistics
         $this->_db = DatabaseConnection::getInstance();
 
         // FIXME: Session coupling...
-        $this->_timeZoneOffset = $_SESSION['CATS']->getTimeZoneOffsetMinutes();
         $this->_ianaTimeZone = $_SESSION['CATS']->getIanaTimeZone();
         $this->_dateDMY = $_SESSION['CATS']->isDateDMY();
     }
@@ -466,15 +464,7 @@ class Statistics
         $sql = sprintf(
             "SELECT
                 activity.activity_id AS activityID,
-                DATE_FORMAT(
-                    activity.date_occurred, '%%m'
-                ) AS month,
-                DATE_FORMAT(
-                    activity.date_occurred, '%%d'
-                ) AS day,
-                DATE_FORMAT(
-                    activity.date_occurred, '%%y'
-                ) AS year
+                activity.date_occurred AS dateUtc
             FROM
                 activity
             WHERE
@@ -484,7 +474,7 @@ class Statistics
             $criterion
         );
 
-        return $this->_db->getAllAssoc($sql);
+        return $this->_addLocalDateParts($this->_db->getAllAssoc($sql), 'dateUtc');
     }
 
     // FIXME: Document me.
@@ -497,15 +487,7 @@ class Statistics
         $sql = sprintf(
             "SELECT
                 candidate.candidate_id AS candidateID,
-                DATE_FORMAT(
-                    candidate.date_created, '%%m'
-                ) AS month,
-                DATE_FORMAT(
-                    candidate.date_created, '%%d'
-                ) AS day,
-                DATE_FORMAT(
-                    candidate.date_created, '%%y'
-                ) AS year
+                candidate.date_created AS dateUtc
             FROM
                 candidate
             WHERE
@@ -515,7 +497,7 @@ class Statistics
             $criterion
         );
 
-        return $this->_db->getAllAssoc($sql);
+        return $this->_addLocalDateParts($this->_db->getAllAssoc($sql), 'dateUtc');
     }
 
     // FIXME: Document me.
@@ -528,15 +510,7 @@ class Statistics
         $sql = sprintf(
             "SELECT
                 joborder.joborder_id AS jobOrderID,
-                DATE_FORMAT(
-                    joborder.date_created, '%%m'
-                ) AS month,
-                DATE_FORMAT(
-                    joborder.date_created, '%%d'
-                ) AS day,
-                DATE_FORMAT(
-                    joborder.date_created, '%%y'
-                ) AS year
+                joborder.date_created AS dateUtc
             FROM
                 joborder
             WHERE
@@ -546,7 +520,7 @@ class Statistics
             $criterion
         );
 
-        return $this->_db->getAllAssoc($sql);
+        return $this->_addLocalDateParts($this->_db->getAllAssoc($sql), 'dateUtc');
     }
 
     // FIXME: Document me.
@@ -558,15 +532,7 @@ class Statistics
 
         $sql = sprintf(
             "SELECT
-                DATE_FORMAT(
-                    candidate_joborder_status_history.date, '%%m'
-                ) AS month,
-                DATE_FORMAT(
-                    candidate_joborder_status_history.date, '%%d'
-                ) AS day,
-                DATE_FORMAT(
-                    candidate_joborder_status_history.date, '%%y'
-                ) AS year
+                candidate_joborder_status_history.date AS dateUtc
             FROM
                 candidate_joborder_status_history
             WHERE
@@ -578,10 +544,10 @@ class Statistics
             $criterion
         );
 
-        return $this->_db->getAllAssoc($sql);
+        return $this->_addLocalDateParts($this->_db->getAllAssoc($sql), 'dateUtc');
     }
 
-	// FIXME: Document me.
+    // FIXME: Document me.
     public function getPlacementsByPeriod($period)
     {
         $criterion = $this->makePeriodCriterion(
@@ -590,15 +556,7 @@ class Statistics
 
         $sql = sprintf(
             "SELECT
-                DATE_FORMAT(
-                    candidate_joborder_status_history.date, '%%m'
-                ) AS month,
-                DATE_FORMAT(
-                    candidate_joborder_status_history.date, '%%d'
-                ) AS day,
-                DATE_FORMAT(
-                    candidate_joborder_status_history.date, '%%y'
-                ) AS year
+                candidate_joborder_status_history.date AS dateUtc
             FROM
                 candidate_joborder_status_history
             WHERE
@@ -610,7 +568,7 @@ class Statistics
             $criterion
         );
 
-        return $this->_db->getAllAssoc($sql);
+        return $this->_addLocalDateParts($this->_db->getAllAssoc($sql), 'dateUtc');
     }
 
     // FIXME: Document me.
@@ -993,109 +951,141 @@ class Statistics
         );
     }
 
+    /**
+     * Adds 'month', 'day', and 'year' keys to each result row by converting
+     * a raw UTC timestamp to the session IANA timezone.
+     *
+     * @param array  $rows     Result set from getAllAssoc().
+     * @param string $utcField Key of the UTC datetime column.
+     * @return array Result set with month/day/year keys added.
+     */
+    private function _addLocalDateParts($rows, $utcField)
+    {
+        foreach ($rows as $key => $row)
+        {
+            $rows[$key]['month'] = DateUtility::utcDateTimeToLocal(
+                $row[$utcField], $this->_ianaTimeZone, 'm'
+            );
+            $rows[$key]['day'] = DateUtility::utcDateTimeToLocal(
+                $row[$utcField], $this->_ianaTimeZone, 'd'
+            );
+            $rows[$key]['year'] = DateUtility::utcDateTimeToLocal(
+                $row[$utcField], $this->_ianaTimeZone, 'y'
+            );
+        }
 
-    // FIXME: Document me.
+        return $rows;
+    }
+
+
+    /**
+     * Builds a SQL WHERE fragment that restricts $dateField (a UTC
+     * timestamp column) to the given human period evaluated in the
+     * session IANA timezone.
+     *
+     * Period boundaries are computed in PHP with full DST awareness and
+     * then expressed as literal UTC datetime strings, so the SQL never
+     * needs MySQL timezone tables or a fixed-offset approximation.
+     */
     private function makePeriodCriterion($dateField, $period)
     {
-        /* Note: we add a bogus "AND date > '1900-01-01'" condition to the
-         * WHERE clause to force MySQL to use an index containing the date
-         * column. MySQL can then build the entire result set without scanning
-         * any rows.
-         */
-        $criteria = '';
+        $guard = sprintf('AND %s > \'1900-01-01\'', $dateField);
+
+        if ($period == TIME_PERIOD_TODATE)
+        {
+            return $guard;
+        }
+
+        $tz  = new DateTimeZone($this->_ianaTimeZone);
+        $now = new DateTime('now', $tz);
+
         switch ($period)
         {
             case TIME_PERIOD_TODAY:
-                $criteria = sprintf(
-                    'AND %s > \'1900-01-01\' AND DATE(%s) = CURDATE()',
-                    $dateField,
-                    $dateField
-                );
+                $start = clone $now;
+                $start->setTime(0, 0, 0);
+                $end = clone $start;
+                $end->modify('+1 day');
                 break;
 
             case TIME_PERIOD_YESTERDAY:
-                $criteria = sprintf(
-                    'AND %s > \'1900-01-01\' AND DATE(%s) = DATE_SUB(CURDATE(), INTERVAL 1 DAY)',
-                    $dateField,
-                    $dateField
-                );
+                $start = clone $now;
+                $start->setTime(0, 0, 0);
+                $start->modify('-1 day');
+                $end = clone $start;
+                $end->modify('+1 day');
                 break;
 
             case TIME_PERIOD_THISWEEK:
-                $criteria = sprintf(
-                    'AND %s > \'1900-01-01\' AND YEARWEEK(%s) = YEARWEEK(NOW())',
-                    $dateField,
-                    $dateField
-                );
+                $dow = (int) $now->format('w');
+                $start = clone $now;
+                $start->setTime(0, 0, 0);
+                $start->modify('-' . $dow . ' days');
+                $end = clone $start;
+                $end->modify('+7 days');
                 break;
 
             case TIME_PERIOD_LASTWEEK:
-                $criteria = sprintf(
-                    'AND %s > \'1900-01-01\' AND YEARWEEK(%s) = YEARWEEK(DATE_SUB(CURDATE(), INTERVAL 7 DAY))',
-                    $dateField,
-                    $dateField
-                );
+                $dow = (int) $now->format('w');
+                $end = clone $now;
+                $end->setTime(0, 0, 0);
+                $end->modify('-' . $dow . ' days');
+                $start = clone $end;
+                $start->modify('-7 days');
                 break;
 
             case TIME_PERIOD_LASTTWOWEEKS:
-                $criteria =sprintf(
-                    'AND %s > \'1900-01-01\' AND (YEARWEEK(%s) = YEARWEEK(NOW()) OR YEARWEEK(%s) = YEARWEEK(NOW() - INTERVAL 7 DAY))',
-                    $dateField,
-                    $dateField,
-                    $dateField
-                );
+                $dow = (int) $now->format('w');
+                $start = clone $now;
+                $start->setTime(0, 0, 0);
+                $start->modify('-' . $dow . ' days');
+                $start->modify('-7 days');
+                $end = clone $start;
+                $end->modify('+14 days');
                 break;
 
             case TIME_PERIOD_THISMONTH:
-                $criteria = sprintf(
-                    'AND %s > \'1900-01-01\' AND EXTRACT(YEAR_MONTH FROM %s) = EXTRACT(YEAR_MONTH FROM CURDATE())',
-                    $dateField,
-                    $dateField
-                );
+                $start = new DateTime($now->format('Y-m-01'), $tz);
+                $end = clone $start;
+                $end->modify('+1 month');
                 break;
 
             case TIME_PERIOD_LASTMONTH:
-                $criteria = sprintf(
-                    'AND %s > \'1900-01-01\' AND EXTRACT(YEAR_MONTH FROM %s) = EXTRACT(YEAR_MONTH FROM DATE_SUB(CURDATE(), INTERVAL 1 MONTH))',
-                    $dateField,
-                    $dateField
-                );
+                $start = new DateTime($now->format('Y-m-01'), $tz);
+                $start->modify('-1 month');
+                $end = clone $start;
+                $end->modify('+1 month');
                 break;
 
             case TIME_PERIOD_THISYEAR:
-                $criteria = sprintf(
-                    'AND %s > \'1900-01-01\' AND YEAR(%s) = YEAR(NOW())',
-                    $dateField,
-                    $dateField
-                );
+                $start = new DateTime($now->format('Y-01-01'), $tz);
+                $end = clone $start;
+                $end->modify('+1 year');
                 break;
 
             case TIME_PERIOD_LASTYEAR:
-                $criteria = sprintf(
-                    'AND %s > \'1900-01-01\' AND YEAR(%s) = YEAR(DATE_SUB(CURDATE(), INTERVAL 1 YEAR))',
-                    $dateField,
-                    $dateField
-                );
+                $start = new DateTime($now->format('Y-01-01'), $tz);
+                $start->modify('-1 year');
+                $end = clone $start;
+                $end->modify('+1 year');
                 break;
 
-            case TIME_PERIOD_TODATE:
             default:
-                return sprintf('AND %s > \'1900-01-01\'', $dateField);
-                break;
+                return $guard;
         }
 
-        /* Apply the current session offset (minutes) to align period
-         * boundaries with local time. This is a single fixed offset and
-         * does NOT perform a full per-row IANA/DST conversion; dates in
-         * a different DST period will be off by the DST delta. */
-        if ($this->_timeZoneOffset != 0)
-        {
-            $criteria = str_replace('CURDATE()', 'DATE_ADD(CURDATE(), INTERVAL ' . $this->_timeZoneOffset . ' MINUTE)', $criteria);
-            $criteria = str_replace('NOW()', 'DATE_ADD(NOW(), INTERVAL ' . $this->_timeZoneOffset . ' MINUTE)', $criteria);
-            $criteria = str_replace($dateField, 'DATE_ADD(' . $dateField . ', INTERVAL ' . $this->_timeZoneOffset . ' MINUTE)', $criteria);
-        }
+        $utc = new DateTimeZone('UTC');
+        $start->setTimezone($utc);
+        $end->setTimezone($utc);
 
-        return $criteria;
+        return sprintf(
+            "%s AND %s >= '%s' AND %s < '%s'",
+            $guard,
+            $dateField,
+            $start->format('Y-m-d H:i:s'),
+            $dateField,
+            $end->format('Y-m-d H:i:s')
+        );
     }
 }
 
