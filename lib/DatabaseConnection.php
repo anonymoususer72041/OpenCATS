@@ -483,6 +483,7 @@ class DatabaseConnection
         // user input. For instance see:
         // https://johnroach.info/2011/02/17/why-mysql_real_escape_string-isnt-enough-to-stop-sql-injection-attacks/
         // To be replaced with Symfony's stack
+        $string = (string) $string;
         return mysqli_real_escape_string($this->_connection, $string);
     }
 
@@ -532,7 +533,7 @@ class DatabaseConnection
             return 'NULL';
         }
 
-        return (integer) $value;
+        return (int) $value;
     }
 
     /**
@@ -545,7 +546,7 @@ class DatabaseConnection
      */
     public function makeQueryInteger($value)
     {
-        return (integer) $value;
+        return (int) $value;
     }
 
     /**

@@ -1,4 +1,4 @@
-ARG PHP_VERSION=7.4
+ARG PHP_VERSION=8.4.1
 FROM php:${PHP_VERSION}-fpm-alpine
 
 # Runtime/system packages required by OpenCATS and helper tools.
@@ -18,6 +18,7 @@ RUN apk add --no-cache \
   freetype-dev \
   libjpeg-turbo-dev \
   libmcrypt-dev \
+  oniguruma-dev \
   libpng-dev \
   libxml2-dev \
   libzip-dev \
@@ -28,6 +29,7 @@ RUN cd /tmp && \
   wget https://ftp.gnu.org/gnu/unrtf/unrtf-0.21.10.tar.gz && \
   tar xzvf unrtf-0.21.10.tar.gz && \
   cd unrtf-0.21.10/ && \
+  export CFLAGS="-D_GNU_SOURCE -std=gnu89 -Wno-error=implicit-int -Wno-error=implicit-function-declaration" && \
   ./bootstrap && \
   ./configure && \
   make && \
@@ -36,7 +38,7 @@ RUN cd /tmp && \
 # PHP extensions expected by OpenCATS.
 RUN pecl install mcrypt-1.0.9 && docker-php-ext-enable mcrypt
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install -j"$(nproc)" mysqli gd soap zip ldap
+    && docker-php-ext-install -j"$(nproc)" mysqli gd soap zip ldap mbstring
 
 # Composer and helper binaries.
 COPY docker/php/scripts/install-composer.sh /opt/install-composer.sh
