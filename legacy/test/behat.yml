@@ -14,7 +14,7 @@ default:
                 tags: "@security"
     extensions:
         OpenCATS\Tests\Behat\ServiceContainer\MinkExtension:
-            base_url: http://opencats
+            base_url: http://laravel.test
             default_session: browserkit
             javascript_session: selenium2
             sessions:

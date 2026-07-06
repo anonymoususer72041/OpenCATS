@@ -18,7 +18,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-version: ['8.4.1', '8.5']
+        # Each version needs a matching Sail runtime directory
+        # (vendor/laravel/sail/runtimes/<version>); SAIL_RUNTIME selects it.
+        php-version: ['8.4', '8.5']
+    env:
+      # Sail shells out to `docker compose`, which honours COMPOSE_FILE and
+      # merges the CI-only legacy services from compose.ci.yml into the stack.
+      COMPOSE_FILE: compose.yaml:compose.ci.yml
+      SAIL_RUNTIME: ${{ matrix.php-version }}
 
     steps:
       - name: Checkout Code
@@ -35,65 +42,78 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.composer/cache
-          key: ${{ runner.os }}-php-${{ matrix.php-version }}-${{ hashFiles('**/composer.lock') }}
+          key: ${{ runner.os }}-composer-${{ matrix.php-version }}-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
-            ${{ runner.os }}-php-${{ matrix.php-version }}-
-            ${{ runner.os }}-php-
+            ${{ runner.os }}-composer-${{ matrix.php-version }}-
+            ${{ runner.os }}-composer-
+
+      - name: Prepare Laravel environment
+        run: cp .env.example .env
 
       - name: Install Dependencies
-        run: composer install --no-progress --prefer-dist
+        run: composer install --no-progress --prefer-dist --no-interaction
+
+      - name: Generate application key
+        run: php artisan key:generate
+
+      - name: Prepare directories & permissions
+        run: |
+          mkdir -p reports legacy/test/screenshots
+          chmod -R 777 storage bootstrap/cache
+
+      - name: Prepare legacy test configuration
+        run: |
+          cp legacy/test/config.php legacy/config.php
+          touch legacy/INSTALL_BLOCK
 
       - name: PHP Syntax Check (Lint)
-        run: find src -name "*.php" -print0 | xargs -0 -n1 php -l
+        run: |
+          find app -name "*.php" -print0 | xargs -0 -n1 -P4 php -l
+          find legacy/src -name "*.php" -print0 | xargs -0 -n1 -P4 php -l
 
       - name: Composer Security Audit
-        # We use || true so legacy vulnerabilities don't block the build
+        # `|| true` so legacy transitive vulnerabilities don't block the build.
         run: composer audit || true
 
-      - name: Create Reports Directory
-        run: mkdir -p reports/behat-default reports/behat-security test/screenshots
+      - name: Build Sail image
+        run: ./vendor/bin/sail build
 
-      - name: Run PHPUnit (Unit Tests)
-        run: ./vendor/bin/phpunit --log-junit reports/unit-report.xml --testsuite UnitTests
-
-      - name: Run Integration Tests (Docker)
+      - name: Start Sail stack
         run: |
-          # 1. Prepare environment files
-          cp test/config.php ./config.php
-          touch ./INSTALL_BLOCK
+          ./vendor/bin/sail up -d --wait
+          ./vendor/bin/sail ps
 
-          cd docker/
-          PHP_VERSION=${{ matrix.php-version }} docker compose -f docker-compose-test.yml up -d --build
+      - name: Run Laravel tests
+        run: ./vendor/bin/sail artisan test --log-junit reports/laravel-report.xml
 
-          echo "Waiting for BOTH databases..."
-          opencatsdb_container="$(docker compose -f docker-compose-test.yml ps -q opencatsdb)"
-          [ -n "$opencatsdb_container" ] || { echo "opencatsdb container ID not found"; exit 1; }
-          timeout 180s bash -c "until [ \"\$(docker inspect --format '{{.State.Health.Status}}' \"${opencatsdb_container}\" 2>/dev/null)\" = \"healthy\" ]; do sleep 3; done"
-          integrationtestdb_container="$(docker compose -f docker-compose-test.yml ps -q integrationtestdb)"
-          [ -n "$integrationtestdb_container" ] || { echo "integrationtestdb container ID not found"; exit 1; }
-          timeout 180s bash -c "until [ \"\$(docker inspect --format '{{.State.Health.Status}}' \"${integrationtestdb_container}\" 2>/dev/null)\" = \"healthy\" ]; do sleep 3; done"
+      # The legacy suites run inside the app container with cwd=legacy so
+      # their relative includes (./config.php, ./constants.php, db/, lib/) resolve.
+      - name: Run legacy Unit tests
+        run: >
+          ./vendor/bin/sail exec -T laravel.test bash -c
+          "cd /var/www/html/legacy &&
+          ../vendor/bin/phpunit -c phpunit.xml.dist --testsuite UnitTests
+          --log-junit /var/www/html/reports/legacy-unit-report.xml"
 
-          # 2. Pre-clean the integration database
-          docker compose -f docker-compose-test.yml exec -T integrationtestdb mysql -udev -pdev -e "DROP DATABASE IF EXISTS cats_integrationtest; CREATE DATABASE cats_integrationtest;"
+      - name: Run legacy Integration tests
+        run: >
+          ./vendor/bin/sail exec -T laravel.test bash -c
+          "cd /var/www/html/legacy &&
+          ../vendor/bin/phpunit -c phpunit.xml.dist --testsuite IntegrationTests
+          --log-junit /var/www/html/reports/legacy-integration-report.xml"
 
-          # 3. DIAGNOSTIC: Check if PHP can resolve the database hostname
-          echo "Diagnostic: Resolving integrationtestdb from PHP container..."
-          docker compose -f docker-compose-test.yml exec -T php php -r "echo 'IP for integrationtestdb: ' . gethostbyname('integrationtestdb') . PHP_EOL;"
+      - name: Run legacy Behat suites
+        run: |
+          ./vendor/bin/sail exec -T laravel.test bash -c \
+            "cd /var/www/html/legacy && ../vendor/bin/behat -v -c test/behat.yml --suite=default --format=progress --out=std --format=junit --out=../reports/behat-default"
+          ./vendor/bin/sail exec -T laravel.test bash -c \
+            "cd /var/www/html/legacy && ../vendor/bin/behat -v -c test/behat.yml --suite=security --format=progress --out=std --format=junit --out=../reports/behat-security"
 
-          echo "Running PHPUnit Integration Tests..."
-          docker compose -f docker-compose-test.yml exec -T --workdir /var/www/public php ./vendor/bin/phpunit --log-junit /var/www/public/reports/integration-report.xml --testsuite IntegrationTests
-
-          echo "Running Behat Suites..."
-          docker compose -f docker-compose-test.yml exec -T --workdir /var/www/public php ./vendor/bin/behat -v -c ./test/behat.yml --suite="default" --format=progress --out=std --format=junit --out=reports/behat-default
-          docker compose -f docker-compose-test.yml exec -T --workdir /var/www/public php ./vendor/bin/behat -v -c ./test/behat.yml --suite="security" --format=progress --out=std --format=junit --out=reports/behat-security
-          # continue-on-error: true
-
-      - name: Docker Diagnostics
+      - name: Stack diagnostics
         if: failure()
         run: |
-          cd docker/
-          docker compose -f docker-compose-test.yml ps
-          docker compose -f docker-compose-test.yml logs --tail=200 opencatsdb integrationtestdb php
+          ./vendor/bin/sail ps
+          ./vendor/bin/sail logs --tail=200
 
       - name: Publish Test Report
         uses: mikepenz/action-junit-report@v4
@@ -110,12 +130,12 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: behat-screenshots-php${{ matrix.php-version }}
-          path: test/screenshots/
+          path: legacy/test/screenshots/
           retention-days: 5
 
-      - name: Shutdown Docker
+      - name: Shutdown Sail
         if: always()
-        run: cd docker && docker compose -f docker-compose-test.yml down
+        run: ./vendor/bin/sail down -v
 
   release:
     name: Create GitHub Release
@@ -130,7 +150,9 @@ jobs:
 
       - name: Create Release Archive
         run: |
-          zip -r opencats-${{ github.ref_name }}.zip . -x "*.git*" "docker/*" "test/*" "reports/*" ".github/*" "phpunit.xml"
+          zip -r opencats-${{ github.ref_name }}.zip . \
+            -x "*.git*" "tests/*" "legacy/test/*" "reports/*" ".github/*" \
+               "phpunit.xml" "legacy/phpunit.xml.dist" "compose.ci.yml"
 
       - name: Create GitHub Release
         env:

@@ -1,0 +1,52 @@
+# CI-only legacy test services (two MariaDB instances and a Selenium browser),
+# merged with the base Sail stack via COMPOSE_FILE=compose.yaml:compose.ci.yml.
+services:
+    # Behat/functional database; hostname, credentials and database name
+    # mirror legacy/test/config.php.
+    opencatsdb:
+        image: 'mariadb:11'
+        environment:
+            MYSQL_ROOT_PASSWORD: dev
+            MYSQL_USER: dev
+            MYSQL_PASSWORD: dev
+            MYSQL_DATABASE: cats_test
+        volumes:
+            - './legacy/db/cats_schema.sql:/docker-entrypoint-initdb.d/000_initDB.sql:ro'
+            - './legacy/test/data/securityTests.sql:/docker-entrypoint-initdb.d/001_addUsers.sql:ro'
+        networks:
+            - sail
+        healthcheck:
+            test: ['CMD', 'healthcheck.sh', '--connect', '--innodb_initialized']
+            interval: 5s
+            timeout: 5s
+            retries: 30
+            start_period: 30s
+
+    # Starts empty; DatabaseTestCase drops and recreates `cats_integrationtest`
+    # on every test.
+    integrationtestdb:
+        image: 'mariadb:11'
+        environment:
+            MYSQL_ROOT_PASSWORD: dev
+            MYSQL_USER: dev
+            MYSQL_PASSWORD: dev
+            MYSQL_DATABASE: cats_integrationtest
+        networks:
+            - sail
+        healthcheck:
+            test: ['CMD', 'healthcheck.sh', '--connect', '--innodb_initialized']
+            interval: 5s
+            timeout: 5s
+            retries: 30
+            start_period: 30s
+
+    # Chrome for @javascript Behat scenarios; image pinned for compatibility
+    # with the Mink selenium2 driver.
+    selenium:
+        image: 'mlespiau/standalone-chrome:2.53.1-cd2.23'
+        environment:
+            JAVA_OPTS: '-Djava.security.egd=file:/dev/./urandom'
+        volumes:
+            - '/dev/shm:/dev/shm'
+        networks:
+            - sail
