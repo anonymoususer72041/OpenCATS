@@ -4,8 +4,8 @@
 <head>
     <title>CATS Applicant Tracking System</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link rel="icon" href="images/favicon.ico" type="image/x-icon" />
-    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
     <link rel="stylesheet" href="<?php echo TemplateUtility::getVersionedAssetURL('modules/wizard/style.css'); ?>" type="text/css" />
     <script type="text/javascript" src="<?php echo TemplateUtility::getVersionedAssetURL('modules/wizard/wizard.js'); ?>"></script>
     <?php if ($this->jsInclude != ''): ?>
