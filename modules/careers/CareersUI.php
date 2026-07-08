@@ -155,7 +155,11 @@ class CareersUI extends UserInterface
                 break;
         }
 
-        if ($p == 'showAll')
+        if ($p == 'captcha')
+        {
+            $this->outputCareerPortalCaptcha();
+        }
+        else if ($p == 'showAll')
         {
             $template['Content'] = $template['Content - Search Results'];
 
@@ -696,6 +700,7 @@ class CareersUI extends UserInterface
             $template['Content'] = str_replace('<input-keySkills>', '<input name="keySkills" id="keySkills" class="inputBoxNormal" value="' . $keySkillsEscaped . '" />', $template['Content']);
             $template['Content'] = str_replace('<input-source>', '<input name="source" id="source" class="inputBoxNormal" value="' . $sourceEscaped . '" />', $template['Content']);
             $template['Content'] = str_replace('<input-employer>', '<input name="employer" id="employer" class="inputBoxNormal" value="' . $employerEscaped . '" />', $template['Content']);
+            $template['Content'] = str_replace(array('<input-captcha>', '<input-captcha req>'), '<img src="' . CATSUtility::getIndexName() . '?m=careers&amp;p=captcha&amp;t=' . time() . '" alt="Captcha" /><br />' . '<input type="text" name="captcha" id="captcha" class="inputBoxNormal" />', $template['Content']);
             $template['Content'] = str_replace('<input-resumeUpload>', '<input type="file" id="resume" name="file" class="inputBoxFile" />', $template['Content']);
             $template['Content'] = str_replace('<input-resumeUploadPreview>',
                 '<input type="hidden" id="applyToJobSubAction" name="applyToJobSubAction" value="" /> '
@@ -816,6 +821,16 @@ class CareersUI extends UserInterface
                 // FIXME: Generate valid XHTML error pages. Create an error/fatal method!
                 echo '<html><body>This position is invalid or no longer available. Please wait while we direct you to the job list...<script>setTimeout("document.location.href=\'?m=careers&&p=showAll\';", 1500);</script></body></html>';
                 die();
+            }
+
+            if ($this->careerPortalTemplateRequiresCaptcha($template['Content - Apply for Position']))
+            {
+                $captchaValue = isset($_POST['captcha']) ? $_POST['captcha'] : '';
+                if (!$this->validateCareerPortalCaptcha($captchaValue))
+                {
+                    CommonErrors::fatal(COMMONERROR_MISSINGFIELDS, $this, 'Invalid CAPTCHA response. Please try again.');
+                    return;
+                }
             }
 
             // Check if this is a returning candidate
@@ -1159,6 +1174,44 @@ class CareersUI extends UserInterface
         {
             $this->_template->display('./modules/careers/Blank.tpl');
         }
+    }
+
+    private function outputCareerPortalCaptcha()
+    {
+        $builder = new \Gregwar\Captcha\CaptchaBuilder();
+        $builder->build();
+
+        $_SESSION['careerPortalCaptcha'] = $builder->getPhrase();
+
+        header('Content-type: image/jpeg');
+        $builder->output();
+
+        die();
+    }
+
+    private function careerPortalTemplateRequiresCaptcha($templateContent)
+    {
+        return (strpos($templateContent, '<input-captcha req>') !== false);
+    }
+
+    private function validateCareerPortalCaptcha($captchaValue)
+    {
+        $expectedPhrase = isset($_SESSION['careerPortalCaptcha']) ? trim((string) $_SESSION['careerPortalCaptcha']) : '';
+        $submittedPhrase = trim((string) $captchaValue);
+
+        $this->clearCareerPortalCaptchaPhrase();
+
+        if ($expectedPhrase === '' || $submittedPhrase === '')
+        {
+            return false;
+        }
+
+        return (strcasecmp($submittedPhrase, $expectedPhrase) === 0);
+    }
+
+    private function clearCareerPortalCaptchaPhrase()
+    {
+        unset($_SESSION['careerPortalCaptcha']);
     }
 
 
