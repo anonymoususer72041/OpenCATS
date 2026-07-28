@@ -153,7 +153,7 @@ class CompanyRepositoryTest extends TestCase
 
             $companyRepository = new CompanyRepository($databaseConnectionMock);
             $companies = $companyRepository->findByName(
-                self::SITE_ID, self::COMPANY_NAME
+                self::COMPANY_NAME
             );
 
             $this->assertSame('04-01-24', $companies[0]['dateCreated']);

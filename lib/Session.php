@@ -614,11 +614,8 @@ class CATSSession
      * @param string  IANA timezone identifier (e.g. 'Europe/Berlin').
      * @return void
      */
-    public function setTimeDateLocalization($timeZone, $isDMY, $isTimeFormat24 = false, $ianaTimeZone = 'UTC')
+    public function setTimeDateLocalization($isDMY, $ianaTimeZone = 'UTC', $isTimeFormat24 = false)
     {
-        $timeZone = (integer) $timeZone;
-
-        $this->_timeZone       = $timeZone;
         $this->_dateDMY        = $isDMY;
         $this->_timeFormat24   = (bool) $isTimeFormat24;
         $this->_ianaTimeZone   = $ianaTimeZone;

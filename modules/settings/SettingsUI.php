@@ -2663,7 +2663,7 @@ class SettingsUI extends UserInterface
         $site->setLocalization($timeZone, $isDMY, $isTimeFormat24, $ianaTimeZone);
 
         /* Reload the new data for the session. */
-        $_SESSION['CATS']->setTimeDateLocalization($timeZone, $isDMY, $isTimeFormat24, $ianaTimeZone);
+        $_SESSION['CATS']->setTimeDateLocalization($isDMY, $ianaTimeZone, $isTimeFormat24);
 
         $this->_template->assign('inputType', 'conclusion');
         $this->_template->assign('title', 'Localization Settings Saved!');
