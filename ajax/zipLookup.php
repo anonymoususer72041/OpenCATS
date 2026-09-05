@@ -8,7 +8,7 @@ include_once(__DIR__ . '/bootstrap.php');
 include_once(LEGACY_ROOT . '/lib/ZipLookup.php');
 include_once(LEGACY_ROOT . '/lib/StringUtility.php');
 
-$interface = new AJAXInterface();
+$interface = new SecureAJAXInterface();
 
 if (!isset($_REQUEST['zip']))
 {
@@ -34,9 +34,9 @@ $interface->outputXMLPage(
     "<data>\n" .
     "    <errorcode>0</errorcode>\n" .
     "    <errormessage></errormessage>\n" .
-    "    <address>" . $street. "</address>\n" .
-    "    <city>"    . $city  . "</city>\n" .
-    "    <state>"   . $state . "</state>\n" .
+    "    <address>" . htmlspecialchars($street, ENT_QUOTES | ENT_SUBSTITUTE, AJAX_ENCODING) . "</address>\n" .
+    "    <city>"    . htmlspecialchars($city, ENT_QUOTES | ENT_SUBSTITUTE, AJAX_ENCODING)   . "</city>\n" .
+    "    <state>"   . htmlspecialchars($state, ENT_QUOTES | ENT_SUBSTITUTE, AJAX_ENCODING)  . "</state>\n" .
     "</data>\n"
 );
 ?>

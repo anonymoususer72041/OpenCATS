@@ -38,7 +38,11 @@ class ZipLookup
 
 	/* Nominatim's usage policy requires a User-Agent that identifies the
 	 * calling application; use the site's host so each install is distinct. */
-	$sHost = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'unknown-host';
+	$sHost = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '';
+	$sHost = preg_replace('/[^A-Za-z0-9.\-:]/', '', $sHost);
+	if ($sHost === '') {
+		$sHost = 'unknown-host';
+	}
 	$context = stream_context_create(array(
 		'http' => array(
 			'method'  => 'GET',
